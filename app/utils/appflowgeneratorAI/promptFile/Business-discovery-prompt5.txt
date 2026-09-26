@@ -1,3 +1,11 @@
+Absolutely. I have kept your prompt **unchanged everywhere else** and added only the three requested sections:
+
+1. `EVIDENCE-FIRST CANDIDATE ELIMINATION`
+2. `BUSINESS ACTIVITY MATERIALITY TEST`
+3. `ALTERNATIVE PATH MATERIALITY TEST`
+
+I placed each section at the appropriate point in the existing prompt.
+
 ### 100% BUSINESS OBJECT COVERAGE + INTERNET VALIDATION — MANDATORY
 
 ### INPUT
@@ -74,6 +82,7 @@ substantive operational reference for the BUSINESS IDEA.
 The selection MUST be based on the supplied INTERNET SEARCH RESULTS.
 
 Do NOT select a business merely because:
+
 * it has a similar name
 * it is well known
 * it operates in a broadly related industry
@@ -105,6 +114,7 @@ Internet evidence shows that they are materially part of the same
 operating model.
 
 For example, distinguish between:
+
 * online grocery retail
 * restaurant food delivery
 * general e-commerce marketplace
@@ -124,7 +134,6 @@ Both PRIMARY REFERENCE BUSINESS and BUSINESS DOMAIN MUST pass the same
 Internet validation standard as Business Objects and Business
 Activities.
 
-
 ### BUSINESS DOMAIN AS DISCOVERY CONTEXT
 
 BUSINESS DOMAIN is a discovery boundary and contextual guide for
@@ -135,6 +144,7 @@ discovered and to distinguish the business from adjacent or unrelated
 business models.
 
 BUSINESS DOMAIN MAY influence:
+
 * which Business Objects are relevant candidates
 * which Business Activities are relevant candidates
 * how Business Object lifecycles are interpreted
@@ -245,6 +255,7 @@ Only create a separate Business Object when Internet evidence supports that it h
 The objective is a BUSINESS MODEL, not a database schema.
 
 ---
+
 ### BUSINESS OBJECT MATERIALITY TEST
 
 A candidate Business Object MUST represent a meaningful real-world
@@ -284,7 +295,6 @@ Evidence takes priority over completeness.
 
 ---
 
-
 ### BUSINESS CAPABILITY VS BUSINESS OBJECT RULE
 
 A business capability or service is NOT automatically a Business Object.
@@ -323,6 +333,64 @@ For every candidate Business Object:
 * Remove it if adequate evidence cannot be found.
 * Do not create technical, software, database, API, UI, or implementation objects.
 * Do not create objects merely to satisfy the 100% coverage requirement.
+
+---
+
+### EVIDENCE-FIRST CANDIDATE ELIMINATION
+
+The model MUST NOT begin with a conventional list of Business Objects or Business Activities normally associated with the BUSINESS DOMAIN and then attempt to justify those items.
+
+For every candidate Business Object and Business Activity, apply this sequence:
+
+1. Identify the candidate from the supplied Internet evidence.
+2. Identify the specific evidence supporting the candidate.
+3. Determine whether the candidate represents a materially distinct real-world business entity or operation.
+4. Determine whether the candidate is actually handled by the discovered operating model.
+5. Determine whether its lifecycle or business handling is represented.
+6. Retain the candidate ONLY if the above conditions are satisfied.
+
+If a candidate is suggested primarily by general knowledge of the industry rather than by the supplied Internet evidence:
+
+```
+DO NOT INCLUDE IT.
+```
+
+The model MUST prefer:
+
+```
+evidence-supported smaller model
+```
+
+over:
+
+```
+industry-complete inferred model.
+```
+
+Do NOT use the following reasoning:
+
+```
+"This is a business in this domain, therefore it probably has X."
+```
+
+Instead use:
+
+```
+"The supplied Internet evidence demonstrates X, therefore X may
+be included."
+```
+
+A candidate MUST NOT survive merely because it is plausible,
+commercially common, operationally useful, or normally expected in the
+BUSINESS DOMAIN.
+
+Plausibility is NOT evidence.
+
+Industry convention is NOT evidence.
+
+Model knowledge is NOT evidence.
+
+Only supplied Internet evidence may justify inclusion.
 
 ---
 
@@ -374,6 +442,48 @@ These are examples only.
 Do NOT automatically include them merely because they are common industry practices.
 
 ---
+
+### BUSINESS ACTIVITY MATERIALITY TEST
+
+Before retaining any Business Activity, internally verify:
+
+1. The activity represents a materially distinct real-world business
+   operation.
+2. The activity has a clear business purpose.
+3. The activity materially handles one or more validated Business
+   Objects.
+4. At least one Activity Step explicitly handles each Business Object
+   referenced by the activity.
+5. The activity is supported by supplied Internet evidence.
+6. The activity is not merely a customer interaction, UI action,
+   validation, decision, rule, notification, status change, or
+   technical operation.
+
+If an Activity references a Business Object that its steps do not
+actually handle:
+
+```
+REMOVE that Business Object from the Activity.
+```
+
+If an Activity contains no materially distinct business operation:
+
+```
+REMOVE the Activity.
+```
+
+If an Activity exists only because the model believes that businesses
+in this domain normally perform it:
+
+```
+REMOVE the Activity unless Internet evidence supports it.
+```
+
+Do NOT create an Activity merely because it provides a convenient
+place to attach an otherwise orphan Business Object.
+
+---
+
 ### DO NOT SPLIT ACTIVITIES ARTIFICIALLY
 
 Do NOT create a separate Business Activity merely because a set of
@@ -615,6 +725,39 @@ is normally an interaction variation, not necessarily a business-process Alterna
 
 ---
 
+### ALTERNATIVE PATH MATERIALITY TEST
+
+Before including an Alternative Path, internally verify that it changes the real-world business process or lifecycle of a Business Object.
+
+Do NOT include an Alternative Path merely because:
+
+* a customer can choose something different
+* a user can perform a different UI action
+* a validation fails
+* a business rule evaluates differently
+* a field has a different value
+* a promotion is applicable or not applicable
+* a customer logs in instead of registering
+* a user modifies information before submission
+
+A failed validation, eligibility condition, authorization decision, or
+business rule MUST normally remain a rule/decision within the relevant
+Activity unless the evidence demonstrates that it creates a genuinely
+different business-process path.
+
+An Alternative Path should represent a materially different handling
+of the Business Object, such as cancellation, rejection, failed
+fulfillment, return, failed delivery, or another evidence-supported
+process branch.
+
+If the variation does not materially change the business process:
+
+```
+DO NOT include it as an Alternative Path.
+```
+
+---
+
 ### BUSINESS RULE / DECISION SEPARATION
 
 Do not convert Business Rules or Business Decisions into Business Objects or Activities unless they represent an actual independent business operation.
@@ -677,6 +820,7 @@ If verification reveals an important missing Business Object or Business Activit
 The final JSON MUST represent the Internet-validated business model, not the model's assumptions or general industry knowledge.
 
 ---
+
 ### EVIDENCE-BOUNDED STOP CONDITION
 
 The discovery process MUST stop when all of the following are true:
@@ -700,7 +844,8 @@ When the available Internet evidence is exhausted, STOP.
 A smaller evidence-supported model is preferable to a larger model
 containing inferred or weakly supported objects, activities, steps, or
 capabilities.
----
+-------------
+
 ### FINAL INTERNAL CONSISTENCY CHECK
 
 Before finalizing the JSON, perform this mandatory internal consistency
@@ -708,33 +853,41 @@ check.
 
 For EVERY businessObject:
 
-    1. It MUST appear in at least one businessActivity.
-    2. At least one Activity Step MUST explicitly handle that
-       Business Object.
-    3. Its relevant lifecycle MUST be represented by the Activities.
-    4. The object and its handling MUST be supported by Internet
-       evidence.
+```
+1. It MUST appear in at least one businessActivity.
+2. At least one Activity Step MUST explicitly handle that
+   Business Object.
+3. Its relevant lifecycle MUST be represented by the Activities.
+4. The object and its handling MUST be supported by Internet
+   evidence.
+```
 
 For EVERY businessActivity:
 
-    1. It MUST reference at least one businessObject.
-    2. Its Activity Steps MUST explicitly handle the referenced
-       Business Objects.
-    3. It MUST represent a genuine real-world business operation.
-    4. It MUST NOT exist solely to satisfy object coverage.
-    5. Its steps and alternative paths MUST be Internet-validated.
+```
+1. It MUST reference at least one businessObject.
+2. Its Activity Steps MUST explicitly handle the referenced
+   Business Objects.
+3. It MUST represent a genuine real-world business operation.
+4. It MUST NOT exist solely to satisfy object coverage.
+5. Its steps and alternative paths MUST be Internet-validated.
+```
 
 If a businessObject fails these conditions:
 
-    REMOVE IT if Internet evidence does not sufficiently support it.
+```
+REMOVE IT if Internet evidence does not sufficiently support it.
 
-    OR, ONLY when Internet evidence supports the missing handling,
-    ADD the required Business Activity and its validated steps.
+OR, ONLY when Internet evidence supports the missing handling,
+ADD the required Business Activity and its validated steps.
+```
 
 If a businessActivity references an object that its steps do not
 actually handle:
 
-    REMOVE the unused object from that activity.
+```
+REMOVE the unused object from that activity.
+```
 
 Do NOT invent an Activity merely to satisfy object coverage.
 
@@ -747,7 +900,7 @@ Objects.
 
 Coverage MUST be achieved through factual Internet evidence, not
 artificial completeness.
----
+------------------------
 
 ### 100% COVERAGE GATE
 
@@ -835,3 +988,5 @@ No [End thinking].
 }
 
 /no_think
+
+This preserves your existing prompt and adds only the targeted controls we discussed.

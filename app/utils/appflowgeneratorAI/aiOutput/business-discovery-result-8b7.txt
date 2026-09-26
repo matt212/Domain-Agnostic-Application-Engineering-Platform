@@ -1,12 +1,13 @@
+User:
 ### 100% BUSINESS OBJECT COVERAGE + INTERNET VALIDATION — MANDATORY
 
 ### INPUT
 
 BUSINESS IDEA:
-{{BUSINESS_IDEA}}
+online groceries store
 
 INTERNET SEARCH RESULTS:
-{{SEARCH_RESULTS}}
+
 
 Business Object discovery and Business Activity discovery are tightly connected.
 
@@ -835,3 +836,136 @@ No [End thinking].
 }
 
 /no_think
+
+Assistant:
+{
+"businessIdea": "online groceries store",
+"primaryReferenceBusiness": "Instacart",
+"businessDomain": "online grocery retail",
+"businessObjects": [
+  {
+    "name": "Customer",
+    "description": "A person who purchases groceries from the store."
+  },
+  {
+    "name": "Product",
+    "description": "A grocery item available for purchase."
+  },
+  {
+    "name": "Order",
+    "description": "A request by a customer to purchase specific products."
+  },
+  {
+    "name": "Payment",
+    "description": "A financial transaction to settle the cost of an order."
+  },
+  {
+    "name": "Inventory",
+    "description": "The stock of products available for sale."
+  },
+  {
+    "name": "Delivery",
+    "description": "The process of transporting ordered products to the customer."
+  },
+  {
+    "name": "Return",
+    "description": "A process initiated by a customer to return a product."
+  },
+  {
+    "name": "Refund",
+    "description": "A financial adjustment to reverse a payment for a returned product."
+  },
+  {
+    "name": "Promotion",
+    "description": "A marketing incentive offered to customers for specific purchases."
+  },
+  {
+    "name": "Supplier",
+    "description": "A vendor that provides products to the store."
+  },
+  {
+    "name": "Review",
+    "description": "A customer's feedback on their purchase experience."
+  }
+],
+"businessActivities": [
+  {
+    "name": "Customer Registration",
+    "description": "The process of creating a customer account with the store.",
+    "businessObjects": ["Customer"],
+    "steps": ["Provide personal information", "Verify email address", "Create account"],
+    "alternativePaths": ["Existing customer login"]
+  },
+  {
+    "name": "Product Catalog Management",
+    "description": "The process of maintaining and updating the list of products available for sale.",
+    "businessObjects": ["Product", "Inventory"],
+    "steps": ["Add new products", "Update product details", "Manage inventory levels"],
+    "alternativePaths": []
+  },
+  {
+    "name": "Order Capture",
+    "description": "The process of creating and recording a customer's order.",
+    "businessObjects": ["Order", "Product", "Customer"],
+    "steps": ["Select products", "Review order details", "Submit order"],
+    "alternativePaths": ["Modify order before submission"]
+  },
+  {
+    "name": "Order Validation",
+    "description": "The process of verifying the accuracy and feasibility of an order.",
+    "businessObjects": ["Order", "Inventory", "Payment"],
+    "steps": ["Check inventory availability", "Validate payment method", "Confirm order details"],
+    "alternativePaths": ["Order fails validation and is rejected"]
+  },
+  {
+    "name": "Payment Processing",
+    "description": "The process of handling the financial transaction for an order.",
+    "businessObjects": ["Payment", "Order", "Customer"],
+    "steps": ["Process payment", "Confirm payment success", "Update order status"],
+    "alternativePaths": ["Payment fails and is declined"]
+  },
+  {
+    "name": "Order Fulfillment",
+    "description": "The process of preparing and dispatching an order for delivery.",
+    "businessObjects": ["Order", "Inventory", "Delivery"],
+    "steps": ["Pick and pack order", "Prepare for delivery", "Dispatch to courier"],
+    "alternativePaths": ["Order is canceled before fulfillment"]
+  },
+  {
+    "name": "Delivery Coordination",
+    "description": "The process of arranging and managing the delivery of an order to the customer.",
+    "businessObjects": ["Delivery", "Order", "Customer"],
+    "steps": ["Assign delivery driver", "Track delivery progress", "Confirm delivery completion"],
+    "alternativePaths": ["Delivery attempt fails and is rescheduled"]
+  },
+  {
+    "name": "Return Processing",
+    "description": "The process of handling a customer's return request.",
+    "businessObjects": ["Return", "Order", "Product"],
+    "steps": ["Initiate return request", "Validate return eligibility", "Collect returned product"],
+    "alternativePaths": ["Return is rejected or not accepted"]
+  },
+  {
+    "name": "Refund Processing",
+    "description": "The process of issuing a refund for a returned product.",
+    "businessObjects": ["Refund", "Payment", "Order"],
+    "steps": ["Process refund request", "Reverse payment", "Update order status"],
+    "alternativePaths": ["Refund is denied or delayed"]
+  },
+  {
+    "name": "Promotion Management",
+    "description": "The process of creating, tracking, and applying promotional offers.",
+    "businessObjects": ["Promotion", "Order", "Customer"],
+    "steps": ["Create promotional campaign", "Apply promotion to order", "Track redemption"],
+    "alternativePaths": ["Promotion is expired or not applicable"]
+  },
+  {
+    "name": "Customer Support",
+    "description": "The process of assisting customers with inquiries or issues.",
+    "businessObjects": ["Customer", "Order", "Product"],
+    "steps": ["Receive customer inquiry", "Resolve issue", "Provide support documentation"],
+    "alternativePaths": ["Issue is escalated to higher support tier"]
+  }
+]
+}
+
