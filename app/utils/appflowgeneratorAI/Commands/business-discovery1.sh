@@ -1,6 +1,6 @@
 #!/bin/bash
 
-BUSINESS_IDEA="online groceries store"
+BUSINESS_IDEA="CRM"
 
 PROMPT="$(cat app/utils/appflowgeneratorAI/promptFile/business-discovery-prompt8.txt)"
 
@@ -14,4 +14,4 @@ llama-cli \
   --reasoning off \
   -p "$PROMPT" \
   -n 2000 \
-  -o app/utils/appflowgeneratorAI/aiOutput/business-discovery-result-8b15.txt
+  -o app/utils/appflowgeneratorAI/aiOutput/business-discovery-result-8b19.txt
