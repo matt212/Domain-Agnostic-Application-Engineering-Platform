@@ -1,0 +1,677 @@
+User:
+You are a DOMAIN-AGNOSTIC BUSINESS DISCOVERY ENGINE.
+
+Your purpose is to transform a BUSINESS IDEA and supplied INTERNET RESEARCH EVIDENCE into a complete, evidence-supported model of the real-world business operation.
+
+The business domain is UNKNOWN until discovered from the evidence.
+
+The same discovery method must work for ANY business domain, including but not limited to:
+
+commerce
+banking
+insurance
+healthcare
+manufacturing
+logistics
+transportation
+education
+hospitality
+travel
+real estate
+professional services
+software/SaaS
+telecommunications
+media
+government services
+energy
+automotive
+agriculture
+or any other domain.
+
+Do NOT assume the business belongs to any particular industry.
+
+Do NOT impose a predefined industry workflow.
+
+============================================================
+INPUT
+=====
+
+BUSINESS IDEA:
+online groceries store
+
+INTERNET RESEARCH EVIDENCE:
+
+
+============================================================
+PRIMARY OBJECTIVE
+=================
+
+Discover the most complete REAL-WORLD BUSINESS MODEL that is
+supported by the supplied evidence.
+
+The objective is:
+
+MAXIMUM EVIDENCE-SUPPORTED BUSINESS COVERAGE
++
+ZERO UNSUPPORTED INVENTION
+
+The business model must be specific to the discovered business
+domain.
+
+Do not generate a generic industry template.
+
+Do not force the business into a predefined workflow.
+
+Do not fill missing information using general industry knowledge.
+
+There is NO minimum number of business objects.
+
+There is NO minimum number of activities.
+
+There is NO required lifecycle shape.
+
+There is NO required actor structure.
+
+There is NO required number of stages.
+
+Include only what the evidence supports.
+
+============================================================
+DOMAIN DISCOVERY
+================
+
+First determine the actual operating domain from the supplied
+evidence.
+
+The domain must describe HOW THE BUSINESS OPERATES, not merely the
+industry name.
+
+For example:
+
+Weak:
+"Retail"
+
+Better:
+"Online grocery marketplace"
+
+Weak:
+"Healthcare"
+
+Better:
+"Outpatient healthcare service provider"
+
+Weak:
+"Banking"
+
+Better:
+"Retail banking and financial services"
+
+Use the most specific operating model supported by evidence.
+
+Do not invent specificity that the evidence does not support.
+
+============================================================
+PRIMARY REFERENCE BUSINESS
+==========================
+
+Identify the specific real-world business that most closely
+represents the BUSINESS IDEA and supplied evidence.
+
+Prefer a specific business/company/organization when evidence
+supports one.
+
+Do not select a reference business merely because it is famous.
+
+The reference business is an evidence source, not a template.
+
+Do not automatically copy every capability of the reference business.
+
+Only include capabilities that are:
+
+1. supported by supplied evidence, and
+2. relevant to the BUSINESS IDEA.
+
+============================================================
+HARD EVIDENCE GATE
+==================
+
+Every discovered element must pass an evidence gate.
+
+BUSINESS OBJECT:
+
+Include only when the supplied evidence explicitly identifies
+the entity or clearly demonstrates that the business materially
+handles that entity.
+
+BUSINESS ACTIVITY:
+
+Include only when the supplied evidence explicitly describes
+the business operation or clearly demonstrates that the operation
+occurs.
+
+ALTERNATIVE PATH:
+
+Include only when the supplied evidence explicitly describes
+a materially different business-process variation.
+
+If evidence is insufficient:
+
+OMIT THE ELEMENT.
+
+Never invent an element merely because it is common in the domain.
+
+Never use:
+
+"Most businesses have this."
+
+"This is normally required."
+
+"This industry usually does this."
+
+"This would probably happen."
+
+as justification.
+
+============================================================
+BUSINESS OBJECT DISCOVERY
+=========================
+
+Discover the REAL-WORLD ENTITIES that materially participate in
+the discovered business operation.
+
+The object model must emerge from the evidence.
+
+Do NOT use a predefined object list.
+
+Do NOT assume objects from another industry.
+
+A business object may represent any meaningful real-world entity
+handled by the business, such as a:
+
+person
+organization
+customer
+employee
+supplier
+asset
+property
+product
+service
+case
+claim
+contract
+application
+account
+transaction
+shipment
+appointment
+reservation
+work order
+project
+document
+policy
+license
+subscription
+request
+or any other domain-specific entity.
+
+These are examples of possible categories only.
+
+Do not include an example unless the evidence supports it.
+
+============================================================
+OBJECT QUALITY
+==============
+
+Business objects must represent meaningful real-world entities.
+
+Do NOT create objects for:
+
+screens
+pages
+buttons
+forms
+APIs
+databases
+tables
+software components
+technical services
+fields
+attributes
+validation rules
+notifications
+status values
+simple decisions
+UI controls
+
+Do not split one real-world entity into artificial objects.
+
+Do not create duplicate or synonymous objects.
+
+If multiple terms represent the same real-world entity, consolidate
+them into one object.
+
+Use the terminology supported by the discovered domain.
+
+============================================================
+BUSINESS ACTIVITY DISCOVERY
+===========================
+
+Discover materially distinct REAL-WORLD BUSINESS OPERATIONS.
+
+Activities must emerge from the evidence and the discovered
+operating model.
+
+Do NOT use a predefined activity list.
+
+An activity represents a meaningful business operation performed
+to create, modify, process, deliver, manage, resolve, or complete
+a business outcome.
+
+The activity model must be appropriate to the discovered domain.
+
+============================================================
+ACTIVITY MATERIALITY
+====================
+
+Do NOT create separate activities merely for:
+
+validation
+calculation
+authorization
+notification
+confirmation
+status changes
+simple decisions
+UI interaction
+screen navigation
+field entry
+technical processing
+
+When these occur as part of a genuine business operation, represent
+them as steps or alternative handling when supported by evidence.
+
+Create a separate activity only when the evidence demonstrates
+a distinct business purpose and materially distinct lifecycle.
+
+============================================================
+ACTIVITY CONSOLIDATION
+======================
+
+Before creating an activity, determine whether it is actually:
+
+1. a step inside another activity,
+2. an exception within another activity,
+3. a supporting operation,
+4. a validation,
+5. a calculation,
+6. a notification,
+7. a status transition,
+8. or a genuinely independent business operation.
+
+Only the final category should normally become a separate activity.
+
+Prefer coherent business processes over artificial fragmentation.
+
+============================================================
+DOMAIN-SPECIFIC LIFECYCLE DISCOVERY
+===================================
+
+Do NOT impose a predefined lifecycle.
+
+Instead discover the lifecycle from the evidence.
+
+Determine, where applicable:
+
+How does the business process begin?
+
+What business object initiates it?
+
+What activities occur?
+
+What transformations or business operations occur?
+
+What constitutes progress?
+
+What constitutes completion?
+
+What happens when the normal process cannot continue?
+
+What exceptions or alternative paths exist?
+
+What happens after completion?
+
+The lifecycle may differ completely between domains.
+
+For example, one domain may involve:
+
+Request
+→ Assessment
+→ Approval
+→ Fulfillment
+→ Completion
+
+Another may involve:
+
+Reservation
+→ Confirmation
+→ Service Delivery
+→ Completion
+
+Another may involve:
+
+Claim
+→ Investigation
+→ Assessment
+→ Decision
+→ Settlement
+
+These are illustrative patterns only.
+
+Do NOT copy them unless supported by evidence.
+
+============================================================
+LIFECYCLE COMPLETENESS
+======================
+
+For the discovered domain, identify all materially important
+evidence-supported lifecycle operations.
+
+Do not stop after finding the first obvious workflow.
+
+Check for evidence concerning:
+
+Initiation
+Discovery
+Intake
+Qualification
+Selection
+Preparation
+Transaction
+Processing
+Allocation
+Fulfillment
+Service delivery
+Completion
+Cancellation
+Modification
+Exception handling
+Returns
+Refunds
+Resolution
+Support
+Post-completion operations
+
+These are generic discovery categories, NOT mandatory capabilities.
+
+Only include categories supported by evidence.
+
+The actual lifecycle may contain different concepts.
+
+============================================================
+ALTERNATIVE PATH DISCOVERY
+==========================
+
+Identify materially different business-process variations.
+
+An alternative path must change how the business operation proceeds.
+
+Examples of generic variation types include:
+
+failure
+rejection
+unavailability
+cancellation
+substitution
+rerouting
+escalation
+manual handling
+alternative fulfillment
+alternative service delivery
+exception resolution
+
+These are categories only.
+
+Discover the actual domain-specific alternatives from evidence.
+
+Do NOT create alternatives for:
+
+dropdown selections
+field values
+UI choices
+ordinary navigation
+minor validation errors
+notifications
+simple status changes
+
+Do not create duplicate alternatives.
+
+============================================================
+BUSINESS OBJECT → ACTIVITY MAPPING
+==================================
+
+Every activity must reference the business objects it materially
+handles.
+
+Do not reference an object merely because it is indirectly related.
+
+Every business object must be used by at least one activity.
+
+Every activity must use at least one business object.
+
+============================================================
+ACTIVITY STEPS
+==============
+
+Each activity must contain 2–4 concise BUSINESS OPERATIONS.
+
+Steps must describe real-world business work.
+
+Do not describe:
+
+screens
+buttons
+UI navigation
+database operations
+API calls
+technical implementation
+software behavior
+
+Steps should normally contain 3–8 words.
+
+============================================================
+EVIDENCE CONFLICTS
+==================
+
+When supplied evidence conflicts:
+
+Prefer stronger and more authoritative evidence.
+
+Do not merge contradictory claims.
+
+Do not invent a compromise capability.
+
+============================================================
+EVIDENCE GAPS
+=============
+
+Missing evidence is NOT permission to infer.
+
+If an important capability is not supported:
+
+OMIT IT.
+
+Do not manufacture completeness.
+
+A smaller evidence-supported model is preferable to a larger
+invented model.
+
+============================================================
+REFERENCE BUSINESS BOUNDARY
+===========================
+
+Do not reproduce the entire business model of the reference
+organization.
+
+Discover only the capabilities relevant to:
+
+BUSINESS IDEA:
+online groceries store
+
+and supported by the supplied evidence.
+
+============================================================
+FINAL VALIDATION
+================
+
+Before producing the JSON, verify:
+
+1. The domain was discovered from evidence.
+2. No industry-specific assumptions were imposed.
+3. The reference business is evidence-supported.
+4. The operating model is evidence-supported.
+5. Every business object passes the evidence gate.
+6. Every business activity passes the evidence gate.
+7. Every alternative path passes the evidence gate.
+8. No technical/UI objects exist.
+9. No artificial activities exist.
+10. Every object is used by an activity.
+11. Every activity uses at least one object.
+12. Every activity has 2–4 business steps.
+13. Every step belongs to its activity.
+14. No duplicate objects exist.
+15. No duplicate activities exist.
+16. No duplicate alternatives exist.
+17. Important evidence-supported lifecycle operations are included.
+18. Unsupported capabilities are excluded.
+19. No capability was added because it is common in the industry.
+20. Output is valid JSON.
+
+============================================================
+OUTPUT FORMAT
+=============
+
+Return ONLY:
+
+{
+"businessIdea": "",
+"primaryReferenceBusiness": "",
+"businessDomain": "",
+"businessObjects": [
+{
+"name": "",
+"description": ""
+}
+],
+"businessActivities": [
+{
+"name": "",
+"description": "",
+"businessObjects": [],
+"steps": [],
+"alternativePaths": []
+}
+]
+}
+
+============================================================
+STRICT OUTPUT
+=============
+
+The response MUST begin with {
+
+The response MUST end with }
+
+Return ONLY valid JSON.
+
+No Markdown.
+
+No commentary.
+
+No explanation.
+
+No source list.
+
+No evidence section.
+
+No additional fields.
+
+No reasoning text.
+
+No <think> content.
+
+/no_think
+
+Assistant:
+{
+"businessIdea": "online groceries store",
+"primaryReferenceBusiness": "Amazon Fresh",
+"businessDomain": "Online grocery marketplace",
+"businessObjects": [
+{
+"name": "Customer",
+"description": "Individual or household that places orders for groceries through the online platform."
+},
+{
+"name": "Product",
+"description": "Grocery items available for purchase, including fresh produce, packaged goods, and household supplies."
+},
+{
+"name": "Order",
+"description": "A request by a customer to purchase specific products, including quantities and delivery preferences."
+},
+{
+"name": "Supplier",
+"description": "Third-party vendors or manufacturers that provide the products available on the platform."
+},
+{
+"name": "Delivery Service",
+"description": "Logistics provider responsible for transporting orders to customers' locations."
+},
+{
+"name": "Payment Gateway",
+"description": "System that processes and verifies customer payments for completed orders."
+},
+{
+"name": "Inventory Management System",
+"description": "System used to track stock levels, manage product availability, and ensure timely restocking."
+}
+],
+"businessActivities": [
+{
+"name": "Customer Order Placement",
+"description": "Customer initiates the process of purchasing groceries by selecting products and submitting an order.",
+"businessObjects": ["Customer", "Product", "Order"],
+"steps": ["Customer selects products", "Customer adds items to cart", "Customer submits order"],
+"alternativePaths": ["Customer abandons cart", "Customer modifies order"]
+},
+{
+"name": "Order Verification and Payment Processing",
+"description": "System verifies order details and processes customer payment.",
+"businessObjects": ["Order", "Payment Gateway", "Customer"],
+"steps": ["System checks order validity", "Payment gateway processes transaction", "System confirms payment"],
+"alternativePaths": ["Payment fails", "Payment is declined"]
+},
+{
+"name": "Inventory and Product Fulfillment",
+"description": "System ensures products are available and prepares them for delivery.",
+"businessObjects": ["Product", "Inventory Management System", "Supplier"],
+"steps": ["System checks inventory levels", "System confirms product availability", "System initiates product retrieval"],
+"alternativePaths": ["Product is out of stock", "Supplier delays delivery"]
+},
+{
+"name": "Order Delivery",
+"description": "Logistics provider delivers the order to the customer's location.",
+"businessObjects": ["Delivery Service", "Order", "Customer"],
+"steps": ["Delivery service picks up order", "Delivery service transports order", "Delivery service delivers order"],
+"alternativePaths": ["Delivery is delayed", "Customer refuses delivery"]
+},
+{
+"name": "Order Completion and Feedback",
+"description": "System finalizes the order and collects customer feedback.",
+"businessObjects": ["Order", "Customer", "Delivery Service"],
+"steps": ["System marks order as complete", "System sends delivery confirmation", "Customer provides feedback"],
+"alternativePaths": ["Customer reports issue", "Order is returned"]
+}
+]
+

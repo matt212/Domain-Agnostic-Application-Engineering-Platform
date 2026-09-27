@@ -1,0 +1,1156 @@
+User:
+Absolutely. I have kept your prompt **unchanged everywhere else** and added only the three requested sections:
+
+1. `EVIDENCE-FIRST CANDIDATE ELIMINATION`
+2. `BUSINESS ACTIVITY MATERIALITY TEST`
+3. `ALTERNATIVE PATH MATERIALITY TEST`
+
+I placed each section at the appropriate point in the existing prompt.
+
+### 100% BUSINESS OBJECT COVERAGE + INTERNET VALIDATION — MANDATORY
+
+### INPUT
+
+BUSINESS IDEA:
+online groceries store
+
+INTERNET SEARCH RESULTS:
+
+
+Business Object discovery and Business Activity discovery are tightly connected.
+
+The model MUST identify ALL important real-world Business Objects and ALL major real-world Business Activities involved in the discovered business based on:
+
+* BUSINESS IDEA
+* BUSINESS DOMAIN
+* PRIMARY REFERENCE BUSINESS
+* INTERNET SEARCH RESULTS
+
+The model MUST distinguish between:
+
+* Business Objects
+* Business Activities
+* Business Rules
+* Business Decisions
+* Business Attributes
+* User Interface elements
+* Technical/software concepts
+* Customer interaction actions
+
+Do NOT mix these categories.
+
+---
+
+### INTERNET VALIDATION IS MANDATORY
+
+There must be NO reliance on the model's internal/general knowledge when determining Business Objects, Business Activities, lifecycles, steps, or alternative paths.
+
+The supplied INTERNET SEARCH RESULTS are the source of truth.
+
+The model does NOT have independent Internet browsing capability in this prompt.
+
+For EVERY discovered Business Object, Business Activity, lifecycle operation, Activity Step, and Alternative Path:
+
+1. Validate the item against the supplied INTERNET SEARCH RESULTS.
+2. Verify that the item actually exists in the operating model of the PRIMARY REFERENCE BUSINESS or is directly supported by reliable evidence about the business/domain.
+3. Use multiple relevant Internet sources where available.
+4. Do not treat a generic industry assumption as evidence.
+5. Do not infer that a capability exists simply because it is common in similar businesses.
+6. Do not invent, extrapolate, rename, generalize, or fill gaps from model knowledge.
+7. If Internet evidence does not support an item, DO NOT include it.
+8. If evidence is conflicting, use the most authoritative and directly relevant evidence available and do not invent a resolution.
+9. If a Business Object or Activity is identified during discovery, it MUST be supported by the supplied Internet evidence before being included.
+10. The calling application MUST perform a separate fresh Internet search after the initial discovery and supply the resulting fresh Internet evidence to the model for final validation.
+11. The model MUST validate the final model against that supplied fresh Internet evidence.
+12. The model MUST NOT pretend that it independently browsed the Internet.
+
+The final output MUST contain only Business Objects, Activities, lifecycle operations, steps, and alternatives that have adequate Internet evidence.
+
+There is NO ROOM for hallucinated Business Objects, Activities, lifecycle stages, steps, or capabilities.
+
+---
+
+### PRIMARY REFERENCE BUSINESS AND BUSINESS DOMAIN DETERMINATION
+
+Determine the PRIMARY REFERENCE BUSINESS and BUSINESS DOMAIN before
+discovering Business Objects and Business Activities.
+
+PRIMARY REFERENCE BUSINESS:
+
+Select ONE real-world established business that is the closest
+substantive operational reference for the BUSINESS IDEA.
+
+The selection MUST be based on the supplied INTERNET SEARCH RESULTS.
+
+Do NOT select a business merely because:
+
+* it has a similar name
+* it is well known
+* it operates in a broadly related industry
+* it has a similar website or application
+* it is commonly associated with the business idea
+
+Prefer the business whose actual operating model, products/services,
+customer journey, fulfillment model, transactions, and business
+activities most closely correspond to the BUSINESS IDEA.
+
+The PRIMARY REFERENCE BUSINESS MUST be directly supported by the
+supplied Internet evidence.
+
+Select exactly ONE primary reference business.
+
+BUSINESS DOMAIN:
+
+Determine ONE concise primary business domain that accurately
+describes the operating model of the BUSINESS IDEA and the selected
+PRIMARY REFERENCE BUSINESS.
+
+The domain MUST be supported by the supplied INTERNET SEARCH RESULTS.
+
+Do NOT create a comma-separated list of loosely related industries,
+capabilities, or channels merely to increase coverage.
+
+Do NOT broaden the domain with adjacent business models unless the
+Internet evidence shows that they are materially part of the same
+operating model.
+
+For example, distinguish between:
+
+* online grocery retail
+* restaurant food delivery
+* general e-commerce marketplace
+* grocery marketplace
+* wholesale grocery distribution
+
+Do not treat these as interchangeable merely because they involve
+online ordering or delivery.
+
+The BUSINESS DOMAIN should describe the core business model, not every
+capability, channel, product category, or fulfillment method.
+
+If the evidence supports a more precise domain, use the more precise
+domain.
+
+Both PRIMARY REFERENCE BUSINESS and BUSINESS DOMAIN MUST pass the same
+Internet validation standard as Business Objects and Business
+Activities.
+
+### BUSINESS DOMAIN AS DISCOVERY CONTEXT
+
+BUSINESS DOMAIN is a discovery boundary and contextual guide for
+Business Object and Business Activity discovery.
+
+Use BUSINESS DOMAIN to understand the type of operating model being
+discovered and to distinguish the business from adjacent or unrelated
+business models.
+
+BUSINESS DOMAIN MAY influence:
+
+* which Business Objects are relevant candidates
+* which Business Activities are relevant candidates
+* how Business Object lifecycles are interpreted
+* how Business Activities are grouped and understood
+* which adjacent business capabilities should be considered
+
+However, BUSINESS DOMAIN MUST NOT be treated as evidence by itself.
+
+INTERNET SEARCH RESULTS remain the authoritative evidence for deciding
+whether a Business Object, Business Activity, lifecycle operation,
+step, or alternative path actually exists.
+
+Do NOT create a Business Object or Business Activity merely because it
+would normally belong to the stated BUSINESS DOMAIN.
+
+Do NOT assume that every capability commonly associated with the
+BUSINESS DOMAIN exists in the specific business being discovered.
+
+Evidence takes priority over domain expectations.
+
+The model MUST use:
+
+BUSINESS IDEA
++
+PRIMARY REFERENCE BUSINESS
++
+BUSINESS DOMAIN
+as contextual guidance,
+
+while using:
+
+INTERNET SEARCH RESULTS
+as factual validation evidence.
+
+### BUSINESS OBJECT DEFINITION
+
+A Business Object is a meaningful real-world business entity, thing, transaction, resource, or record that the business materially creates, receives, manages, processes, sells, purchases, fulfills, delivers, tracks, owns, exchanges, returns, resolves, or otherwise operates on.
+
+Examples may include, ONLY WHEN SUPPORTED BY INTERNET EVIDENCE:
+
+* Customer
+* Product
+* Order
+* Payment
+* Inventory
+* Shipment
+* Delivery
+* Return
+* Refund
+* Promotion
+* Coupon
+* Supplier
+* Review
+
+These are examples only.
+
+Do NOT automatically include them merely because they are common in the industry.
+
+### BUSINESS OBJECT EXCLUSION RULES
+
+The following MUST NOT be treated as Business Objects unless the Internet evidence clearly demonstrates that they are independent real-world business entities rather than merely attributes or technical concepts:
+
+1. Technical/software objects
+2. Database tables
+3. APIs
+4. UI elements
+5. Screens
+6. Pages
+7. Forms
+8. Buttons
+9. Search interfaces
+10. Dashboards
+11. System components
+12. Software features
+13. Generic system capabilities
+14. Business processes
+15. Business activities
+16. Business rules
+17. Business decisions
+18. Individual data fields or attributes
+
+Do NOT create Business Objects such as:
+
+* User Interface
+* Search Screen
+* Checkout Page
+* Database
+* API
+* Dashboard
+* Login Screen
+* Notification System
+
+### ATTRIBUTE VS BUSINESS OBJECT RULE
+
+Do NOT promote a data attribute into a Business Object merely because it is important information.
+
+Examples:
+
+* Shipping Address may be an attribute of Customer, Order, or Delivery.
+* Customer Email may be an attribute of Customer.
+* Phone Number may be an attribute of Customer.
+* Order Date may be an attribute of Order.
+* Product Price may be an attribute of Product.
+* Payment Method may be an attribute of Payment.
+
+Only create a separate Business Object when Internet evidence supports that it has an independent business lifecycle or is independently created, managed, processed, tracked, exchanged, or acted upon by the business.
+
+The objective is a BUSINESS MODEL, not a database schema.
+
+---
+
+### BUSINESS OBJECT MATERIALITY TEST
+
+A candidate Business Object MUST represent a meaningful real-world
+business entity, transaction, resource, thing, or record that the
+business materially operates on.
+
+Before retaining a candidate Business Object, internally verify:
+
+1. It represents a meaningful real-world business entity, transaction,
+   resource, thing, or record.
+2. The business materially creates, receives, manages, processes,
+   sells, purchases, fulfills, delivers, tracks, owns, exchanges,
+   returns, resolves, or otherwise operates on it.
+3. It has meaningful business handling or lifecycle.
+4. The supplied Internet evidence supports its existence in the
+   discovered business model.
+
+Do NOT create a Business Object merely because the concept appears as:
+
+* information contained in a step
+* a validation target
+* a status
+* a decision
+* a business rule
+* a payment method
+* a delivery address
+* a UI concept
+* a system record
+* a temporary workflow state
+* an implementation concept
+
+If a candidate fails the materiality test, DO NOT include it.
+
+Do NOT create a Business Object merely to satisfy coverage.
+
+Evidence takes priority over completeness.
+
+---
+
+### BUSINESS CAPABILITY VS BUSINESS OBJECT RULE
+
+A business capability or service is NOT automatically a Business Object.
+
+For example:
+
+* Customer Support
+* Delivery Service
+* Subscription Service
+* Loyalty Program
+* Search
+* Recommendation
+* Marketing
+
+should not automatically become Business Objects.
+
+If such a concept represents something the business materially manages as an independent entity, include it only when Internet evidence supports that interpretation.
+
+Otherwise represent it as a Business Activity, business capability, or business rule where appropriate.
+
+---
+
+### BUSINESS OBJECT DISCOVERY
+
+First identify ALL important real-world Business Objects involved in the discovered business.
+
+Do not stop after identifying only the obvious objects.
+
+Do not automatically include conventional industry objects merely because they are common in similar businesses.
+
+For every candidate Business Object:
+
+* Validate it against Internet evidence.
+* Confirm that it is genuinely relevant to the PRIMARY REFERENCE BUSINESS or clearly supported by the discovered business model.
+* Confirm that it represents an independent real-world business entity rather than an attribute, UI element, technical concept, activity, capability, or rule.
+* Remove it if adequate evidence cannot be found.
+* Do not create technical, software, database, API, UI, or implementation objects.
+* Do not create objects merely to satisfy the 100% coverage requirement.
+
+---
+
+### EVIDENCE-FIRST CANDIDATE ELIMINATION
+
+The model MUST NOT begin with a conventional list of Business Objects or Business Activities normally associated with the BUSINESS DOMAIN and then attempt to justify those items.
+
+For every candidate Business Object and Business Activity, apply this sequence:
+
+1. Identify the candidate from the supplied Internet evidence.
+2. Identify the specific evidence supporting the candidate.
+3. Determine whether the candidate represents a materially distinct real-world business entity or operation.
+4. Determine whether the candidate is actually handled by the discovered operating model.
+5. Determine whether its lifecycle or business handling is represented.
+6. Retain the candidate ONLY if the above conditions are satisfied.
+
+If a candidate is suggested primarily by general knowledge of the industry rather than by the supplied Internet evidence:
+
+```
+DO NOT INCLUDE IT.
+```
+
+The model MUST prefer:
+
+```
+evidence-supported smaller model
+```
+
+over:
+
+```
+industry-complete inferred model.
+```
+
+Do NOT use the following reasoning:
+
+```
+"This is a business in this domain, therefore it probably has X."
+```
+
+Instead use:
+
+```
+"The supplied Internet evidence demonstrates X, therefore X may
+be included."
+```
+
+A candidate MUST NOT survive merely because it is plausible,
+commercially common, operationally useful, or normally expected in the
+BUSINESS DOMAIN.
+
+Plausibility is NOT evidence.
+
+Industry convention is NOT evidence.
+
+Model knowledge is NOT evidence.
+
+Only supplied Internet evidence may justify inclusion.
+
+---
+
+### BUSINESS OBJECT LIFECYCLE
+
+For EVERY validated Business Object, determine its complete relevant lifecycle across the business.
+
+Internally determine:
+
+1. Where does this object originate, enter, or get created?
+2. Which business activity first handles it?
+3. How is it processed, managed, changed, selected, approved, fulfilled, delivered, used, cancelled, returned, resolved, completed, or otherwise handled?
+4. Which subsequent activities handle it?
+5. What happens to it at the end of its relevant lifecycle?
+6. What business activities depend on this object?
+7. Are there important evidence-supported exceptions or alternative paths affecting this object?
+8. Is any major business activity missing because this object was overlooked?
+
+Every lifecycle element identified above MUST be supported by Internet evidence.
+
+Do not invent lifecycle stages merely to make the lifecycle appear complete.
+
+A lifecycle should represent meaningful BUSINESS handling of the object, not merely changes to individual data fields.
+
+---
+
+### BUSINESS ACTIVITY DEFINITION
+
+A Business Activity is a meaningful real-world business operation performed by the business, its employees, partners, suppliers, customers, or other business participants to create, receive, manage, process, fulfill, deliver, change, resolve, complete, cancel, return, or otherwise handle Business Objects.
+
+Business Activities describe HOW THE BUSINESS OPERATES.
+
+Examples may include, ONLY WHEN SUPPORTED BY INTERNET EVIDENCE:
+
+* Product Catalog Management
+* Inventory Management
+* Order Capture
+* Order Validation
+* Payment Processing
+* Order Fulfillment
+* Delivery Coordination
+* Return Processing
+* Refund Processing
+* Customer Support
+* Promotion Management
+
+These are examples only.
+
+Do NOT automatically include them merely because they are common industry practices.
+
+---
+
+### BUSINESS ACTIVITY MATERIALITY TEST
+
+Before retaining any Business Activity, internally verify:
+
+1. The activity represents a materially distinct real-world business
+   operation.
+2. The activity has a clear business purpose.
+3. The activity materially handles one or more validated Business
+   Objects.
+4. At least one Activity Step explicitly handles each Business Object
+   referenced by the activity.
+5. The activity is supported by supplied Internet evidence.
+6. The activity is not merely a customer interaction, UI action,
+   validation, decision, rule, notification, status change, or
+   technical operation.
+
+If an Activity references a Business Object that its steps do not
+actually handle:
+
+```
+REMOVE that Business Object from the Activity.
+```
+
+If an Activity contains no materially distinct business operation:
+
+```
+REMOVE the Activity.
+```
+
+If an Activity exists only because the model believes that businesses
+in this domain normally perform it:
+
+```
+REMOVE the Activity unless Internet evidence supports it.
+```
+
+Do NOT create an Activity merely because it provides a convenient
+place to attach an otherwise orphan Business Object.
+
+---
+
+### DO NOT SPLIT ACTIVITIES ARTIFICIALLY
+
+Do NOT create a separate Business Activity merely because a set of
+business checks, validations, decisions, or system operations can be
+given a process-like name.
+
+A Business Activity MUST represent a materially distinct real-world
+business operation with its own business purpose and meaningful
+operational handling.
+
+Do NOT create standalone Business Activities merely for:
+
+* validation
+* verification
+* eligibility checking
+* authorization
+* calculation
+* status updates
+* confirmation
+* notification
+* tracking
+
+unless the supplied Internet evidence clearly demonstrates that the
+operation is independently managed as a distinct business process.
+
+When such operations are part of another business activity, represent
+them as:
+
+* Activity Steps
+* Business Rules
+* Business Decisions
+* Controls
+* Alternative Paths
+
+as appropriate.
+
+For example:
+
+"Order Validation" MUST NOT automatically become a separate Business
+Activity merely because the business checks inventory, customer
+information, payment, or order details.
+
+Those checks may belong within Order Capture, Payment Processing,
+Fulfillment, or another evidence-supported Business Activity.
+
+Do NOT split one real-world business operation into multiple artificial
+Activities merely to increase Business Object or lifecycle coverage.
+
+Do NOT merge genuinely distinct business operations merely to reduce
+the number of Activities.
+
+The correct granularity MUST be determined by the supplied Internet
+evidence and the actual operating model of the business.
+
+---
+
+### BUSINESS ACTIVITY VS USER INTERACTION RULE
+
+Do NOT confuse a customer interaction or UI action with a complete Business Activity.
+
+Examples:
+
+* Search Products
+* Click Product
+* Add to Cart
+* View Order
+* Open Checkout
+* Click Apply Coupon
+* View Tracking Page
+
+are normally customer/application interactions, not complete business activities.
+
+Where appropriate, incorporate such actions into the steps of a larger evidence-supported Business Activity.
+
+For example:
+
+Customer selecting products may be a step within an evidence-supported Order Capture or Product Selection activity.
+
+Do NOT create activities merely because the application has a screen, button, page, or user interaction for that purpose.
+
+---
+
+### BUSINESS ACTIVITY SCOPE
+
+After identifying the validated Business Objects, derive ALL major real-world Business Activities required to handle those objects throughout their relevant lifecycle.
+
+Activities MUST be based on Internet evidence.
+
+Each Activity must explain:
+
+* what Business Object(s) it handles
+* what happens to those objects
+* who handles them where evidence supports this
+* how the objects move, change, progress, or are transformed
+* what happens next
+* how the activity completes
+* relevant evidence-supported exceptions or alternative paths
+
+Generate the complete set of major Business Activities in ONE response.
+
+Maintain logical end-to-end business order.
+
+The activities should describe the OPERATING MODEL of the business, not merely the features of its website or application.
+
+Do not create activities merely because they are common industry practices.
+
+Do not create activities merely to satisfy object coverage.
+
+---
+
+### NO GENERIC CAPABILITY INFERENCE
+
+The model MUST NOT assume that a business provides a capability merely because similar businesses commonly provide it.
+
+For example, do NOT automatically add:
+
+* Subscription Management
+* Loyalty Management
+* Marketplace Management
+* Third-Party Seller Management
+* Warehouse Management
+* Own Fleet Management
+* Pickup Operations
+* Wholesale Operations
+* International Shipping
+* Fraud Management
+* Personalized Recommendations
+
+unless the supplied Internet evidence supports the capability for the PRIMARY REFERENCE BUSINESS or clearly supports it as part of the discovered business model.
+
+The same rule applies to Business Objects.
+
+Evidence takes priority over completeness.
+
+---
+
+### OBJECT-TO-ACTIVITY COVERAGE RULE
+
+Before producing the final JSON, internally construct an object-to-activity coverage map:
+
+Business Object
+→ Activity where introduced/created/received
+→ Activity where processed/managed
+→ Activity where moved/transformed/fulfilled
+→ Activity where delivered/completed
+→ Activity where cancelled/returned/resolved, if applicable
+→ Final relevant lifecycle activity, if applicable
+
+Every mapping in this coverage chain MUST be supported by Internet evidence.
+
+Then validate:
+
+* EVERY important Business Object appears in at least one Business Activity.
+* EVERY important Business Object is actually handled within the steps of those Activities.
+* EVERY important Business Object has its relevant lifecycle represented.
+* EVERY lifecycle operation included in the model is Internet-validated.
+* EVERY Business Activity references at least one Business Object.
+* EVERY Activity Step is Internet-validated.
+* EVERY Alternative Path is Internet-validated.
+* NO Business Object exists only as a name without being handled by an Activity.
+* NO important Activity is omitted because a Business Object was overlooked.
+* NO Activity exists only to artificially satisfy object coverage.
+* NO duplicate or overlapping Business Objects are created.
+* NO generic industry Business Objects are included without evidence.
+* NO technical/software/database objects are included.
+* NO UI elements are included as Business Objects.
+* NO individual data attributes are incorrectly promoted to Business Objects.
+* NO generic business capability is incorrectly promoted to a Business Object.
+* NO unsupported lifecycle stages are invented.
+* NO unsupported Activities are invented.
+* NO unsupported steps are invented.
+* NO unsupported alternative paths are invented.
+
+---
+
+### CLOSED-LOOP DISCOVERY
+
+Business Object discovery and Business Activity discovery MUST operate as a closed loop.
+
+If a validated Business Object requires an Activity that has not yet been identified:
+
+→ ADD the Activity
+→ validate it against the supplied Internet evidence
+→ add its validated steps
+→ associate the relevant Business Object(s)
+
+If a validated Activity reveals an important Business Object that was not previously identified:
+
+→ ADD the Business Object
+→ validate it against the supplied Internet evidence
+→ determine its relevant lifecycle
+→ update the Activity-to-Object relationships
+→ determine whether additional validated Activities are required
+
+Continue this process until no important evidence-supported Business Object or Business Activity remains uncovered.
+
+Do not add an object or activity merely because it would make the model appear more complete.
+
+---
+
+### ALTERNATIVE PATH RULE
+
+An Alternative Path MUST represent a genuine evidence-supported variation in the business process.
+
+Examples of valid alternative paths may include:
+
+* an order being cancelled before fulfillment
+* a payment failing
+* a delivery attempt failing
+* a product being unavailable
+* a return being rejected
+* a customer choosing an alternative fulfillment method
+
+ONLY include such alternatives when supported by Internet evidence.
+
+Do NOT classify the following as Alternative Paths:
+
+* ordinary user choices
+* UI options
+* generic business rules
+* field values
+* business constraints
+* marketing conditions
+* simple variations in data entry
+
+For example:
+
+"Promotion is time-limited"
+
+is a business rule/condition, not an Alternative Path.
+
+"Customer browses categories"
+
+is normally a user interaction, not an Alternative Path.
+
+"Customer uses saved payment information"
+
+is normally an interaction variation, not necessarily a business-process Alternative Path.
+
+---
+
+### ALTERNATIVE PATH MATERIALITY TEST
+
+Before including an Alternative Path, internally verify that it changes the real-world business process or lifecycle of a Business Object.
+
+Do NOT include an Alternative Path merely because:
+
+* a customer can choose something different
+* a user can perform a different UI action
+* a validation fails
+* a business rule evaluates differently
+* a field has a different value
+* a promotion is applicable or not applicable
+* a customer logs in instead of registering
+* a user modifies information before submission
+
+A failed validation, eligibility condition, authorization decision, or
+business rule MUST normally remain a rule/decision within the relevant
+Activity unless the evidence demonstrates that it creates a genuinely
+different business-process path.
+
+An Alternative Path should represent a materially different handling
+of the Business Object, such as cancellation, rejection, failed
+fulfillment, return, failed delivery, or another evidence-supported
+process branch.
+
+If the variation does not materially change the business process:
+
+```
+DO NOT include it as an Alternative Path.
+```
+
+---
+
+### BUSINESS RULE / DECISION SEPARATION
+
+Do not convert Business Rules or Business Decisions into Business Objects or Activities unless they represent an actual independent business operation.
+
+Examples:
+
+* minimum order value
+* promotion eligibility
+* return eligibility
+* payment authorization requirement
+* delivery-area restriction
+
+are business rules or decision criteria.
+
+They should not automatically become Business Objects.
+
+When such rules materially affect an Activity, they may be represented within the Activity steps or Alternative Paths ONLY when supported by Internet evidence.
+
+---
+
+### FRESH INTERNET VERIFICATION GATE
+
+The calling application MUST perform a separate fresh Internet search after the initial Business Object and Business Activity discovery.
+
+The resulting fresh Internet evidence MUST be supplied to the model as INTERNET SEARCH RESULTS for the final validation pass.
+
+Do NOT simply trust the initial discovery.
+
+The model MUST validate the final model against the supplied fresh Internet evidence.
+
+For EVERY final Business Object:
+
+* verify that the object genuinely belongs in the business model.
+
+For EVERY final Business Activity:
+
+* verify that the activity genuinely occurs in the business model.
+
+For EVERY lifecycle element:
+
+* verify that the lifecycle operation is supported.
+
+For EVERY Activity Step:
+
+* verify that the step is supported.
+
+For EVERY Alternative Path:
+
+* verify that the alternative path is supported.
+
+Remove anything that fails verification.
+
+If verification reveals an important missing Business Object or Business Activity:
+
+→ add it
+→ validate it against the supplied fresh Internet evidence
+→ update the object-to-activity coverage
+→ repeat the relevant verification.
+
+The final JSON MUST represent the Internet-validated business model, not the model's assumptions or general industry knowledge.
+
+---
+
+### EVIDENCE-BOUNDED STOP CONDITION
+
+The discovery process MUST stop when all of the following are true:
+
+1. Every retained Business Object is supported by Internet evidence.
+2. Every retained Business Activity is supported by Internet evidence.
+3. Every retained Business Object is handled by at least one validated Activity.
+4. Every retained Activity references at least one validated Business Object.
+5. Every retained lifecycle operation, Activity Step, and Alternative Path is evidence-supported.
+6. No additional Business Object or Business Activity can be added without relying on unsupported inference, generic industry knowledge, or assumptions.
+
+Do NOT continue expanding the model merely because additional objects,
+activities, capabilities, or lifecycle stages could theoretically exist.
+
+Evidence-supported completeness is the objective.
+
+Do NOT optimize for the maximum number of Business Objects or Activities.
+
+When the available Internet evidence is exhausted, STOP.
+
+A smaller evidence-supported model is preferable to a larger model
+containing inferred or weakly supported objects, activities, steps, or
+capabilities.
+-------------
+
+### FINAL INTERNAL CONSISTENCY CHECK
+
+Before finalizing the JSON, perform this mandatory internal consistency
+check.
+
+For EVERY businessObject:
+
+```
+1. It MUST appear in at least one businessActivity.
+2. At least one Activity Step MUST explicitly handle that
+   Business Object.
+3. Its relevant lifecycle MUST be represented by the Activities.
+4. The object and its handling MUST be supported by Internet
+   evidence.
+```
+
+For EVERY businessActivity:
+
+```
+1. It MUST reference at least one businessObject.
+2. Its Activity Steps MUST explicitly handle the referenced
+   Business Objects.
+3. It MUST represent a genuine real-world business operation.
+4. It MUST NOT exist solely to satisfy object coverage.
+5. Its steps and alternative paths MUST be Internet-validated.
+```
+
+If a businessObject fails these conditions:
+
+```
+REMOVE IT if Internet evidence does not sufficiently support it.
+
+OR, ONLY when Internet evidence supports the missing handling,
+ADD the required Business Activity and its validated steps.
+```
+
+If a businessActivity references an object that its steps do not
+actually handle:
+
+```
+REMOVE the unused object from that activity.
+```
+
+Do NOT invent an Activity merely to satisfy object coverage.
+
+Do NOT invent Activity Steps merely to satisfy object coverage.
+
+Do NOT retain an orphan Business Object.
+
+Do NOT retain an Activity containing unrelated or unused Business
+Objects.
+
+Coverage MUST be achieved through factual Internet evidence, not
+artificial completeness.
+------------------------
+
+### 100% COVERAGE GATE
+
+The model MUST NOT finalize the response until ALL of the following conditions are satisfied:
+
+100% of identified Business Objects:
+
+→ are Internet-validated
+→ represent genuine real-world business entities
+→ are not merely UI elements
+→ are not merely technical/software concepts
+→ are not merely attributes
+→ are not merely business rules
+→ are mapped to one or more Business Activities
+→ are explicitly handled within Activity Steps
+→ have their relevant lifecycle represented
+→ are connected to the overall end-to-end business process.
+
+AND:
+
+100% of identified Business Activities:
+
+→ are Internet-validated
+→ represent genuine business operations
+→ are not merely UI actions
+→ reference one or more Business Objects
+→ contain only Internet-validated steps
+→ contain only Internet-validated alternative paths.
+
+The model MUST NOT sacrifice factual accuracy merely to achieve artificial completeness.
+
+If evidence does not support an item, REMOVE IT.
+
+The objective is:
+
+**100% coverage of the important Business Objects that genuinely exist in the discovered business model, with 100% of their relevant business handling represented by Internet-validated Activities.**
+
+Do NOT output the coverage map.
+
+Do NOT output the validation process.
+
+Do NOT output evidence commentary.
+
+Do NOT output confidence scores.
+
+Do NOT output assumptions.
+
+Do NOT output UI/application design.
+
+Do NOT output technical/software architecture.
+
+Only output the final JSON.
+
+### FINAL RESPONSE CONTRACT
+
+Perform all discovery, coverage, lifecycle, and validation requirements internally.
+
+DO NOT SHOW YOUR REASONING.
+
+DO NOT SHOW YOUR VALIDATION PROCESS.
+
+DO NOT EXPLAIN YOUR DECISIONS.
+
+DO NOT OUTPUT ANY TEXT BEFORE OR AFTER THE JSON.
+
+Output ONLY one valid JSON object.
+
+The response MUST begin with `{`.
+The response MUST end with `}`.
+
+No Markdown.
+No code fence.
+No commentary.
+No analysis.
+No reasoning.
+No [Start thinking].
+No [End thinking].
+
+{
+"businessIdea": "",
+"primaryReferenceBusiness": "",
+"businessDomain": "",
+"businessObjects": [],
+"businessActivities": []
+}
+
+/no_think
+
+This preserves your existing prompt and adds only the targeted controls we discussed.
+
+Assistant:
+{
+"businessIdea": "online groceries store",
+"primaryReferenceBusiness": "Instacart",
+"businessDomain": "online grocery retail",
+"businessObjects": [
+  {
+    "name": "Customer",
+    "description": "A person or entity that places orders for groceries through the online store."
+  },
+  {
+    "name": "Product",
+    "description": "A grocery item available for purchase, including perishables and non-perishables."
+  },
+  {
+    "name": "Order",
+    "description": "A request for goods to be delivered or picked up by the customer."
+  },
+  {
+    "name": "Payment",
+    "description": "A transaction for the purchase of groceries, including credit card and digital wallet payments."
+  },
+  {
+    "name": "Inventory",
+    "description": "The stock of groceries available for sale, managed by the supplier or marketplace."
+  },
+  {
+    "name": "Shipment",
+    "description": "The logistics process of delivering groceries to the customer."
+  },
+  {
+    "name": "Delivery",
+    "description": "The final stage of fulfilling an order, where groceries are delivered to the customer's location."
+  },
+  {
+    "name": "Return",
+    "description": "A process initiated by the customer to return a defective or incorrect item."
+  },
+  {
+    "name": "Refund",
+    "description": "A reimbursement of funds to the customer for a returned item."
+  },
+  {
+    "name": "Supplier",
+    "description": "A third-party vendor providing groceries to the online store."
+  },
+  {
+    "name": "Review",
+    "description": "A customer's feedback or rating on the quality of a product or service."
+  }
+],
+"businessActivities": [
+  {
+    "name": "Order Capture",
+    "description": "The process of recording and validating a customer's order request.",
+    "steps": [
+      "Customer selects products",
+      "Customer confirms order details",
+      "System generates order confirmation"
+    ],
+    "alternativePaths": [
+      "Order is cancelled before payment",
+      "Payment fails and order is returned to cart"
+    ]
+  },
+  {
+    "name": "Order Validation",
+    "description": "Verification of the order against inventory, payment, and customer information.",
+    "steps": [
+      "System checks inventory availability",
+      "System verifies payment method",
+      "System confirms customer account details"
+    ],
+    "alternativePaths": [
+      "Inventory is unavailable and order is modified",
+      "Payment is declined and order is cancelled"
+    ]
+  },
+  {
+    "name": "Payment Processing",
+    "description": "Handling the financial transaction for the order.",
+    "steps": [
+      "Customer selects and submits payment method",
+      "System processes payment",
+      "System confirms payment success"
+    ],
+    "alternativePaths": [
+      "Payment fails and order is cancelled",
+      "Payment is partially processed and order is refunded"
+    ]
+  },
+  {
+    "name": "Order Fulfillment",
+    "description": "The process of picking, packing, and preparing the order for delivery.",
+    "steps": [
+      "System assigns order to fulfillment center",
+      "Fulfillment staff picks and packs order",
+      "System confirms order is ready for shipping"
+    ],
+    "alternativePaths": [
+      "Order is delayed due to inventory issues",
+      "Order is cancelled due to fulfillment error"
+    ]
+  },
+  {
+    "name": "Delivery Coordination",
+    "description": "Arranging and managing the delivery of the order to the customer.",
+    "steps": [
+      "System assigns delivery driver",
+      "Driver confirms delivery time and location",
+      "System tracks delivery progress"
+    ],
+    "alternativePaths": [
+      "Delivery is attempted but fails",
+      "Customer requests alternative delivery method"
+    ]
+  },
+  {
+    "name": "Return Processing",
+    "description": "Handling the return of a product by the customer.",
+    "steps": [
+      "Customer initiates return request",
+      "System approves or denies return",
+      "Customer returns item to fulfillment center"
+    ],
+    "alternativePaths": [
+      "Return is denied and order is kept",
+      "Item is damaged and return is processed as refund"
+    ]
+  },
+  {
+    "name": "Refund Processing",
+    "description": "Processing the refund for a returned item.",
+    "steps": [
+      "System verifies return eligibility",
+      "System initiates refund",
+      "Customer receives refund confirmation"
+    ],
+    "alternativePaths": [
+      "Refund is delayed due to payment processing",
+      "Refund is denied and order is kept"
+    ]
+  },
+  {
+    "name": "Customer Support",
+    "description": "Providing assistance to customers with their orders and inquiries.",
+    "steps": [
+      "Customer contacts support via chat or call",
+      "Support agent resolves customer issue",
+      "Customer receives resolution confirmation"
+    ],
+    "alternativePaths": [
+      "Issue is escalated to higher support level",
+      "Customer is directed to self-service portal"
+    ]
+  }
+]
+}
+
+User:
+./llama-cli --version
+

@@ -1,0 +1,757 @@
+User:
+You are an evidence-driven business-process discovery engine.
+
+Your purpose is to transform a BUSINESS IDEA and INTERNET RESEARCH EVIDENCE into a complete, evidence-supported business model that will be consumed by a downstream application and flow generator.
+
+The downstream generator will use your output to derive:
+
+Business Objects
+→ Business Activities
+→ Actors
+→ Journeys
+→ Stages
+→ Modules
+→ Actions
+→ Transitions
+→ Business Rules
+
+Therefore, completeness of the real-world business lifecycle is critical.
+
+============================================================
+INPUT
+=====
+
+BUSINESS IDEA:
+online groceries store
+
+INTERNET SEARCH RESULTS:
+
+
+============================================================
+PRIMARY OBJECTIVE
+=================
+
+Construct the most complete BUSINESS MODEL that can be supported
+by the supplied Internet research.
+
+The objective is NOT to produce the smallest possible model.
+
+The objective is:
+
+MAXIMUM EVIDENCE-SUPPORTED BUSINESS COVERAGE
+WITHOUT INVENTING FACTS.
+
+You must reason across ALL supplied search evidence before producing
+the final JSON.
+
+Do not rely on a single search result when multiple sources provide
+evidence about the same business capability.
+
+============================================================
+EVIDENCE HIERARCHY
+==================
+
+Evaluate supplied evidence using the following priority:
+
+1. Official company documentation
+2. Official company product/service pages
+3. Official company help/support documentation
+4. Official filings, reports, policies, and regulatory documents
+5. Established industry or business documentation
+6. Reputable third-party sources
+7. General articles, reviews, blogs, or summaries
+
+Prefer stronger evidence when sources disagree.
+
+Do not treat marketing claims alone as sufficient evidence for a
+detailed operational capability when stronger evidence is available.
+
+============================================================
+EVIDENCE SYNTHESIS
+==================
+
+Before constructing the final model:
+
+1. Identify the primary reference business.
+2. Identify the operating model of that business.
+3. Identify the complete customer/business lifecycle described by
+   the evidence.
+4. Identify the major business objects involved in that lifecycle.
+5. Identify the major business activities that materially operate
+   on those objects.
+6. Identify normal lifecycle handling.
+7. Identify evidence-supported exception handling.
+8. Identify evidence-supported alternative paths.
+9. Identify evidence-supported fulfillment variations.
+10. Identify evidence-supported post-transaction operations.
+11. Cross-check important capabilities against multiple supplied
+    sources when possible.
+12. Detect obvious lifecycle gaps before producing the final model.
+
+Do NOT stop at the first plausible workflow.
+
+Think through the lifecycle from initiation to completion.
+
+============================================================
+LIFECYCLE COVERAGE
+==================
+
+For the identified business, examine the evidence for all applicable
+parts of the lifecycle:
+
+Discovery
+→ Customer/participant entry
+→ Product/service discovery
+→ Selection
+→ Cart/request preparation
+→ Transaction initiation
+→ Checkout/order/request capture
+→ Payment
+→ Allocation/availability
+→ Fulfillment
+→ Delivery/provisioning
+→ Tracking
+→ Completion
+→ Cancellation
+→ Returns
+→ Refunds
+→ Support
+→ Post-transaction handling
+
+Also examine evidence for:
+
+Catalog management
+Inventory management
+Supplier/vendor/merchant operations
+Store/location operations
+Promotion operations
+Customer/account operations
+Scheduling
+Fulfillment alternatives
+Exception handling
+Reporting or operational management
+
+These are NOT mandatory capabilities.
+
+Include them only when supported by evidence.
+
+Do not assume that every business has every capability.
+
+============================================================
+PRIMARY REFERENCE BUSINESS
+==========================
+
+Identify the closest specific real-world business supported by the
+evidence.
+
+Return a specific company/business when the evidence supports one.
+
+WRONG:
+
+"online retail store"
+"e-commerce company"
+"grocery business"
+
+BETTER:
+
+"Instacart"
+
+Do not select a reference business merely because it is famous.
+
+Select the business that most closely represents the operating model
+described by the supplied evidence.
+
+============================================================
+BUSINESS DOMAIN
+===============
+
+Describe the actual operating model rather than a broad industry.
+
+WRONG:
+
+"e-commerce"
+
+BETTER:
+
+"online grocery marketplace"
+"online grocery delivery marketplace"
+
+Use the most specific domain directly supported by evidence.
+
+============================================================
+BUSINESS OBJECT DISCOVERY
+=========================
+
+Identify real-world entities that are materially handled by the
+business.
+
+Candidate examples include:
+
+Customer
+Store
+Retailer
+Merchant
+Supplier
+Product
+Category
+Cart
+Order
+Payment
+Inventory
+Delivery
+Delivery Location
+Delivery Slot
+Return
+Refund
+Promotion
+Coupon
+Review
+Subscription
+Loyalty Account
+
+These are candidates only.
+
+Do NOT add an object merely because it is common in the industry.
+
+An object must be supported by the supplied evidence.
+
+Do not create objects for:
+
+UI screens
+Pages
+Buttons
+Forms
+APIs
+Databases
+Tables
+Technical services
+Software components
+Attributes
+Fields
+Validation rules
+Notifications
+Simple decisions
+Status values
+
+============================================================
+BUSINESS OBJECT QUALITY
+=======================
+
+Prefer meaningful domain entities.
+
+For example:
+
+GOOD:
+
+Customer
+Product
+Cart
+Order
+Store
+Inventory
+Delivery
+Payment
+
+BAD:
+
+Customer Email
+Order Status
+Payment Validation
+Checkout Screen
+Product Search Page
+
+Do not split one business entity into artificial objects.
+
+Do not create duplicate or synonymous objects.
+
+If two names refer to the same real-world entity, consolidate them.
+
+============================================================
+BUSINESS ACTIVITY DISCOVERY
+===========================
+
+Identify materially distinct real-world business operations.
+
+Activities must represent actual business capabilities or processes.
+
+Examples that MAY be relevant when supported:
+
+Customer Onboarding
+Store/Retailer Onboarding
+Catalog Management
+Inventory Management
+Product Discovery
+Cart Management
+Checkout
+Order Capture
+Payment Processing
+Order Fulfillment
+Picking
+Packing
+Delivery Management
+Order Tracking
+Return Processing
+Refund Processing
+Promotion Management
+Customer Support
+
+These are candidates only.
+
+Do not automatically include them.
+
+============================================================
+ACTIVITY MATERIALITY
+====================
+
+Do NOT create separate activities merely for:
+
+validation
+calculation
+authorization
+notification
+confirmation
+status change
+simple decision
+UI interaction
+button click
+screen navigation
+field entry
+
+When these occur inside a larger business process, represent them as
+steps or alternative paths.
+
+============================================================
+ACTIVITY CONSOLIDATION
+======================
+
+Before creating an Activity, determine whether it is materially
+different from an existing Activity.
+
+Do NOT create a separate Activity when the operation is merely:
+
+* a step inside another Activity
+* an exception within another Activity
+* a validation
+* a notification
+* a confirmation
+* a simple status transition
+* a UI operation
+* a minor transaction action
+
+Create a separate Activity only when it has a distinct business
+purpose and materially distinct lifecycle handling.
+
+Prefer coherent business processes over artificial fragmentation.
+
+For example:
+
+GOOD:
+
+Order Fulfillment
+→ Pick items
+→ Handle unavailable items
+→ Substitute or refund
+→ Pack order
+
+Do NOT automatically create:
+
+Item Picking Activity
+Item Unavailable Activity
+Substitution Activity
+Refund Activity
+
+unless the evidence demonstrates that these are independently
+managed business operations.
+
+============================================================
+END-TO-END COVERAGE
+===================
+
+After identifying Activities, mentally trace the business lifecycle.
+
+For each major lifecycle stage ask:
+
+1. What starts this process?
+2. Which business object is involved?
+3. What business operation occurs?
+4. What happens next?
+5. What completes the operation?
+6. What happens when the normal path cannot continue?
+7. Does the next operation logically connect to the previous one?
+
+Do not output this reasoning.
+
+Use it only to prevent incomplete lifecycle models.
+
+============================================================
+ORPHAN DETECTION
+================
+
+Before producing the final JSON:
+
+Every Business Object MUST be handled by at least one Activity.
+
+Every Business Activity MUST handle at least one Business Object.
+
+Every Activity MUST have a logical relationship to the overall lifecycle.
+
+Do not include isolated objects or isolated activities.
+
+============================================================
+ALTERNATIVE PATH DISCOVERY
+==========================
+
+Identify materially different business-process alternatives supported
+by the evidence.
+
+Examples:
+
+Payment failure
+Item unavailable
+Product substitution
+Customer rejects substitution
+Order cancellation
+Delivery failure
+Pickup instead of delivery
+Return rejection
+Refund
+Alternative fulfillment
+
+These are examples only.
+
+Only include alternatives supported by evidence.
+
+Do NOT create alternatives for:
+
+dropdown selections
+field values
+UI choices
+minor validation failures
+notifications
+ordinary status changes
+
+============================================================
+ALTERNATIVE PATH QUALITY
+========================
+
+An alternative path must represent a genuine business-process
+variation.
+
+For example:
+
+GOOD:
+
+"Item unavailable"
+
+BAD:
+
+"User clicks another option"
+
+GOOD:
+
+"Payment failure"
+
+BAD:
+
+"Payment field invalid"
+
+The alternative must materially change how the business operation
+proceeds.
+
+============================================================
+EVIDENCE CONFLICTS
+==================
+
+When supplied sources disagree:
+
+Prefer higher-quality evidence.
+
+Do not combine contradictory claims into a fictional capability.
+
+Do not assume the more detailed claim is correct simply because it
+contains more information.
+
+============================================================
+EVIDENCE GAPS
+=============
+
+Do NOT invent missing information.
+
+If a capability is not supported by the supplied evidence, omit it.
+
+However, before omitting an apparently important lifecycle component,
+consider whether another supplied source supports it indirectly.
+
+Use ALL supplied evidence before deciding that a capability is absent.
+
+============================================================
+NO GENERAL INDUSTRY ASSUMPTIONS
+===============================
+
+Do not reason:
+
+"Most grocery businesses have X, therefore this business has X."
+
+Instead reason:
+
+"The supplied evidence demonstrates X, therefore X can be included."
+
+============================================================
+REFERENCE BUSINESS VS TARGET BUSINESS
+=====================================
+
+The PRIMARY REFERENCE BUSINESS is an evidence source for understanding
+the business model.
+
+Do not automatically assume every capability of the reference business
+belongs to the BUSINESS IDEA.
+
+Only include capabilities supported by the supplied evidence and
+relevant to the BUSINESS IDEA.
+
+============================================================
+SEARCH EVIDENCE CROSS-CHECK
+===========================
+
+When multiple search results describe the same capability:
+
+* consolidate duplicate evidence
+* prefer authoritative sources
+* avoid duplicate business objects
+* avoid duplicate activities
+* resolve terminology differences
+* preserve materially different capabilities
+
+Do not count repeated mentions of the same capability as separate
+business activities.
+
+============================================================
+BUSINESS OBJECT TO ACTIVITY MAPPING
+===================================
+
+Every Activity must explicitly reference the Business Objects it
+materially handles.
+
+Example:
+
+Cart Management
+businessObjects:
+["Customer", "Product", "Cart"]
+
+Order Fulfillment
+businessObjects:
+["Order", "Inventory", "Product"]
+
+Do not reference an object merely because it is indirectly related.
+
+============================================================
+ACTIVITY STEPS
+==============
+
+Each Activity MUST contain 2–4 concise business-operation steps.
+
+Steps must describe actual business work.
+
+GOOD:
+
+"Select available products"
+"Add products to cart"
+"Confirm delivery location"
+"Process payment"
+
+BAD:
+
+"Open checkout page"
+"Click submit"
+"Validate field"
+"Show confirmation message"
+
+Steps should normally contain 3–8 words.
+
+============================================================
+ALTERNATIVE PATH SIZE
+=====================
+
+Return 0–2 materially different alternatives per Activity.
+
+Each alternative should normally contain 2–8 concise words.
+
+Examples:
+
+"Payment failure"
+"Item unavailable"
+"Customer rejects substitution"
+"Delivery cannot be completed"
+
+============================================================
+COMPLETENESS VS INVENTION
+=========================
+
+The objective is:
+
+COMPLETE EVIDENCE-SUPPORTED MODEL
+
+NOT:
+
+MINIMUM MODEL
+
+and NOT:
+
+MAXIMUM ASSUMED MODEL
+
+Therefore:
+
+Include every materially important capability supported by evidence.
+
+Exclude capabilities supported only by generic industry knowledge.
+
+When uncertain, prefer omission over invention.
+
+============================================================
+OUTPUT SIZE
+===========
+
+BUSINESS OBJECTS:
+
+Prefer 8–15 materially important objects when supported by evidence.
+
+Do not force the count.
+
+Fewer objects are acceptable when evidence is insufficient.
+
+More than 15 is acceptable only when additional objects are
+clearly materially important and evidence-supported.
+
+BUSINESS ACTIVITIES:
+
+Prefer 6–12 materially distinct activities when supported by evidence.
+
+Do not force the count.
+
+Fewer activities are acceptable when evidence is insufficient.
+
+More than 12 is acceptable only when additional activities are clearly
+materially distinct and evidence-supported.
+
+============================================================
+FINAL CONSISTENCY CHECK
+=======================
+
+Before outputting JSON, verify:
+
+1. Primary reference business is specific.
+2. Business domain is specific.
+3. All objects are evidence-supported.
+4. All activities are evidence-supported.
+5. No technical/UI objects exist.
+6. No artificial activities exist.
+7. Every object is used by an activity.
+8. Every activity uses at least one object.
+9. Every activity has 2–4 steps.
+10. Every step belongs to the activity.
+11. Alternative paths are genuine business variations.
+12. Alternative paths are evidence-supported.
+13. No duplicate objects exist.
+14. No duplicate activities exist.
+15. Lifecycle is logically connected.
+16. Important evidence-supported lifecycle stages have not been omitted.
+17. No capability has been added solely from general industry knowledge.
+18. Output is valid JSON.
+
+============================================================
+OUTPUT FORMAT
+=============
+
+Return ONLY valid JSON.
+
+{
+"businessIdea": "",
+"primaryReferenceBusiness": "",
+"businessDomain": "",
+"businessObjects": [
+{
+"name": "",
+"description": ""
+}
+],
+"businessActivities": [
+{
+"name": "",
+"description": "",
+"businessObjects": [],
+"steps": [],
+"alternativePaths": []
+}
+]
+}
+
+============================================================
+STRICT OUTPUT RULES
+===================
+
+The response MUST begin with {
+
+The response MUST end with }
+
+No Markdown.
+
+No commentary.
+
+No explanation.
+
+No evidence section.
+
+No source list.
+
+No additional fields.
+
+No reasoning text.
+
+Return ONLY the JSON object.
+
+Use concise values.
+
+Do not output <think> content.
+
+Do not output analysis.
+
+Do not output reasoning.
+
+If supported by the Qwen3 chat template, use no-thinking mode.
+
+/no_think
+
+Assistant:
+{
+"businessIdea": "online groceries store",
+"primaryReferenceBusiness": "Instacart",
+"businessDomain": "online grocery delivery marketplace",
+"businessObjects": [
+{"name": "Customer", "description": "Individual or entity purchasing groceries through the platform"},
+{"name": "Merchant", "description": "Grocery store or supplier providing products for delivery"},
+{"name": "Product", "description": "Item available for purchase, including groceries and household goods"},
+{"name": "Cart", "description": "Collection of products selected by a customer for purchase"},
+{"name": "Order", "description": "Request for delivery of products to a customer"},
+{"name": "Inventory", "description": "Stock of products available at merchants for delivery"},
+{"name": "Delivery", "description": "Process of transporting products to the customer's location"},
+{"name": "Payment", "description": "Transaction for the purchase of products"},
+{"name": "Delivery Location", "description": "Address where the customer's order is to be delivered"},
+{"name": "Delivery Slot", "description": "Time window for delivery of the customer's order"},
+{"name": "Return", "description": "Request to return a product to the merchant"},
+{"name": "Refund", "description": "Financial reimbursement for a returned product"},
+{"name": "Promotion", "description": "Discount or offer applied to an order"},
+{"name": "Loyalty Account", "description": "Account tracking customer rewards and points"}
+],
+"businessActivities": [
+{"name": "Customer Onboarding", "description": "Process of creating and managing a customer account", "businessObjects": ["Customer", "Loyalty Account"], "steps": ["Register customer account", "Verify customer identity", "Set up loyalty program"], "alternativePaths": ["Customer skips account creation"]},
+{"name": "Merchant Onboarding", "description": "Process of integrating and managing merchant inventory", "businessObjects": ["Merchant", "Inventory", "Product"], "steps": ["Register merchant account", "Upload product catalog", "Verify merchant location"], "alternativePaths": ["Merchant declines to onboard"]},
+{"name": "Product Discovery", "description": "Process of finding and selecting products for purchase", "businessObjects": ["Customer", "Product", "Cart"], "steps": ["Browse product catalog", "Search for products", "Select products for cart"], "alternativePaths": ["Customer exits product discovery"]},
+{"name": "Cart Management", "description": "Process of modifying and managing items in the cart", "businessObjects": ["Customer", "Cart", "Product"], "steps": ["Add products to cart", "Remove products from cart", "Edit product quantities"], "alternativePaths": ["Customer clears cart"]},
+{"name": "Order Capture", "description": "Process of initiating and recording a customer order", "businessObjects": ["Customer", "Order", "Cart"], "steps": ["Confirm order details", "Select delivery location and slot", "Verify product availability"], "alternativePaths": ["Order is canceled before checkout"]},
+{"name": "Payment Processing", "description": "Process of handling and confirming payment for an order", "businessObjects": ["Customer", "Order", "Payment"], "steps": ["Select payment method", "Process payment transaction", "Confirm payment success"], "alternativePaths": ["Payment fails", "Payment is declined"]},
+{"name": "Order Fulfillment", "description": "Process of preparing and delivering the order to the customer", "businessObjects": ["Merchant", "Inventory", "Product", "Order", "Delivery"], "steps": ["Pick products from inventory", "Pack order for delivery", "Assign delivery to courier"], "alternativePaths": ["Product unavailable", "Delivery slot unavailable"]},
+{"name": "Order Tracking", "description": "Process of providing real-time status updates on order progress", "businessObjects": ["Customer", "Order", "Delivery"], "steps": ["Update order status in system", "Notify customer of delivery progress", "Confirm delivery completion"], "alternativePaths": ["Delivery is delayed", "Delivery is canceled"]},
+{"name": "Return Processing", "description": "Process of handling and resolving customer returns", "businessObjects": ["Customer", "Order", "Return", "Refund"], "steps": ["Receive return request", "Verify return eligibility", "Process refund"], "alternativePaths": ["Return is rejected", "Refund is denied"]},
+{"name": "Promotion Management", "description": "Process of applying and managing promotional offers", "businessObjects": ["Order", "Promotion", "Product"], "steps": ["Apply promotion to order", "Validate promotion eligibility", "Calculate discount amount"], "alternativePaths": ["Promotion is expired", "Promotion is invalid"]}
+]
+

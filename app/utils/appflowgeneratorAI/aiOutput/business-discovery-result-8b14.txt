@@ -1,0 +1,457 @@
+User:
+You are a DOMAIN-AGNOSTIC BUSINESS DISCOVERY ENGINE.
+
+Your job is to convert a BUSINESS IDEA and INTERNET RESEARCH EVIDENCE into a structured model of the real-world business operation.
+
+The business domain is unknown until discovered from the research evidence.
+
+Do not assume an industry, workflow, lifecycle, actor model, object list, or capability list.
+
+============================================================
+INPUT
+=====
+
+BUSINESS IDEA:
+online groceries store
+
+INTERNET RESEARCH EVIDENCE:
+
+
+============================================================
+PRIMARY OBJECTIVE
+=================
+
+Build the most complete business model supported by the supplied
+Internet research.
+
+TARGET:
+
+1. MAXIMUM COVERAGE OF RESEARCHED BUSINESS CAPABILITIES
+2. ZERO UNSUPPORTED INVENTION
+3. REAL-WORLD BUSINESS MODEL
+4. DOMAIN-AGNOSTIC STRUCTURE
+
+The Internet research is the source of truth.
+
+Do NOT fill gaps using general industry knowledge.
+
+Do NOT assume something exists because it is common in the industry.
+
+If the research does not support something, do not add it.
+
+============================================================
+DOMAIN
+======
+
+Determine the specific operating model from the research.
+
+Prefer a specific operating model over a generic industry label.
+
+Example:
+
+"Retail" → only if that is all the evidence supports.
+
+"Online grocery marketplace" → if the evidence supports that operating model.
+
+Do not invent specificity.
+
+============================================================
+REFERENCE BUSINESS
+==================
+
+Identify the primary real-world business/company/organization represented
+by the research.
+
+Use it as an evidence source.
+
+Do not copy its entire business model.
+
+Include only capabilities relevant to:
+
+BUSINESS IDEA:
+online groceries store
+
+and supported by the research.
+
+============================================================
+BUSINESS REALITY BOUNDARY
+=========================
+
+Model the REAL-WORLD BUSINESS.
+
+Do not model the software implementation.
+
+A BUSINESS OBJECT is a meaningful real-world entity that the business
+materially handles.
+
+A BUSINESS ACTIVITY is a meaningful real-world business operation.
+
+Do NOT create business objects for:
+
+* screens
+* pages
+* forms
+* buttons
+* APIs
+* databases
+* software systems
+* technical services
+* fields
+* validation logic
+* notifications
+* status values
+* UI controls
+
+Do NOT create business activities for:
+
+* screen navigation
+* API calls
+* database operations
+* technical processing
+* status updates
+* simple validation
+* notifications
+* UI interactions
+
+============================================================
+BUSINESS OBJECTS
+================
+
+Discover objects directly from the research.
+
+Do not use a predefined industry object list.
+
+Include every materially relevant, research-supported real-world entity.
+
+Consolidate synonyms and duplicates.
+
+Every object must be used by at least one business activity.
+
+============================================================
+BUSINESS ACTIVITIES
+===================
+
+Discover materially distinct business operations from the research.
+
+Do not stop after finding the obvious primary transaction.
+
+Look across the complete researched operating model, including where
+supported:
+
+* participants and operational responsibilities
+* core business operations
+* transaction lifecycle
+* fulfillment or service delivery
+* exceptions
+* cancellations or modifications
+* returns or reversals
+* refunds or settlements
+* post-transaction operations
+* support or resolution
+* other domain-specific operations
+
+These are discovery areas only.
+
+Do not include a capability unless the research supports it.
+
+============================================================
+ACTIVITY CONSOLIDATION
+======================
+
+Combine activities that are merely steps of the same business operation.
+
+Do not create separate activities for:
+
+* validation
+* calculation
+* notification
+* confirmation
+* status changes
+* technical processing
+* simple decisions
+
+Create a separate activity only when the research shows a distinct
+business purpose or materially different operation.
+
+============================================================
+ACTIVITY STEPS
+==============
+
+Each activity must contain 2–4 concise real-world business steps.
+
+Steps must describe actual business work.
+
+Do not describe software behavior.
+
+Do not use steps such as:
+
+"System validates..."
+"System updates..."
+"System calls..."
+"System sends..."
+
+Describe the business operation instead.
+
+============================================================
+ALTERNATIVE PATHS
+=================
+
+Include alternative paths only when the research explicitly supports
+a materially different business-process variation.
+
+Examples of variation types:
+
+failure
+rejection
+cancellation
+unavailability
+substitution
+rerouting
+manual handling
+escalation
+exception resolution
+
+These are categories only.
+
+Discover the actual alternatives from the research.
+
+Do not invent alternatives.
+
+Do not treat ordinary UI choices or minor validation errors as
+business-process alternatives.
+
+============================================================
+COVERAGE RULE
+=============
+
+The research may contain multiple businesses, pages, documents,
+capabilities, participants, objects, and lifecycle operations.
+
+Do not model only the first obvious workflow.
+
+Cross-check the entire supplied research before producing the result.
+
+If the research identifies a materially relevant business participant,
+object, activity, lifecycle operation, exception, return, refund,
+settlement, support operation, or other capability relevant to the
+BUSINESS IDEA, include it when supported.
+
+Do not omit a capability simply because it is outside the primary
+happy-path transaction.
+
+============================================================
+EVIDENCE RULE
+=============
+
+Every output element must be supported by the supplied research.
+
+If evidence is weak or absent:
+
+OMIT IT.
+
+Never use:
+
+"normally"
+"usually"
+"most businesses"
+"industry standard"
+"probably"
+"likely"
+
+as evidence.
+
+============================================================
+QUALITY CHECK
+=============
+
+Before returning the JSON, verify:
+
+* domain is supported by research
+* reference business is supported by research
+* objects are real-world business entities
+* activities are real-world business operations
+* technical/software objects are excluded
+* artificial activities are excluded
+* relevant researched capabilities are not omitted
+* every object is used by an activity
+* every activity uses at least one object
+* every activity has 2–4 business steps
+* steps describe business work
+* alternatives are research-supported
+* duplicates are consolidated
+* unsupported capabilities are removed
+* output is valid JSON
+
+============================================================
+OUTPUT
+======
+
+Return ONLY this JSON structure:
+
+{
+"businessIdea": "",
+"primaryReferenceBusiness": "",
+"businessDomain": "",
+"businessObjects": [
+{
+"name": "",
+"description": ""
+}
+],
+"businessActivities": [
+{
+"name": "",
+"description": "",
+"businessObjects": [],
+"steps": [],
+"alternativePaths": []
+}
+]
+}
+
+Return ONLY valid JSON.
+
+No Markdown.
+No commentary.
+No explanation.
+No sources.
+No additional fields.
+No reasoning.
+No <think> content.
+{/no_think}
+
+Assistant:
+{
+"businessIdea": "online groceries store",
+"primaryReferenceBusiness": "Amazon Fresh",
+"businessDomain": "Online grocery marketplace",
+"businessObjects": [
+{
+"name": "Customer",
+"description": "Individual or household that purchases groceries through the online store."
+},
+{
+"name": "Grocery Item",
+"description": "Individual product available for purchase, including perishable and non-perishable items."
+},
+{
+"name": "Order",
+"description": "A collection of grocery items placed by a customer for delivery or pickup."
+},
+{
+"name": "Delivery Address",
+"description": "Physical location where groceries are delivered to the customer."
+},
+{
+"name": "Payment Method",
+"description": "Financial instrument used by the customer to settle the order."
+},
+{
+"name": "Inventory",
+"description": "Stock of grocery items available for sale and fulfillment."
+},
+{
+"name": "Supplier",
+"description": "Entity that provides grocery items to the online store for sale."
+},
+{
+"name": "Delivery Partner",
+"description": "Third-party service that facilitates the physical delivery of groceries to customers."
+},
+{
+"name": "Return Request",
+"description": "Formal request by a customer to return a purchased grocery item."
+},
+{
+"name": "Refund",
+"description": "Financial reimbursement provided to a customer for a returned grocery item."
+}
+],
+"businessActivities": [
+{
+"name": "Customer Registration",
+"description": "Process of establishing a customer account with the online groceries store.",
+"businessObjects": ["Customer", "Payment Method"],
+"steps": [
+"Customer provides personal information and contact details.",
+"Customer selects and binds a payment method.",
+"Customer confirms account creation."
+],
+"alternativePaths": []
+},
+{
+"name": "Grocery Item Search and Selection",
+"description": "Process of identifying and selecting grocery items for purchase.",
+"businessObjects": ["Grocery Item", "Inventory"],
+"steps": [
+"Customer browses available grocery items by category or keyword.",
+"Customer checks inventory availability for selected items.",
+"Customer adds items to a virtual shopping cart."
+],
+"alternativePaths": []
+},
+{
+"name": "Order Placement",
+"description": "Process of submitting a purchase request for groceries.",
+"businessObjects": ["Order", "Customer", "Payment Method"],
+"steps": [
+"Customer reviews selected items and confirms quantities.",
+"Customer selects delivery or pickup option.",
+"Customer submits payment and confirms order."
+],
+"alternativePaths": []
+},
+{
+"name": "Order Fulfillment",
+"description": "Process of preparing and dispatching groceries for delivery or pickup.",
+"businessObjects": ["Order", "Inventory", "Supplier", "Delivery Partner"],
+"steps": [
+"System verifies inventory availability for ordered items.",
+"System prepares selected items for packaging.",
+"System assigns order to a delivery partner for delivery or pickup."
+],
+"alternativePaths": []
+},
+{
+"name": "Delivery Execution",
+"description": "Process of delivering groceries to the customer's specified address.",
+"businessObjects": ["Delivery Address", "Delivery Partner", "Order"],
+"steps": [
+"Delivery partner retrieves order from fulfillment center.",
+"Delivery partner transports groceries to the specified delivery address.",
+"Delivery partner confirms delivery and updates order status."
+],
+"alternativePaths": [
+"Delivery delay due to unforeseen circumstances.",
+"Customer is unavailable for delivery, leading to rescheduling."
+]
+},
+{
+"name": "Order Completion",
+"description": "Process of confirming that the customer has received their groceries.",
+"businessObjects": ["Order", "Customer"],
+"steps": [
+"Customer receives groceries and confirms delivery.",
+"System updates order status to 'completed'.",
+"Customer provides feedback on the delivery experience."
+],
+"alternativePaths": [
+"Customer reports a missing item, leading to a replacement or refund."
+]
+},
+{
+"name": "Return Processing",
+"description": "Process of handling a customer's request to return a purchased grocery item.",
+"businessObjects": ["Return Request", "Grocery Item", "Refund"],
+"steps": [
+"Customer submits a return request with item details.",
+"System verifies the eligibility of the return.",
+"System processes the refund and updates the customer's account."
+],
+"alternativePaths": [
+"Item is not eligible for return, leading to a resolution or explanation."
+]
+}
+]
+}
+

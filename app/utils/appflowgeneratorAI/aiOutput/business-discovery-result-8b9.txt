@@ -1,0 +1,141 @@
+User:
+You are a business-process discovery engine.
+
+INPUT
+
+BUSINESS IDEA:
+online groceries store
+
+INTERNET SEARCH RESULTS:
+
+
+TASK
+
+Using ONLY the supplied INTERNET SEARCH RESULTS:
+
+1. Determine the closest real-world PRIMARY REFERENCE BUSINESS.
+2. Determine the primary BUSINESS DOMAIN.
+3. Identify evidence-supported BUSINESS OBJECTS.
+4. Identify evidence-supported BUSINESS ACTIVITIES.
+5. Map each Business Object to the Activities that materially handle it.
+6. Identify relevant evidence-supported lifecycle handling.
+7. Identify only materially different evidence-supported alternative paths.
+
+RULES
+
+- Internet Search Results are the only factual evidence.
+- Do not use general industry assumptions.
+- Do not invent capabilities.
+- Do not infer that a capability exists because similar businesses have it.
+- Do not include UI elements, screens, pages, buttons, APIs, databases,
+  technical components, attributes, rules, or decisions as Business Objects.
+- Do not create an Activity merely for validation, calculation,
+  authorization, notification, status change, or UI interaction.
+- Do not split one real-world business operation into artificial Activities.
+- Do not create Alternative Paths for ordinary UI choices or field values.
+- Every Business Object MUST be handled by at least one Activity.
+- Every Activity MUST materially handle at least one Business Object.
+- Every Activity Step MUST relate to the Activity's Business Objects.
+- Every Alternative Path MUST materially change the business process.
+- Prefer a smaller evidence-supported model over an inferred model.
+- Do not add anything that cannot be supported by the supplied evidence.
+
+OUTPUT
+
+Return ONLY valid JSON.
+
+{
+  "businessIdea": "",
+  "primaryReferenceBusiness": "",
+  "businessDomain": "",
+  "businessObjects": [
+    {
+      "name": "",
+      "description": ""
+    }
+  ],
+  "businessActivities": [
+    {
+      "name": "",
+      "description": "",
+      "businessObjects": [],
+      "steps": [],
+      "alternativePaths": []
+    }
+  ]
+}
+
+The response MUST begin with { and end with }.
+No Markdown.
+No commentary.
+No reasoning.
+
+Assistant:
+{
+  "businessIdea": "online groceries store",
+  "primaryReferenceBusiness": "online retail store",
+  "businessDomain": "e-commerce",
+  "businessObjects": [
+    {
+      "name": "customer",
+      "description": "individual or entity that purchases groceries through the online store"
+    },
+    {
+      "name": "grocery item",
+      "description": "product available for purchase in the online store"
+    },
+    {
+      "name": "order",
+      "description": "request for delivery of groceries made by a customer"
+    },
+    {
+      "name": "delivery",
+      "description": "process of delivering groceries to the customer's location"
+    }
+  ],
+  "businessActivities": [
+    {
+      "name": "customer registration",
+      "description": "process of creating an account for a new customer",
+      "businessObjects": ["customer"],
+      "steps": ["collect customer information", "verify customer details"],
+      "alternativePaths": []
+    },
+    {
+      "name": "product browsing",
+      "description": "process of searching and selecting groceries for purchase",
+      "businessObjects": ["grocery item"],
+      "steps": ["search for groceries", "select grocery items"],
+      "alternativePaths": []
+    },
+    {
+      "name": "order placement",
+      "description": "process of submitting a purchase request",
+      "businessObjects": ["order", "grocery item"],
+      "steps": ["select items for purchase", "submit order details"],
+      "alternativePaths": []
+    },
+    {
+      "name": "order fulfillment",
+      "description": "process of preparing and packaging groceries for delivery",
+      "businessObjects": ["order", "grocery item"],
+      "steps": ["verify order details", "prepare groceries for delivery"],
+      "alternativePaths": []
+    },
+    {
+      "name": "delivery execution",
+      "description": "process of delivering groceries to the customer",
+      "businessObjects": ["delivery", "order"],
+      "steps": ["dispatch delivery", "deliver groceries"],
+      "alternativePaths": []
+    },
+    {
+      "name": "order confirmation",
+      "description": "process of informing the customer about the order status",
+      "businessObjects": ["order", "customer"],
+      "steps": ["notify customer of order status", "send confirmation details"],
+      "alternativePaths": []
+    }
+  ]
+}
+

@@ -1,0 +1,346 @@
+User:
+You are a business-process discovery engine.
+
+INPUT
+
+BUSINESS IDEA:
+online groceries store
+
+INTERNET SEARCH RESULTS:
+
+
+TASK
+
+Using ONLY the supplied INTERNET SEARCH RESULTS:
+
+1. Determine the closest real-world PRIMARY REFERENCE BUSINESS.
+2. Determine the primary BUSINESS DOMAIN.
+3. Identify evidence-supported BUSINESS OBJECTS.
+4. Identify evidence-supported BUSINESS ACTIVITIES.
+5. Map each Business Object to the Activities that materially handle it.
+6. Identify relevant evidence-supported lifecycle handling.
+7. Identify only materially different evidence-supported alternative paths.
+
+RULES
+
+- Internet Search Results are the only factual evidence.
+- Do not use general industry assumptions.
+- Do not invent capabilities.
+- Do not infer that a capability exists because similar businesses have it.
+- Do not include UI elements, screens, pages, buttons, APIs, databases,
+  technical components, attributes, rules, or decisions as Business Objects.
+- Do not create an Activity merely for validation, calculation,
+  authorization, notification, status change, or UI interaction.
+- Do not split one real-world business operation into artificial Activities.
+- Do not create Alternative Paths for ordinary UI choices or field values.
+- Every Business Object MUST be handled by at least one Activity.
+- Every Activity MUST materially handle at least one Business Object.
+- Every Activity Step MUST relate to the Activity's Business Objects.
+- Every Alternative Path MUST materially change the business process.
+- Prefer a smaller evidence-supported model over an inferred model.
+- Do not add anything that cannot be supported by the supplied evidence.
+
+
+
+IMPORTANT DISCOVERY REQUIREMENTS
+
+1. PRIMARY REFERENCE BUSINESS
+
+The PRIMARY REFERENCE BUSINESS must be a specific real-world
+company or business supported by the supplied Internet evidence.
+
+Do NOT return a generic business type.
+
+WRONG:
+"online retail store"
+"e-commerce company"
+"grocery business"
+
+The result must identify a specific established business when the
+Internet evidence supports one.
+
+2. BUSINESS DOMAIN
+
+The BUSINESS DOMAIN must describe the actual operating model rather
+than a broad industry category.
+
+WRONG:
+"e-commerce"
+
+BETTER:
+"online grocery retail"
+"online grocery marketplace"
+"grocery delivery marketplace"
+
+Choose the most specific domain supported by the evidence.
+
+3. BUSINESS OBJECT COVERAGE
+
+Identify the important real-world entities materially handled by the
+business.
+
+Consider the following as candidates when supported by Internet
+evidence:
+
+Customer
+Product
+Category
+Order
+Payment
+Inventory
+Supplier
+Delivery
+Return
+Refund
+Promotion
+Coupon
+Review
+
+These are candidates only.
+
+Do NOT include an object merely because it is common in the industry.
+Include it only when supported by the supplied Internet evidence.
+
+4. BUSINESS ACTIVITY COVERAGE
+
+Identify the major real-world business operations across the relevant
+business lifecycle.
+
+Do not stop after only:
+
+browse → order → fulfill → deliver
+
+Consider evidence-supported operations such as:
+
+catalog management
+inventory management
+customer onboarding
+product discovery
+cart/order capture
+payment processing
+order fulfillment
+delivery
+returns
+refunds
+customer support
+promotion management
+supplier operations
+
+These are candidates only.
+
+Include them only when supported by the supplied Internet evidence.
+
+5. ALTERNATIVE PATH COVERAGE
+
+Do not leave alternativePaths empty when the supplied evidence
+identifies a genuine business-process variation.
+
+Consider evidence-supported alternatives such as:
+
+payment failure
+item unavailable
+order cancellation
+delivery failure
+return rejection
+refund
+product substitution
+alternative fulfillment
+
+Only include alternatives supported by the supplied evidence.
+
+6. ACTIVITY MATERIALITY
+
+Do NOT create separate Business Activities for:
+
+notifications
+confirmations
+validation
+authorization
+calculations
+UI actions
+buttons
+screens
+status changes
+simple decisions
+
+When these occur as part of a larger business operation, represent
+them as steps, rules, decisions, or alternative paths as appropriate.
+
+7. EVIDENCE-FIRST BUT NOT MINIMAL
+
+The objective is:
+
+COMPLETE EVIDENCE-SUPPORTED BUSINESS MODEL
+
+NOT:
+
+MINIMUM POSSIBLE BUSINESS MODEL.
+
+Do not invent missing capabilities.
+
+However, do not unnecessarily remove important Business Objects,
+Business Activities, lifecycle handling, or Alternative Paths when
+the supplied Internet evidence supports them.
+
+Prefer the complete evidence-supported model over an artificially
+small model.
+
+OUTPUT
+
+Return ONLY valid JSON.
+
+{
+  "businessIdea": "",
+  "primaryReferenceBusiness": "",
+  "businessDomain": "",
+  "businessObjects": [
+    {
+      "name": "",
+      "description": ""
+    }
+  ],
+  "businessActivities": [
+    {
+      "name": "",
+      "description": "",
+      "businessObjects": [],
+      "steps": [],
+      "alternativePaths": []
+    }
+  ]
+}
+
+The response MUST begin with { and end with }.
+No Markdown.
+No commentary.
+No reasoning.
+
+Assistant:
+{
+  "businessIdea": "online groceries store",
+  "primaryReferenceBusiness": "Instacart",
+  "businessDomain": "online grocery marketplace",
+  "businessObjects": [
+    {
+      "name": "Customer",
+      "description": "Individual or household that purchases groceries through the platform."
+    },
+    {
+      "name": "Product",
+      "description": "Grocery items available for purchase on the platform."
+    },
+    {
+      "name": "Order",
+      "description": "A customer's request to purchase specific products."
+    },
+    {
+      "name": "Payment",
+      "description": "Monetary transaction used to settle an order."
+    },
+    {
+      "name": "Inventory",
+      "description": "Stock of products available for sale across partnered grocery stores."
+    },
+    {
+      "name": "Supplier",
+      "description": "Grocery store or vendor that provides products to the platform."
+    },
+    {
+      "name": "Delivery",
+      "description": "Service that transports ordered products to the customer's location."
+    },
+    {
+      "name": "Return",
+      "description": "Process initiated by the customer to return a product."
+    },
+    {
+      "name": "Refund",
+      "description": "Monetary reimbursement provided to the customer for a returned product."
+    },
+    {
+      "name": "Promotion",
+      "description": "Discount or incentive offered to customers for specific actions or purchases."
+    },
+    {
+      "name": "Coupon",
+      "description": "Discount code or voucher provided to customers for use during checkout."
+    },
+    {
+      "name": "Review",
+      "description": "Customer feedback on the quality or experience of a product or service."
+    }
+  ],
+  "businessActivities": [
+    {
+      "name": "Customer Onboarding",
+      "description": "Process of registering and verifying a new customer account.",
+      "businessObjects": ["Customer"],
+      "steps": ["Registration", "Verification", "Welcome Email"],
+      "alternativePaths": []
+    },
+    {
+      "name": "Product Catalog Management",
+      "description": "Management and maintenance of product listings available for sale.",
+      "businessObjects": ["Product", "Supplier"],
+      "steps": ["Product Addition", "Inventory Updates", "Category Management"],
+      "alternativePaths": []
+    },
+    {
+      "name": "Order Capture",
+      "description": "Process of recording and confirming a customer's order.",
+      "businessObjects": ["Order", "Product", "Payment"],
+      "steps": ["Cart Checkout", "Payment Processing", "Order Confirmation"],
+      "alternativePaths": ["Payment Failure"]
+    },
+    {
+      "name": "Order Fulfillment",
+      "description": "Process of preparing and dispatching an order to the customer.",
+      "businessObjects": ["Order", "Inventory", "Supplier"],
+      "steps": ["Order Routing", "Inventory Allocation", "Picking and Packing"],
+      "alternativePaths": ["Item Unavailable"]
+    },
+    {
+      "name": "Delivery Coordination",
+      "description": "Process of arranging and executing the delivery of an order.",
+      "businessObjects": ["Delivery", "Order", "Customer"],
+      "steps": ["Delivery Scheduling", "Route Assignment", "Delivery Execution"],
+      "alternativePaths": ["Delivery Failure"]
+    },
+    {
+      "name": "Return Handling",
+      "description": "Process of receiving and processing a returned product.",
+      "businessObjects": ["Return", "Product", "Order"],
+      "steps": ["Return Request", "Product Inspection", "Refund Processing"],
+      "alternativePaths": ["Return Rejection"]
+    },
+    {
+      "name": "Refund Processing",
+      "description": "Process of issuing a refund to the customer.",
+      "businessObjects": ["Refund", "Payment", "Order"],
+      "steps": ["Refund Initiation", "Payment Reversal", "Refund Notification"],
+      "alternativePaths": []
+    },
+    {
+      "name": "Promotion Management",
+      "description": "Process of creating, applying, and tracking promotional campaigns.",
+      "businessObjects": ["Promotion", "Coupon", "Order"],
+      "steps": ["Promotion Creation", "Coupon Distribution", "Promotion Tracking"],
+      "alternativePaths": []
+    },
+    {
+      "name": "Customer Support",
+      "description": "Process of assisting customers with inquiries and issues.",
+      "businessObjects": ["Customer", "Order", "Product"],
+      "steps": ["Support Ticket Creation", "Issue Resolution", "Feedback Collection"],
+      "alternativePaths": []
+    },
+    {
+      "name": "Product Substitution",
+      "description": "Process of replacing an unavailable item with an alternative.",
+      "businessObjects": ["Order", "Product", "Inventory"],
+      "steps": ["Item Unavailability Notification", "Alternative Product Selection", "Order Update"],
+      "alternativePaths": []
+    }
+  ]
+}
+
