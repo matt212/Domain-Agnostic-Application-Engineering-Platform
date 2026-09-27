@@ -1,11 +1,16 @@
 #!/bin/bash
 
 #BUSINESS_IDEA="CRM"
+
 BUSINESS_IDEA="ERP"
+
 PROMPT="$(cat app/utils/appflowgeneratorAI/promptFile/business-discovery-prompt8CRM.txt)"
 
 PROMPT="${PROMPT//\{\{BUSINESS_IDEA\}\}/$BUSINESS_IDEA}"
+
 PROMPT="${PROMPT//\{\{SEARCH_RESULTS\}\}/$SEARCH_RESULTS}"
+
+PROMPT="${PROMPT//\{\{VALIDATION_RESULTS\}\}/$VALIDATION_RESULTS}"
 
 llama-cli \
   -hf Qwen/Qwen3-8B-GGUF:Q4_K_M \
