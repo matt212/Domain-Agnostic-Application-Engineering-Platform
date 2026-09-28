@@ -1,0 +1,49 @@
+User:
+# ROLE & GOAL
+You are an expert Enterprise Software Architect and Domain-Driven Design (DDD) specialist. Your sole objective is to output a precise, production-ready blueprint of core Business Objects for a specific business idea based on grounded reference schemas.
+
+# BUSINESS CONTEXT
+- Target Business Idea: {{BUSINESS_IDEA}}
+- Schema Reference Dump:           @type: Organization,
+- Integrity Metadata: {{VALIDATION_RESULTS}}
+
+# DEFINITION OF BUSINESS OBJECTS
+A "Business Object" is a core domain entity within the application architecture. It represents what the system sells, provides, manufactures, manages, receives, stores, or directly works with. It is NOT a business goal, milestone, or task.
+
+# INSTRUCTIONS & CONSTRAINTS
+1. STRICT TRUTH: Rely heavily on the schema definitions provided in the Reference Dump. If a direct match is missing, construct the entities using industry-standard enterprise software blueprints for a {{BUSINESS_IDEA}} platform.
+2. APPLICATION FLOW & TRANSACTION DETAILS MANDATE: To identify the true essential objects, you must trace the step-by-step operational lifecycle and user transaction journey of the application. Extract only the active entities that process, record, or fulfill these workflows. For every primary master transaction or collection entity identified, you MUST mechanically extract and include its corresponding multi-item detail records as separate, individual entries (e.g., list both the master transaction name and its specific constituent item or line entity name independently).
+3. STRICT BUSINESS REALITY FILTER: You must ONLY include active objects that represent real-world commercial transactions or core operational assets. 
+   - ABSOLUTELY FORBID and EXCLUDE technical infrastructure boilerplate (such as storage, loggers, media assets, automation steps, or template systems).
+   - ABSOLUTELY FORBID and EXCLUDE non-operational static lookup choices, properties, design details, system utilities, configurations, or data-type descriptors. Every object must represent a standalone commercial operational step or tangible asset entity.
+4. ABSOLUTE DEDUPLICATION (OPERATIONAL ORDER): Every element inside the BusinessObjects array must be 100% unique. To guarantee zero duplicates or repeated entries, you MUST sort the entire array in strict chronological operational order, following the natural step-by-step application transaction flow from start to finish. Do not repeat any business object.
+5. INTERNAL TWO-PASS EXECUTION RULE: To completely eliminate model overload and structural truncation, you must process this generation in two distinct mental phases:
+   - Phase 1: Determine and lock down the entire, complete list of core operational Business Object names from start to end following the natural transaction journey.
+   - Phase 2: Once the complete object pipeline is identified, loop back internally and populate each locked object's "PrimaryRelations" and "KeyStateTransitions" parameters. Keep the metadata values highly compressed and dense.
+6. NO FILLER TEXT: Do not include introductory phrases, markdown formatting blocks, explanations, notes, or conversational signature text.
+7. OUTPUT FORMAT: You must output ONLY a raw, valid JSON object following the exact layout defined below. Do not wrap the JSON inside markdown triple-backtick (```) code blocks. Use dense, short shorthand values for relationships and transitions to maximize processing speeds.
+
+# REQUIRED JSON STRUCTURE
+{
+  "CORE_DOMAIN": "{{BUSINESS_IDEA}}",
+  "AllCoreBusinessObjects": [
+    "[First Core Object Name]",
+    "[Second Core Object Name (Repeat sequentially to finish the entire end-to-end list first)]"
+  ],
+  "BusinessObjectsDeepArchitecture": [
+    {
+      "BusinessObjectName": "[Match First Core Object Name From Above]",
+      "PrimaryRelations": [
+        "[How it links to other objects, e.g., Belongs to Organization (M:1)]"
+      ],
+      "KeyStateTransitions": [
+        "[The sequential lifecycle phases, e.g., Created -> Processing -> Active]"
+      ]
+    }
+  ]
+}
+
+
+    {
+     
+

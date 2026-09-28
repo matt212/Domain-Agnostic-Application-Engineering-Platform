@@ -1,0 +1,144 @@
+User:
+# ROLE & GOAL
+You are an expert Enterprise Software Architect and Domain-Driven Design (DDD) specialist. Your sole objective is to take a pre-extracted list of core Business Objects and enrich them with precise Primary Relations and Key State Transitions.
+
+# BUSINESS CONTEXT
+- Target Business Idea: \E Commerce
+- Grounded Core Business Objects List: \[    "Organization",    "Product",    "Customer",    "Order",    "OrderLine",    "Inventory",    "Payment",    "ShippingAddress",    "Supplier",    "Warehouse"  ]
+
+# INSTRUCTIONS & CONSTRAINTS
+1. ITERATIVE ENRICHMENT: For every single operational business object name string present in the \[    "Organization",    "Product",    "Customer",    "Order",    "OrderLine",    "Inventory",    "Payment",    "ShippingAddress",    "Supplier",    "Warehouse"  ] list, map out its specific architectural metadata details.
+2. STRICT COMPLIANCE: Do not add any new entities, do not omit entities, and do not introduce generic engineering lookup records. Follow the exact order provided.
+3. NO FILLER TEXT: Do not include introductory phrases, explanations, notes, or markdown formatting backticks (```).
+4. OUTPUT FORMAT: You must output ONLY a raw, valid JSON object following the exact layout defined below. Use compressed, dense shorthand values for relationships and transitions to maximize execution speed.
+
+# REQUIRED JSON STRUCTURE
+{
+  "CORE_DOMAIN": "E Commerce",
+  "BusinessObjectsDeepArchitecture": [
+    {
+      "BusinessObjectName": "[Exact Name From Provided List]",
+      "PrimaryRelations": [
+        "[How it links to other objects in the list, e.g., Belongs to Organization (M:1)]"
+      ],
+      "KeyStateTransitions": [
+        "[The sequential lifecycle phases, e.g., Created -> Processing -> Active]"
+      ]
+    }
+  ]
+}
+============================================================
+OUTPUT
+======
+Return ONLY this JSON structure
+
+Assistant:
+{
+  "CORE_DOMAIN": "E Commerce",
+  "BusinessObjectsDeepArchitecture": [
+    {
+      "BusinessObjectName": "Organization",
+      "PrimaryRelations": [
+        "Owns Customer (1:M)",
+        "Owns Product (1:M)",
+        "Owns Supplier (1:M)",
+        "Owns Warehouse (1:M)"
+      ],
+      "KeyStateTransitions": [
+        "Created -> Active -> Inactive"
+      ]
+    },
+    {
+      "BusinessObjectName": "Product",
+      "PrimaryRelations": [
+        "Belongs to Organization (M:1)",
+        "Has Inventory (1:M)",
+        "Is in OrderLine (1:M)"
+      ],
+      "KeyStateTransitions": [
+        "Created -> Active -> Discontinued"
+      ]
+    },
+    {
+      "BusinessObjectName": "Customer",
+      "PrimaryRelations": [
+        "Belongs to Organization (M:1)",
+        "Has Order (1:M)",
+        "Has ShippingAddress (1:M)"
+      ],
+      "KeyStateTransitions": [
+        "Registered -> Active -> Suspended"
+      ]
+    },
+    {
+      "BusinessObjectName": "Order",
+      "PrimaryRelations": [
+        "Belongs to Customer (M:1)",
+        "Has OrderLine (1:M)",
+        "Has Payment (1:M)"
+      ],
+      "KeyStateTransitions": [
+        "Created -> Processing -> Shipped -> Completed -> Cancelled"
+      ]
+    },
+    {
+      "BusinessObjectName": "OrderLine",
+      "PrimaryRelations": [
+        "Belongs to Order (M:1)",
+        "Belongs to Product (M:1)"
+      ],
+      "KeyStateTransitions": [
+        "Created -> Reserved -> Shipped -> Cancelled"
+      ]
+    },
+    {
+      "BusinessObjectName": "Inventory",
+      "PrimaryRelations": [
+        "Belongs to Product (M:1)",
+        "Belongs to Warehouse (M:1)"
+      ],
+      "KeyStateTransitions": [
+        "Created -> InStock -> OutOfStock"
+      ]
+    },
+    {
+      "BusinessObjectName": "Payment",
+      "PrimaryRelations": [
+        "Belongs to Order (M:1)"
+      ],
+      "KeyStateTransitions": [
+        "Initiated -> Approved -> Failed -> Refunded"
+      ]
+    },
+    {
+      "BusinessObjectName": "ShippingAddress",
+      "PrimaryRelations": [
+        "Belongs to Customer (M:1)"
+      ],
+      "KeyStateTransitions": [
+        "Created -> Active -> Deactivated"
+      ]
+    },
+    {
+      "BusinessObjectName": "Supplier",
+      "PrimaryRelations": [
+        "Belongs to Organization (M:1)",
+        "Supplies Product (1:M)"
+      ],
+      "KeyStateTransitions": [
+        "Registered -> Active -> Inactive"
+      ]
+    },
+    {
+      "BusinessObjectName": "Warehouse",
+      "PrimaryRelations": [
+        "Belongs to Organization (M:1)",
+        "Has Inventory (1:M)"
+      ],
+      "KeyStateTransitions": [
+        "Created -> Operational -> Closed"
+      ]
+    }
+  ]
+}
+

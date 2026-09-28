@@ -1,15 +1,15 @@
 #!/bin/bash
 
 # 1. Capture the Business Idea target dynamically
-BUSINESS_IDEA="${1:-online grocery store}"
+BUSINESS_IDEA="${1:-E Commerce}"
 
 if [ -z "$BUSINESS_IDEA" ]; then
   echo "❌ CRITICAL ERROR: You must provide a business idea parameter string."
   exit 1
 fi
 
-PROMPT_FILE="app/utils/appflowgeneratorAI/promptFile/business-discovery-prompt9businessObjects.txt"
-OUTPUT_FILE="app/utils/appflowgeneratorAI/aiOutput/business-discovery-result-8b22.txt"
+PROMPT_FILE="app/utils/appflowgeneratorAI/promptFile/Business-discovery-prompt10businessObjects.txt"
+OUTPUT_FILE="app/utils/appflowgeneratorAI/aiOutput/business-discovery-result-8b25.txt"
 
 echo "🌐 STEP 1: Fetching official raw machine-readable Schema.org layer..."
 # Use Schema.org's official developer export layer for raw text matching
@@ -45,7 +45,7 @@ llama-cli \
   --single-turn \
   --reasoning off \
   -p "$PROMPT" \
-  -n 800 \
+  -n 1200 \
   -o "$OUTPUT_FILE"
 
 echo "✅ Finished! High-precision grounded unique schema saved to $OUTPUT_FILE"
