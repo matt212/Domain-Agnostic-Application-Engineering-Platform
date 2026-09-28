@@ -1,105 +1,27 @@
 User:
-You are an expert Enterprise Data Architect. Your task is to analyze a business idea and extract its core Business Objects with 100% precision. 
+You are an expert Enterprise Data Architect. Your task is to analyze a business idea alongside provided internet research data and extract its core business concepts with 100% precision.
 
-A "Business Object" is a fundamental entity (a noun) that the business sells, provides, manufactures, manages, receives, or tracks. Do not include abstract concepts, actions, or system features.
-
-Analyze the business idea provided at the end of this prompt and output a JSON array of Business Objects strictly following these rules:
-
-1. ENTITY IDENTIFICATION: Identify ONLY distinct, tangible, or legally binding entities (e.g., Customer, Product, Order, Invoice, Employee).
-2. DEFINITION: For each object, provide a clear, concise operational definition.
-3. CORE ATTRIBUTES: For each object, list 3-5 foundational attributes (fields/data points it must hold).
-4. RELATIONSHIPS: For each object, list its relationships to other objects in the system.
-5. DATA VALIDATION MANDATE: Cross-reference every identified Business Object against standard industry schemas (such as Schema.org, Fowler's Analysis Patterns, or standard ERP models). Map the object to its closest official equivalent to ensure industry-standard naming conventions (e.g., prefer "Organization/Person" or "Customer" over "Buyer Profile").
-6. STRICT NEGATIVE CONSTRAINT: Do not include processes, verbs, workflow states, or software UI elements (e.g., "Login System", "Payment Processing", "In Cart", and "Search Button" are strictly forbidden. Use "User", "Transaction", and "Order" instead).
-7. STRUCTURAL COVERAGE & NORMALIZATION MANDATE:
-   - Every relationship must be perfectly reciprocal. If Object A references Object B, Object B MUST reference Object A using matching relationship logic. Do not reference external entities (like "Bank") unless they are defined as separate objects in the array.
-   - Separate Many-to-Many relationships. If an entity contains quantities or line items (like a shopping cart or an order containing multiple distinct products), you MUST explicitly break it down into line-item business objects (e.g., "Order Line Item").
-   - Ensure every 'industry_validated_mapping' strictly uses actual, existing standard schemas (e.g., use Schema.org/Offer for Inventory, Schema.org/OrderItem for line items).
+EXECUTE THE ARCHITECTURAL REASONING PIPELINE IN THESE EXACT STEPS:
+1. INTERNET RESEARCH & ALIGNMENT: Read the provided [DOMAIN CONTEXT & EXTRACTED SEARCH DATA] text block fetched live from the internet lookup registry. Identify exactly ONE primary, dominant real-world reference company that successfully operates this exact business model.
+2. OPERATIONAL DOMAIN BOUNDARY: Define the precise backend infrastructure boundaries, scale, and exact software application type (e.g., ERP, CRM, B2C Marketplace Store) that this reference business operates in.
+3. MANDATORY APPLICATION MODULES DEFINITION: Based strictly on the application type and domain identified in Step 2, define the non-negotiable, mandatory core software modules and building blocks that MUST exist in this type of system architecture to manage what the enterprise sells, provides, manufactures, handles, receives, or works with daily.
+4. CONCEPT IDENTIFICATION: For each mandatory software module defined in Step 3, extract the comprehensive list of core concepts, nouns, physical assets, and tracking records the business operates with on the floor daily.
 
 OUTPUT FORMAT:
-Respond ONLY with a valid JSON array of objects. Do not include any conversational filler, markdown formatting blocks (like ```json), intro, or outro text. Use this exact structure for each object in the array:
+Respond ONLY with a valid single JSON object block. Do not include any conversational filler, markdown formatting blocks (like ```json), intro, or outro text. You must stop the response string immediately after closing the array for identified_concepts:
 {
-  "business_object": "Standardized Name",
-  "industry_validated_mapping": "Schema.org or ERP standard equivalent name",
-  "definition": "...",
-  "attributes": ["attr1", "attr2", "attr3"],
-  "relationships": ["Relationship 1", "Relationship 2"]
+  "business_reference": "Name of the single primary real-world reference company identified in Step 1",
+  "business_domain": "The precise operational domain, scale, and backend category defined in Step 2",
+  "mandatory_application_modules": "Detailed summary mapping the mandatory core software modules and system building blocks required by this specific application type and reference domain",
+  "identified_concepts": ["concept1", "concept2", "concept3"]
 }
 
 [BUSINESS IDEA]:
-ERP
+online groceries store
 
-Assistant:
-[
-  {
-    "business_object": "Organization",
-    "industry_validated_mapping": "schema.org/Organization",
-    "definition": "A legal or registered entity that engages in business activities, such as a company, corporation, or partnership.",
-    "attributes": ["name", "legal_id", "industry", "address", "contact_info"],
-    "relationships": ["hasEmployee", "hasLocation", "hasProduct"]
-  },
-  {
-    "business_object": "Product",
-    "industry_validated_mapping": "schema.org/Product",
-    "definition": "A tangible or digital item that is manufactured, sold, or provided by an organization.",
-    "attributes": ["name", "sku", "description", "price", "category"],
-    "relationships": ["belongsToOrganization", "hasInventory", "isInOrder"]
-  },
-  {
-    "business_object": "Inventory",
-    "industry_validated_mapping": "schema.org/Inventory",
-    "definition": "A record of the quantity and status of products available for sale or use.",
-    "attributes": ["item", "quantity", "location", "last_restock_date", "min_threshold"],
-    "relationships": ["belongsToOrganization", "hasProduct", "isInStock"]
-  },
-  {
-    "business_object": "Order",
-    "industry_validated_mapping": "schema.org/Order",
-    "definition": "A record of a customer's request to purchase products or services.",
-    "attributes": ["order_id", "date", "status", "total_amount", "customer"],
-    "relationships": ["belongsToCustomer", "hasOrderLineItem", "belongsToOrganization"]
-  },
-  {
-    "business_object": "OrderLineItem",
-    "industry_validated_mapping": "schema.org/OrderItem",
-    "definition": "A specific product or service included in an order, along with its quantity and price.",
-    "attributes": ["order", "product", "quantity", "unit_price", "total_price"],
-    "relationships": ["belongsToOrder", "belongsToProduct"]
-  },
-  {
-    "business_object": "Customer",
-    "industry_validated_mapping": "schema.org/Person",
-    "definition": "An individual or entity that purchases products or services from an organization.",
-    "attributes": ["name", "email", "phone", "address", "account_status"],
-    "relationships": ["hasOrder", "belongsToOrganization"]
-  },
-  {
-    "business_object": "Employee",
-    "industry_validated_mapping": "schema.org/Person",
-    "definition": "An individual who works for an organization and performs specific roles or tasks.",
-    "attributes": ["name", "role", "email", "hire_date", "department"],
-    "relationships": ["belongsToOrganization", "hasAccessTo"]
-  },
-  {
-    "business_object": "Location",
-    "industry_validated_mapping": "schema.org/Place",
-    "definition": "A physical or virtual location associated with an organization or entity.",
-    "attributes": ["name", "address", "type", "capacity", "status"],
-    "relationships": ["belongsToOrganization", "hasInventory"]
-  },
-  {
-    "business_object": "Transaction",
-    "industry_validated_mapping": "schema.org/Transaction",
-    "definition": "A record of a financial exchange between an organization and a customer or vendor.",
-    "attributes": ["transaction_id", "date", "amount", "type", "related_order"],
-    "relationships": ["belongsToCustomer", "belongsToOrganization"]
-  },
-  {
-    "business_object": "Supplier",
-    "industry_validated_mapping": "schema.org/Organization",
-    "definition": "An entity that provides products or services to an organization.",
-    "attributes": ["name", "contact_info", "products_supplied", "terms_of_service"],
-    "relationships": ["sellsToOrganization", "hasProduct"]
-  }
-]
+[DOMAIN CONTEXT & EXTRACTED SEARCH DATA]:
+Enterprise systems infrastructure managing core operational records, user actor profiles, resource ledgers, and fulfillment tracking nodes.
+
+[AUTOMATED PIPELINE VALIDATION RESULTS]:
+[THREAD_METRICS: UNIX_TIME=1790592769 NODE_ARCH=x86_64 REASONING_TARGET=online groceries store]
 

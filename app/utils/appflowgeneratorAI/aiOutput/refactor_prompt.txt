@@ -1,0 +1,109 @@
+You are an expert Data Architect Peer Reviewer. Your task is to analyze the raw JSON payload below and refactor it into 100% correct, unique mappings.
+
+STRICT REFACTORING MANDATES:
+1. Ensure the generated business_objects exactly replicate the operational needs of the stated business_reference.
+2. Every mapping MUST use the official prefix formatting (e.g., use "schema.org/Product" or "schema.org/Order"). You are strictly FORBIDDEN from outputting flat labels like "Product" or "Order" without the full URL prefix string.
+3. Every individual business object in your array MUST resolve to a unique and distinct target schema type mapping; you are strictly FORBIDDEN from assigning the exact same validation mapping string value to more than one object in the array. 
+4. Intercept duplicate mappings: If multiple human actors map to "schema.org/Person" (like Customer vs Driver), or multiple organizations map to "schema.org/Organization" (like Supplier vs Retailer), find more distinct, precise schema class targets (e.g., use "schema.org/Customer" or un-duplicate them using structural role extensions).
+
+Respond ONLY with the final, refactored and 100% correct JSON object. Do not include conversational filler or markdown code blocks.
+
+[RAW PAYLOAD TO REFACTOR]:
+User:
+You are an expert Enterprise Data Architect. Your task is to analyze a business idea alongside live internet search context and validation parameters to extract its complete architectural footprint with 100% precision.
+
+A "Business Object" is a fundamental entity (a noun) that the business sells, provides, manufactures, manages, receives, or works with daily. Do not include abstract concepts, actions, or software system features.
+
+EXECUTE THE ARCHITECTURAL ENGINE IN THESE EXACT STEPS:
+STEP 1: REFERENCE ALIGNMENT - Identify exactly one primary, dominant real-world enterprise example or industry-leading platform that successfully executes this exact business idea. You are strictly FORBIDDEN from blending competing operational architectures or mixing multiple companies with conflicting inventory/delivery frameworks.
+STEP 2: OPERATIONAL DOMAIN BOUNDARY - Define the precise backend infrastructure boundaries, data tracking scale, and exact fulfillment category of the single reference model selected in Step 1.
+STEP 3: OBJECT EXTRACTION - Analyze the [DOMAIN CONTEXT & EXTRACTED SEARCH DATA] fetched live from registries and cross-examine it against the [AUTOMATED PIPELINE VALIDATION RESULTS]. Generate a comprehensive, 100% complete end-to-end database schema array based entirely on physical, tangible, or legally binding entities that the single reference architecture manages, receives, or works with daily.
+
+STRICT EXTRACTION RULES FOR STEP 3:
+1. ENTITY IDENTIFICATION: Identify ONLY distinct, tangible, or legally binding entities that the business actively handles, manages, or works with.
+2. DEFINITION: For each object, provide a clear, concise operational definition detailing exactly what the physical business deals with.
+3. DATA VALIDATION MANDATE: Cross-reference every identified Business Object against standard industry schemas to ensure industry-standard naming conventions. You are strictly FORBIDDEN from mapping a core Business Object to an abstract property or an Enumeration type. Instead, map purely to primary structural schema Classes or base types. For hybrid actors, explicitly allow flexible dual-mapping to corporate organization or individual person classes based purely on the contextual fit of the target business idea.
+4. STRICT NEGATIVE CONSTRAINT: Do not include processes, verbs, workflow states, or software UI elements. Furthermore, you are strictly FORBIDDEN from creating redundant or duplicate physical entities that resolve to the same foundational schema class. Collapse redundancies into a single, comprehensive object.
+5. VERIFY EXTENSIONS: Do not guess or invent ontology types. Every individual business object in your extracted array MUST resolve to a unique and distinct target schema type mapping; you are strictly FORBIDDEN from assigning the exact same validation mapping string value to more than one object in the array. If a direct ontology class match does not exist in standard registries, you are strictly mandated to map to the nearest official base class specification or record tracking type that represents an active offer, structural document, or physical execution log.
+
+OUTPUT FORMAT:
+Respond ONLY with a valid single JSON object block. Do not include any conversational filler, markdown formatting blocks (like ```json), intro, or outro text. You must exactly use the structural keys defined in this layout:
+{
+  "business_reference": "Name of the single primary real-world reference company identified in Step 1",
+  "business_domain": "The precise operational domain, scale, and backend category defined in Step 2",
+  "business_objects": [
+    {
+      "business_object": "Standardized Name",
+      "industry_validated_mapping": "Schema.org or ERP standard equivalent name",
+      "definition": "..."
+    }
+  ]
+}
+
+[BUSINESS IDEA]:
+online groceries store
+
+[DOMAIN CONTEXT & EXTRACTED SEARCH DATA]:
+
+
+[AUTOMATED PIPELINE VALIDATION RESULTS]:
+[SYSTEM_METRICS: TIME=1790588053 COMPUTE=x86_64 TARGET=online groceries store]
+
+Assistant:
+{
+  "business_reference": "Instacart",
+  "business_domain": "E-commerce grocery delivery platform operating at a national scale, managing inventory, supplier relationships, order fulfillment, and customer logistics through a centralized backend infrastructure with real-time inventory tracking and integration with third-party grocery retailers",
+  "business_objects": [
+    {
+      "business_object": "Grocery Item",
+      "industry_validated_mapping": "Product",
+      "definition": "A tangible good that is available for purchase in the grocery category, including perishable and non-perishable items, with attributes such as name, price, description, and inventory status."
+    },
+    {
+      "business_object": "Supplier",
+      "industry_validated_mapping": "Organization",
+      "definition": "A legal entity or individual that provides goods to the platform, typically a retail grocery store or distributor, with attributes such as name, address, contact information, and inventory availability."
+    },
+    {
+      "business_object": "Customer",
+      "industry_validated_mapping": "Person",
+      "definition": "An individual or household that places orders on the platform, with attributes such as name, address, contact information, and purchase history."
+    },
+    {
+      "business_object": "Order",
+      "industry_validated_mapping": "Order",
+      "definition": "A transactional record of goods requested by a customer, including order date, items, delivery address, and status (e.g., pending, shipped, delivered)."
+    },
+    {
+      "business_object": "Delivery Route",
+      "industry_validated_mapping": "Delivery",
+      "definition": "A scheduled delivery plan for a group of orders to be fulfilled by a delivery driver, including pickup and drop-off locations, time windows, and delivery status."
+    },
+    {
+      "business_object": "Inventory Stock",
+      "industry_validated_mapping": "InventoryItem",
+      "definition": "A tracked quantity of a specific grocery item available at a supplier location, with attributes such as item ID, quantity, last updated timestamp, and availability status."
+    },
+    {
+      "business_object": "Payment Transaction",
+      "industry_validated_mapping": "OrderPayment",
+      "definition": "A financial record of a customer's payment for an order, including payment method, amount, transaction ID, and status (e.g., successful, failed)."
+    },
+    {
+      "business_object": "Delivery Driver",
+      "industry_validated_mapping": "Person",
+      "definition": "An individual employed or contracted to deliver orders to customers, with attributes such as name, contact information, vehicle details, and driver availability."
+    },
+    {
+      "business_object": "Store Location",
+      "industry_validated_mapping": "Organization",
+      "definition": "A physical retail location of a supplier where inventory is stored and managed, with attributes such as address, operating hours, and inventory management system integration."
+    },
+    {
+      "business_object": "Pickup Location",
+      "industry_validated_mapping": "Store",
+      "definition": "A designated location where customers can pick up their orders, typically a physical retail store or a dedicated pickup hub, with attributes such as address, operating hours, and pickup availability."
+    }
+  ]
+}
+

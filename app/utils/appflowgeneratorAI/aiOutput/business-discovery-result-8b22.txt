@@ -1,0 +1,89 @@
+User:
+# ROLE & GOAL
+You are an expert Enterprise Software Architect and Domain-Driven Design (DDD) specialist. Your sole objective is to output a precise, production-ready blueprint of core Business Objects for a specific business idea based on grounded reference schemas.
+
+# BUSINESS CONTEXT
+- Target Business Idea: online grocery store
+- Schema Reference Dump:           @type: Organization,
+- Integrity Metadata: [THREAD_INTEGRITY_LOG: TIME=1790599840 ARCH=x86_64 REASONING_TARGET=online grocery store]
+
+# DEFINITION OF BUSINESS OBJECTS
+A "Business Object" is a core domain entity within the application architecture. It represents what the system sells, provides, manufactures, manages, receives, stores, or directly works with. It is NOT a business goal, milestone, or task.
+
+# INSTRUCTIONS & CONSTRAINTS
+1. STRICT TRUTH: Rely heavily on the schema definitions provided in the Reference Dump. If a direct match is missing, construct the entities using industry-standard enterprise software blueprints for a online grocery store platform.
+2. STRUCTURAL RIGOR: You must identify exactly 5 to 8 critical core Business Objects required to make this specific application functional.
+3. NO FILLER text: Do not include introductory phrases like "Sure, here is your...", do not include notes, do not explain your thought process, and do not append conversational signature text. 
+4. OUTPUT FORMAT: You must output ONLY a valid markdown block following the exact structural template defined below.
+
+# REQUIRED OUTPUT FORMAT TEMPLATE
+### 🏢 CORE DOMAIN: [Insert System Name/Domain Here]
+
+#### [Business Object Name 1]
+- **Definition:** [One concise sentence describing what this object manages/represents in the real world]
+- **Core Attributes:** [Comma-separated list of technical attributes, e.g., id (UUID), status (Enum), created_at (Timestamp), name (String)]
+- **Primary Relations:** [How it links to other objects, e.g., Belongs to Customer (1:M), Contains LineItems (1:M)]
+- **Key State Transitions:** [The lifecycle phases, e.g., Created -> Processing -> Active -> Archived]
+
+#### [Business Object Name 2]
+- **Definition:** ...
+- **Core Attributes:** ...
+- **Primary Relations:** ...
+- **Key State Transitions:** ...
+
+[Repeat the layout precisely for all remaining 3-6 identified Business Objects]
+============================================================
+OUTPUT
+======
+
+Return ONLY this JSON structure
+
+Assistant:
+{
+  "CORE_DOMAIN": "Online Grocery Store",
+  "BusinessObjects": [
+    {
+      "BusinessObject": "Product",
+      "Definition": "A physical item that can be purchased in the online grocery store",
+      "CoreAttributes": "id (UUID), name (String), description (String), price (Decimal), category (String), stock_quantity (Integer), supplier_id (UUID), created_at (Timestamp), updated_at (Timestamp)",
+      "PrimaryRelations": "Belongs to Category (1:M), Belongs to Supplier (1:1), Contains Inventory (1:M), Contains Reviews (1:M)",
+      "KeyStateTransitions": "Created -> Active -> Discontinued"
+    },
+    {
+      "BusinessObject": "Category",
+      "Definition": "A classification of products for organizational and search purposes",
+      "CoreAttributes": "id (UUID), name (String), description (String), created_at (Timestamp), updated_at (Timestamp)",
+      "PrimaryRelations": "Contains Products (1:M), Belongs to Supplier (1:M)",
+      "KeyStateTransitions": "Created -> Active -> Archived"
+    },
+    {
+      "BusinessObject": "Customer",
+      "Definition": "A user who purchases products from the online grocery store",
+      "CoreAttributes": "id (UUID), first_name (String), last_name (String), email (String), password_hash (String), phone (String), address (String), created_at (Timestamp), updated_at (Timestamp)",
+      "PrimaryRelations": "Has Orders (1:M), Belongs to Address (1:1), Belongs to PaymentMethod (1:M)",
+      "KeyStateTransitions": "Created -> Active -> Suspended"
+    },
+    {
+      "BusinessObject": "Order",
+      "Definition": "A record of a customer's purchase transaction",
+      "CoreAttributes": "id (UUID), customer_id (UUID), order_date (Timestamp), total_amount (Decimal), status (Enum), shipping_address (String), billing_address (String), created_at (Timestamp), updated_at (Timestamp)",
+      "PrimaryRelations": "Belongs to Customer (1:1), Contains LineItems (1:M), Belongs to Payment (1:1), Belongs to Shipping (1:1)",
+      "KeyStateTransitions": "Created -> Processing -> Paid -> Shipped -> Delivered -> Cancelled"
+    },
+    {
+      "BusinessObject": "Inventory",
+      "Definition": "A record of product stock availability in the online grocery store",
+      "CoreAttributes": "id (UUID), product_id (UUID), quantity (Integer), last_restock_date (Timestamp), warehouse_location (String), created_at (Timestamp), updated_at (Timestamp)",
+      "PrimaryRelations": "Belongs to Product (1:1), Belongs to Warehouse (1:1)",
+      "KeyStateTransitions": "Created -> Active -> LowStock -> OutOfStock"
+    },
+    {
+      "BusinessObject": "Supplier",
+      "Definition": "A business entity that provides products to the online grocery store",
+      "CoreAttributes": "id (UUID), name (String), contact_info (String), address (String), rating (Decimal), created_at (Timestamp), updated_at (Timestamp)",
+      "PrimaryRelations": "Provides Products (1:M), Belongs to Category (1:M), Has Contracts (1:M)",
+      "KeyStateTransitions": "Created -> Active -> Suspended -> Terminated"
+    }
+  ]
+}
+
