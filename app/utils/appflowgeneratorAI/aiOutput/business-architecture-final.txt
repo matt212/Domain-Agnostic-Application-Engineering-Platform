@@ -3,18 +3,18 @@ User:
 You are an expert Enterprise Software Architect and Domain-Driven Design (DDD) specialist. Your sole objective is to take a pre-extracted list of core Business Objects and enrich them with precise Primary Relations and Key State Transitions.
 
 # BUSINESS CONTEXT
-- Target Business Idea: \E Commerce
-- Grounded Core Business Objects List: \[    "Organization",    "Product",    "Customer",    "Order",    "OrderLine",    "Inventory",    "Payment",    "ShippingAddress",    "Supplier",    "Warehouse"  ]
+- Target Business Idea: \online groceries store
+- Grounded Core Business Objects List: \[ "Customer", "Product", "Order", "OrderLine", "Inventory", "Supplier", "Warehouse", "Payment", "ShippingAddress", "Delivery" ]
 
 # INSTRUCTIONS & CONSTRAINTS
-1. ITERATIVE ENRICHMENT: For every single operational business object name string present in the \[    "Organization",    "Product",    "Customer",    "Order",    "OrderLine",    "Inventory",    "Payment",    "ShippingAddress",    "Supplier",    "Warehouse"  ] list, map out its specific architectural metadata details.
+1. ITERATIVE ENRICHMENT: For every single operational business object name string present in the \[ "Customer", "Product", "Order", "OrderLine", "Inventory", "Supplier", "Warehouse", "Payment", "ShippingAddress", "Delivery" ] list, map out its specific architectural metadata details.
 2. STRICT COMPLIANCE: Do not add any new entities, do not omit entities, and do not introduce generic engineering lookup records. Follow the exact order provided.
 3. NO FILLER TEXT: Do not include introductory phrases, explanations, notes, or markdown formatting backticks (```).
 4. OUTPUT FORMAT: You must output ONLY a raw, valid JSON object following the exact layout defined below. Use compressed, dense shorthand values for relationships and transitions to maximize execution speed.
 
 # REQUIRED JSON STRUCTURE
 {
-  "CORE_DOMAIN": "E Commerce",
+  "CORE_DOMAIN": "online groceries store",
   "BusinessObjectsDeepArchitecture": [
     {
       "BusinessObjectName": "[Exact Name From Provided List]",
@@ -34,77 +34,87 @@ Return ONLY this JSON structure
 
 Assistant:
 {
-  "CORE_DOMAIN": "E Commerce",
+  "CORE_DOMAIN": "online groceries store",
   "BusinessObjectsDeepArchitecture": [
     {
-      "BusinessObjectName": "Organization",
+      "BusinessObjectName": "Customer",
       "PrimaryRelations": [
-        "Owns Customer (1:M)",
-        "Owns Product (1:M)",
-        "Owns Supplier (1:M)",
-        "Owns Warehouse (1:M)"
+        "Owns ShippingAddress (1:M)",
+        "Places Order (1:M)"
       ],
       "KeyStateTransitions": [
-        "Created -> Active -> Inactive"
+        "Registered -> Active -> Suspended -> Deleted"
       ]
     },
     {
       "BusinessObjectName": "Product",
       "PrimaryRelations": [
-        "Belongs to Organization (M:1)",
-        "Has Inventory (1:M)",
-        "Is in OrderLine (1:M)"
+        "Belongs to Inventory (1:M)",
+        "Supplied by Supplier (1:M)",
+        "Stored in Warehouse (1:M)"
       ],
       "KeyStateTransitions": [
-        "Created -> Active -> Discontinued"
-      ]
-    },
-    {
-      "BusinessObjectName": "Customer",
-      "PrimaryRelations": [
-        "Belongs to Organization (M:1)",
-        "Has Order (1:M)",
-        "Has ShippingAddress (1:M)"
-      ],
-      "KeyStateTransitions": [
-        "Registered -> Active -> Suspended"
+        "Created -> Available -> OutOfStock -> Discontinued"
       ]
     },
     {
       "BusinessObjectName": "Order",
       "PrimaryRelations": [
-        "Belongs to Customer (M:1)",
-        "Has OrderLine (1:M)",
-        "Has Payment (1:M)"
+        "Belongs to Customer (1:M)",
+        "Contains OrderLine (1:M)",
+        "Has Payment (1:M)",
+        "Has ShippingAddress (1:M)",
+        "Linked to Delivery (1:M)"
       ],
       "KeyStateTransitions": [
-        "Created -> Processing -> Shipped -> Completed -> Cancelled"
+        "Created -> Paid -> Processing -> Shipped -> Delivered -> Cancelled"
       ]
     },
     {
       "BusinessObjectName": "OrderLine",
       "PrimaryRelations": [
         "Belongs to Order (M:1)",
-        "Belongs to Product (M:1)"
+        "References Product (M:1)"
       ],
       "KeyStateTransitions": [
-        "Created -> Reserved -> Shipped -> Cancelled"
+        "Created -> Confirmed -> Shipped -> Delivered"
       ]
     },
     {
       "BusinessObjectName": "Inventory",
       "PrimaryRelations": [
-        "Belongs to Product (M:1)",
-        "Belongs to Warehouse (M:1)"
+        "Contains Product (1:M)",
+        "Linked to Warehouse (1:M)"
       ],
       "KeyStateTransitions": [
-        "Created -> InStock -> OutOfStock"
+        "Initialized -> Stocked -> Depleted -> Replenished"
+      ]
+    },
+    {
+      "BusinessObjectName": "Supplier",
+      "PrimaryRelations": [
+        "Supplies Product (1:M)",
+        "Linked to Warehouse (1:M)"
+      ],
+      "KeyStateTransitions": [
+        "Registered -> Active -> Suspended -> Deleted"
+      ]
+    },
+    {
+      "BusinessObjectName": "Warehouse",
+      "PrimaryRelations": [
+        "Stores Inventory (1:M)",
+        "Linked to Supplier (1:M)"
+      ],
+      "KeyStateTransitions": [
+        "Initialized -> Operational -> Maintenance -> Decommissioned"
       ]
     },
     {
       "BusinessObjectName": "Payment",
       "PrimaryRelations": [
-        "Belongs to Order (M:1)"
+        "Belongs to Order (M:1)",
+        "Processed by PaymentGateway (1:1)"
       ],
       "KeyStateTransitions": [
         "Initiated -> Approved -> Failed -> Refunded"
@@ -113,30 +123,21 @@ Assistant:
     {
       "BusinessObjectName": "ShippingAddress",
       "PrimaryRelations": [
-        "Belongs to Customer (M:1)"
+        "Belongs to Customer (1:M)",
+        "Linked to Order (M:1)"
       ],
       "KeyStateTransitions": [
-        "Created -> Active -> Deactivated"
+        "Created -> Valid -> Modified -> Deleted"
       ]
     },
     {
-      "BusinessObjectName": "Supplier",
+      "BusinessObjectName": "Delivery",
       "PrimaryRelations": [
-        "Belongs to Organization (M:1)",
-        "Supplies Product (1:M)"
+        "Linked to Order (M:1)",
+        "Linked to Warehouse (1:M)"
       ],
       "KeyStateTransitions": [
-        "Registered -> Active -> Inactive"
-      ]
-    },
-    {
-      "BusinessObjectName": "Warehouse",
-      "PrimaryRelations": [
-        "Belongs to Organization (M:1)",
-        "Has Inventory (1:M)"
-      ],
-      "KeyStateTransitions": [
-        "Created -> Operational -> Closed"
+        "Scheduled -> InTransit -> Delivered -> Cancelled"
       ]
     }
   ]

@@ -3,15 +3,15 @@ User:
 You are an expert Enterprise Software Architect and Domain-Driven Design (DDD) specialist. Your sole objective is to output a precise, production-ready blueprint of core Business Objects for a specific business idea based on grounded reference schemas.
 
 # BUSINESS CONTEXT
-- Target Business Idea: E Commerce
-- Schema Reference Dump:           @type: Organization,
-- Integrity Metadata: [THREAD_INTEGRITY_LOG: TIME=1790608510 ARCH=x86_64 REASONING_TARGET=E Commerce]
+- Target Business Idea: online groceries store
+- Schema Reference Dump: @type: Organization,
+- Integrity Metadata: [THREAD_INTEGRITY_LOG: TIME=1790621787 ARCH=x64 REASONING_TARGET=online groceries store]
 
 # DEFINITION OF BUSINESS OBJECTS
 A "Business Object" is a core domain entity within the application architecture. It represents what the system sells, provides, manufactures, manages, receives, stores, or directly works with. It is NOT a business goal, milestone, or task.
 
 # INSTRUCTIONS & CONSTRAINTS
-1. STRICT TRUTH: Rely heavily on the schema definitions provided in the Reference Dump. If a direct match is missing, construct the entities using industry-standard enterprise software blueprints for a E Commerce platform.
+1. STRICT TRUTH: Rely heavily on the schema definitions provided in the Reference Dump. If a direct match is missing, construct the entities using industry-standard enterprise software blueprints for a online groceries store platform.
 2. APPLICATION FLOW & TRANSACTION DETAILS MANDATE: To identify the true essential objects, you must trace the step-by-step operational lifecycle and user transaction journey of the application. Extract only the active entities that process, record, or fulfill these workflows. For every primary master transaction or collection entity identified, you MUST mechanically extract and include its corresponding multi-item detail records as separate, individual strings (e.g., if a transaction entity holds multiple entry lines, list both the master transaction name and its specific constituent item or line entity name independently in the array).
 3. STRICT BUSINESS REALITY FILTER: You must ONLY include active objects that represent real-world commercial transactions or core operational assets. 
    - ABSOLUTELY FORBID and EXCLUDE technical infrastructure boilerplate (such as storage, loggers, media assets, automation steps, or template systems).
@@ -22,7 +22,7 @@ A "Business Object" is a core domain entity within the application architecture.
 
 # REQUIRED JSON STRUCTURE
 {
-  "CORE_DOMAIN": "E Commerce",
+  "CORE_DOMAIN": "online groceries store",
   "BusinessObjects": [
     "FirstOperationalBusinessObject",
     "SecondOperationalBusinessObject"
@@ -35,18 +35,18 @@ Return ONLY this JSON structure
 
 Assistant:
 {
-  "CORE_DOMAIN": "E Commerce",
+  "CORE_DOMAIN": "online groceries store",
   "BusinessObjects": [
-    "Organization",
-    "Product",
     "Customer",
+    "Product",
     "Order",
     "OrderLine",
     "Inventory",
+    "Supplier",
+    "Warehouse",
     "Payment",
     "ShippingAddress",
-    "Supplier",
-    "Warehouse"
+    "Delivery"
   ]
 }
 

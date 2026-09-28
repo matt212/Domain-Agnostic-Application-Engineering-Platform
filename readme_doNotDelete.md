@@ -557,3 +557,8 @@ npx playwright test playwright/tests/employees.concurrency.spec.js
 
 ###########ai based flow generator#######
 app/utils/appflowgeneratorAI/commands/business-discovery.sh
+
+
+node app/utils/appflowgeneratorAI/commands/combine12.js "online groceries store"
+
+tils/appflowgeneratorAI/commands/generateDiagram.js
