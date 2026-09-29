@@ -45,28 +45,31 @@ const TMP_PROMPT_FILE = path.join(PROJECT_ROOT, 'app/utils/appflowgeneratorAI/pr
        // 2. CONSTRUCT MERMAID PROMPT TEMPLATE WITH MANDATORY INDENTATIONS AND LAYOUT RULES
        // 2. CONSTRUCT MERMAID PROMPT TEMPLATE WITH DYNAMIC NON-REPETITION CONSTRAINTS
         // 2. CONSTRUCT MERMAID PROMPT TEMPLATE WITH MANDATORY CODE BLOCK ENCLOSURES
-    const mermaidPrompt = `You are an expert Systems Architect specializing in visual workflow layout notation. Your sole objective is to read the architectural JSON payload below and translate it into a perfectly formatted, clean, linear 'flowchart TD' Mermaid diagram.
+        
+ const mermaidPrompt   = `You are a strict business domain analyst. Your sole objective is to read the architectural JSON payload below and print a short, sweet, purely functional breakdown of what each business object does.
 
-STRICT VISUAL & REPETITION MANDATES:
-1. CODE BLOCK INITIALIZATION: You MUST start the output with the literal markdown code block wrapper "\`\`\`mermaid" on its own line.
-2. FLOWCHART NOTATION: Directly below the wrapper line, write the literal keyword "flowchart TD" on its own line.
-3. FORCE 4-SPACE INDENTATION: Every single line of code inside the diagram following "flowchart TD" MUST begin with exactly four leading spaces.
-4. GRAPH COMPILATION CONSTRAINTS:
-    - Include 'classDef actor fill:#f7f7f7,stroke:#555,stroke-width:2px;' as the first block configuration line.
-    - Render the primary operational actor node at the top using uppercase 'A' variable name and bind the actor class directly to it using the clean inline suffix format: A["ACTOR: [ActorName]"]:::actor
-    - MANDATORY ACTOR CONNECTION: You MUST explicitly connect the root actor node 'A' directly to the first core operational object identifier node using a labeled arrow link matching this exact format: A -->|"Initiates Workflow"| NODE_ID
-    - Declare each unique object node exactly ONCE using a clean multiline layout format containing the entity name and its parent module name (e.g., NODE_ID["Object Name<br/>Module: Context Module"]).
-    - Map out the directional paths based strictly on the unique object identifiers using labeled arrows: nodeA -->|"Action Label"| nodeB.
-    - CRITICAL TEXT REPLACEMENT RULE: You are strictly FORBIDDEN from including the colon character ":" inside any arrow label text. If a relationship has a string layout like "Owns (1:M)", you MUST strip the colon or replace it with a space or dash (e.g., change it to "Owns 1 to M" or "Owns 1-M") to prevent the Mermaid parser from crashing.
-    - ANTI-LOOP FILTER: You are strictly FORBIDDEN from mapping an edge relation path back onto the exact same node (e.g., do not output nodeA --> nodeA), and you are strictly FORBIDDEN from repeating an identical directional relationship connection that has already been declared.
-5. CODE BLOCK TERMINATION: You MUST close the diagram block by outputting the literal markdown code block enclosure "\`\`\`" on its own line at the very end of the file.
-6. NO EXTRA CHATTER: Do not write explanations, introductions, or conversational footnotes. Output the markdown diagram syntax text directly.
+STRICT FUNCTIONAL EXTRACTION MANDATE:
+1. Read the provided "CORE_DOMAIN" attribute string and extract the exact literal text values from the "BusinessObjects" array.
+2. For each unique entity string present in that array, execute a functional input-output analysis based entirely on its real-world purpose within the scope of the domain.
+3. Print your analysis using the actual text string value of the entity as the heading title. You must fill out the fields dynamically with short, sweet business facts using this exact structure:
+
+### Business Object Name
+- **Input:** State the functional data or human action this item receives to begin.
+- **Activity:** State the short real-world business verification or task it executes.
+- **Output:** State the concrete resulting state or item it delivers downstream.
+
+STRICT CONSTRAINTS:
+- You are strictly FORBIDDEN from printing placeholder brackets, template text variables, or literal instruction examples. You must substitute the real names from the array directly.
+- You are strictly FORBIDDEN from generating a Mermaid block, flowchart code, diagrams, or JavaScript blocks.
+- Do not write introductions, prefaces, setup notes, or conversational footnotes. Start the output text block directly with the very first business object name from the payload array.
 
 [SOURCE ARCHITECTURE PAYLOAD]:
-${rawJsonPayload}
+\${rawJsonPayload}`;
 
 
-`;
+
+
+
     // =========================================================================
 
     // Write the prompt to an intermediate file to maximize llama-cli performance
@@ -77,7 +80,8 @@ ${rawJsonPayload}
     fs.mkdirSync(path.dirname(DIAGRAM_OUTPUT_FILE), { recursive: true });
 
     const args = [
-      '-hf', 'Qwen/Qwen3-8B-GGUF:Q4_K_M',
+    //'-hf', 'Qwen/Qwen3-8B-GGUF:Q4_K_M',
+     '-hf','Qwen/Qwen2.5-Coder-14B-Instruct-GGUF:Q4_K_M',
       '-ngl', '99',
       '--single-turn',
       '--reasoning', 'off',
