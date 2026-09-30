@@ -155,7 +155,14 @@ Re-evaluate, re-order, add, remove, or modify the objects, exactly as requested 
     console.log("🚀 INITIATING INTERACTIVE HUMAN-IN-THE-LOOP BLUEPRINT ENGINE...");
     
     // 1. Get Domain (Deterministic baseline)
-    const domainData = await getBusinessDomain(USER_BUSINESS_INPUT);
+    //const domainData = await getBusinessDomain(USER_BUSINESS_INPUT);
+
+    const domainData = await getInteractiveBusinessDomain(
+      USER_BUSINESS_INPUT, 
+      askQuestion, 
+      callLlamaCli, 
+      parseField
+    );
     console.log(`\nDomain Category Identified: ${domainData.domain} (${domainData.niche})`);
 
     let objectsText = "";
@@ -226,3 +233,34 @@ console.log(assistantContent1);
     process.exit(1);
   }
 })();
+
+async function getInteractiveBusinessDomain(businessIdea, askQuestion, callLlamaCli, parseField) {
+  let userFeedback = null;
+  let previousDraft = "";
+  let domainData = { domain: "", niche: "" };
+
+  while (true) {
+    const prompt = !userFeedback 
+      ? `You are an industry taxonomy system. Analyze this business idea: "${businessIdea}"\nIdentify its modern technology vertical.\nOutput exactly two lines formatted strictly like this:\nDomain: [Name of Vertical]\nNiche: [Target Market Niche]`
+      : `You are an industry taxonomy system. Refine this configuration for: "${businessIdea}"\n\nCurrent Draft:\n${previousDraft}\n\nUser Feedback: "${userFeedback}"\n\nOutput exactly two lines formatted strictly like this:\nDomain: [Name of Vertical]\nNiche: [Target Market Niche]`;
+
+    const output = await callLlamaCli(prompt, 'domain');
+    domainData = parseField(output);
+    previousDraft = `Domain: ${domainData.domain}\nNiche: ${domainData.niche}`;
+
+    console.log(`\n--- CURRENT TAXONOMY EVALUATION ---\n${previousDraft}`);
+
+    const userInput = await askQuestion(`\n👉 Type 'approved' to lock it in, or type modifications to rerun: `);
+    
+    if (userInput.trim().toLowerCase() === 'approved') {
+      console.log(`✅ Classification locked: ${domainData.domain} (${domainData.niche})`);
+      return domainData;
+    }
+
+    userFeedback = userInput.trim();
+  }
+}
+
+
+
+
