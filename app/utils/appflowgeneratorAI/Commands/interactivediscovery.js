@@ -54,13 +54,26 @@ function callLlamaCli(promptText, taskName) {
   });
 }
 
-function parseField(rawText, keyName) {
-  const lines = rawText.split('\n');
-  const matchingLine = lines.find(line => line.toLowerCase().replace(/[*_]/g, '').trim().startsWith(keyName.toLowerCase()));
-  if (!matchingLine) return null;
-  const cleanParts = matchingLine.split(':');
-  if (cleanParts.length < 2) return null;
-  return cleanParts.slice(1).join(':').replace(/[*_]/g, '').trim();
+function parseField(rawText) {
+  // 1. Split the text to focus only on what comes after "Assistant:"
+const assistantPart = rawText.split("Assistant:\n")[1] || "";
+
+// 2. Use Regular Expressions to extract the values after "Domain:" and "Niche:"
+const domainMatch = assistantPart.match(/Domain:\s*(.*)/);
+const nicheMatch = assistantPart.match(/Niche:\s*(.*)/);
+
+// 3. Store the extracted values into your domainData object
+const domainData = {
+    domain: domainMatch ? domainMatch[1].trim() : "",
+    niche: nicheMatch ? nicheMatch[1].trim() : ""
+};
+
+// Verify the results
+console.log("Extracted Object:", domainData);
+console.log("Domain:", domainData.domain);
+console.log("Niche:", domainData.niche);
+
+  return domainData
 }
 
 async function getBusinessDomain(businessIdea) {
@@ -71,10 +84,7 @@ Domain: [Name of Vertical]
 Niche: [Target Market Niche]`;
 
   const output = await callLlamaCli(prompt, 'domain');
-  return {
-    domain: parseField(output, 'Domain') || 'Digital Transformation',
-    niche: parseField(output, 'Niche') || 'On-Demand Operations'
-  };
+  return parseField(output);
 }
 
 // REGENERATION PASS: Consumes the previous draft and applies the human's explicit tuning instructions
@@ -85,7 +95,7 @@ async function getBusinessObjects(businessIdea, domainData, feedbackText = null,
     // Phase 2A: Initial Baseline Generation Pass
     prompt = `You are a database and enterprise systems analyst. 
 Given the business idea: "${businessIdea}" operating in the "domainData.domain (${domainData.niche})" sector.
-1. List the 15-30 most critical  Business Objects  required to execute this model.
+1. List the 10-15 most critical Functional Business Objects  required to execute this model.
 2. APPLICATION FLOW & TRANSACTION DETAILS MANDATE: To identify the true essential objects, you must trace the step-by-step operational lifecycle and user transaction journey of the application. Extract only the active entities that process, record, or fulfill these workflows. For every primary master transaction or collection entity identified, you MUST mechanically extract and include its corresponding multi-item detail records as separate, individual strings (e.g., if a transaction entity holds multiple entry lines, list both the master transaction name and its specific constituent item or line entity name independently in the array).
 3. STRICT BUSINESS REALITY FILTER: You must ONLY include active objects that represent real-world commercial transactions or core operational assets. 
    - ABSOLUTELY FORBID and EXCLUDE technical infrastructure boilerplate (such as storage, loggers, media assets, automation steps, or template systems).
@@ -100,6 +110,18 @@ Format your output exactly as a clean markdown list:
 - **Input:** data received
 - **Activity:** system validation or process executed
 - **Output:** downstream state produced`;
+
+/*for testing only not acutal prompt*/
+/*prompt = `You are a database and enterprise systems analyst. 
+Given the business idea: "${businessIdea}" operating in the "domainData.domain (${domainData.niche})" sector. just give 1-2 business objects only 
+For each object, detail its Input data, primary business activity, and output state.
+
+Format your output exactly as a clean markdown list:
+### [Object Name]
+- **Input:** data received
+- **Activity:** system validation or process executed
+- **Output:** downstream state produced`;
+*/
   } else {
     // Phase 2B: Human Refinement loop injection block
     prompt = `You are a senior enterprise architecture reviewer. 
@@ -170,6 +192,21 @@ Re-evaluate, re-order, add, remove, or modify the objects, exactly as requested 
       if (userInput.trim().toLowerCase() === 'approved') {
         isApproved = true;
         console.log("✅ Architecture foundations locked down by designer! Advancing downstream processing...");
+        const reviewFilePath1 = path.join(OUTPUT_DIR, `final-Objects-for-${domainData.domain}-and-(${domainData.niche}).txt`);
+      fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+      const parts1 = assistantOutput.split(/assistant:\s*/i);
+
+// 2. Safely grab the text after the marker and trim off any starting/trailing empty spaces
+const assistantContent1 = parts1.length > 1 ? parts1[1].trim() : "";
+
+// Output the extracted markdown list
+console.log(assistantContent1);
+
+      fs.writeFileSync(reviewFilePath1, `=== Final DATA MATRIX DRAFT ===\n\n${assistantContent1}`, 'utf8');
+      
+      console.log(`\n--- Final CORE  LINKED ---`);
+      console.log(assistantOutput);
+      console.log(`\n📂 final draft written to disk for next processing: ${reviewFilePath1}`);
       } else {
         userFeedback = userInput.trim();
         iterationCount++;

@@ -1,25 +1,5 @@
-=== CURRENT DATA MATRIX DRAFT ===
+=== Final DATA MATRIX DRAFT ===
 
-User:
-You are a database and enterprise systems analyst. 
-Given the business idea: "online groceries app like if i order i get those within 15 minutes or 30 minutes" operating in the "domainData.domain (Quick Delivery Services)" sector.
-1. List the 10-15 most critical  Business Objects  required to execute this model.
-2. APPLICATION FLOW & TRANSACTION DETAILS MANDATE: To identify the true essential objects, you must trace the step-by-step operational lifecycle and user transaction journey of the application. Extract only the active entities that process, record, or fulfill these workflows. For every primary master transaction or collection entity identified, you MUST mechanically extract and include its corresponding multi-item detail records as separate, individual strings (e.g., if a transaction entity holds multiple entry lines, list both the master transaction name and its specific constituent item or line entity name independently in the array).
-3. STRICT BUSINESS REALITY FILTER: You must ONLY include active objects that represent real-world commercial transactions or core operational assets. 
-   - ABSOLUTELY FORBID and EXCLUDE technical infrastructure boilerplate (such as storage, loggers, media assets, automation steps, or template systems).
-   - ABSOLUTELY FORBID and EXCLUDE non-operational static lookup choices, properties, design details, system utilities, configurations, or data-type descriptors (such as abstract pricing units, feature traits, or value metrics). Every object must represent a standalone commercial operational step or tangible asset entity.
-4. ABSOLUTE DEDUPLICATION (OPERATIONAL ORDER): Every element inside the BusinessObjects array must be 100% unique. To guarantee zero duplicates or repeated entries, you MUST sort the entire array in strict chronological operational order, following the natural step-by-step application transaction flow from start to finish. Do not repeat any business object.
-5. NO FILLER TEXT: Do not include introductory phrases, markdown formatting blocks, explanations, notes, or conversational signature text.
-
-For each object, detail its Input data, primary business activity, and output state.
-
-Format your output exactly as a clean markdown list:
-### [Object Name]
-- **Input:** data received
-- **Activity:** system validation or process executed
-- **Output:** downstream state produced
-
-Assistant:
 ### UserAccount
 - **Input:** User registration data (name, email, password, phone number)
 - **Activity:** Validation of user data; creation of user account
