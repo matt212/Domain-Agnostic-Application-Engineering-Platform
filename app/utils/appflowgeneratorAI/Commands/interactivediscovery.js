@@ -65,7 +65,7 @@ function parseField(rawText, keyName) {
 
 async function getBusinessDomain(businessIdea) {
   const prompt = `You are an industry taxonomy system. Analyze this business idea: "${businessIdea}"
-Identify its modern technology vertical (e.g., Quick Commerce, FinTech, SaaS).
+Identify its modern technology vertical .
 Output exactly two lines formatted strictly like this:
 Domain: [Name of Vertical]
 Niche: [Target Market Niche]`;
@@ -83,8 +83,16 @@ async function getBusinessObjects(businessIdea, domainData, feedbackText = null,
   
   if (!feedbackText) {
     // Phase 2A: Initial Baseline Generation Pass
-    prompt = `You are a systems analyst. Business Idea: "${businessIdea}" operating in the "${domainData.domain} (${domainData.niche})" sector.
-List the 3 most critical internal transactional Business Objects (e.g., Order, InventoryLot, DriverAssignment) required to execute this model.
+    prompt = `You are a database and enterprise systems analyst. 
+Given the business idea: "${businessIdea}" operating in the "domainData.domain (${domainData.niche})" sector.
+1. List the 15-30 most critical  Business Objects  required to execute this model.
+2. APPLICATION FLOW & TRANSACTION DETAILS MANDATE: To identify the true essential objects, you must trace the step-by-step operational lifecycle and user transaction journey of the application. Extract only the active entities that process, record, or fulfill these workflows. For every primary master transaction or collection entity identified, you MUST mechanically extract and include its corresponding multi-item detail records as separate, individual strings (e.g., if a transaction entity holds multiple entry lines, list both the master transaction name and its specific constituent item or line entity name independently in the array).
+3. STRICT BUSINESS REALITY FILTER: You must ONLY include active objects that represent real-world commercial transactions or core operational assets. 
+   - ABSOLUTELY FORBID and EXCLUDE technical infrastructure boilerplate (such as storage, loggers, media assets, automation steps, or template systems).
+   - ABSOLUTELY FORBID and EXCLUDE non-operational static lookup choices, properties, design details, system utilities, configurations, or data-type descriptors (such as abstract pricing units, feature traits, or value metrics). Every object must represent a standalone commercial operational step or tangible asset entity.
+4. ABSOLUTE DEDUPLICATION (OPERATIONAL ORDER): Every element inside the BusinessObjects array must be 100% unique. To guarantee zero duplicates or repeated entries, you MUST sort the entire array in strict chronological operational order, following the natural step-by-step application transaction flow from start to finish. Do not repeat any business object.
+5. NO FILLER TEXT: Do not include introductory phrases, markdown formatting blocks, explanations, notes, or conversational signature text.
+
 For each object, detail its Input data, primary business activity, and output state.
 
 Format your output exactly as a clean markdown list:
@@ -103,7 +111,7 @@ ${previousDraft}
 The human user has given the following explicit feedback and adjustments:
 "${feedbackText}"
 
-Re-evaluate, re-order, add, remove, or modify the objects exactly as requested by the user. Maintain the structural output format:
+Re-evaluate, re-order, add, remove, or modify the objects, exactly as requested by the user. Maintain the structural output format:
 ### [Object Name]
 - **Input:** data received
 - **Activity:** system validation or process executed
@@ -119,7 +127,7 @@ Re-evaluate, re-order, add, remove, or modify the objects exactly as requested b
  * Master Loop Handler
  */
 (async () => {
-  const USER_BUSINESS_INPUT = "A hyper-local dark store grocery chain that delivers organic produce within 15 minutes via an e-bike courier fleet.";
+  const USER_BUSINESS_INPUT = "online groceries app like if i order i get those within 15 minutes or 30 minutes";
   
   try {
     console.log("🚀 INITIATING INTERACTIVE HUMAN-IN-THE-LOOP BLUEPRINT ENGINE...");
@@ -132,19 +140,27 @@ Re-evaluate, re-order, add, remove, or modify the objects exactly as requested b
     let userFeedback = "";
     let isApproved = false;
     let iterationCount = 1;
+    let assistantOutput="";
+    let parts="";
 
     // 2. RUNTIME HUMAN REFINEMENT LOOP (Repeats execution loops dynamically until human types "approved")
     while (!isApproved) {
+      // 1. Split the string by the target marker
+ parts = objectsText.split("Assistant:\n");
+
+// 2. Safely grab the text after the marker (if it exists) and trim whitespace
+ assistantOutput = parts.length > 1 ? parts[1].trim() : "";
+
       console.log(`\n📦 [Iteration #${iterationCount}] Running object structural generation...`);
-      objectsText = await getBusinessObjects(USER_BUSINESS_INPUT, domainData, userFeedback, objectsText);
+      assistantOutput = await getBusinessObjects(USER_BUSINESS_INPUT, domainData, userFeedback, assistantOutput);
       
       // Write current state immediately to a review text file for user inspection
       const reviewFilePath = path.join(OUTPUT_DIR, 'current-objects-review.txt');
       fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-      fs.writeFileSync(reviewFilePath, `=== CURRENT DATA MATRIX DRAFT ===\n\n${objectsText}`, 'utf8');
+      fs.writeFileSync(reviewFilePath, `=== CURRENT DATA MATRIX DRAFT ===\n\n${assistantOutput}`, 'utf8');
       
       console.log(`\n--- CURRENT CORE DRAFT LINKED ---`);
-      console.log(objectsText);
+      console.log(assistantOutput);
       console.log(`\n📂 Current draft written to disk for manual inspection: ${reviewFilePath}`);
       
       const userInput = await askQuestion(

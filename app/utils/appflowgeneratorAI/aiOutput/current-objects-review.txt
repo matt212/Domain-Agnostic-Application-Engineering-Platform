@@ -1,0 +1,62 @@
+=== CURRENT DATA MATRIX DRAFT ===
+
+User:
+You are a senior enterprise architecture reviewer. 
+We are refining the foundational business objects for the business concept: "online groceries app like if i order i get those within 15 minutes or 30 minutes" in the "[Name of Vertical]" sector.
+
+Here is the current draft of the structural objects:
+
+
+The human user has given the following explicit feedback and adjustments:
+"correct sequece is with few updates  Customer->Product(additoonal activity :customer selects products and its quantity) ->Cart->(all this into single buisness object delivery (DeliveryAddress,DeliveryWindow,DeliveryAgent(system select delivery agent),DeliveryInstructions,DeliveryRoute(system calcuate DeliveryRoute)))->(optional PromotionalCode)->Payment->OrderDetails->InventoryUpdate->Notification(also includes DeliveryStatus)"
+
+Re-evaluate, re-order, add, remove, or modify the objects, exactly as requested by the user. Maintain the structural output format:
+### [Object Name]
+- **Input:** data received
+- **Activity:** system validation or process executed
+- **Output:** downstream state produced
+
+Assistant:
+### Customer
+- **Input:** User registration data, login credentials
+- **Activity:** Authentication, session management
+- **Output:** Authenticated user session
+
+### Product
+- **Input:** Product list, search queries, filter criteria
+- **Activity:** Display products, filter and sort products
+- **Output:** Filtered and sorted product list
+
+### Cart
+- **Input:** Selected products and their quantities
+- **Activity:** Add products to cart, update quantities, remove products
+- **Output:** Updated cart state
+
+### Delivery
+- **Input:** DeliveryAddress, DeliveryWindow, PromotionalCode (optional)
+- **Activity:** System selects delivery agent, calculates delivery route
+- **Output:** DeliveryAgent, DeliveryRoute, DeliveryInstructions, DeliveryStatus
+
+### Payment
+- **Input:** Payment details (credit card, PayPal, etc.)
+- **Activity:** Validate payment, authorize transaction
+- **Output:** Payment confirmation
+
+### OrderDetails
+- **Input:** Cart contents, Delivery details, Payment confirmation
+- **Activity:** Generate order summary, order confirmation
+- **Output:** Order confirmation, Order ID
+
+### InventoryUpdate
+- **Input:** Order details
+- **Activity:** Update inventory levels based on order
+- **Output:** Updated inventory state
+
+### Notification
+- **Input:** Order confirmation, DeliveryStatus updates
+- **Activity:** Notify customer of order status, delivery updates
+- **Output:** Customer notifications (email, SMS, in-app)
+
+---
+
+This refined structure ensures a clear sequence of activities and maintains the necessary business objects as per the user's feedback.
