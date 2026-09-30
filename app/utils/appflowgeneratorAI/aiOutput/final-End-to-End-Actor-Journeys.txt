@@ -1,0 +1,59 @@
+=== E2E ACTOR TRANSACTION JOURNEYS FOR QUICK COMMERCE ===
+
+### [Customer - Complete Flow Timeline]
+- **Operational Role Context:** The Customer is an end user interacting with the Quick Commerce system to order, pay for, and receive groceries.
+- **Chronological Milestones & Data Inputs:**
+  * **Step 1 (Customer):** Registers and logs in to the system. (Input: User registration details, login credentials; Output: Registered customer profile, logged-in state)
+  * **Step 2 (Product Catalog):** Browses and selects products from the catalog. (Input: User selected product and quantity; Output: Selected product and quantity, updated cart)
+  * **Step 3 (Cart):** Adds products to the cart and updates quantities. (Input: Selected product and quantity from Product Catalog; Output: Cart with items and quantities, cart total)
+  * **Step 4 (Checkout):** Proceeds to checkout and provides customer information. (Input: Cart items and quantities, customer information; Output: Order ready for payment, checkout details)
+  * **Step 5 (Payment):** Enters payment details and completes the payment process. (Input: Payment details (e.g., credit card, digital wallet); Output: Payment confirmation, payment status)
+  * **Step 6 (Order Details):** Receives order confirmation and delivery status updates. (Input: Payment confirmation, customer information; Output: Order confirmation, order details)
+  * **Step 7 (Delivery Notification):** Receives delivery status updates. (Input: Order details; Output: Delivery status updates, notification to customer)
+  * **Step 8 (Delivery Completion):** Confirms delivery completion. (Input: Delivery status update; Output: Delivery confirmation, system update)
+
+### [Customer Support Agent - Complete Flow Timeline]
+- **Operational Role Context:** The Customer Support Agent assists customers with issues, troubleshooting, and support.
+- **Chronological Milestones & Data Inputs:**
+  * **Step 1 (Customer Support Agent):** Validates customer registration details and handles authentication issues. (Input: Customer profiles; Output: Customer profiles)
+  * **Step 2 (Customer Support Agent):** Assists customers with order issues, payment problems, and delivery status concerns. (Input: Order Details, Delivery Notification; Output: Order Details, Delivery Notification)
+  * **Step 3 (Customer Support Agent):** Manages and escalates customer complaints and feedback. (Input: Customer profiles, Order Details, Delivery Notification; Output: Customer support tickets)
+
+### [Payment Gateway Provider - Complete Flow Timeline]
+- **Operational Role Context:** The Payment Gateway Provider processes and validates payment transactions.
+- **Chronological Milestones & Data Inputs:**
+  * **Step 1 (Payment Gateway Provider):** Processes payment details and validates payment success. (Input: Payment details; Output: Payment confirmation, payment status)
+  * **Step 2 (Payment Gateway Provider):** Provides payment confirmation and status updates. (Input: Payment details; Output: Payment confirmation, payment status)
+
+### [Inventory Manager - Complete Flow Timeline]
+- **Operational Role Context:** The Inventory Manager manages and updates inventory levels.
+- **Chronological Milestones & Data Inputs:**
+  * **Step 1 (Inventory Manager):** Updates inventory based on delivery confirmations. (Input: Delivery Confirmation; Output: Updated inventory)
+  * **Step 2 (Inventory Manager):** Notifies suppliers of inventory levels and requirements. (Input: Inventory Management; Output: Supplier notifications)
+
+### [Supplier - Complete Flow Timeline]
+- **Operational Role Context:** The Supplier restocks products based on inventory notifications.
+- **Chronological Milestones & Data Inputs:**
+  * **Step 1 (Supplier):** Receives notifications from inventory management. (Input: Inventory notifications; Output: Supplier action decisions)
+  * **Step 2 (Supplier):** Decides on restocking actions and communicates back. (Input: Inventory notifications; Output: Supplier action decisions)
+
+### [System Administrator - Complete Flow Timeline]
+- **Operational Role Context:** The System Administrator maintains, monitors, and secures the system.
+- **Chronological Milestones & Data Inputs:**
+  * **Step 1 (System Administrator):** Monitors system performance and ensures smooth operation. (Input: All business objects, system logs; Output: System configurations, user access controls)
+  * **Step 2 (System Administrator):** Manages user permissions and access controls. (Input: All business objects, system logs; Output: System configurations, user access controls)
+  * **Step 3 (System Administrator):** Handles security incidents and implements necessary measures. (Input: All business objects, system logs; Output: System configurations, user access controls, security policies)
+
+### [Delivery Personnel - Complete Flow Timeline]
+- **Operational Role Context:** The Delivery Personnel delivers groceries to customers.
+- **Chronological Milestones & Data Inputs:**
+  * **Step 1 (Delivery Personnel):** Receives delivery assignments and picks up orders. (Input: Delivery assignments, customer locations; Output: Not applicable)
+  * **Step 2 (Delivery Personnel):** Delivers orders to customers and confirms delivery completion. (Input: Delivery assignments, customer locations; Output: Delivery status updates)
+  * **Step 3 (Delivery Personnel):** Provides real-time status updates during the delivery process. (Input: Delivery assignments, customer locations; Output: Delivery status updates)
+
+### [System - Complete Flow Timeline]
+- **Operational Role Context:** The System manages delivery coordination, assigns delivery personnel, and monitors delivery status.
+- **Chronological Milestones & Data Inputs:**
+  * **Step 1 (System):** Assigns delivery personnel based on order details. (Input: Order Details; Output: Delivery assignments)
+  * **Step 2 (System):** Monitors delivery status updates and notifies customers. (Input: Delivery Notification; Output: Delivery status, customer notifications)
+  * **Step 3 (System):** Confirms delivery completion and updates the system. (Input: Delivery status update; Output: Delivery confirmation, system update)

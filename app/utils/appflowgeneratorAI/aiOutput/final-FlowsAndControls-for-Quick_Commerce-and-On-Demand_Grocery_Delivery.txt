@@ -1,0 +1,79 @@
+=== Final OPERATIONAL OWNERSHIP & CONTROL MATRIX for domain :Quick Commerce and niche :On-Demand Grocery Delivery ===
+
+### [Step 1: Customer - User Registration]
+- **Operational Ownership / Flow:** Participant [Customer] executes [User Registration] on the [Customer] object.
+- **Coordination Mechanics:** Customer inputs user registration details and login credentials. The system validates these details and creates a registered customer profile, logging the user in.
+- **Decisions & Approvals:** The system checks for registration details validity (e.g., email format, password strength).
+- **Systemic Controls:** Automated guardrails ensure data integrity and security, such as hashing passwords before storage.
+
+### [Step 2: Customer - Browse and Select Products]
+- **Operational Ownership / Flow:** Participant [Customer] executes [Browse and Select Products] on the [Product Catalog] object.
+- **Coordination Mechanics:** Customer selects products and quantities from the catalog. The system validates product availability and quantity.
+- **Decisions & Approvals:** System checks for product availability and quantity constraints.
+- **Systemic Controls:** Automated validation ensures selected products are in stock and quantities are within limits.
+
+### [Step 3: Customer - Add to Cart]
+- **Operational Ownership / Flow:** Participant [Customer] executes [Add to Cart] on the [Cart] object.
+- **Coordination Mechanics:** Customer adds selected products to the cart. The system updates the cart with items and quantities.
+- **Decisions & Approvals:** System ensures cart updates are consistent with available stock.
+- **Systemic Controls:** Automated validation checks for cart consistency and updates totals.
+
+### [Step 4: Customer - Proceed to Checkout]
+- **Operational Ownership / Flow:** Participant [Customer] executes [Proceed to Checkout] on the [Checkout] object.
+- **Coordination Mechanics:** Customer provides customer information. The system prepares the order for payment, generating checkout details.
+- **Decisions & Approvals:** System checks for mandatory customer information completeness.
+- **Systemic Controls:** Automated validation ensures all required information is provided.
+
+### [Step 5: Customer - Payment]
+- **Operational Ownership / Flow:** Participant [Customer] executes [Payment] on the [Payment] object.
+- **Coordination Mechanics:** Customer enters payment details. The Payment Gateway Provider processes payment details and validates payment success.
+- **Decisions & Approvals:** Payment Gateway Provider checks payment success and status.
+- **Systemic Controls:** Automated validation ensures payment details are valid and secure, with SLA time-bounds for payment processing.
+
+### [Step 6: Customer - Order Confirmation]
+- **Operational Ownership / Flow:** Participant [System] executes [Order Confirmation] on the [Order Details] object.
+- **Coordination Mechanics:** System generates order details and confirms order placement. Customer receives order confirmation.
+- **Decisions & Approvals:** System checks for successful payment before confirming order.
+- **Systemic Controls:** Automated validation ensures order details are accurate and SLA time-bounds for order confirmation.
+
+### [Step 7: System - Delivery Notification]
+- **Operational Ownership / Flow:** Participant [System] executes [Delivery Notification] on the [Delivery Notification] object.
+- **Coordination Mechanics:** System assigns delivery personnel and notifies the customer of delivery status. Customer receives delivery status updates.
+- **Decisions & Approvals:** System checks for available delivery personnel and assigns based on order details.
+- **Systemic Controls:** Automated validation ensures delivery assignments are made within SLA time-bounds.
+
+### [Step 8: Delivery Personnel - Delivery Assignment]
+- **Operational Ownership / Flow:** Participant [Delivery Personnel] executes [Delivery Assignment] on the [Delivery Notification] object.
+- **Coordination Mechanics:** Delivery personnel receives delivery assignments and picks up orders.
+- **Decisions & Approvals:** Delivery personnel confirms readiness for delivery.
+- **Systemic Controls:** Automated validation ensures delivery personnel are assigned within SLA time-bounds.
+
+### [Step 9: Delivery Personnel - Delivery Process]
+- **Operational Ownership / Flow:** Participant [Delivery Personnel] executes [Delivery Process] on the [Delivery Notification] object.
+- **Coordination Mechanics:** Delivery personnel delivers orders to customers and confirms delivery completion. System receives delivery status updates.
+- **Decisions & Approvals:** Delivery personnel confirms successful delivery.
+- **Systemic Controls:** Automated validation ensures delivery completion is confirmed within SLA time-bounds.
+
+### [Step 10: Delivery Completion]
+- **Operational Ownership / Flow:** Participant [System] executes [Delivery Confirmation] on the [Delivery Completion] object.
+- **Coordination Mechanics:** System confirms delivery completion and updates the system. Customer receives delivery confirmation.
+- **Decisions & Approvals:** System checks for successful delivery confirmation.
+- **Systemic Controls:** Automated validation ensures delivery confirmation is accurate and SLA time-bounds for delivery confirmation.
+
+### [Step 11: System - Inventory Update]
+- **Operational Ownership / Flow:** Participant [System] executes [Update Inventory] on the [Inventory Management] object.
+- **Coordination Mechanics:** System updates inventory based on delivery confirmations. Supplier is notified of inventory levels and requirements.
+- **Decisions & Approvals:** System checks for successful delivery confirmation before updating inventory.
+- **Systemic Controls:** Automated validation ensures inventory updates are accurate and SLA time-bounds for inventory management.
+
+### [Step 12: Supplier - Restocking Decision]
+- **Operational Ownership / Flow:** Participant [Supplier] executes [Restocking Decision] on the [Supplier Action] object.
+- **Coordination Mechanics:** Supplier receives inventory notifications and decides on restocking actions. Supplier communicates back decisions.
+- **Decisions & Approvals:** Supplier decides based on notification requirements and stock levels.
+- **Systemic Controls:** Automated validation ensures supplier decisions are communicated within SLA time-bounds.
+
+### [Step 13: Supplier - Supplier Communication]
+- **Operational Ownership / Flow:** Participant [Supplier] executes [Supplier Communication] on the [Supplier Action] object.
+- **Coordination Mechanics:** Supplier communicates restocking decisions. System updates supplier communication.
+- **Decisions & Approvals:** Supplier confirms restocking actions.
+- **Systemic Controls:** Automated validation ensures supplier communication is accurate and SLA time-bounds for supplier action.
