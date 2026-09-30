@@ -154,7 +154,7 @@ Re-evaluate, add, remove, or modify the roles and permissions exactly as request
     // 2. Extract context dimensions dynamically
     const domainData = extractDomainAndNicheFromHeader(fullFileContent);
     console.log(`🎯 Context Frame Isolated -> Domain: "${domainData.domain}" | Niche: "${domainData.niche}"`);
-
+ 
     let actorsText = "";
     let userFeedback = "";
     let isApproved = false;
