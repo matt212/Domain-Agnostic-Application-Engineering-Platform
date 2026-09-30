@@ -209,7 +209,7 @@ const assistantContent1 = parts1.length > 1 ? parts1[1].trim() : "";
 // Output the extracted markdown list
 console.log(assistantContent1);
 
-      fs.writeFileSync(reviewFilePath1, `=== Final DATA MATRIX DRAFT ===\n\n${assistantContent1}`, 'utf8');
+      fs.writeFileSync(reviewFilePath1, `=== Final DATA MATRIX for domain :${domainData.domain} and niche :(${domainData.niche}  ===\n\n${assistantContent1}`, 'utf8');
       
       console.log(`\n--- Final CORE  LINKED ---`);
       console.log(assistantOutput);

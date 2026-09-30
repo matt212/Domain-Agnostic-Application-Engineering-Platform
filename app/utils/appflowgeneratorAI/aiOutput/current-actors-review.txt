@@ -1,0 +1,97 @@
+=== CURRENT SYSTEM ACTORS MATRIX DRAFT ===
+
+### [Customer]
+- **Operational Role:** End user interacting with the Quick Commerce system to order, pay for, and receive groceries.
+- **Core Responsibilities:**
+  * Register and log in to the system.
+  * Browse and select products from the catalog.
+  * Add products to the cart and update quantities.
+  * Proceed to checkout and provide customer information.
+  * Enter payment details and complete the payment process.
+  * Receive order confirmation and delivery status updates.
+- **Access Authorization & Scope:**
+  * Read: Product Catalog, Cart, Checkout, Payment, Order Details, Delivery Notification.
+  * Create: User registration details, login credentials.
+  * Update: Cart contents, customer information, payment details.
+  * Delete: Not applicable.
+
+### [Customer Support Agent]
+- **Operational Role:** Systemic interface agent responsible for customer assistance, troubleshooting, and support.
+- **Core Responsibilities:**
+  * Validate customer registration details and handle authentication issues.
+  * Assist customers with order issues, payment problems, and delivery status concerns.
+  * Manage and escalate customer complaints and feedback.
+- **Access Authorization & Scope:**
+  * Read: Customer profiles, Order Details, Delivery Notification.
+  * Create: Customer support tickets.
+  * Update: Customer profiles, Order Details, Delivery Notification.
+  * Delete: Not applicable.
+
+### [Payment Gateway Provider]
+- **Operational Role:** Third-party participant responsible for processing and validating payment transactions.
+- **Core Responsibilities:**
+  * Process payment details and validate payment success.
+  * Provide payment confirmation and status updates.
+- **Access Authorization & Scope:**
+  * Read: Payment details.
+  * Create: Payment confirmation, payment status.
+  * Update: Payment status.
+  * Delete: Not applicable.
+
+### [Inventory Manager]
+- **Operational Role:** Systemic interface agent responsible for managing and updating inventory levels.
+- **Core Responsibilities:**
+  * Update inventory based on delivery confirmations.
+  * Notify suppliers of inventory levels and requirements.
+- **Access Authorization & Scope:**
+  * Read: Delivery Confirmation, Inventory Management.
+  * Create: Inventory updates, supplier notifications.
+  * Update: Inventory levels, supplier communication.
+  * Delete: Not applicable.
+
+### [Supplier]
+- **Operational Role:** Third-party participant responsible for restocking products based on inventory notifications.
+- **Core Responsibilities:**
+  * Receive notifications from inventory management.
+  * Decide on restocking actions and communicate back.
+- **Access Authorization & Scope:**
+  * Read: Inventory notifications.
+  * Create: Supplier action decisions.
+  * Update: Supplier communication.
+  * Delete: Not applicable.
+
+### [System Administrator]
+- **Operational Role:** Systemic interface agent responsible for system maintenance, monitoring, and security.
+- **Core Responsibilities:**
+  * Monitor system performance and ensure smooth operation.
+  * Manage user permissions and access controls.
+  * Handle security incidents and implement necessary measures.
+- **Access Authorization & Scope:**
+  * Read: All business objects, system logs.
+  * Create: System configurations, user access controls.
+  * Update: System configurations, user access controls, security policies.
+  * Delete: Not applicable.
+
+### [Delivery Personnel]
+- **Operational Role:** Third-party participant responsible for delivering groceries to customers.
+- **Core Responsibilities:**
+  * Receive delivery assignments and pick up orders.
+  * Deliver orders to customers and confirm delivery completion.
+  * Provide real-time status updates during the delivery process.
+- **Access Authorization & Scope:**
+  * Read: Delivery assignments, customer locations.
+  * Create: Delivery status updates.
+  * Update: Delivery status.
+  * Delete: Not applicable.
+
+### [System]
+- **Operational Role:** Automated system responsible for managing delivery coordination, assigning delivery personnel, and monitoring delivery status.
+- **Core Responsibilities:**
+  * Assign delivery personnel based on order details.
+  * Monitor delivery status updates and notify customers.
+  * Confirm delivery completion and update the system.
+- **Access Authorization & Scope:**
+  * Read: Order Details, Delivery Notification.
+  * Create: Delivery assignments.
+  * Update: Delivery status, customer notifications.
+  * Delete: Not applicable.
