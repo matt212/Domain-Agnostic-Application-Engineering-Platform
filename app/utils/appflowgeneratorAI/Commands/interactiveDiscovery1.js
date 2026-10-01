@@ -7,20 +7,22 @@ const PROJECT_ROOT = path.resolve(__dirname, '../../../../');
 const OUTPUT_DIR = path.join(PROJECT_ROOT, 'app/utils/appflowgeneratorAI/aiOutput');
 const TMP_DIR = path.join(PROJECT_ROOT, 'app/utils/appflowgeneratorAI/promptFile');
 
+const MODEL_PASS_CONFIG = {
+ // model: 'Qwen/Qwen2.5-Coder-14B-Instruct-GGUF:Q4_K_M',
+ model: 'Qwen/Qwen3-8B-GGUF:Q4_K_M',
+  ngl: '99',
+  threads: '4',
+  tokens: '1536',
+};
+
 // const MODEL_PASS_CONFIG = {
 //   model: 'Qwen/Qwen2.5-Coder-14B-Instruct-GGUF:Q4_K_M',
-//   ngl: '99',
+//   ngl: '15', // 👈 Change this to 0. Force CPU processing.
 //   tokens: '1536',
+//   ctx_size: '2048',
+//   threads: '4',
+//   flash_attn: true
 // };
-
-const MODEL_PASS_CONFIG = {
-  model: 'Qwen/Qwen2.5-Coder-14B-Instruct-GGUF:Q4_K_M',
-  ngl: '15', // 👈 Change this to 0. Force CPU processing.
-  tokens: '1536',
-  ctx_size: '2048',
-  threads: '4',
-  flash_attn: true
-};
 
 
 // Interface to capture live human feedback from the terminal
