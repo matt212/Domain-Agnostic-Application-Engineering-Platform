@@ -1,0 +1,66 @@
+=== Final DATA MATRIX for domain :Quick Commerce and niche :Express Online Groceries Delivery  ===
+
+```json
+[
+  {
+    "object_name": "Customer",
+    "input": "User, UserSession",
+    "activity": "Aggregate user and session data,searches , browses and selects Product to be added to cart ",
+    "output": "Customer profile with session information"
+  },
+  {
+    "object_name": "Product",
+    "input": "Catalog updates, customer searches, browses, and selects product and its available quantity",
+    "activity": "Handle product catalog management and customer interactions",
+    "output": "Updated product catalog with customer activity data"
+  },
+  {
+    "object_name": "ShoppingCart",
+    "input": "get inputs from customer activity of searches , browses and selects Product to be added to cart",
+    "activity": "Manage shopping cart operations",
+    "output": "Shopping cart state with selected products"
+  },
+  {
+    "object_name": "Delivery",
+    "input": "Delivery options, customer address selection, confirmation, order tracking, and status updates",
+    "activity": "Handle delivery logistics and customer interactions",
+    "output": "Delivery details with tracking and status updates"
+  },
+  {
+    "object_name": "Payment",
+    "input": "Payment processing, confirmation, and status updates",
+    "activity": "Process payments and manage payment status",
+    "output": "Payment confirmation and status updates"
+  },
+  {
+    "object_name": "Order",
+    "input": "N/A",
+    "activity": "Manage order creation and fulfillment",
+    "output": "Order state with delivery and payment details"
+  },
+  {
+    "object_name": "NotificationService",
+    "input": "N/A",
+    "activity": "Send notifications to customers and suppliers",
+    "output": "Sent notifications for various system events"
+  },
+  {
+    "object_name": "Inventory",
+    "input": "Successful delivery of products",
+    "activity": "Track inventory levels, update stock quantities, and notify stakeholders",
+    "output": "Updated inventory levels with notifications for low or out-of-stock products"
+  },
+  {
+    "object_name": "Supplier",
+    "input": "Manage supplier information, track supplier performance, and facilitate communication",
+    "activity": "Handle supplier management and communication for order fulfillment",
+    "output": "Supplier information and performance metrics"
+  },
+  {
+    "object_name": "Feedback",
+    "input": "Customer receives product",
+    "activity": "Prompt customer for feedback and ratings",
+    "output": "Customer feedback and ratings for products and overall experience"
+  }
+]
+```

@@ -1,0 +1,121 @@
+You are a Principal Enterprise Systems Architect and IAM (Identity & Access Management) Security Engineer.
+Analyze the following sequential Business Objects Matrix designed for a system operating in the "Quick Commerce (Express Online Groceries Delivery)" sector.
+
+=== FOUNDATIONAL BUSINESS OBJECTS MATRIX ===
+=== Final DATA MATRIX for domain :Quick Commerce and niche :Express Online Groceries Delivery  ===
+
+```json
+[
+  {
+    "object_name": "Customer",
+    "input": "User, UserSession",
+    "activity": "Aggregate user and session data,searches , browses and selects Product to be added to cart ",
+    "output": "Customer profile with session information"
+  },
+  {
+    "object_name": "Product",
+    "input": "Catalog updates, customer searches, browses, and selects product and its available quantity",
+    "activity": "Handle product catalog management and customer interactions",
+    "output": "Updated product catalog with customer activity data"
+  },
+  {
+    "object_name": "ShoppingCart",
+    "input": "get inputs from customer activity of searches , browses and selects Product to be added to cart",
+    "activity": "Manage shopping cart operations",
+    "output": "Shopping cart state with selected products"
+  },
+  {
+    "object_name": "Delivery",
+    "input": "Delivery options, customer address selection, confirmation, order tracking, and status updates",
+    "activity": "Handle delivery logistics and customer interactions",
+    "output": "Delivery details with tracking and status updates"
+  },
+  {
+    "object_name": "Payment",
+    "input": "Payment processing, confirmation, and status updates",
+    "activity": "Process payments and manage payment status",
+    "output": "Payment confirmation and status updates"
+  },
+  {
+    "object_name": "Order",
+    "input": "N/A",
+    "activity": "Manage order creation and fulfillment",
+    "output": "Order state with delivery and payment details"
+  },
+  {
+    "object_name": "NotificationService",
+    "input": "N/A",
+    "activity": "Send notifications to customers and suppliers",
+    "output": "Sent notifications for various system events"
+  },
+  {
+    "object_name": "Inventory",
+    "input": "Successful delivery of products",
+    "activity": "Track inventory levels, update stock quantities, and notify stakeholders",
+    "output": "Updated inventory levels with notifications for low or out-of-stock products"
+  },
+  {
+    "object_name": "Supplier",
+    "input": "Manage supplier information, track supplier performance, and facilitate communication",
+    "activity": "Handle supplier management and communication for order fulfillment",
+    "output": "Supplier information and performance metrics"
+  },
+  {
+    "object_name": "Feedback",
+    "input": "Customer receives product",
+    "activity": "Prompt customer for feedback and ratings",
+    "output": "Customer feedback and ratings for products and overall experience"
+  }
+]
+```
+===========================================
+
+Your objective is to identify and map every critical Human Actor, Systemic Interface Agent, and Third-Party Participant required to run, fulfill, and monitor this transactional model.
+
+For every distinct Actor identified, you must meticulously compile three parameters:
+1. **Core Operational Role:** Their functional profile, commercial objective, and operational context within the specific boundaries of the "Quick Commerce" domain and the "Express Online Groceries Delivery" niche.
+2. **Responsibilities Matrix:** A direct, action-oriented bulleted list mapping precisely which of the business objects above they interact with, manipulate, or depend on.
+3. **Data Access Authorization & Security Scope:** Define their clear CRUD boundaries (Create, Read, Update, Delete) and strict operational data constraints to protect system integrity.
+
+CRITICAL ARCHITECTURAL DIRECTIVE: Do not inventory generic user profiles. You must strictly tailor roles to the high-velocity operational realities of "Express Online Groceries Delivery" (e.g., highly compressed cycles, real-time tracking, edge coordination).
+
+Format your output exactly as a clean, highly structured markdown document using this template structure:
+You must output your response as a valid, minified or formatted JSON array containing the processed objects. Do not include markdown text, explanations, or code fences outside the JSON. 
+
+Each object in the array must strictly follow this key structure:
+{
+  "actor_name": "[Actor Name]",
+  "operational_role": "[Deep system profile and context description]",
+  "core_responsibilities": [
+    "[Action item linked to object interaction]",
+    "[Action item linked to workflow execution]"
+  ],
+  "access_authorization_and_scope": {
+    "What_They_Can_See": [
+      "[Plain-english business entity or record view 1]",
+      "[Plain-english business entity or record view 2]"
+    ],
+    "What_They_Can_Create": [
+      "[Plain-english object or transaction initialization 1]",
+      "[Plain-english object or transaction initialization 2]"
+    ],
+    "What_They_Can_Change": [
+      "[Modifiable system aspect or parameter 1]",
+      "[Modifiable system aspect or parameter 2]"
+    ],
+    "What_They_Can_Remove": [
+      "[Removable or clearable item parameter 1]"
+    ],
+    "Operations_They_Can_Run": [
+      "[System flow, pipeline trigger, or action block 1]"
+    ],
+    "Business_Rules_And_Guardrails": {
+      "Data_Privacy": "[Data visibility boundaries and cross-tenant restrictions in simple terms]",
+      "Order_Lock": "[Operational timeline locks or state mutation constraints in simple terms]"
+    }
+  }
+
+}
+
+
+DO NOT include introductory text, conversational filler, summaries, markdown block tick wrappers, or closing remarks. Output the structural markdown list immediately.

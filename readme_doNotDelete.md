@@ -562,3 +562,20 @@ app/utils/appflowgeneratorAI/commands/business-discovery.sh
 node app/utils/appflowgeneratorAI/commands/combine12.js "online groceries store"
 
 tils/appflowgeneratorAI/commands/generateDiagram.js
+
+
+
+'correct sequence and updates 
+1.customer :(User, UserSession should be part of customer)
+2.ProductCatalog: (should be just product , where activity not just Catalog update and management but also customer searchs, browses and select product and its avaialble quantit )
+3.ShoppingCart
+4.Delivery : (should be not be just delivery selected options also select address from customer(DeliveryLocation) and ask for confirmation, where activity not just delivery but also order tracking and status updates, DeliveryDriver, DeliveryService is part of delivery)
+5.Payment:(PaymentProcessor should be part of payment, where activity not just payment processing but also payment confirmation and status updates)
+6.Order :
+remove OrderItem
+remove DeliveryLocation
+7.NotificationService
+8.Inventory:(after successful deliver of product , system should be able to track inventory levels, update stock quantities, and notify relevant stakeholders in this case supplier/seller when inventory is low or out of stock).
+9.Supplier: (should be able to manage supplier information, track supplier performance, and facilitate communication between the system and suppliers for order fulfillment and restocking purposes).   
+10.Feedback:(once custoer receives the product, system should prompt for feedback and ratings, allowing customers to provide their opinions and experiences with the product and overall shopping experience).
+'

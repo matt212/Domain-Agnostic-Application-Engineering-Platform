@@ -105,11 +105,21 @@ Given the business idea: "${businessIdea}" operating in the "domainData.domain (
 
 For each object, detail its Input data, primary business activity, and output state.
 
-Format your output exactly as a clean markdown list:
-### [Object Name]
-- **Input:** data received
-- **Activity:** system validation or process executed
-- **Output:** downstream state produced`;
+You must output your response as a valid, minified or formatted JSON array containing the processed objects. Do not include markdown text, explanations, or code fences outside the JSON. 
+
+Each object in the array must strictly follow this key structure:
+
+[
+  {
+    "object_name": "Name of the object",
+    "input": "Data received",
+    "activity": "System validation or process executed",
+    "output": "Downstream state produced"
+  }
+]
+
+
+`;
 
 /*for testing only not acutal prompt*/
 /*prompt = `You are a database and enterprise systems analyst. 
@@ -134,10 +144,18 @@ The human user has given the following explicit feedback and adjustments:
 "${feedbackText}"
 
 Re-evaluate, re-order, add, remove, or modify the objects, exactly as requested by the user. Maintain the structural output format:
-### [Object Name]
-- **Input:** data received
-- **Activity:** system validation or process executed
-- **Output:** downstream state produced`;
+You must output your response as a valid, minified or formatted JSON array containing the processed objects. Do not include markdown text, explanations, or code fences outside the JSON. 
+
+Each object in the array must strictly follow this key structure:
+
+[
+  {
+    "object_name": "Name of the object",
+    "input": "Data received",
+    "activity": "System validation or process executed",
+    "output": "Downstream state produced"
+  }
+]`;
   }
 
   return await callLlamaCli(prompt, 'objects');
@@ -199,7 +217,8 @@ Re-evaluate, re-order, add, remove, or modify the objects, exactly as requested 
       if (userInput.trim().toLowerCase() === 'approved') {
         isApproved = true;
         console.log("✅ Architecture foundations locked down by designer! Advancing downstream processing...");
-        const reviewFilePath1 = path.join(OUTPUT_DIR, `final-Objects-for-${domainData.domain}-and-(${domainData.niche}).txt`);
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        const reviewFilePath1 = path.join(OUTPUT_DIR, `final-Objects-for-${domainData.domain}_and_(${domainData.niche}_${timestamp}.txt`);
       fs.mkdirSync(OUTPUT_DIR, { recursive: true });
       const parts1 = assistantOutput.split(/assistant:\s*/i);
 
@@ -208,6 +227,7 @@ const assistantContent1 = parts1.length > 1 ? parts1[1].trim() : "";
 
 // Output the extracted markdown list
 console.log(assistantContent1);
+
 
       fs.writeFileSync(reviewFilePath1, `=== Final DATA MATRIX for domain :${domainData.domain} and niche :(${domainData.niche}  ===\n\n${assistantContent1}`, 'utf8');
       

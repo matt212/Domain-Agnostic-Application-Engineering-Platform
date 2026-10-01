@@ -8,65 +8,84 @@ Here is the current draft of the structural objects:
 
 
 The human user has given the following explicit feedback and adjustments:
-"Sequence and updates 1.User Registration, User Login should be in one buisness object called customer,2.Product Catalog activities can we multiple like user selects product and its quantity. 3.Order Placement remove this business object 4.add cart module and then only cusomter on cart item and quantity proceed to chekcout 5.then payment business object (payment Processing and Payment Confirmation should be part of this business object)6. once payment successful then Order Details 7. after order details 8. system assign Delivery Personnel 9.Delivery Notification 10. once delivery is completed successful then nventory Management system updates inventory and notifties supplier 11. supplier then takes action whether to stock the product or leave it as is"
+"'correct sequence and updates 1.customer :(User, UserSession should be part of customer)2.ProductCatalog: (should be just product , where activity not just Catalog update and management but also customer searchs, browses and select product and its avaialble quantit )3.ShoppingCart4.Delivery : (should be not be just delivery selected options also select address from customer(DeliveryLocation) and ask for confirmation, where activity not just delivery but also order tracking and status updates, DeliveryDriver, DeliveryService is part of delivery)5.Payment:(PaymentProcessor should be part of payment, where activity not just payment processing but also payment confirmation and status updates)6.Order :remove OrderItemremove DeliveryLocation7.NotificationService8.Inventory:(after successful deliver of product , system should be able to track inventory levels, update stock quantities, and notify relevant stakeholders in this case supplier/seller when inventory is low or out of stock).9.Supplier: (should be able to manage supplier information, track supplier performance, and facilitate communication between the system and suppliers for order fulfillment and restocking purposes).   10.Feedback:(once custoer receives the product, system should prompt for feedback and ratings, allowing customers to provide their opinions and experiences with the product and overall shopping experience).'"
 
 Re-evaluate, re-order, add, remove, or modify the objects, exactly as requested by the user. Maintain the structural output format:
-### [Object Name]
-- **Input:** data received
-- **Activity:** system validation or process executed
-- **Output:** downstream state produced
+You must output your response as a valid, minified or formatted JSON array containing the processed objects. Do not include markdown text, explanations, or code fences outside the JSON. 
+
+Each object in the array must strictly follow this key structure:
+
+[
+  {
+    "object_name": "Name of the object",
+    "input": "Data received",
+    "activity": "System validation or process executed",
+    "output": "Downstream state produced"
+  }
+]
 
 Assistant:
-Based on the user's feedback and adjustments, I will re-evaluate and reorder the foundational business objects for the "online groceries app like if I order I get those within 15 minutes or 30 minutes" concept in the "Quick Commerce" sector.
-
-### [Customer]
-- **Input:** User registration details, login credentials
-- **Activity:** System validation of registration details, user authentication
-- **Output:** Registered customer profile, logged-in state
-
-### [Product Catalog]
-- **Input:** User selected product and quantity
-- **Activity:** Display product catalog, validate product availability and quantity
-- **Output:** Selected product and quantity, updated cart
-
-### [Cart]
-- **Input:** Selected product and quantity from Product Catalog
-- **Activity:** Add items to cart, update cart contents
-- **Output:** Cart with items and quantities, cart total
-
-### [Checkout]
-- **Input:** Cart items and quantities, customer information
-- **Activity:** Validate cart contents, prepare order for payment
-- **Output:** Order ready for payment, checkout details
-
-### [Payment]
-- **Input:** Payment details (e.g., credit card, digital wallet)
-- **Activity:** Process payment, validate payment success
-- **Output:** Payment confirmation, payment status
-
-### [Order Details]
-- **Input:** Payment confirmation, customer information
-- **Activity:** Generate order details, confirm order placement
-- **Output:** Order confirmation, order details
-
-### [Delivery Notification]
-- **Input:** Order details
-- **Activity:** Assign delivery personnel, notify customer of delivery status
-- **Output:** Delivery status updates, notification to customer
-
-### [Delivery Completion]
-- **Input:** Delivery status update
-- **Activity:** Confirm delivery completion
-- **Output:** Delivery confirmation, system update
-
-### [Inventory Management]
-- **Input:** Delivery confirmation
-- **Activity:** Update inventory, notify supplier
-- **Output:** Updated inventory, notification to supplier
-
-### [Supplier Action]
-- **Input:** Notification from Inventory Management
-- **Activity:** Supplier decides to stock the product or leave it as is
-- **Output:** Supplier action based on notification
-
-This revised structure aligns with the user's feedback and ensures a smooth flow from user registration to final delivery and supplier action.
+```json
+[
+  {
+    "object_name": "Customer",
+    "input": "User, UserSession",
+    "activity": "Aggregate user and session data",
+    "output": "Customer profile with session information"
+  },
+  {
+    "object_name": "Product",
+    "input": "Catalog updates, customer searches, browses, and selects product and its available quantity",
+    "activity": "Handle product catalog management and customer interactions",
+    "output": "Updated product catalog with customer activity data"
+  },
+  {
+    "object_name": "ShoppingCart",
+    "input": "N/A",
+    "activity": "Manage shopping cart operations",
+    "output": "Shopping cart state with selected products"
+  },
+  {
+    "object_name": "Delivery",
+    "input": "Delivery options, customer address selection, confirmation, order tracking, and status updates",
+    "activity": "Handle delivery logistics and customer interactions",
+    "output": "Delivery details with tracking and status updates"
+  },
+  {
+    "object_name": "Payment",
+    "input": "Payment processing, confirmation, and status updates",
+    "activity": "Process payments and manage payment status",
+    "output": "Payment confirmation and status updates"
+  },
+  {
+    "object_name": "Order",
+    "input": "N/A",
+    "activity": "Manage order creation and fulfillment",
+    "output": "Order state with delivery and payment details"
+  },
+  {
+    "object_name": "NotificationService",
+    "input": "N/A",
+    "activity": "Send notifications to customers and suppliers",
+    "output": "Sent notifications for various system events"
+  },
+  {
+    "object_name": "Inventory",
+    "input": "Successful delivery of products",
+    "activity": "Track inventory levels, update stock quantities, and notify stakeholders",
+    "output": "Updated inventory levels with notifications for low or out-of-stock products"
+  },
+  {
+    "object_name": "Supplier",
+    "input": "Manage supplier information, track supplier performance, and facilitate communication",
+    "activity": "Handle supplier management and communication for order fulfillment",
+    "output": "Supplier information and performance metrics"
+  },
+  {
+    "object_name": "Feedback",
+    "input": "Customer receives product",
+    "activity": "Prompt customer for feedback and ratings",
+    "output": "Customer feedback and ratings for products and overall experience"
+  }
+]
+```

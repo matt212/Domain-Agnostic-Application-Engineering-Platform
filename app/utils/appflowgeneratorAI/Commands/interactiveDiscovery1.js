@@ -7,11 +7,21 @@ const PROJECT_ROOT = path.resolve(__dirname, '../../../../');
 const OUTPUT_DIR = path.join(PROJECT_ROOT, 'app/utils/appflowgeneratorAI/aiOutput');
 const TMP_DIR = path.join(PROJECT_ROOT, 'app/utils/appflowgeneratorAI/promptFile');
 
+// const MODEL_PASS_CONFIG = {
+//   model: 'Qwen/Qwen2.5-Coder-14B-Instruct-GGUF:Q4_K_M',
+//   ngl: '99',
+//   tokens: '1536',
+// };
+
 const MODEL_PASS_CONFIG = {
   model: 'Qwen/Qwen2.5-Coder-14B-Instruct-GGUF:Q4_K_M',
-  ngl: '99',
-  tokens: '1536'
+  ngl: '15', // 👈 Change this to 0. Force CPU processing.
+  tokens: '1536',
+  ctx_size: '2048',
+  threads: '4',
+  flash_attn: true
 };
+
 
 // Interface to capture live human feedback from the terminal
 const rl = readline.createInterface({
@@ -100,13 +110,43 @@ For every distinct Actor identified, you must meticulously compile three paramet
 CRITICAL ARCHITECTURAL DIRECTIVE: Do not inventory generic user profiles. You must strictly tailor roles to the high-velocity operational realities of "${domainData.niche}" (e.g., highly compressed cycles, real-time tracking, edge coordination).
 
 Format your output exactly as a clean, highly structured markdown document using this template structure:
+You must output your response as a valid, minified or formatted JSON array containing the processed objects. Do not include markdown text, explanations, or code fences outside the JSON. 
 
-### [Actor Name]
-- **Operational Role:** [Deep system profile and context description]
-- **Core Responsibilities:**
-  * [Action item linked to object interaction]
-  * [Action item linked to workflow execution]
-- **Access Authorization & Scope:** [CRUD access bounds and data security constraints]
+Each object in the array must strictly follow this key structure:
+{
+  "actor_name": "[Actor Name]",
+  "operational_role": "[Deep system profile and context description]",
+  "core_responsibilities": [
+    "[Action item linked to object interaction]",
+    "[Action item linked to workflow execution]"
+  ],
+  "access_authorization_and_scope": {
+    "What_They_Can_See": [
+      "[Plain-english business entity or record view 1]",
+      "[Plain-english business entity or record view 2]"
+    ],
+    "What_They_Can_Create": [
+      "[Plain-english object or transaction initialization 1]",
+      "[Plain-english object or transaction initialization 2]"
+    ],
+    "What_They_Can_Change": [
+      "[Modifiable system aspect or parameter 1]",
+      "[Modifiable system aspect or parameter 2]"
+    ],
+    "What_They_Can_Remove": [
+      "[Removable or clearable item parameter 1]"
+    ],
+    "Operations_They_Can_Run": [
+      "[System flow, pipeline trigger, or action block 1]"
+    ],
+    "Business_Rules_And_Guardrails": {
+      "Data_Privacy": "[Data visibility boundaries and cross-tenant restrictions in simple terms]",
+      "Order_Lock": "[Operational timeline locks or state mutation constraints in simple terms]"
+    }
+  }
+
+}
+
 
 DO NOT include introductory text, conversational filler, summaries, markdown block tick wrappers, or closing remarks. Output the structural markdown list immediately.`;
   } else {
@@ -121,13 +161,44 @@ The human user has given the following explicit feedback and adjustments:
 "${feedbackText}"
 
 Re-evaluate, add, remove, or modify the roles and permissions exactly as requested by the user. Maintain the structural output template:
-### [Actor Name]
-- **Operational Role:** [Deep system profile and context description]
-- **Core Responsibilities:**
-  * [Action item linked to object interaction]
-- **Access Authorization & Scope:** [CRUD access bounds and data security constraints]`;
+You must output your response as a valid, minified or formatted JSON array containing the processed objects. Do not include markdown text, explanations, or code fences outside the JSON. 
+
+Each object in the array must strictly follow this key structure:
+{
+  "actor_name": "[Actor Name]",
+  "operational_role": "[Deep system profile and context description]",
+  "core_responsibilities": [
+    "[Action item linked to object interaction]",
+    "[Action item linked to workflow execution]"
+  ],
+  "access_authorization_and_scope": {
+    "What_They_Can_See": [
+      "[Plain-english business entity or record view 1]",
+      "[Plain-english business entity or record view 2]"
+    ],
+    "What_They_Can_Create": [
+      "[Plain-english object or transaction initialization 1]",
+      "[Plain-english object or transaction initialization 2]"
+    ],
+    "What_They_Can_Change": [
+      "[Modifiable system aspect or parameter 1]",
+      "[Modifiable system aspect or parameter 2]"
+    ],
+    "What_They_Can_Remove": [
+      "[Removable or clearable item parameter 1]"
+    ],
+    "Operations_They_Can_Run": [
+      "[System flow, pipeline trigger, or action block 1]"
+    ],
+    "Business_Rules_And_Guardrails": {
+      "Data_Privacy": "[Data visibility boundaries and cross-tenant restrictions in simple terms]",
+      "Order_Lock": "[Operational timeline locks or state mutation constraints in simple terms]"
+    }
   }
 
+}`;
+  }
+//"access_authorization_and_scope": "[Select, Create, Read, Update, Delete access bounds and data security constraints in accurate details]"
   console.log("⚙️ Running actor layout matrix iteration via local AI model...");
   const rawOutput = await callLlamaCli(prompt, 'actors_roles');
   
@@ -145,7 +216,8 @@ Re-evaluate, add, remove, or modify the roles and permissions exactly as request
     console.log("🚀 INITIATING INTERACTIVE SYSTEM ACTOR & AUTHORIZATION PIPELINE...");
 
     // 1. Locate and load the source business objects document
-    const objectsFilePath = path.join(OUTPUT_DIR, 'final-Objects-for-Quick_Commerce-and-On-Demand_Grocery_Delivery.txt');
+   // const objectsFilePath = path.join(OUTPUT_DIR, 'final-Objects-for-Quick_Commerce-and-On-Demand_Grocery_Delivery.txt');
+    const objectsFilePath = path.join(OUTPUT_DIR, 'final-Objects-for-Quick Commerce_and_(Express Online Groceries Delivery_2026-10-01T17-50-23-016Z.txt');
     if (!fs.existsSync(objectsFilePath)) {
       throw new Error(`Source business objects file missing at: ${objectsFilePath}. Please ensure your Objects step ran first.`);
     }
@@ -189,7 +261,9 @@ Re-evaluate, add, remove, or modify the roles and permissions exactly as request
         console.log("✅ Identity and Authorization systems locked down! Committing blueprints to persistent files...");
         
         // Construct final locked filepath layout matching your exact pattern parameters
-        const finalFilePath = path.join(OUTPUT_DIR, `final-Actors-for-${domainData.domain}-and-(${domainData.niche}).txt`);
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+
+        const finalFilePath = path.join(OUTPUT_DIR, `final-Actors-for-${domainData.domain}_and_${domainData.niche}_${timestamp}.txt`);
         
         const cleanSplitParts = assistantOutput.split(/assistant:\s*/i);
         const finalCleanedContent = cleanSplitParts.length > 1 ? cleanSplitParts[1].trim() : assistantOutput.trim();
