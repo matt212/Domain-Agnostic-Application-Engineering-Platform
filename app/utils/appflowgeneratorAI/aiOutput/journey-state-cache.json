@@ -1,0 +1,150 @@
+[
+  {
+    "actor_name": "Customer",
+    "operational_role_context": "The Customer interacts with the Express Online Groceries Delivery system to browse, select, and purchase groceries.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Customer initiates an account and logs in to the system, which retrieves their customer profile and session information. They then browse the product catalog."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Customer searches the catalog for specific items. The system filters the products based on the search criteria and displays relevant options."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Customer selects a product from the search results and adds it to their shopping cart. The shopping cart object is updated to reflect the selected products."
+      },
+      {
+        "step": "4",
+        "data_object_layer": "Customer navigates through the shopping cart and checks the availability of products. The system updates the shopping cart with the latest stock information."
+      },
+      {
+        "step": "5",
+        "data_object_layer": "Customer selects delivery options, including delivery address, and confirms the order. The system updates the delivery details and order status."
+      },
+      {
+        "step": "6",
+        "data_object_layer": "Customer processes payment through a secure payment gateway. The system confirms the payment and updates the payment status."
+      },
+      {
+        "step": "7",
+        "data_object_layer": "Customer receives a confirmation message and can track the order status through the system."
+      },
+      {
+        "step": "8",
+        "data_object_layer": "Customer provides feedback on their purchase. The system collects this feedback and updates the customer profile."
+      }
+    ]
+  },
+  {
+    "actor_name": "DeliveryAgent",
+    "operational_role_context": "The DeliveryAgent is responsible for delivering groceries to customers.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "DeliveryAgent receives a new order from the system. The system sends delivery details and order status updates to the DeliveryAgent."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "DeliveryAgent checks the customer's address and coordinates with the logistics team to arrange the delivery. The system updates the delivery status with the latest status information."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "DeliveryAgent arrives at the customer's address and confirms the delivery. The system updates the delivery status and sends a confirmation message to the customer."
+      },
+      {
+        "step": "4",
+        "data_object_layer": "DeliveryAgent tracks the order status and updates the system with any changes during the delivery process. The system sends notifications to the customer about any delivery updates."
+      }
+    ]
+  },
+  {
+    "actor_name": "PaymentProcessor",
+    "operational_role_context": "The PaymentProcessor processes financial transactions for Express Online Groceries Delivery.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Customer initiates a payment through the payment gateway. The system confirms the payment and updates the payment status."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "PaymentProcessor receives payment details from the payment gateway. The system processes the payment and confirms the transaction."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "PaymentProcessor sends a confirmation message to the customer and updates the system with the payment status."
+      }
+    ]
+  },
+  {
+    "actor_name": "InventoryManager",
+    "operational_role_context": "The InventoryManager manages product inventory for Express Online Groceries Delivery.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Successful delivery of products is noted by the DeliveryAgent. The system updates inventory levels based on the delivery details."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "InventoryManager receives inventory updates from the DeliveryAgent. The system updates the inventory levels and sends notifications to stakeholders about low or out-of-stock products."
+      }
+    ]
+  },
+  {
+    "actor_name": "SupplierManager",
+    "operational_role_context": "The SupplierManager manages supplier information and performance.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "SupplierManager receives order details from the system. The system updates supplier information based on the order fulfillment process."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "SupplierManager facilitates communication with suppliers for order fulfillment. The system sends communication details and updates supplier performance metrics."
+      }
+    ]
+  },
+  {
+    "actor_name": "NotificationService",
+    "operational_role_context": "The NotificationService sends notifications to customers and suppliers.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Customer receives order confirmation and delivery updates from the system. The system sends notifications to the customer."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "SupplierManager receives order updates from the system. The system sends notifications to the supplier regarding order fulfillment and status updates."
+      }
+    ]
+  },
+  {
+    "actor_name": "OrderFulfillmentManager",
+    "operational_role_context": "The OrderFulfillmentManager manages order creation and fulfillment, with the system providing order details and updates.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "OrderFulfillmentManager receives order details from the system and updates the order state with delivery and payment details."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "OrderFulfillmentManager coordinates with InventoryManager to ensure product availability and coordinates orders with the system for fulfillment. The system updates the order state with delivery status and payment status."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "In case of customer escalation, the OrderFulfillmentManager overrides its automated processes to address the escalation in terms of order fulfillment."
+      }
+    ]
+  },
+  {
+    "actor_name": "SystemAdministrator",
+    "operational_role_context": "The SystemAdministrator manages the Express Online Groceries Delivery system.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "SystemAdministrator accesses system configurations and logs to monitor system performance and security. The system administrator updates system configurations and handles user account access management."
+      }
+    ]
+  }
+]

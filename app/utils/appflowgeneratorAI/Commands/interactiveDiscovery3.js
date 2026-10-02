@@ -8,8 +8,9 @@ const OUTPUT_DIR = path.join(PROJECT_ROOT, 'app/utils/appflowgeneratorAI/aiOutpu
 const TMP_DIR = path.join(PROJECT_ROOT, 'app/utils/appflowgeneratorAI/promptFile');
 
 const MODEL_PASS_CONFIG = {
-  model: 'Qwen/Qwen2.5-Coder-14B-Instruct-GGUF:Q4_K_M',
-  ngl: '99',
+  // model: 'Qwen/Qwen2.5-Coder-14B-Instruct-GGUF:Q4_K_M',
+ model: 'Qwen/Qwen2.5-Coder-3B-Instruct-GGUF',
+  ngl: '0',
   tokens: '2048' // Bumped tokens slightly to support 100% full journey coverage texts
 };
 
@@ -99,12 +100,19 @@ CRITICAL WORKFLOW STRUCTURING SCHEMATICS:
 1. **Actor Continuity**: For every single actor found in the authorization matrix , map out their exact operational touchpoints from start to finish.
 2. **Real-World Logical Timeline**: Structure the journey step-by-step so it tracks exactly how a transaction flows chronologically across all actors .
 3. **Data & Access Alignment**: Ensure every step explicitly mentions the business objects modified and honors the strict CRUD limits and scopes defined for that actor. Do not invent out-of-scope actions.
-4. **Format Template**: Structure your output precisely as a clean, highly readable Markdown documentation block using this exact formatting standard for each actor's journey:
+4. **Format Template**: Structure your output precisely as a clean, highly readable JSON Structure using this exact formatting standard for each actor's journey:
+You must output your response as a valid, minified or formatted JSON array containing the processed objects. Do not include markdown text, explanations, or code fences outside the JSON. 
+{
+  "actor_name": "[Actor Name - Complete Flow Timeline]",
+  "operational_role_context": "[Brief validation of their profile within this domain]",
+  "chronological_milestones_and_data_inputs": [
+    {
+      "step": "X",
+      "data_object_layer": "[Detailed action narrative explaining what they do, the explicit data inputs/outputs processed, and how it directly unlocks the next sequential actor's trigger]"
+    }
+  ]
+}
 
-### [Actor Name - Complete Flow Timeline]
-- **Operational Role Context:** [Brief validation of their profile within this domain]
-- **Chronological Milestones & Data Inputs:**
-  * **Step X (Data Object Layer):** [Detailed action narrative explaining what they do, the explicit data inputs/outputs processed, and how it directly unlocks the next sequential actor's trigger]
 
 DO NOT include introductory meta-dialogue, conversational greetings, code wrappers, or summary sections. Start immediately with the structural markdown analysis text.`;
   } else {
@@ -117,7 +125,7 @@ ${previousDraft}
 
 The human user has given the following explicit feedback and adjustments:
 "${feedbackText}"
-
+CRITICAL INSTRUCTION: Analyze the user modification request. if user has mentioned keep everything as is and only update specific actors and its steps. Do NOT regenerate unmodified arrays. Locate the specific actor or step mentioned, apply the modification precisely, and output the updated full JSON array back.
 Re-evaluate, trace the logic, and modify the actor journeys exactly as requested by the user. Maintain the clean markdown document structure without adding introductory commentary or wrapper code block syntax.`;
   }
 
@@ -138,8 +146,8 @@ Re-evaluate, trace the logic, and modify the actor journeys exactly as requested
     console.log("🚀 INITIATING INTERACTIVE ACTOR TRANSACTION JOURNEY GENERATION PIPELINE...");
 
     // 1. Locate and load the source matrices documents
-    const objectsFilePath = path.join(OUTPUT_DIR, 'final-Objects-for-Quick_Commerce-and-On-Demand_Grocery_Delivery.txt');
-    const actorsFilePath = path.join(OUTPUT_DIR, 'final-Actors-for-Quick_Commerce-and-On-Demand_Grocery_Delivery.txt');
+    const objectsFilePath = path.join(OUTPUT_DIR, 'final-Objects-for-Quick Commerce_and_(Express Online Groceries Delivery_2026-10-01T17-50-23-016Z.txt');
+    const actorsFilePath = path.join(OUTPUT_DIR, 'final-Actors-for-Quick Commerce_and_(Express Online Groceries Delivery_2026-10-01T19-20-03-389Z.txt');
 
     if (!fs.existsSync(objectsFilePath)) {
       throw new Error(`Source business objects file missing at: ${objectsFilePath}. Please run the objects generation phase first.`);
@@ -174,7 +182,8 @@ Re-evaluate, trace the logic, and modify the actor journeys exactly as requested
       journeysText = await getEndToEndJourney(objectsMatrixContent, actorsMatrixContent, domainData, userFeedback, journeysText);
       
       // Instantly record current state to a staging review path file
-      const finalJourneyPath = path.join(OUTPUT_DIR, 'final-End-to-End-Actor-Journeys.txt');
+      const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+      const finalJourneyPath = path.join(OUTPUT_DIR, `final-End-to-End-Actor-Journeys-${domainData.domain}_and_${domainData.niche}_${timestamp}.txt`);
       fs.mkdirSync(OUTPUT_DIR, { recursive: true });
       fs.writeFileSync(finalJourneyPath, `=== E2E ACTOR TRANSACTION JOURNEYS FOR ${domainData.domain.toUpperCase()} ===\n\n${journeysText}`, 'utf8');
       

@@ -1,0 +1,58 @@
+=== E2E ACTOR TRANSACTION JOURNEYS FOR QUICK COMMERCE ===
+
+### Customer - Complete Flow Timeline
+- **Operational Role Context:** The Customer is the end-user who interacts with the Express Online Groceries Delivery system to browse, select, and purchase groceries. Their primary objective is to receive their order in a timely manner with accurate product delivery.
+- **Chronological Milestones & Data Inputs:**
+  * **Step 1 (Customer - Data Object Layer):** The Customer initiates a session by logging in or registering, which triggers the creation of a UserSession. They then browse the product catalog, which involves reading the Product business object. 
+  * **Step 2 (Customer - Data Object Layer):** The Customer selects products to add to their shopping cart, which involves updating the ShoppingCart business object. They may also search for products, which requires reading the Product business object.
+  * **Step 3 (Customer - Data Object Layer):** The Customer selects delivery options and confirms their order, which involves reading and updating the Delivery business object. They also proceed with payment, which triggers interactions with the Payment business object.
+  * **Step 4 (Customer - Data Object Layer):** The Customer receives a confirmation of payment and completes the order, which involves reading the Payment business object. They then receive the product, which triggers the Feedback business object to prompt for feedback.
+  * **Step 5 (Customer - Data Object Layer):** The Customer provides feedback on their order and delivery experience, which involves updating the Feedback business object.
+
+### DeliveryAgent - Complete Flow Timeline
+- **Operational Role Context:** The DeliveryAgent is responsible for the physical delivery of groceries to the customers. Their main goal is to ensure timely and accurate delivery of orders.
+- **Chronological Milestones & Data Inputs:**
+  * **Step 1 (DeliveryAgent - Data Object Layer):** The DeliveryAgent receives delivery instructions from the system, which involves reading the Delivery business object. They may also receive tracking information for specific orders.
+  * **Step 2 (DeliveryAgent - Data Object Layer):** The DeliveryAgent updates the delivery status and tracking information in real time, which involves updating the Delivery business object. They interact with the Customer during delivery and may provide status updates.
+  * **Step 3 (DeliveryAgent - Data Object Layer):** The DeliveryAgent confirms successful delivery of the order, which involves updating the Delivery business object. This triggers a notification to the Customer and updates the Order business object.
+
+### PaymentProcessor - Complete Flow Timeline
+- **Operational Role Context:** The PaymentProcessor is a systemic interface agent responsible for processing financial transactions related to the Express Online Groceries Delivery system. Their main objective is to ensure secure and efficient payment processing.
+- **Chronological Milestones & Data Inputs:**
+  * **Step 1 (PaymentProcessor - Data Object Layer):** The PaymentProcessor receives payment information from the Customer, which involves reading the Payment business object. They process the payment and confirm the transaction status.
+  * **Step 2 (PaymentProcessor - Data Object Layer):** The PaymentProcessor updates the payment status within the Payment business object and sends a confirmation to the system. This triggers an update in the Order business object.
+
+### InventoryManager - Complete Flow Timeline
+- **Operational Role Context:** The InventoryManager is responsible for managing the inventory levels of products in the Express Online Groceries Delivery system. Their primary goal is to ensure an adequate stock of products and notify stakeholders when stock levels are low or out of stock.
+- **Chronological Milestones & Data Inputs:**
+  * **Step 1 (InventoryManager - Data Object Layer):** The InventoryManager tracks inventory levels and updates stock quantities based on order fulfillment, which involves reading and updating the Inventory business object.
+  * **Step 2 (InventoryManager - Data Object Layer):** The InventoryManager receives successful delivery information from the system, which involves reading the Delivery business object. They then adjust inventory levels in the Inventory business object.
+  * **Step 3 (InventoryManager - Data Object Layer):** The InventoryManager notifies stakeholders about low or out-of-stock products, which involves updating the Inventory business object and sending notifications through the NotificationService business object.
+
+### SupplierManager - Complete Flow Timeline
+- **Operational Role Context:** The SupplierManager is responsible for managing supplier information and performance within the Express Online Groceries Delivery system. Their main objective is to ensure a reliable supply of products and facilitate communication for order fulfillment.
+- **Chronological Milestones & Data Inputs:**
+  * **Step 1 (SupplierManager - Data Object Layer):** The SupplierManager manages supplier information and tracks supplier performance, which involves reading and updating the Supplier business object.
+  * **Step 2 (SupplierManager - Data Object Layer):** The SupplierManager facilitates communication with suppliers for order fulfillment, which involves reading the Order business object and updating the Supplier business object.
+  * **Step 3 (SupplierManager - Data Object Layer):** The SupplierManager updates supplier information and performance metrics, which involves updating the Supplier business object. They also receive delivery confirmation from the system to adjust inventory.
+
+### NotificationService - Complete Flow Timeline
+- **Operational Role Context:** The NotificationService is a systemic interface agent responsible for sending notifications to customers and suppliers regarding various system events. Their primary goal is to keep stakeholders informed about their orders and system updates.
+- **Chronological Milestones & Data Inputs:**
+  * **Step 1 (NotificationService - Data Object Layer):** The NotificationService sends notifications to customers and suppliers about order status, payment confirmations, and delivery updates, which involves reading the Customer, Supplier, Order, Payment, and Delivery business objects.
+  * **Step 2 (NotificationService - Data Object Layer):** The NotificationService updates sent notifications in the system, which involves updating the NotificationService business object.
+  * **Step 3 (NotificationService - Data Object Layer):** The NotificationService handles communication with customers and suppliers for order status updates, which involves reading and updating the NotificationService business object.
+
+### OrderFulfillmentManager - Complete Flow Timeline
+- **Operational Role Context:** The OrderFulfillmentManager is responsible for managing the creation and fulfillment of orders in the Express Online Groceries Delivery system. Their primary goal is to ensure orders are processed and delivered efficiently.
+- **Chronological Milestones & Data Inputs:**
+  * **Step 1 (OrderFulfillmentManager - Data Object Layer):** The OrderFulfillmentManager manages the creation and fulfillment of orders, which involves reading and updating the Order business object.
+  * **Step 2 (OrderFulfillmentManager - Data Object Layer):** The OrderFulfillmentManager coordinates with the Inventory and Supplier business objects to ensure product availability, which involves reading the Inventory and Supplier business objects.
+  * **Step 3 (OrderFulfillmentManager - Data Object Layer):** The OrderFulfillmentManager updates the order state with delivery and payment details, which involves updating the Order business object.
+
+### SystemAdministrator - Complete Flow Timeline
+- **Operational Role Context:** The SystemAdministrator is responsible for the overall administration and maintenance of the Express Online Groceries Delivery system. Their primary goal is to ensure the system operates smoothly and securely.
+- **Chronological Milestones & Data Inputs:**
+  * **Step 1 (SystemAdministrator - Data Object Layer):** The SystemAdministrator manages system configurations, updates, and maintenance, which involves reading and updating the System logs and configuration settings.
+  * **Step 2 (SystemAdministrator - Data Object Layer):** The SystemAdministrator monitors system performance and logs for security and operational issues, which involves reading the System logs.
+  * **Step 3 (SystemAdministrator - Data Object Layer):** The SystemAdministrator handles user accounts and access management for all system actors, which involves reading and updating the User accounts and access permissions.
