@@ -21,8 +21,9 @@ const MODEL_PASS_CONFIG = {
   //model: 'Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF',
   //3 minutes
   model: 'unsloth/Qwen3.5-9B-GGUF',
+  //37 minutes
   ngl: '0',
-  tokens: '2048' 
+  tokens: '4048' 
 };
 
 const rl = readline.createInterface({
