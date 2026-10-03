@@ -1,4 +1,103 @@
-=== CURRENT SYSTEM ACTORS MATRIX DRAFT ===
+User:
+You are a Principal Enterprise Systems Architect. Create a highly granular user transaction journey based on these specs:
+=== SYSTEM DATA MATRIX ===
+=== Final DATA MATRIX for domain :Quick Commerce (Q-Commerce) and niche :Hyperlocal Grocery Delivery  ===
+
+[
+  {
+    "object_name": "User Account",
+    "input": "Customer registration details and authentication credentials",
+    "activity": "Identity verification and profile initialization",
+    "output": "Authenticated session token and user context"
+  },
+  {
+    "object_name": "Geolocation Request",
+    "input": "Mobile device GPS coordinates and address verification data",
+    "activity": "Service area validation and delivery zone mapping",
+    "output": "Confirmed delivery pin and applicable service fee"
+  },
+  {
+    "object_name": "Cart Item",
+    "input": "Product selection, quantity, and selected delivery slot",
+    "activity": "Inventory availability check and price calculation",
+    "output": "Updated cart state with real-time stock confirmation"
+  },
+  {
+    "object_name": "Order Header",
+    "input": "Finalized cart contents, delivery address, and payment method",
+    "activity": "Order creation and initial payment authorization",
+    "output": "Unique Order ID and confirmed order receipt"
+  },
+  {
+    "object_name": "Order Line Item",
+    "input": "Detailed product specifications, SKU, and unit price per order header",
+    "activity": "Line-level inventory reservation and weight estimation",
+    "output": "Reserved stock hold and aggregated line subtotal"
+  },
+  {
+    "object_name": "Delivery Slot",
+    "input": "Customer requested time window and driver availability data",
+    "activity": "Slot allocation and time-window enforcement logic",
+    "output": "Assigned pickup and delivery timestamps"
+  },
+  {
+    "object_name": "Merchant Inventory Stock",
+    "input": "Real-time stock levels from local store database",
+    "activity": "Batch deduction and shelf-space allocation update",
+    "output": "Adjusted available quantity and stock status flags"
+  },
+  {
+    "object_name": "Assigned Courier",
+    "input": "Order ID, delivery address, and courier availability status",
+    "activity": "Route optimization and driver assignment validation",
+    "output": "Active delivery task and assigned courier ID"
+  },
+  {
+    "object_name": "Pickup Manifest",
+    "input": "List of items to collect and store location coordinates",
+    "activity": "Store associate task generation and item verification",
+    "output": "Collected items list and ready-for-pickup status"
+  },
+  {
+    "object_name": "Handover Receipt",
+    "input": "Customer signature or digital confirmation and item count",
+    "activity": "Completion validation and quality check verification",
+    "output": "Delivered status update and final payment capture"
+  },
+  {
+    "object_name": "Payment Transaction",
+    "input": "Order total, tax, fees, and selected payment gateway data",
+    "activity": "Secure fund transfer and receipt generation",
+    "output": "Paid status flag and digital invoice record"
+  },
+  {
+    "object_name": "Refund Claim",
+    "input": "Reason for return, damaged item evidence, and original order ID",
+    "activity": "Claim validation and partial/full fund reversal",
+    "output": "Refund approval and adjusted account balance"
+  },
+  {
+    "object_name": "Subscription Plan",
+    "input": "User eligibility and recurring payment authorization",
+    "activity": "Fee calculation and recurring billing cycle setup",
+    "output": "Active membership tier and priority delivery rights"
+  },
+  {
+    "object_name": "Loyalty Points Ledger",
+    "input": "Purchase total and promotional offer codes",
+    "activity": "Point accrual calculation and redemption validation",
+    "output": "Updated points balance and discounted order total"
+  },
+  {
+    "object_name": "Cancellation Request",
+    "input": "User cancellation reason and current order status",
+    "activity": "Inventory release and refund initiation logic",
+    "output": "Cancelled order status and released stock availability"
+  }
+]
+
+=== SYSTEM ACTORS & AUTHORIZATION MATRIX ===
+=== Final SYSTEM ACTORS & AUTHORIZATION MATRIX ===
 
 [
   {
@@ -253,3 +352,16 @@
     }
   }
 ]
+
+Format your output strictly as a valid JSON Array containing objects matching this structural schematic:
+[
+  {
+    "actor_name": "Actor Name",
+    "operational_role_context": "Validation profile details",
+    "chronological_milestones_and_data_inputs": [
+      { "step": "1", "data_object_layer": "Narrative explaining modifications and data scopes..." }
+    ]
+  }
+]
+Return ONLY raw minified/formatted JSON. No code fences, no markdown text wrappers outside the JSON array.
+

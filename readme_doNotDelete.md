@@ -579,3 +579,27 @@ remove DeliveryLocation
 9.Supplier: (should be able to manage supplier information, track supplier performance, and facilitate communication between the system and suppliers for order fulfillment and restocking purposes).   
 10.Feedback:(once custoer receives the product, system should prompt for feedback and ratings, allowing customers to provide their opinions and experiences with the product and overall shopping experience).
 '
+
+
+interactiveDiscovery - 3 oct 
+correct sequence and update are below
+1.Customer 
+below are customer's activities not output, till 1.e . 
+1.a Customer should be able to register and login in platform. 1.b Customer should be able to search , browse, product/s and its quantity
+1.c Customer should be able to add to cart those product or product. 1.c Customer should be able to select Delivery address 1.d customer should be able to select payment option
+1.e Customer should be able to receive the order(Order Request) once payment is successfuly
+2.remove Order Request
+3.Product should be item added, updated by seller/supplier to platform, so that customer can search, browse and purchase Product.  
+4.Inventory Item should be inventory , seller can add and update inventory and also system can update inventory once product is ordered by customer
+5. remove Order Line Item
+6. remove Vendor Order
+7. Delivery zone ,Route,Location, DeliveryDriver,Delivery Vehicle,Delivery Staff, Delivery slot ,Delivery Status, Pickup Task, Delivery Route,Delivery History, Delivery Execution should be part of single  Delivery business object's activity not input  
+8. Promotion
+9.  Transaction should be payment transaction 
+10. OrderFullfilment is systemic driven but overriden in case of customer escalation
+11. Order History 
+12. User Notification 
+13. Customer Feedback 
+14. Vendor Inventory should be supplier/seller ,who add, updates products in the platform under its activity, Inventory Log should be part of this
+ 
+

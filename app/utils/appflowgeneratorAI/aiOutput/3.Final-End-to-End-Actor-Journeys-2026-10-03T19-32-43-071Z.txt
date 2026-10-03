@@ -1,0 +1,136 @@
+=== E2E ACTOR TRANSACTION JOURNEYS ===
+
+[
+  {
+    "actor_name": "End-User Customer",
+    "operational_role_context": "Validation profile details",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "User registration details (username, email, password)"
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Geolocation details (address verification, GPS coordinates)"
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Product selection, quantity, and delivery slot"
+      },
+      {
+        "step": "4",
+        "data_object_layer": "Payment method selection"
+      },
+      {
+        "step": "5",
+        "data_object_layer": "Order confirmation with real-time stock confirmation"
+      },
+      {
+        "step": "6",
+        "data_object_layer": "Loyalty points redemption"
+      }
+    ]
+  },
+  {
+    "actor_name": "Store Associate",
+    "operational_role_context": "Validation profile details",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Assigned pickup manifest (items to collect, location coordinates)"
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Inventory verification (item counts, quality checks)"
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Real-time stock level update"
+      },
+      {
+        "step": "4",
+        "data_object_layer": "Store location coordinates for delivery"
+      },
+      {
+        "step": "5",
+        "data_object_layer": "Order completion with inventory release"
+      }
+    ]
+  },
+  {
+    "actor_name": "Logistics Dispatcher",
+    "operational_role_context": "Validation profile details",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Validated courier availability status"
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Assigned courier to order"
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Route optimization for courier assignment"
+      },
+      {
+        "step": "4",
+        "data_object_layer": "Real-time driver location data for tracking"
+      }
+    ]
+  },
+  {
+    "actor_name": "Merchant Inventory Manager",
+    "operational_role_context": "Validation profile details",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Bulk stock deductions"
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Shelf-space allocation"
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Stock status flags"
+      }
+    ]
+  },
+  {
+    "actor_name": "IAM Security Officer",
+    "operational_role_context": "Validation profile details",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "User authentication credentials (password, security questions)"
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Geolocation verification (address, GPS coordinates)"
+      },
+      {
+        "step": "3",
+        "data_object_layer": "User account status (active, suspended, locked)"
+      }
+    ]
+  },
+  {
+    "actor_name": "Finance & Billing Agent",
+    "operational_role_context": "Validation profile details",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Payment transaction details (amount, payment gateway, etc.)"
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Refund claim details (reason, evidence)"
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Subscription plan billing and settlement"
+      }
+    ]
+  }
+]

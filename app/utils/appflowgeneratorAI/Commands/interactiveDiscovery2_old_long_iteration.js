@@ -183,7 +183,7 @@ Re-evaluate, trace the logic, and modify the actor journeys exactly as requested
       
       // Instantly record current state to a staging review path file
       const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-      const finalJourneyPath = path.join(OUTPUT_DIR, `final-End-to-End-Actor-Journeys-${domainData.domain}_and_${domainData.niche}_${timestamp}.txt`);
+      const finalJourneyPath = path.join(OUTPUT_DIR, `3.Final-End-to-End-Actor-Journeys-${domainData.domain}_and_${domainData.niche}_${timestamp}.txt`);
       fs.mkdirSync(OUTPUT_DIR, { recursive: true });
       fs.writeFileSync(finalJourneyPath, `=== E2E ACTOR TRANSACTION JOURNEYS FOR ${domainData.domain.toUpperCase()} ===\n\n${journeysText}`, 'utf8');
       

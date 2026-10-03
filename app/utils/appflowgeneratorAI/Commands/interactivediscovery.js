@@ -8,9 +8,14 @@ const OUTPUT_DIR = path.join(PROJECT_ROOT, 'app/utils/appflowgeneratorAI/aiOutpu
 const TMP_DIR = path.join(PROJECT_ROOT, 'app/utils/appflowgeneratorAI/promptFile');
 
 const MODEL_PASS_CONFIG = {
-  model: 'Qwen/Qwen2.5-Coder-14B-Instruct-GGUF:Q4_K_M',
-  ngl: '99',
-  tokens: '1024'
+  //model: 'Qwen/Qwen2.5-Coder-14B-Instruct-GGUF:Q4_K_M',
+  //model: 'Qwen/Qwen3-8B-GGUF:Q4_K_M',
+  //12 minutes for first run 
+  model: 'unsloth/Qwen3.5-9B-GGUF', 
+  //13 minutes for first run
+  ngl: '0',
+  threads: '6',   
+  tokens: '1524'
 };
 
 // Interface to capture live human feedback from the terminal
@@ -218,7 +223,7 @@ Each object in the array must strictly follow this key structure:
         isApproved = true;
         console.log("✅ Architecture foundations locked down by designer! Advancing downstream processing...");
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-        const reviewFilePath1 = path.join(OUTPUT_DIR, `final-Objects-for-${domainData.domain}_and_(${domainData.niche}_${timestamp}.txt`);
+        const reviewFilePath1 = path.join(OUTPUT_DIR, `1-Final-Objects-for-${domainData.domain}_and_${domainData.niche}_${timestamp}.txt`);
       fs.mkdirSync(OUTPUT_DIR, { recursive: true });
       const parts1 = assistantOutput.split(/assistant:\s*/i);
 

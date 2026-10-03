@@ -18,8 +18,9 @@ const MODEL_PASS_CONFIG = {
  // model :'hugging-quants/Llama-3.2-3B-Instruct-Q4_K_M-GGUF',
  // model:'Qwen/Qwen2.5-Coder-7B-Instruct-GGUF:Q4_K_M',
  //17 minutes
-  model: 'Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF',
+  //model: 'Qwen/Qwen2.5-Coder-1.5B-Instruct-GGUF',
   //3 minutes
+  model: 'unsloth/Qwen3.5-9B-GGUF',
   ngl: '0',
   tokens: '2048' 
 };
@@ -127,20 +128,20 @@ Return ONLY raw minified/formatted JSON. No code fences, no markdown text wrappe
   const rawOutput = await callLlamaCli(prompt, 'actor_journeys_base');
   
   const parts1 = rawOutput.split("Assistant:\n");
-  console.log("what the actual fuck");
-  // Locate the exact starting position of the token
-const assistantPos = rawOutput.indexOf("Assistant:");
-
-if (assistantPos !== -1) {
-  // Grab 100 characters before and 200 characters after the marker to capture the full sentence context
-  const startContext = Math.max(0, assistantPos - 100);
-  const endContext = Math.min(rawOutput.length, assistantPos + 200);
   
-  const surroundingSentence = rawOutput.substring(startContext, endContext);
-  console.log(`\n🔍 FOUND SURROUNDING CONTEXT:\n${surroundingSentence}\n`);
-} else {
-  console.log("❌ The wording 'Assistant:' was not found anywhere in the raw output.");
-}
+  // Locate the exact starting position of the token
+// const assistantPos = rawOutput.indexOf("Assistant:");
+
+// if (assistantPos !== -1) {
+//   // Grab 100 characters before and 200 characters after the marker to capture the full sentence context
+//   const startContext = Math.max(0, assistantPos - 100);
+//   const endContext = Math.min(rawOutput.length, assistantPos + 200);
+  
+//   const surroundingSentence = rawOutput.substring(startContext, endContext);
+//   console.log(`\n🔍 FOUND SURROUNDING CONTEXT:\n${surroundingSentence}\n`);
+// } else {
+//   console.log("❌ The wording 'Assistant:' was not found anywhere in the raw output.");
+// }
 
   let cleaned = parts1.length > 1 ? parts1[1].trim() : rawOutput.trim();
 //cleaned=rawOutput.trim();
@@ -185,8 +186,8 @@ Modify the milestones based on the mutation request. Output ONLY the updated JSO
   try {
     console.log("🚀 INITIATING MULTI-SECOND REFINEMENT JOURNEY GENERATION PIPELINE...");
 
-    const objectsFilePath = path.join(OUTPUT_DIR, 'final-Objects-for-Quick Commerce_and_(Express Online Groceries Delivery_2026-10-01T17-50-23-016Z.txt');
-    const actorsFilePath = path.join(OUTPUT_DIR, 'final-Actors-for-Quick Commerce_and_(Express Online Groceries Delivery_2026-10-01T19-20-03-389Z.txt');
+    const objectsFilePath = path.join(OUTPUT_DIR, '1-Final-Objects-for-Quick Commerce (Q-Commerce)_and_(Hyperlocal Grocery Delivery_2026-10-03T18-42-31-031Z.txt');
+    const actorsFilePath = path.join(OUTPUT_DIR, '2.Final-Actors-for-Quick Commerce (Q-Commerce)_and_Hyperlocal Grocery Delivery_2026-10-03T19-22-16-404Z.txt');
 
     if (!fs.existsSync(objectsFilePath)) throw new Error(`Source objects file missing.`);
     const objectsMatrixContent = fs.readFileSync(objectsFilePath, 'utf8');
@@ -279,7 +280,7 @@ console.log("Node.js instantly patches the master tracking structure");
     // Export Final Complete Structured Manifest
     // Export Final Complete Structured Manifest
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-    const finalJourneyPath = path.join(OUTPUT_DIR, `final-End-to-End-Actor-Journeys-${timestamp}.txt`);
+    const finalJourneyPath = path.join(OUTPUT_DIR, `3.Final-End-to-End-Actor-Journeys-${timestamp}.txt`);
     
     fs.writeFileSync(finalJourneyPath, `=== E2E ACTOR TRANSACTION JOURNEYS ===\n\n${JSON.stringify(currentJourneys, null, 2)}`, 'utf8');
     console.log(`\n\x1b[32m✔ Success! Full journey configuration saved to: ${finalJourneyPath}\x1b[0m`);

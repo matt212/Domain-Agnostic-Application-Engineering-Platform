@@ -11,7 +11,9 @@ const MODEL_PASS_CONFIG = {
   // Directly targets the lightweight 3B model file already cached on your MacBook Pro
  // model: '/Users/apple/.cache/huggingface/hub/models--Qwen--Qwen2.5-Coder-3B-Instruct-GGUF/snapshots/f74adce6aa16316c625447af059dbebe4983757c/qwen2.5-coder-3b-instruct-q4_k_m.gguf',
  //model: 'Qwen/Qwen2.5-Coder-3B-Instruct-GGUF',
- model:'Qwen/Qwen3-8B-GGUF:Q4_K_M' ,
+ //model:'Qwen/Qwen3-8B-GGUF:Q4_K_M' ,
+ model: 'unsloth/Qwen3.5-9B-GGUF', 
+ //28 minutes for first run
  ngl: '0',            // Pure, stable CPU execution for Intel Mac environments
   threads: '6',        // Explicitly matched to your 6 physical Intel cores
   tokens: '3072',      // High ceiling gives the model plenty of runway to close JSON brackets
@@ -186,7 +188,7 @@ function cleanJsonString(rawStr) {
   try {
     console.log("🚀 INITIATING INTERACTIVE SYSTEM ACTOR & AUTHORIZATION PIPELINE...");
 
-    const objectsFilePath = path.join(OUTPUT_DIR, 'final-Objects-for-Quick Commerce_and_(Express Online Groceries Delivery_2026-10-01T17-50-23-016Z.txt');
+    const objectsFilePath = path.join(OUTPUT_DIR, '1-Final-Objects-for-Quick Commerce (Q-Commerce)_and_(Hyperlocal Grocery Delivery_2026-10-03T18-42-31-031Z.txt');
     if (!fs.existsSync(objectsFilePath)) {
       throw new Error(`Source business objects file missing at: ${objectsFilePath}.`);
     }
@@ -228,7 +230,7 @@ function cleanJsonString(rawStr) {
         console.log("✅ Identity and Authorization systems locked down!");
         
         const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
-        const finalFilePath = path.join(OUTPUT_DIR, `final-Actors-for-${domainData.domain}_and_${domainData.niche}_${timestamp}.txt`);
+        const finalFilePath = path.join(OUTPUT_DIR, `2.Final-Actors-for-${domainData.domain}_and_${domainData.niche}_${timestamp}.txt`);
         fs.writeFileSync(finalFilePath, `=== Final SYSTEM ACTORS & AUTHORIZATION MATRIX ===\n\n${displayString}`, 'utf8');
         process.stdout.write(displayString + '\n');
         console.log(`\n🎉 Step complete. Blueprint document written to disk:\n📂 ${finalFilePath}`);
