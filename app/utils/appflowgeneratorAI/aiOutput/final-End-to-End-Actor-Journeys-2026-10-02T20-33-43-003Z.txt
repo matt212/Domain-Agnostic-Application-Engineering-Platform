@@ -1,0 +1,216 @@
+=== E2E ACTOR TRANSACTION JOURNEYS ===
+
+[
+  {
+    "actor_name": "Customer",
+    "operational_role_context": "Browses and selects products, adds to cart, selects delivery options, processes payment, and provides feedback.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "User, UserSession"
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Product catalog updates, customer searches, browses, and selects product and its available quantity"
+      },
+      {
+        "step": "3",
+        "data_object_layer": "ShoppingCart"
+      },
+      {
+        "step": "4",
+        "data_object_layer": "Delivery options, customer address selection, confirmation, order tracking, and status updates"
+      },
+      {
+        "step": "5",
+        "data_object_layer": "Payment processing, confirmation, and status updates"
+      },
+      {
+        "step": "6",
+        "data_object_layer": "Inventory levels upon successful delivery"
+      },
+      {
+        "step": "7",
+        "data_object_layer": "Customer receives product and provides feedback"
+      }
+    ]
+  },
+  {
+    "actor_name": "DeliveryAgent",
+    "operational_role_context": "Manages delivery logistics, provides real-time status updates, and handles customer interactions.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Delivery details"
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Customer information"
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Delivery status updates"
+      },
+      {
+        "step": "4",
+        "data_object_layer": "Tracking information"
+      }
+    ]
+  },
+  {
+    "actor_name": "PaymentProcessor",
+    "operational_role_context": "Processes financial transactions and updates payment status.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Payment details"
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Customer information"
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Payment status updates"
+      }
+    ]
+  },
+  {
+    "actor_name": "InventoryManager",
+    "operational_role_context": "Tracks inventory levels, updates stock quantities, and notifies stakeholders about low or out-of-stock products.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Inventory levels"
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Delivery details"
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Stock quantities updates"
+      },
+      {
+        "step": "4",
+        "data_object_layer": "Notifications for low or out-of-stock products"
+      }
+    ]
+  },
+  {
+    "actor_name": "SupplierManager",
+    "operational_role_context": "Manages supplier information, tracks supplier performance, and facilitates communication for order fulfillment.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Supplier information"
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Order details"
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Supplier information updates"
+      },
+      {
+        "step": "4",
+        "data_object_layer": "Performance metrics updates"
+      }
+    ]
+  },
+  {
+    "actor_name": "NotificationService",
+    "operational_role_context": "Sends notifications to customers and suppliers regarding system events.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Customer information"
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Supplier information"
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Order details"
+      },
+      {
+        "step": "4",
+        "data_object_layer": "Payment confirmation"
+      },
+      {
+        "step": "5",
+        "data_object_layer": "Delivery details"
+      },
+      {
+        "step": "6",
+        "data_object_layer": "Sent notifications"
+      }
+    ]
+  },
+  {
+    "actor_name": "OrderFulfillmentManager",
+    "operational_role_context": "Manages order creation, coordinates with inventory and supplier, and updates order state.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Order details"
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Inventory levels"
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Supplier information"
+      },
+      {
+        "step": "4",
+        "data_object_layer": "Delivery details"
+      },
+      {
+        "step": "5",
+        "data_object_layer": "Payment confirmation"
+      },
+      {
+        "step": "6",
+        "data_object_layer": "Order state updates"
+      },
+      {
+        "step": "7",
+        "data_object_layer": "Delivery status updates"
+      },
+      {
+        "step": "8",
+        "data_object_layer": "Payment status updates"
+      }
+    ]
+  },
+  {
+    "actor_name": "SystemAdministrator",
+    "operational_role_context": "Manages system configurations, monitors performance, and handles user accounts.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "System logs"
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Configuration settings"
+      },
+      {
+        "step": "3",
+        "data_object_layer": "User accounts"
+      },
+      {
+        "step": "4",
+        "data_object_layer": "System configuration updates"
+      },
+      {
+        "step": "5",
+        "data_object_layer": "User access permissions updates"
+      }
+    ]
+  }
+]

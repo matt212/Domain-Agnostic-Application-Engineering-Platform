@@ -1,0 +1,156 @@
+=== E2E ACTOR TRANSACTION JOURNEYS ===
+
+[
+  {
+    "actor_name": "Customer",
+    "operational_role_context": "The Customer is the end-user who interacts with the Express Online Groceries Delivery system to browse, select, and purchase groceries. Their primary objective is to receive their order in a timely manner with accurate product delivery.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "User interacts with the 'Customer' business object to aggregate user and session data."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "User browses and selects products, which are managed by the 'Product' business object."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "User adds products to the shopping cart, handled by the 'ShoppingCart' business object."
+      },
+      {
+        "step": "4",
+        "data_object_layer": "User selects delivery options and confirms the order, involving the 'Delivery' business object."
+      },
+      {
+        "step": "5",
+        "data_object_layer": "User processes payment through the 'Payment' business object."
+      },
+      {
+        "step": "6",
+        "data_object_layer": "User receives and provides feedback on their order and delivery experience, managed by the 'Feedback' business object."
+      }
+    ]
+  },
+  {
+    "actor_name": "DeliveryAgent",
+    "operational_role_context": "The DeliveryAgent is responsible for the physical delivery of groceries to the customers. Their main goal is to ensure timely and accurate delivery of orders.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "DeliveryAgent interacts with the 'Delivery' business object to manage delivery logistics and provide real-time status updates."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "DeliveryAgent handles customer interactions during the delivery process."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "DeliveryAgent updates delivery tracking information to the system."
+      }
+    ]
+  },
+  {
+    "actor_name": "PaymentProcessor",
+    "operational_role_context": "The PaymentProcessor is a systemic interface agent responsible for processing financial transactions related to the Express Online Groceries Delivery system. Their main objective is to ensure secure and efficient payment processing.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "PaymentProcessor interacts with the 'Payment' business object to process payments and confirm payment status."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "PaymentProcessor handles communication with financial institutions for payment processing."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "PaymentProcessor updates payment status and sends confirmation to the system."
+      }
+    ]
+  },
+  {
+    "actor_name": "InventoryManager",
+    "operational_role_context": "The InventoryManager is responsible for managing the inventory levels of products in the Express Online Groceries Delivery system. Their primary goal is to ensure an adequate stock of products and notify stakeholders when stock levels are low or out of stock.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "InventoryManager interacts with the 'Inventory' business object to track inventory levels and update stock quantities."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "InventoryManager receives successful delivery information to adjust inventory levels."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "InventoryManager notifies stakeholders about low or out-of-stock products."
+      }
+    ]
+  },
+  {
+    "actor_name": "SupplierManager",
+    "operational_role_context": "The SupplierManager is responsible for managing supplier information and performance within the Express Online Groceries Delivery system. Their main objective is to ensure a reliable supply of products and facilitate communication for order fulfillment.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "SupplierManager interacts with the 'Supplier' business object to manage supplier information and track supplier performance."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "SupplierManager facilitates communication between the system and suppliers for order fulfillment."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "SupplierManager updates supplier information and performance metrics."
+      }
+    ]
+  },
+  {
+    "actor_name": "NotificationService",
+    "operational_role_context": "The NotificationService is a systemic interface agent responsible for sending notifications to customers and suppliers regarding various system events. Their primary goal is to keep stakeholders informed about their orders and system updates.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "NotificationService interacts with the 'NotificationService' business object to send notifications."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "NotificationService handles communication with customers and suppliers for order status updates, payment confirmations, and other relevant information."
+      }
+    ]
+  },
+  {
+    "actor_name": "OrderFulfillmentManager",
+    "operational_role_context": "The OrderFulfillmentManager is responsible for managing the creation and fulfillment of orders in the Express Online Groceries Delivery system. Their primary goal is to ensure orders are processed and delivered efficiently.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "OrderFulfillmentManager interacts with the 'Order' business object to manage order creation and fulfillment."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "OrderFulfillmentManager coordinates with the 'Inventory' and 'Supplier' business objects to ensure product availability and order fulfillment."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "OrderFulfillmentManager updates order state with delivery and payment details."
+      }
+    ]
+  },
+  {
+    "actor_name": "SystemAdministrator",
+    "operational_role_context": "The SystemAdministrator is responsible for the overall administration and maintenance of the Express Online Groceries Delivery system. Their primary goal is to ensure the system operates smoothly and securely.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "SystemAdministrator manages system configurations, updates, and maintenance."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "SystemAdministrator monitors system performance and logs for security and operational issues."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "SystemAdministrator handles user accounts and access management for all system actors."
+      }
+    ]
+  }
+]

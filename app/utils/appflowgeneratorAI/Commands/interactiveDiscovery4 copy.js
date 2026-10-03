@@ -126,24 +126,8 @@ Return ONLY raw minified/formatted JSON. No code fences, no markdown text wrappe
   console.log("⚙️ Compiling baseline journey layers (Initial Setup)...");
   const rawOutput = await callLlamaCli(prompt, 'actor_journeys_base');
   
-  const parts1 = rawOutput.split("Assistant:\n");
-  console.log("what the actual fuck");
-  // Locate the exact starting position of the token
-const assistantPos = rawOutput.indexOf("Assistant:");
-
-if (assistantPos !== -1) {
-  // Grab 100 characters before and 200 characters after the marker to capture the full sentence context
-  const startContext = Math.max(0, assistantPos - 100);
-  const endContext = Math.min(rawOutput.length, assistantPos + 200);
-  
-  const surroundingSentence = rawOutput.substring(startContext, endContext);
-  console.log(`\n🔍 FOUND SURROUNDING CONTEXT:\n${surroundingSentence}\n`);
-} else {
-  console.log("❌ The wording 'Assistant:' was not found anywhere in the raw output.");
-}
-
-  let cleaned = parts1.length > 1 ? parts1[1].trim() : rawOutput.trim();
-//cleaned=rawOutput.trim();
+  const parts = rawOutput.split("Assistant:\n");
+  let cleaned = parts.length > 1 ? parts[1].trim() : rawOutput.trim();
   return cleanJsonString(cleaned); // FIXED: Uses robust cleaning extractor here
 }
 
@@ -190,8 +174,8 @@ Modify the milestones based on the mutation request. Output ONLY the updated JSO
 
     if (!fs.existsSync(objectsFilePath)) throw new Error(`Source objects file missing.`);
     const objectsMatrixContent = fs.readFileSync(objectsFilePath, 'utf8');
-    const actorsMatrixContent = fs.readFileSync(actorsFilePath, 'utf8')
-//: fs.readFileSync(path.join(OUTPUT_DIR, 'current-actors-review.txt'), 'utf8');
+    const actorsMatrixContent = fs.existsSync(actorsFilePath) ? fs.readFileSync(actorsFilePath, 'utf8') : fs.readFileSync(path.join(OUTPUT_DIR, 'current-actors-review.txt'), 'utf8');
+
     const domainData = extractDomainAndNicheFromHeader(objectsMatrixContent);
     console.log(`🎯 Context Isolated -> Domain: "${domainData.domain}" | Niche: "${domainData.niche}"`);
  
@@ -248,33 +232,12 @@ Modify the milestones based on the mutation request. Output ONLY the updated JSO
       const updatedActorBlock = await getTargetedDeltaPatch(targetActor.actor_name, targetActor, feedback);
 
       // Node.js instantly patches the master tracking structure
-    //  currentJourneys[index] = updatedActorBlock;
-console.log("Node.js instantly patches the master tracking structure");
-      //console.log(currentJourneys)
-      // 🔥 THE STRUCTURAL FIX: Safe Object Re-Aggregation & Patching
-      if (updatedActorBlock) {
-        // SCENARIO A: The model returned a raw naked array instead of a wrapper object
-        if (Array.isArray(updatedActorBlock)) {
-          currentJourneys[index] = {
-            ...targetActor, // Safely preserves the existing "actor_name" and "operational_role_context" keys
-            chronological_milestones_and_data_inputs: updatedActorBlock // Assigns the array to the correct key slot
-          };
-        } 
-        // SCENARIO B: The model returned the correct object but missed or mutated the identity name key
-        else if (typeof updatedActorBlock === 'object') {
-          currentJourneys[index] = {
-            ...targetActor, // Fallback baseline keys insurance
-            ...updatedActorBlock, // Spreads updated properties over it
-            actor_name: targetActor.actor_name // Forces the original name variable to stay locked down
-          };
-        }
+      currentJourneys[index] = updatedActorBlock;
 
       // Commit changes to disk cache instantly
       fs.writeFileSync(CACHE_FILE_PATH, JSON.stringify(currentJourneys, null, 2), 'utf8');
-      
       console.log(`\n✅ Local array mutated successfully in seconds!`);
     }
-  }
 
     // Export Final Complete Structured Manifest
     // Export Final Complete Structured Manifest

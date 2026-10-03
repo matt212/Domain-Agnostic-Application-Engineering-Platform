@@ -1,0 +1,196 @@
+=== Final SYSTEM ACTORS & AUTHORIZATION MATRIX ===
+
+[
+  {
+    "actor_name": "Customer",
+    "operational_role": "Express Online Groceries Delivery Customer",
+    "core_responsibilities": [
+      "Search for products, browse products, add products to cart, view cart, initiate payment, track order status"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Customer profile with session information, product catalog, shopping cart state, delivery details"
+      ],
+      "What_They_Can_Create": [
+        "Shopping cart"
+      ],
+      "What_They_Can_Change": [
+        "Shopping cart"
+      ],
+      "What_They_Can_Remove": [
+        "Shopping cart"
+      ],
+      "Operations_They_Can_Run": [
+        "Initiate payment, track order status"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": [
+          "Personal information is secure and protected"
+        ],
+        "Order_Lock": [
+          "Orders cannot be modified once completed"
+        ]
+      }
+    }
+  },
+  {
+    "actor_name": "Supplier",
+    "operational_role": "Express Online Groceries Delivery Supplier",
+    "core_responsibilities": [
+      "Manage supplier information, track supplier performance, facilitate communication, receive feedback"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Supplier information, product catalog, order fulfillment metrics"
+      ],
+      "What_They_Can_Create": [
+        "Supplier information, order"
+      ],
+      "What_They_Can_Change": [
+        "Supplier information, order"
+      ],
+      "What_They_Can_Remove": [
+        "Supplier information"
+      ],
+      "Operations_They_Can_Run": [
+        "Facilitate communication, receive feedback"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": [
+          "Supplier information is secure and protected"
+        ],
+        "Order_Lock": [
+          "Orders cannot be modified once completed"
+        ]
+      }
+    }
+  },
+  {
+    "actor_name": "Delivery Service",
+    "operational_role": "Express Online Groceries Delivery Delivery Service",
+    "core_responsibilities": [
+      "Handle delivery logistics, confirm deliveries, track order status"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Delivery details, order tracking"
+      ],
+      "What_They_Can_Create": [
+        "Delivery"
+      ],
+      "What_They_Can_Change": [
+        "Delivery"
+      ],
+      "What_They_Can_Remove": [
+        "Delivery"
+      ],
+      "Operations_They_Can_Run": [
+        "Confirm deliveries, track order status"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": [
+          "Delivery information is secure and protected"
+        ],
+        "Order_Lock": [
+          "Orders cannot be modified once completed"
+        ]
+      }
+    }
+  },
+  {
+    "actor_name": "Payment Processor",
+    "operational_role": "Express Online Groceries Delivery Payment Processor",
+    "core_responsibilities": [
+      "Process payments, manage payment status"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Payment confirmation, status updates"
+      ],
+      "What_They_Can_Create": [
+        "Payment"
+      ],
+      "What_They_Can_Change": [
+        "Payment"
+      ],
+      "What_They_Can_Remove": [
+        "Payment"
+      ],
+      "Operations_They_Can_Run": [
+        "Process payments, manage payment status"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": [
+          "Payment information is secure and protected"
+        ],
+        "Order_Lock": [
+          "Orders cannot be modified once completed"
+        ]
+      }
+    }
+  },
+  {
+    "actor_name": "System Administrator",
+    "operational_role": "Express Online Groceries Delivery System Administrator",
+    "core_responsibilities": [
+      "Manage user roles and permissions, monitor system performance, configure settings"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "All system settings, user roles and permissions, system performance metrics"
+      ],
+      "What_They_Can_Create": [
+        "User roles and permissions"
+      ],
+      "What_They_Can_Change": [
+        "User roles and permissions, system settings"
+      ],
+      "What_They_Can_Remove": [
+        "User roles and permissions"
+      ],
+      "Operations_They_Can_Run": [
+        "Manage user roles and permissions, monitor system performance, configure settings"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": [
+          "All system information is secure and protected"
+        ],
+        "Order_Lock": [
+          "Orders cannot be modified once completed"
+        ]
+      }
+    }
+  },
+  {
+    "actor_name": "Feedback",
+    "operational_role": "Express Online Groceries Delivery Feedback",
+    "core_responsibilities": [
+      "Prompt customer for feedback and ratings"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Customer feedback and ratings for products and overall experience"
+      ],
+      "What_They_Can_Create": [
+        "Feedback"
+      ],
+      "What_They_Can_Change": [
+        "Feedback"
+      ],
+      "What_They_Can_Remove": [
+        "Feedback"
+      ],
+      "Operations_They_Can_Run": [
+        "Prompt customer for feedback and ratings"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": [
+          "Feedback information is secure and protected"
+        ],
+        "Order_Lock": [
+          "Orders cannot be modified once completed"
+        ]
+      }
+    }
+  }
+]

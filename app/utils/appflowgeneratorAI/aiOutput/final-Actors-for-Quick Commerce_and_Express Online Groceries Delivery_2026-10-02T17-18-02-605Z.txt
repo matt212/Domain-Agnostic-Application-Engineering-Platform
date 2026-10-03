@@ -1,0 +1,186 @@
+=== Final SYSTEM ACTORS & AUTHORIZATION MATRIX ===
+
+[
+  {
+    "actor_name": "Customer",
+    "operational_role": "Customer Profile",
+    "core_responsibilities": [
+      "View and search for products",
+      "Add products to cart",
+      "Check out and place an order",
+      "View order status"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Product catalog",
+        "Order history",
+        "Delivery options",
+        "Customer account details",
+        "Feedback"
+      ],
+      "What_They_Can_Create": [
+        "Shopping cart",
+        "Order"
+      ],
+      "What_They_Can_Change": [
+        "Shopping cart items",
+        "Order details"
+      ],
+      "What_They_Can_Remove": [
+        "Shopping cart items"
+      ],
+      "Operations_They_Can_Run": [
+        "Place an order",
+        "Cancel an order"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "Personal information is protected",
+        "Order_Lock": "Orders can only be canceled within a 24-hour period after purchase"
+      }
+    }
+  },
+  {
+    "actor_name": "Supplier",
+    "operational_role": "Supplier Management",
+    "core_responsibilities": [
+      "Manage supplier information",
+      "Track supplier performance",
+      "Communicate with customers for order fulfillment",
+      "Receive feedback from customers"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Supplier details",
+        "Supplier performance metrics",
+        "Order details",
+        "Feedback from customers"
+      ],
+      "What_They_Can_Create": [
+        "Supplier information"
+      ],
+      "What_They_Can_Change": [
+        "Supplier information",
+        "Supplier performance metrics"
+      ],
+      "What_They_Can_Remove": [
+        "Supplier information"
+      ],
+      "Operations_They_Can_Run": [
+        "Update supplier details"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "Supplier information is protected",
+        "Order_Lock": "Suppliers cannot modify order details once placed"
+      }
+    }
+  },
+  {
+    "actor_name": "Delivery Team",
+    "operational_role": "Delivery Coordinator",
+    "core_responsibilities": [
+      "Track order status",
+      "Confirm delivery",
+      "Update delivery details",
+      "Notify customers of delivery status"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Order details",
+        "Delivery status",
+        "Customer account details"
+      ],
+      "What_They_Can_Create": [
+        "Delivery confirmation"
+      ],
+      "What_They_Can_Change": [
+        "Delivery status"
+      ],
+      "What_They_Can_Remove": [
+        "Delivery confirmation"
+      ],
+      "Operations_They_Can_Run": [
+        "Confirm delivery",
+        "Update delivery status"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "Delivery details are protected",
+        "Order_Lock": "Delivery status cannot be changed once confirmed"
+      }
+    }
+  },
+  {
+    "actor_name": "Payment Processor",
+    "operational_role": "Payment Gateway",
+    "core_responsibilities": [
+      "Process payments",
+      "Confirm payment status",
+      "Notify customers of payment confirmation"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Order details",
+        "Payment status",
+        "Customer account details"
+      ],
+      "What_They_Can_Create": [
+        "Payment confirmation"
+      ],
+      "What_They_Can_Change": [
+        "Payment status"
+      ],
+      "What_They_Can_Remove": [
+        "Payment confirmation"
+      ],
+      "Operations_They_Can_Run": [
+        "Process payments",
+        "Confirm payment status"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "Payment information is protected",
+        "Order_Lock": "Payment status cannot be changed once confirmed"
+      }
+    }
+  },
+  {
+    "actor_name": "Admin",
+    "operational_role": "System Administrator",
+    "core_responsibilities": [
+      "Manage user accounts",
+      "Configure system settings",
+      "Monitor system performance",
+      "Manage inventory levels",
+      "Update product catalog"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "User accounts",
+        "System settings",
+        "System performance metrics",
+        "Inventory levels",
+        "Product catalog"
+      ],
+      "What_They_Can_Create": [
+        "User accounts",
+        "System settings"
+      ],
+      "What_They_Can_Change": [
+        "User accounts",
+        "System settings"
+      ],
+      "What_They_Can_Remove": [
+        "User accounts"
+      ],
+      "Operations_They_Can_Run": [
+        "Manage user accounts",
+        "Configure system settings",
+        "Monitor system performance",
+        "Manage inventory levels",
+        "Update product catalog"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "System settings are protected",
+        "Order_Lock": "System settings cannot be changed without prior approval"
+      }
+    }
+  }
+]

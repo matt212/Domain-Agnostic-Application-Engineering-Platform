@@ -1,0 +1,156 @@
+=== E2E ACTOR TRANSACTION JOURNEYS ===
+
+[
+  {
+    "actor_name": "Customer",
+    "operational_role_context": "Customer can browse, select, and purchase groceries",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Customer profile"
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Product catalog"
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Shopping cart"
+      },
+      {
+        "step": "4",
+        "data_object_layer": "Delivery details"
+      },
+      {
+        "step": "5",
+        "data_object_layer": "Payment confirmation"
+      },
+      {
+        "step": "6",
+        "data_object_layer": "Feedback"
+      }
+    ]
+  },
+  {
+    "actor_name": "DeliveryAgent",
+    "operational_role_context": "Delivery agent responsible for physical delivery of groceries",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Delivery details"
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Customer information"
+      }
+    ]
+  },
+  {
+    "actor_name": "PaymentProcessor",
+    "operational_role_context": "Payment processor responsible for financial transactions",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Payment details"
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Customer information"
+      }
+    ]
+  },
+  {
+    "actor_name": "InventoryManager",
+    "operational_role_context": "Inventory manager responsible for managing inventory levels",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Inventory levels"
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Delivery details"
+      }
+    ]
+  },
+  {
+    "actor_name": "SupplierManager",
+    "operational_role_context": "Supplier manager responsible for managing supplier information and performance",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Supplier information"
+      }
+    ]
+  },
+  {
+    "actor_name": "NotificationService",
+    "operational_role_context": "Notification service responsible for sending notifications",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Customer information"
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Supplier information"
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Order details"
+      },
+      {
+        "step": "4",
+        "data_object_layer": "Payment confirmation"
+      },
+      {
+        "step": "5",
+        "data_object_layer": "Delivery details"
+      }
+    ]
+  },
+  {
+    "actor_name": "OrderFulfillmentManager",
+    "operational_role_context": "Order fulfillment manager responsible for creating and fulfilling orders",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Order details"
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Inventory levels"
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Supplier information"
+      },
+      {
+        "step": "4",
+        "data_object_layer": "Delivery details"
+      },
+      {
+        "step": "5",
+        "data_object_layer": "Payment confirmation"
+      }
+    ]
+  },
+  {
+    "actor_name": "SystemAdministrator",
+    "operational_role_context": "System administrator responsible for system administration",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "System logs"
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Configuration settings"
+      },
+      {
+        "step": "3",
+        "data_object_layer": "User accounts"
+      }
+    ]
+  }
+]

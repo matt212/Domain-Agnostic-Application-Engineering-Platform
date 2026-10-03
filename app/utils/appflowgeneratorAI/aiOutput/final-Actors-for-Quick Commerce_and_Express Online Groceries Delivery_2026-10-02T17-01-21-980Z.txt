@@ -1,0 +1,118 @@
+=== Final SYSTEM ACTORS & AUTHORIZATION MATRIX ===
+
+[
+  {
+    "actor_name": "Customer",
+    "operational_role": "End-User",
+    "core_responsibilities": [
+      "Search for products, browse products, add products to cart, checkout, track orders, provide feedback",
+      "Manage personal profile, view shopping cart, manage order history, view notifications"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Product catalog, shopping cart content, order history, order details, feedback responses"
+      ],
+      "What_They_Can_Create": [
+        "New shopping cart entries, new order entries"
+      ],
+      "What_They_Can_Change": [
+        "Shopping cart content, order details, customer preferences"
+      ],
+      "What_They_Can_Remove": [
+        "Shopping cart entries, order entries"
+      ],
+      "Operations_They_Can_Run": [
+        "Search, browse, add to cart, checkout, track order, provide feedback"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "Customer data is protected, only accessible by the customer and authorized personnel",
+        "Order_Lock": "Orders cannot be modified once confirmed or shipped"
+      }
+    }
+  },
+  {
+    "actor_name": "Supervisor",
+    "operational_role": "Management",
+    "core_responsibilities": [
+      "Manage supplier information, track supplier performance, facilitate communication, process payments, manage inventory levels",
+      "Monitor order fulfillment, manage order history, review customer feedback"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Supplier information, supplier performance metrics, customer feedback, order details, payment statuses, inventory levels"
+      ],
+      "What_They_Can_Create": [
+        "New supplier entries, new payment entries, new inventory entries"
+      ],
+      "What_They_Can_Change": [
+        "Supplier information, supplier performance metrics, order details, payment statuses, inventory levels"
+      ],
+      "What_They_Can_Remove": [
+        "Supplier entries, payment entries, inventory entries"
+      ],
+      "Operations_They_Can_Run": [
+        "Manage supplier, process payments, manage inventory levels"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "Supervisor data is protected, only accessible by the supervisor and authorized personnel",
+        "Order_Lock": "Orders cannot be modified once confirmed or shipped"
+      }
+    }
+  },
+  {
+    "actor_name": "Delivery Person",
+    "operational_role": "Delivery",
+    "core_responsibilities": [
+      "Deliver products to customers, track deliveries, confirm order status"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Customer address, order details, delivery status"
+      ],
+      "What_They_Can_Create": [
+        "Delivery records"
+      ],
+      "What_They_Can_Change": [
+        "Delivery status"
+      ],
+      "What_They_Can_Remove": [
+        "Delivery records"
+      ],
+      "Operations_They_Can_Run": [
+        "Track deliveries, confirm order status"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "Delivery data is protected, only accessible by the delivery person and authorized personnel",
+        "Order_Lock": "Orders cannot be modified once confirmed or shipped"
+      }
+    }
+  },
+  {
+    "actor_name": "Customer Service Representative",
+    "operational_role": "Customer Support",
+    "core_responsibilities": [
+      "Respond to customer inquiries, resolve customer issues, provide customer support"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Customer inquiries, customer feedback, order details, payment statuses"
+      ],
+      "What_They_Can_Create": [
+        "New customer support tickets"
+      ],
+      "What_They_Can_Change": [
+        "Customer support ticket status"
+      ],
+      "What_They_Can_Remove": [
+        "Customer support tickets"
+      ],
+      "Operations_They_Can_Run": [
+        "Respond to customer inquiries, resolve customer issues, provide customer support"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "Customer data is protected, only accessible by the customer support representative and authorized personnel",
+        "Order_Lock": "Orders cannot be modified once confirmed or shipped"
+      }
+    }
+  }
+]

@@ -1,0 +1,253 @@
+=== Final SYSTEM ACTORS & AUTHORIZATION MATRIX ===
+
+[
+  {
+    "actor_name": "Customer",
+    "operational_role": "Customer in the Express Online Groceries Delivery sector",
+    "core_responsibilities": [
+      "Search for products",
+      "Browse available products",
+      "Select products for addition to shopping cart",
+      "Review shopping cart and proceed to checkout",
+      "Track order status",
+      "Provide feedback after receiving product"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Product catalog",
+        "Shopping cart details",
+        "Order status"
+      ],
+      "What_They_Can_Create": [
+        "Product search query",
+        "Shopping cart item",
+        "Order"
+      ],
+      "What_They_Can_Change": [
+        "Shopping cart items"
+      ],
+      "What_They_Can_Remove": [
+        "Shopping cart items"
+      ],
+      "Operations_They_Can_Run": [
+        "Search, browse, select, checkout, track order status, provide feedback"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "Customer information is stored securely",
+        "Order_Lock": "Orders are locked until payment is confirmed"
+      }
+    }
+  },
+  {
+    "actor_name": "Supplier",
+    "operational_role": "Supplier in the Express Online Groceries Delivery sector",
+    "core_responsibilities": [
+      "Manage supplier information",
+      "Track supplier performance",
+      "Facilitate communication with customers",
+      "Track successful deliveries",
+      "Handle order fulfillment"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Supplier information",
+        "Order fulfillment details",
+        "Supplier performance metrics"
+      ],
+      "What_They_Can_Create": [
+        "Supplier information",
+        "Order",
+        "Order fulfillment"
+      ],
+      "What_They_Can_Change": [
+        "Supplier information"
+      ],
+      "What_They_Can_Remove": [
+        "Supplier information"
+      ],
+      "Operations_They_Can_Run": [
+        "Manage supplier information",
+        "Track supplier performance",
+        "Facilitate communication",
+        "Track successful deliveries",
+        "Handle order fulfillment"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "Supplier information is secure",
+        "Order_Lock": "Orders are not locked until received"
+      }
+    }
+  },
+  {
+    "actor_name": "Delivery Service",
+    "operational_role": "Delivery service in the Express Online Groceries Delivery sector",
+    "core_responsibilities": [
+      "Manage delivery options",
+      "Confirm delivery address",
+      "Track delivery status",
+      "Update order status after delivery"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Delivery options",
+        "Delivery address",
+        "Delivery status",
+        "Order status"
+      ],
+      "What_They_Can_Create": [
+        "Delivery address",
+        "Order"
+      ],
+      "What_They_Can_Change": [
+        "Delivery status"
+      ],
+      "What_They_Can_Remove": [
+        "Delivery status"
+      ],
+      "Operations_They_Can_Run": [
+        "Manage delivery options",
+        "Confirm delivery address",
+        "Track delivery status",
+        "Update order status after delivery"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "Delivery information is secure",
+        "Order_Lock": "Orders are not locked until received"
+      }
+    }
+  },
+  {
+    "actor_name": "Payment Service",
+    "operational_role": "Payment service in the Express Online Groceries Delivery sector",
+    "core_responsibilities": [
+      "Process payments",
+      "Manage payment status",
+      "Confirm payment"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Payment status"
+      ],
+      "What_They_Can_Create": [
+        "Payment"
+      ],
+      "What_They_Can_Change": [
+        "Payment status"
+      ],
+      "What_They_Can_Remove": [
+        "Payment"
+      ],
+      "Operations_They_Can_Run": [
+        "Process payments",
+        "Manage payment status",
+        "Confirm payment"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "Payment details are secure",
+        "Order_Lock": "Orders are not locked until received"
+      }
+    }
+  },
+  {
+    "actor_name": "Order Management System",
+    "operational_role": "Order management system in the Express Online Groceries Delivery sector",
+    "core_responsibilities": [
+      "Manage order creation",
+      "Manage order fulfillment",
+      "Update order status"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Order status",
+        "Order details"
+      ],
+      "What_They_Can_Create": [
+        "Order"
+      ],
+      "What_They_Can_Change": [
+        "Order status"
+      ],
+      "What_They_Can_Remove": [
+        "Order"
+      ],
+      "Operations_They_Can_Run": [
+        "Manage order creation",
+        "Manage order fulfillment",
+        "Update order status"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "Order details are secure",
+        "Order_Lock": "Orders are not locked until received"
+      }
+    }
+  },
+  {
+    "actor_name": "Inventory Management System",
+    "operational_role": "Inventory management system in the Express Online Groceries Delivery sector",
+    "core_responsibilities": [
+      "Track inventory levels",
+      "Update stock quantities",
+      "Notify stakeholders"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Inventory levels",
+        "Supplier performance"
+      ],
+      "What_They_Can_Create": [
+        "Inventory update"
+      ],
+      "What_They_Can_Change": [
+        "Inventory levels"
+      ],
+      "What_They_Can_Remove": [
+        "Inventory levels"
+      ],
+      "Operations_They_Can_Run": [
+        "Track inventory levels",
+        "Update stock quantities",
+        "Notify stakeholders"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "Inventory details are secure",
+        "Order_Lock": "Orders are not locked until received"
+      }
+    }
+  },
+  {
+    "actor_name": "Customer Service",
+    "operational_role": "Customer service in the Express Online Groceries Delivery sector",
+    "core_responsibilities": [
+      "Respond to customer inquiries",
+      "Provide customer support",
+      "Facilitate communication with suppliers",
+      "Track customer feedback"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Customer inquiries",
+        "Supplier performance"
+      ],
+      "What_They_Can_Create": [
+        "Customer inquiry",
+        "Supplier communication"
+      ],
+      "What_They_Can_Change": [
+        "Customer inquiries"
+      ],
+      "What_They_Can_Remove": [
+        "Customer inquiries"
+      ],
+      "Operations_They_Can_Run": [
+        "Respond to customer inquiries",
+        "Provide customer support",
+        "Facilitate communication with suppliers",
+        "Track customer feedback"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "Customer information is secure",
+        "Order_Lock": "Orders are not locked until received"
+      }
+    }
+  }
+]

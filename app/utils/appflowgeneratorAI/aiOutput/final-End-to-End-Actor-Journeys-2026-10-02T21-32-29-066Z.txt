@@ -1,0 +1,160 @@
+=== E2E ACTOR TRANSACTION JOURNEYS ===
+
+[
+  {
+    "actor_name": "Customer",
+    "operational_role_context": "End-user interacting with the system to browse, select, and purchase groceries with the goal of receiving orders on time and accurately.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Customer logs in, system aggregates user and session data, initializes session for browsing and selecting products."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Customer browses product catalog, system updates search and browse activity on product object."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Customer selects products, adds to shopping cart, system updates cart state with selected items."
+      },
+      {
+        "step": "4",
+        "data_object_layer": "Customer selects delivery options, confirms order, system updates delivery details and order state."
+      },
+      {
+        "step": "5",
+        "data_object_layer": "Customer processes payment, system confirms payment and updates payment status."
+      },
+      {
+        "step": "6",
+        "data_object_layer": "Customer receives product, system prompts for feedback and collects ratings on feedback object."
+      }
+    ]
+  },
+  {
+    "actor_name": "DeliveryAgent",
+    "operational_role_context": "Responsible for delivering groceries to customers ensuring timely and accurate delivery.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "DeliveryAgent receives delivery instructions from system, updates delivery status and tracking information."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "DeliveryAgent interacts with customer during delivery, updates delivery status in real-time."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "DeliveryAgent confirms successful delivery, system updates delivery status and notifies customer."
+      }
+    ]
+  },
+  {
+    "actor_name": "PaymentProcessor",
+    "operational_role_context": "Processes financial transactions for the system ensuring secure and efficient payments.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "PaymentProcessor receives payment request, processes transaction with financial institutions."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "PaymentProcessor confirms payment status, updates payment details in system."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "PaymentProcessor sends payment confirmation to system and notifies customer."
+      }
+    ]
+  },
+  {
+    "actor_name": "InventoryManager",
+    "operational_role_context": "Manages product inventory levels and notifies stakeholders of stock availability.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "InventoryManager tracks inventory levels, updates stock quantities based on system inputs."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "InventoryManager receives delivery confirmation, adjusts inventory levels accordingly."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "InventoryManager notifies stakeholders when inventory is low or out of stock."
+      }
+    ]
+  },
+  {
+    "actor_name": "SupplierManager",
+    "operational_role_context": "Manages supplier information and ensures reliable product supply for the system.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "SupplierManager updates supplier information and performance metrics."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "SupplierManager communicates with suppliers for order fulfillment and updates order status."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "SupplierManager tracks supplier performance and notifies system of any issues."
+      }
+    ]
+  },
+  {
+    "actor_name": "NotificationService",
+    "operational_role_context": "Sends notifications to customers and suppliers for order updates and system events.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "NotificationService sends order confirmation and payment confirmation to customers."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "NotificationService updates suppliers on order status and delivery tracking."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "NotificationService sends delivery status updates and system alerts to relevant stakeholders."
+      }
+    ]
+  },
+  {
+    "actor_name": "OrderFulfillmentManager",
+    "operational_role_context": "Manages order creation and fulfillment ensuring efficient and accurate processing.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "OrderFulfillmentManager creates order and updates order state with delivery and payment details."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "OrderFulfillmentManager coordinates with inventory and supplier systems to ensure product availability."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "OrderFulfillmentManager updates order status and confirms fulfillment to all stakeholders."
+      }
+    ]
+  },
+  {
+    "actor_name": "SystemAdministrator",
+    "operational_role_context": "Maintains and secures the system ensuring smooth and efficient operation.",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "SystemAdministrator monitors system performance and logs for security and operational issues."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "SystemAdministrator manages user accounts and access permissions for all system actors."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "SystemAdministrator updates system configurations and performs maintenance tasks."
+      }
+    ]
+  }
+]

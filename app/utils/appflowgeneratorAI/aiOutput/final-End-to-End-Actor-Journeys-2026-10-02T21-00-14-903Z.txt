@@ -1,0 +1,252 @@
+=== E2E ACTOR TRANSACTION JOURNEYS ===
+
+[
+  {
+    "actor_name": "Customer",
+    "operational_role_context": "Validation profile details",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Interacts with the 'Customer' business object to aggregate user and session data."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Browses and selects products, which are managed by the 'Product' business object."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Adds products to the shopping cart, handled by the 'ShoppingCart' business object."
+      },
+      {
+        "step": "4",
+        "data_object_layer": "Selects delivery options and confirms the order, involving the 'Delivery' business object."
+      },
+      {
+        "step": "5",
+        "data_object_layer": "Processes payment through the 'Payment' business object."
+      },
+      {
+        "step": "6",
+        "data_object_layer": "Receives and provides feedback on their order and delivery experience, managed by the 'Feedback' business object."
+      },
+      {
+        "step": "7",
+        "data_object_layer": "Reads customer profile, product catalog, shopping cart, delivery details, payment confirmation, and feedback."
+      },
+      {
+        "step": "8",
+        "data_object_layer": "Updates shopping cart, delivery options, and payment information."
+      },
+      {
+        "step": "9",
+        "data_object_layer": "Deletes no data."
+      }
+    ]
+  },
+  {
+    "actor_name": "DeliveryAgent",
+    "operational_role_context": "Validation profile details",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Interacts with the 'Delivery' business object to manage delivery logistics and provide real-time status updates."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Handles customer interactions during the delivery process."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Updates delivery tracking information to the system."
+      },
+      {
+        "step": "4",
+        "data_object_layer": "Reads delivery details and customer information."
+      },
+      {
+        "step": "5",
+        "data_object_layer": "Updates delivery status and tracking information."
+      },
+      {
+        "step": "6",
+        "data_object_layer": "Deletes no data."
+      }
+    ]
+  },
+  {
+    "actor_name": "PaymentProcessor",
+    "operational_role_context": "Validation profile details",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Interacts with the 'Payment' business object to process payments and confirm payment status."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Handles communication with financial institutions for payment processing."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Updates payment status and sends confirmation to the system."
+      },
+      {
+        "step": "4",
+        "data_object_layer": "Reads payment details and customer information."
+      },
+      {
+        "step": "5",
+        "data_object_layer": "Updates payment status."
+      },
+      {
+        "step": "6",
+        "data_object_layer": "Deletes no data."
+      }
+    ]
+  },
+  {
+    "actor_name": "InventoryManager",
+    "operational_role_context": "Validation profile details",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Interacts with the 'Inventory' business object to track inventory levels and update stock quantities."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Receives successful delivery information to adjust inventory levels."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Notifies stakeholders about low or out-of-stock products."
+      },
+      {
+        "step": "4",
+        "data_object_layer": "Reads inventory levels and delivery details."
+      },
+      {
+        "step": "5",
+        "data_object_layer": "Updates stock quantities."
+      },
+      {
+        "step": "6",
+        "data_object_layer": "Deletes no data."
+      }
+    ]
+  },
+  {
+    "actor_name": "SupplierManager",
+    "operational_role_context": "Validation profile details",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Interacts with the 'Supplier' business object to manage supplier information and track supplier performance."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Facilitates communication between the system and suppliers for order fulfillment."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Updates supplier information and performance metrics."
+      },
+      {
+        "step": "4",
+        "data_object_layer": "Reads supplier information and order details."
+      },
+      {
+        "step": "5",
+        "data_object_layer": "Updates supplier information and performance metrics."
+      },
+      {
+        "step": "6",
+        "data_object_layer": "Deletes no data."
+      }
+    ]
+  },
+  {
+    "actor_name": "NotificationService",
+    "operational_role_context": "Validation profile details",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Interacts with the 'NotificationService' business object to send notifications."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Handles communication with customers and suppliers for order status updates, payment confirmations, and other relevant information."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Reads customer information, supplier information, order details, payment confirmation, and delivery details."
+      },
+      {
+        "step": "4",
+        "data_object_layer": "Updates sent notifications."
+      },
+      {
+        "step": "5",
+        "data_object_layer": "Deletes no data."
+      }
+    ]
+  },
+  {
+    "actor_name": "OrderFulfillmentManager",
+    "operational_role_context": "Validation profile details",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Interacts with the 'Order' business object to manage order creation and fulfillment."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Coordinates with the 'Inventory' and 'Supplier' business objects to ensure product availability and order fulfillment."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Updates order state with delivery and payment details."
+      },
+      {
+        "step": "4",
+        "data_object_layer": "Reads order details, inventory levels, supplier information, delivery details, payment confirmation, and feedback."
+      },
+      {
+        "step": "5",
+        "data_object_layer": "Updates order state, delivery status, and payment status."
+      },
+      {
+        "step": "6",
+        "data_object_layer": "Deletes no data."
+      }
+    ]
+  },
+  {
+    "actor_name": "SystemAdministrator",
+    "operational_role_context": "Validation profile details",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Manages system configurations, updates, and maintenance."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Monitors system performance and logs for security and operational issues."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Handles user accounts and access management for all system actors."
+      },
+      {
+        "step": "4",
+        "data_object_layer": "Reads system logs, configuration settings, and user accounts."
+      },
+      {
+        "step": "5",
+        "data_object_layer": "Updates system configurations and user access permissions."
+      },
+      {
+        "step": "6",
+        "data_object_layer": "Deletes no data."
+      }
+    ]
+  }
+]

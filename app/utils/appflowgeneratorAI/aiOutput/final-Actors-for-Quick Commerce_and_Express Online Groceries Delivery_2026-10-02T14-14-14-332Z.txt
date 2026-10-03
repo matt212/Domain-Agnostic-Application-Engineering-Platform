@@ -1,0 +1,294 @@
+=== Final SYSTEM ACTORS & AUTHORIZATION MATRIX ===
+
+[
+  {
+    "actor_name": "Customer",
+    "operational_role": "End-user of the Quick Commerce platform, seeking to purchase groceries with minimal latency and maximum efficiency. They require real-time updates, instant delivery, and seamless checkout.",
+    "core_responsibilities": [
+      "Initiates search and browsing of products",
+      "Adds products to shopping cart",
+      "Confirms delivery address and payment",
+      "Receives and provides feedback on delivered products"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Product catalog with availability",
+        "Shopping cart contents",
+        "Order status and delivery tracking",
+        "Payment confirmation and status"
+      ],
+      "What_They_Can_Create": [
+        "Customer profile",
+        "Shopping cart entries",
+        "Order request",
+        "Feedback submission"
+      ],
+      "What_They_Can_Change": [
+        "Shopping cart contents",
+        "Delivery address",
+        "Payment method",
+        "Feedback ratings"
+      ],
+      "What_They_Can_Remove": [
+        "Shopping cart entries"
+      ],
+      "Operations_They_Can_Run": [
+        "Initiate checkout",
+        "Track order status",
+        "Submit feedback"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "Visible only to their own account, no cross-tenant access",
+        "Order_Lock": "Cannot modify order once payment is confirmed"
+      }
+    }
+  },
+  {
+    "actor_name": "DeliveryAgent",
+    "operational_role": "Frontline operator responsible for rapid, real-time delivery of groceries. Must operate within tight time windows and coordinate with multiple systems to ensure on-time delivery.",
+    "core_responsibilities": [
+      "Receives delivery order from system",
+      "Navigates to customer location",
+      "Updates delivery status in real-time",
+      "Handles delivery confirmation and signature capture"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Delivery request with address",
+        "Estimated delivery time",
+        "Order status",
+        "Payment confirmation"
+      ],
+      "What_They_Can_Create": [
+        "Delivery confirmation record",
+        "Delivery note"
+      ],
+      "What_They_Can_Change": [
+        "Delivery status updates",
+        "Estimated delivery time"
+      ],
+      "What_They_Can_Remove": [
+        "Delivery note"
+      ],
+      "Operations_They_Can_Run": [
+        "Trigger delivery confirmation",
+        "Update delivery status in real-time"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "Visible only to their assigned delivery area",
+        "Order_Lock": "Cannot modify order once delivery is initiated"
+      }
+    }
+  },
+  {
+    "actor_name": "WarehouseOperator",
+    "operational_role": "Operational staff managing the rapid fulfillment of orders from inventory. Must ensure real-time inventory accuracy and fast turnaround for order preparation.",
+    "core_responsibilities": [
+      "Picks and packs products based on order",
+      "Updates inventory levels in real-time",
+      "Notifies system of product availability",
+      "Coordinates with delivery agents for order readiness"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Inventory stock levels",
+        "Order details",
+        "Product availability",
+        "Delivery readiness status"
+      ],
+      "What_They_Can_Create": [
+        "Packing slip",
+        "Inventory record"
+      ],
+      "What_They_Can_Change": [
+        "Inventory stock levels",
+        "Order fulfillment status"
+      ],
+      "What_They_Can_Remove": [
+        "Packing slip"
+      ],
+      "Operations_They_Can_Run": [
+        "Trigger order fulfillment",
+        "Update inventory status"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "Visible only to their assigned warehouse location",
+        "Order_Lock": "Cannot modify order once fulfillment is initiated"
+      }
+    }
+  },
+  {
+    "actor_name": "PaymentProcessor",
+    "operational_role": "Third-party financial service provider responsible for secure, real-time payment processing. Must ensure instant transaction confirmation and fraud detection.",
+    "core_responsibilities": [
+      "Processes payment for customer orders",
+      "Confirms payment status in real-time",
+      "Notifies system of payment success or failure",
+      "Maintains transaction records"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Payment request with amount",
+        "Customer payment method",
+        "Payment confirmation",
+        "Payment status"
+      ],
+      "What_They_Can_Create": [
+        "Payment transaction record"
+      ],
+      "What_They_Can_Change": [
+        "Payment status"
+      ],
+      "What_They_Can_Remove": [
+        "Payment transaction record"
+      ],
+      "Operations_They_Can_Run": [
+        "Process payment",
+        "Confirm payment status"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "Visible only to the payment transaction",
+        "Order_Lock": "Cannot modify order once payment is processed"
+      }
+    }
+  },
+  {
+    "actor_name": "InventoryManager",
+    "operational_role": "System administrator responsible for maintaining accurate inventory levels and ensuring product availability. Must monitor stock in real-time and trigger replenishment alerts.",
+    "core_responsibilities": [
+      "Monitors and updates inventory stock levels",
+      "Triggers low stock alerts",
+      "Receives inventory updates from delivery",
+      "Coordinates with suppliers for replenishment"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Inventory stock levels",
+        "Product availability",
+        "Low stock alerts",
+        "Inventory updates from delivery"
+      ],
+      "What_They_Can_Create": [
+        "Inventory record",
+        "Low stock alert"
+      ],
+      "What_They_Can_Change": [
+        "Inventory stock levels",
+        "Inventory status"
+      ],
+      "What_They_Can_Remove": [
+        "Low stock alert"
+      ],
+      "Operations_They_Can_Run": [
+        "Trigger inventory replenishment",
+        "Update inventory status"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "Visible only to the inventory system",
+        "Order_Lock": "Cannot modify order once inventory is confirmed"
+      }
+    }
+  },
+  {
+    "actor_name": "Supplier",
+    "operational_role": "Third-party entity providing products to the system. Must ensure rapid delivery of goods and maintain real-time product availability.",
+    "core_responsibilities": [
+      "Provides product inventory",
+      "Updates product availability in real-time",
+      "Coordinates with inventory system for replenishment",
+      "Handles product delivery to warehouse"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Product availability",
+        "Inventory stock levels",
+        "Replenishment requests"
+      ],
+      "What_They_Can_Create": [
+        "Product inventory record"
+      ],
+      "What_They_Can_Change": [
+        "Product availability"
+      ],
+      "What_They_Can_Remove": [
+        "Product inventory record"
+      ],
+      "Operations_They_Can_Run": [
+        "Update product availability",
+        "Trigger inventory replenishment"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "Visible only to the supplier's assigned products",
+        "Order_Lock": "Cannot modify order once product is confirmed"
+      }
+    }
+  },
+  {
+    "actor_name": "NotificationAgent",
+    "operational_role": "System component responsible for sending real-time notifications to customers and suppliers. Must ensure timely delivery of alerts and updates.",
+    "core_responsibilities": [
+      "Sends delivery confirmation notifications",
+      "Notifies customer of order status",
+      "Alerts supplier of inventory replenishment needs",
+      "Notifies customer of feedback submission"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Order status updates",
+        "Delivery confirmation",
+        "Feedback submission"
+      ],
+      "What_They_Can_Create": [
+        "Notification record"
+      ],
+      "What_They_Can_Change": [
+        "Notification status"
+      ],
+      "What_They_Can_Remove": [
+        "Notification record"
+      ],
+      "Operations_They_Can_Run": [
+        "Send delivery confirmation",
+        "Send order status updates"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "Visible only to the recipient of the notification",
+        "Order_Lock": "Cannot modify order once notification is sent"
+      }
+    }
+  },
+  {
+    "actor_name": "SystemAdministrator",
+    "operational_role": "Functional steward responsible for ensuring system-wide operational integrity, business process alignment, and compliance with organizational policies. Ensures that all system activities support business objectives and regulatory requirements.",
+    "core_responsibilities": [
+      "Ensure business processes are operational and compliant",
+      "Maintain system-wide operational consistency across workflows"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "System logs",
+        "User access records",
+        "System alerts",
+        "System performance metrics"
+      ],
+      "What_They_Can_Create": [
+        "System access control records"
+      ],
+      "What_They_Can_Change": [
+        "System access permissions",
+        "System configuration"
+      ],
+      "What_They_Can_Remove": [
+        "System logs"
+      ],
+      "Operations_They_Can_Run": [
+        "Monitor system performance",
+        "Adjust system configurations"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "Visible only to system administrative roles",
+        "Order_Lock": "Cannot modify order once system is operational"
+      }
+    }
+  }
+]
