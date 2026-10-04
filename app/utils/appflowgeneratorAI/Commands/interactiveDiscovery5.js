@@ -8,37 +8,34 @@ const readline = require('readline');
 // ============================================================================
 const PROMPTS = {
   /**
-   * 1. BASELINE PROMPT BLOCK (Generates Mermaid code enclosed inside a valid JSON schema wrapper)
+   * 1. BASELINE MACRO FLOWCHART PROMPT BLOCK
+   * Domain-agnostic track configuration extracts boundaries dynamically from data inputs
    */
-  BASELINE_GENERATION: (actorData, objectsData, actorsData, domainData) => {
-    return `You are a WORLD-CLASS SYSTEMS ARCHITECT ENGINE. Your goal is to map out a partial visual system flowchart segment for ONE specific actor, formatted strictly using Mermaid.js syntax (graph TD).
+  BASELINE_GENERATION: (objectsData, actorsData, journeysData, domainData) => {
+    return `You are a WORLD-CLASS SYSTEMS ARCHITECT ENGINE. Your goal is to map out a complete visual system flow diagram from start to finish, formatted strictly as a Mermaid.js flowchart (graph TD).
 
 === CONTEXT VARIABLES ===
 - DOMAIN: ${domainData.domain}
 - NICHE: ${domainData.niche}
 
-=== TARGET SPECIFIC ACTOR TRANSACTIONS TO MAP ===
-${JSON.stringify(actorData, null, 2)}
+=== DIAGRAM ARCHITECTURE STRUCTURAL INSTRUCTIONS ===
+You must organize the entire system architecture layout across explicit, clean structural containers. Do not map this by isolated actors. Instead, follow these macro layout instructions:
 
-=== GROUNDING MATRICES REFERENCE ===
---- DATA SCHEMA RELATIONSHIPS ---
-${objectsData.substring(0, 3000)}
+1. DYNAMIC CONTAINER DISCOVERY: Analyze your input payload below. Discover and generate distinct "subgraph" blocks representing the horizontal functional layers, back-office modules, or operational domains of the system. 
+2. DOMAIN REPLICATION: Use the system architecture structure layout found in the source payloads to map out your nodes. For example, group frontend/client interfaces together, fulfillment operations together, database/ledger services together, and transaction security modules together.
+3. TRACK THE LIFECYCLE: Connect nodes sequentially using standard arrows (-->). Links must weave directly across your subgraphs to trace cross-domain data dependencies chronologically.
+4. EDGE EXCEPTIONS: Wherever a business validation check or transaction rule can fail, branch out a dedicated conditional error path mapping the fallback loop.
+5. ZERO DISCUSSION OR MARKDOWN CODE FENCES: Output ONLY the raw Mermaid diagram code string beginning directly with "graph TD".
 
---- BUSINESS RULE SETS ---
-${actorsData.substring(0, 3000)}
+=== SOURCE INPUT PAYLOAD DATA ===
+--- COMPONENT LAYOUT OBJECTS ---
+${objectsData.substring(0, 8000)}
 
-=== DIAGRAM ARCHITECTURE INSTRUCTIONS ===
-1. Map out dynamic subgraphs tracking this specific actor's operations and operational boundaries.
-2. Link nodes sequentially using standard arrows (-->).
-3. Weave conditional exception error paths directly into the map layout matching rule failures.
+--- ROLE SET VALIDATIONS ---
+${actorsData.substring(0, 8000)}
 
-=== OUTPUT SPECIFICATION SCHEMA FORMAT ===
-You must return your output enclosed inside this valid minified JSON object structure. Do not escape newlines inside the mermaid string manually.
-{
-  "actor_name": "${actorData.actor_name || 'System Actor'}",
-  "mermaid_blueprint": "graph TD\\n    subgraph Operations\\n        A[Node] --> B[Node]\\n    end"
-}
-Return ONLY a valid minified JSON object wrapper matching the structural block requested. No markdown fences. No preamble.
+--- CHRONOLOGICAL JOURNEY TRACKS ---
+${journeysData.substring(0, 10000)}
 
 Assistant:\n`;
   },
@@ -46,22 +43,21 @@ Assistant:\n`;
   /**
    * 2. INTERACTIVE REVISION/DELTA PATCH PROMPT BLOCK
    */
-  INTERACTIVE_PATCH: (actorName, previousActorData, feedbackText, domainData) => {
-    return `You are an isolated patching utility for actor diagram layout: [${actorName}].
-MUTATION ORDER: "${feedbackText}"
+  INTERACTIVE_PATCH: (currentMatrixData, feedbackText, domainData) => {
+    return `You are an isolated layout adjustment utility patching our system architecture graph flowchart.
+MUTATION ORDER CRITERIA: "${feedbackText}"
 
-CURRENT BLOCK STATE:
-${JSON.stringify(previousActorData, null, 2)}
+BUSINESS DOMAIN: ${domainData.domain}
+BUSINESS NICHE: ${domainData.niche}
 
-=== OBJECTIVE ===
-Modify the Mermaid connectors and node blocks inside the "mermaid_blueprint" property string matching the user feedback. 
+CURRENT MAP CONFIGURATION STATE:
+${currentMatrixData}
 
-OUTPUT SPECIFICATION SCHEMA FORMAT:
-{
-  "actor_name": "${actorName}",
-  "mermaid_blueprint": "..."
-}
-Output ONLY the clean updated JSON object structure. No conversation.
+OBJECTIVE:
+Modify the diagram connectors, labels, node names, and subgraph assignments matching the user feedback. 
+
+OUTPUT SPECIFICATION RULES:
+Output ONLY the clean updated raw Mermaid diagram string beginning directly with "graph TD". No descriptions outside the chart text structure.
 
 Assistant:\n`;
   }
@@ -82,14 +78,26 @@ const CONFIG = {
     EXEC_BINARY: 'llama-cli',
     IDENTIFIER: 'unsloth/Qwen3.5-9B-GGUF',
     NGL: '0',
-    MAX_TOKENS: '4048',
-    PATCH_TOKENS: '2048',
+    MAX_TOKENS: '8048',         
+    PATCH_TOKENS: '4048',
     BATCH_SIZE: '2048', 
     THREADS: '8',       
     REASONING_MODE: 'off'
   },
+  SCANNING_PATTERNS: {
+    STAGE_1_OBJECTS: "1-Final-Objects-",
+    STAGE_2_ACTORS: "2.Final-Actors-",
+    STAGE_3_JOURNEYS: "3.Final-End-to-End-Actor-Journeys-",
+    FILE_EXTENSION: ".txt"
+  },
+  HEADERS: {
+    PRIMARY_TARGET: "=== Final DATA MATRIX for domain :",
+    ALTERNATE_TARGET: "=== E2E ACTOR TRANSACTION JOURNEYS for domain :",
+    SPLIT_ANCHOR_PRIMARY: " and niche :",
+    SPLIT_ANCHOR_ALTERNATE: " and niche :"
+  },
   SCRUBBERS: {
-    JSON_FENCE: /```json\s*/gi,
+    MERMAID_FENCE: /```mermaid\s*/gi,
     GENERIC_FENCE: /```\s*/g
   }
 };
@@ -116,6 +124,7 @@ function streamLlamaCli(promptText, taskName, maxTokens = CONFIG.MODEL.MAX_TOKEN
       '-hf', CONFIG.MODEL.IDENTIFIER,
       '-ngl', CONFIG.MODEL.NGL,
       '--single-turn',
+      '-c', '32768',            
       '-b', CONFIG.MODEL.BATCH_SIZE, 
       '-t', CONFIG.MODEL.THREADS,     
       '--reasoning', CONFIG.MODEL.REASONING_MODE,
@@ -151,81 +160,76 @@ function streamLlamaCli(promptText, taskName, maxTokens = CONFIG.MODEL.MAX_TOKEN
 }
 
 function extractDomainAndNicheFromHeader(fileContent) {
-  const targetHeader = "=== Final DATA MATRIX for domain :";
+  const targetHeader = CONFIG.HEADERS.PRIMARY_TARGET;
   if (!fileContent.includes(targetHeader)) {
-    const altHeader = "=== E2E ACTOR TRANSACTION JOURNEYS for domain :";
+    const altHeader = CONFIG.HEADERS.ALTERNATE_TARGET;
     if (fileContent.includes(altHeader)) {
       const lineEnd = fileContent.indexOf('\n');
       const headerLine = lineEnd !== -1 ? fileContent.substring(0, lineEnd) : fileContent;
-      const domainPart = headerLine.split(altHeader)[1] || "";
-      const nicheSplit = domainPart.split(" and niche :(");
+      const domainPart = headerLine.split(altHeader) || "";
+      const nicheSplit = domainPart.split(CONFIG.HEADERS.SPLIT_ANCHOR_ALTERNATE);
       return { 
-        domain: nicheSplit[0] ? nicheSplit[0].trim() : "Unknown Domain", 
-        niche: nicheSplit[1] ? nicheSplit[1].replace("===", "").replace(")", "").trim() : "Unknown Niche" 
+        domain: nicheSplit ? nicheSplit.trim() : "Unknown Domain", 
+        niche: nicheSplit ? nicheSplit.replace("===", "").replace(")", "").trim() : "Unknown Niche" 
       };
     }
     return { domain: "Unknown Domain", niche: "Unknown Niche" };
   }
   const firstLineEnd = fileContent.indexOf('\n');
   const headerLine = firstLineEnd !== -1 ? fileContent.substring(0, firstLineEnd) : fileContent;
-  const domainPart = headerLine.split(targetHeader)[1] || "";
-  const nicheSplit = domainPart.split(" and niche :");
+  const domainPart = headerLine.split(targetHeader) || "";
+  const nicheSplit = domainPart.split(CONFIG.HEADERS.SPLIT_ANCHOR_PRIMARY);
   return { 
-    domain: nicheSplit[0] ? nicheSplit[0].trim() : "Unknown Domain", 
-    niche: nicheSplit[1] ? nicheSplit[1].replace("===", "").trim() : "Unknown Niche" 
+    domain: nicheSplit ? nicheSplit.trim() : "Unknown Domain", 
+    niche: nicheSplit ? nicheSplit.replace("===", "").trim() : "Unknown Niche" 
   };
 }
 
-function cleanJsonString(rawStr) {
+function cleanMermaidOutputString(rawStr) {
   if (typeof rawStr !== 'string') return '';
-  let cleaned = rawStr.replace(CONFIG.SCRUBBERS.JSON_FENCE, '').replace(CONFIG.SCRUBBERS.GENERIC_FENCE, '').trim();
-  const arrayStart = cleaned.indexOf('[');
-  const objectStart = cleaned.indexOf('{');
-  let startIdx = (arrayStart !== -1 && objectStart !== -1) ? Math.min(arrayStart, objectStart) : (arrayStart !== -1 ? arrayStart : objectStart);
-  const arrayEnd = cleaned.lastIndexOf(']');
-  const objectEnd = cleaned.lastIndexOf('}');
-  let endIdx = Math.max(arrayEnd, objectEnd);
-  if (startIdx !== -1 && endIdx !== -1 && endIdx > startIdx) {
-    return cleaned.substring(startIdx, endIdx + 1).trim();
+  let scrubbed = rawStr.replace(CONFIG.SCRUBBERS.MERMAID_FENCE, '').replace(CONFIG.SCRUBBERS.GENERIC_FENCE, '').trim();
+  const graphTDStart = scrubbed.indexOf('graph TD');
+  const graphLRStart = scrubbed.indexOf('graph LR');
+  let validStartIdx = (graphTDStart !== -1 && graphLRStart !== -1) ? Math.min(graphTDStart, graphLRStart) : (graphTDStart !== -1 ? graphTDStart : graphLRStart);
+  if (validStartIdx !== -1) {
+    return scrubbed.substring(validStartIdx).trim();
   }
-  return cleaned;
+  return scrubbed;
 }
 
-async function generateSingleActorMatrix(actorData, objectsData, actorsData, domainData) {
-  const prompt = PROMPTS.BASELINE_GENERATION(actorData, objectsData, actorsData, domainData);
-  const rawOutput = await streamLlamaCli(prompt, `actor_block_${Date.now()}`, CONFIG.MODEL.MAX_TOKENS);
-  const parts = rawOutput.split("Assistant:\n");
-  let cleaned = parts.length > 1 ? parts[1].trim() : rawOutput.trim();
-  return JSON.parse(cleanJsonString(cleaned));
-}
+/**
+ * FIXED FOREVER: Explicitly pulls index 0 string element from the array to prevent path type errors
+ */
+function resolveLatestStageFile(directory, prefixPattern) {
+  if (!fs.existsSync(directory)) return null;
+  const files = fs.readdirSync(directory);
+  
+  const matchedFiles = files.filter(f => f.startsWith(prefixPattern) && f.endsWith(CONFIG.SCANNING_PATTERNS.FILE_EXTENSION));
+  if (matchedFiles.length === 0) return null;
 
-async function getTargetedDeltaPatch(actorName, previousActorData, feedbackText, domainData) {
-  const prompt = PROMPTS.INTERACTIVE_PATCH(actorName, previousActorData, feedbackText, domainData);
-  const rawOutput = await streamLlamaCli(prompt, 'tech_func_patch', CONFIG.MODEL.PATCH_TOKENS);
-  const parts = rawOutput.split("Assistant:\n");
-  let cleaned = parts.length > 1 ? parts[1].trim() : rawOutput.trim();
-  return JSON.parse(cleanJsonString(cleaned));
+  matchedFiles.sort((a, b) => {
+    return fs.statSync(path.join(directory, b)).mtimeMs - fs.statSync(path.join(directory, a)).mtimeMs;
+  });
+
+  // ✔️ FIXED LAYER: References index 0 string explicitly to fix path array coercion crash
+  return path.join(directory, matchedFiles[0]);
 }
 
 (async () => {
   try {
-    console.log("🚀 INITIATING RUNTIME ASYNC-STREAM EXCEPTION PIPELINE...");
+    console.log("🚀 INITIATING UN-HARDCODED MACRO-CAPABILITY FLOWCHART COMPILER ENGINE...");
 
-    const objectsFilePath = path.join(OUTPUT_DIR, '1-Final-Objects-for-Quick Commerce (Q-Commerce)_and_(Hyperlocal Grocery Delivery_2026-10-03T18-42-31-031Z.txt');
-    const actorsFilePath = path.join(OUTPUT_DIR, '2.Final-Actors-for-Quick Commerce (Q-Commerce)_and_Hyperlocal Grocery Delivery_2026-10-03T19-22-16-404Z.txt');
+    const objectsFilePath = resolveLatestStageFile(OUTPUT_DIR, CONFIG.SCANNING_PATTERNS.STAGE_1_OBJECTS);
+    const actorsFilePath = resolveLatestStageFile(OUTPUT_DIR, CONFIG.SCANNING_PATTERNS.STAGE_2_ACTORS);
+    const journeysFilePath = resolveLatestStageFile(OUTPUT_DIR, CONFIG.SCANNING_PATTERNS.STAGE_3_JOURNEYS);
     
-    const files = fs.readdirSync(OUTPUT_DIR);
-    const journeyFiles = files.filter(f => f.startsWith('3.Final-End-to-End-Actor-Journeys-') && f.endsWith('.txt'));
-    
-    if (!fs.existsSync(objectsFilePath)) throw new Error("Source objects file missing.");
-    if (!fs.existsSync(actorsFilePath)) throw new Error("Source actors file missing.");
-    if (journeyFiles.length === 0) throw new Error("Source journeys file missing.");
-    
-    journeyFiles.sort((a, b) => fs.statSync(path.join(OUTPUT_DIR, b)).mtimeMs - fs.statSync(path.join(OUTPUT_DIR, a)).mtimeMs);
-    const journeysFilePath = path.join(OUTPUT_DIR, journeyFiles[0]);
+    if (!objectsFilePath) throw new Error(`Dynamic lookup failed for Stage 1 file pattern bounds inside: ${OUTPUT_DIR}`);
+    if (!actorsFilePath) throw new Error(`Dynamic lookup failed for Stage 2 file pattern bounds inside: ${OUTPUT_DIR}`);
+    if (!journeysFilePath) throw new Error(`Dynamic lookup failed for Stage 3 file pattern bounds inside: ${OUTPUT_DIR}`);
 
-    console.log(`\n📖 Loading source actors from: ${path.basename(actorsFilePath)}`);
-    console.log(`📖 Loading source transaction journeys from: ${path.basename(journeysFilePath)}`);
+    console.log(`\n📖 Dynamically Scanned Stage 1 -> ${path.basename(objectsFilePath)}`);
+    console.log(`📖 Dynamically Scanned Stage 2 -> ${path.basename(actorsFilePath)}`);
+    console.log(`📖 Dynamically Scanned Stage 3 -> ${path.basename(journeysFilePath)}`);
     
     const objectsMatrixContent = fs.readFileSync(objectsFilePath, 'utf8');
     const actorsMatrixContent = fs.readFileSync(actorsFilePath, 'utf8');
@@ -234,103 +238,62 @@ async function getTargetedDeltaPatch(actorName, previousActorData, feedbackText,
     const domainData = extractDomainAndNicheFromHeader(objectsMatrixContent);
     console.log(`🎯 Context Isolated -> Domain: "${domainData.domain}" | Niche: "${domainData.niche}"`);
     
-    const jsonStartIdx = journeysMatrixContent.indexOf('[');
-    if (jsonStartIdx === -1) throw new Error("Could not segment array index data from Stage 3 manifest.");
-    const baselineJourneysInput = JSON.parse(cleanJsonString(journeysMatrixContent.substring(jsonStartIdx)));
-    
-    let currentMatrixData = [];
+    let currentMatrixData = "";
     
     if (fs.existsSync(CACHE_FILE_PATH)) {
-      console.log(`💾 Local cache discovery made at: ${CACHE_FILE_PATH}`);
-      const cacheAction = await askQuestion("Type 'clear' to rebuild through clean segmented workers or press Enter to load cache: ");
+      console.log(`\n💾 Local cache discovery made at: ${CACHE_FILE_PATH}`);
+      const cacheAction = await askQuestion("Type 'clear' to drop configuration cache and run fresh baseline pass, or Enter to load directly: ");
       
       if (cacheAction.trim().toLowerCase() === 'clear') {
         fs.unlinkSync(CACHE_FILE_PATH);
-        console.log("⚙️ Executing isolated sequential mapping across all discovered journeys...");
-        
-        for (let entry of baselineJourneysInput) {
-          console.log(`\n⏳ Structuring target segment workflow for: [${entry.actor_name}]...`);
-          try {
-            const singleBlock = await generateSingleActorMatrix(entry, objectsMatrixContent, actorsMatrixContent, domainData);
-            if (singleBlock) currentMatrixData.push(singleBlock);
-          } catch (e) {
-            console.log(`⚠️ Segment parsing failure skipped for [${entry.actor_name}]: ${e.message}`);
-          }
-        }
-        fs.writeFileSync(CACHE_FILE_PATH, JSON.stringify(currentMatrixData, null, 2), 'utf8');
+        console.log("⚙️ Compiling macro cross-domain layout matrix diagram from unified input parameters...");
+        const rawBase = await streamLlamaCli(PROMPTS.BASELINE_GENERATION(objectsMatrixContent, actorsMatrixContent, journeysMatrixContent, domainData), 'tech_func_base', CONFIG.MODEL.MAX_TOKENS);
+        currentMatrixData = cleanMermaidOutputString(rawBase);
+        fs.writeFileSync(CACHE_FILE_PATH, currentMatrixData, 'utf8');
       } else {
-        console.log("🔄 Loading structural state instantly from disk cache...");
-        currentMatrixData = JSON.parse(fs.readFileSync(CACHE_FILE_PATH, 'utf8'));
+        console.log("🔄 Loading structural blueprint text straight from system disk cache...");
+        currentMatrixData = fs.readFileSync(CACHE_FILE_PATH, 'utf8').trim();
       }
     } else {
-      console.log("⚙️ Executing baseline async sequential builder loop...");
-      for (let entry of baselineJourneysInput) {
-        console.log(`\n⏳ Structuring target segment workflow for: [${entry.actor_name}]...`);
-        try {
-          const singleBlock = await generateSingleActorMatrix(entry, objectsMatrixContent, actorsMatrixContent, domainData);
-          if (singleBlock) currentMatrixData.push(singleBlock);
-        } catch (e) {
-          console.log(`⚠️ Segment parsing failure skipped for [${entry.actor_name}]: ${e.message}`);
-        }
-      }
+      console.log("⚙️ Compiling macro cross-domain layout matrix diagram from unified input parameters...");
+      const rawBase = await streamLlamaCli(PROMPTS.BASELINE_GENERATION(objectsMatrixContent, actorsMatrixContent, journeysMatrixContent, domainData), 'tech_func_base', CONFIG.MODEL.MAX_TOKENS);
+      currentMatrixData = cleanMermaidOutputString(rawBase);
       fs.mkdirSync(OUTPUT_DIR, { recursive: true });
-      fs.writeFileSync(CACHE_FILE_PATH, JSON.stringify(currentMatrixData, null, 2), 'utf8');
+      fs.writeFileSync(CACHE_FILE_PATH, currentMatrixData, 'utf8');
     }
     
     let isApproved = false;
     while (!isApproved) {
-      console.log(`\n--- CURRENT AVAILABLE GENERATED ACTORS ---`);
-      currentMatrixData.forEach((m, i) => console.log(`[${i + 1}] ${m.actor_name || "Unknown Block"}`));
+      console.log(`\n--- CURRENT ACTIVE REVISION MONITOR ---`);
+      console.log(`\x1b[32m📦 Graph State locked in buffer memory: ${currentMatrixData.length} characters.\x1b[0m`);
+      console.log(`\n[Preview Head]:\n${currentMatrixData.substring(0, 450)}\n...`);
       
-      const actorSelection = await askQuestion("\nWhich actor matrix do you want to modify? (Or type 'YES' to approve and export everything): ");
+      const actorSelection = await askQuestion("\nApply fine-tuning configuration feedback? (Or type 'YES' to approve and export everything): ");
       if (actorSelection.trim().toUpperCase() === 'YES') {
         isApproved = true;
         break;
       }
       
-      const index = parseInt(actorSelection.trim(), 10) - 1;
-      if (isNaN(index) || !currentMatrixData[index]) {
-        console.log("❌ Invalid index option.");
-        continue;
-      }
+      const feedback = await askQuestion("Provide layout tuning instructions for the flowchart structure: ");
+      const rawPatch = await streamLlamaCli(PROMPTS.INTERACTIVE_PATCH(currentMatrixData, feedback, domainData), 'tech_func_patch', CONFIG.MODEL.PATCH_TOKENS);
+      const updatedActorBlock = cleanMermaidOutputString(rawPatch);
       
-      const targetActorMatrix = currentMatrixData[index];
-      const feedback = await askQuestion(`Provide patch details for [${targetActorMatrix.actor_name}]: `);
-      const updatedActorBlock = await getTargetedDeltaPatch(targetActorMatrix.actor_name, targetActorMatrix, feedback, domainData);
-      
-      if (updatedActorBlock) {
-        currentMatrixData[index] = { ...targetActorMatrix, ...updatedActorBlock, actor_name: targetActorMatrix.actor_name };
-        fs.writeFileSync(CACHE_FILE_PATH, JSON.stringify(currentMatrixData, null, 2), 'utf8');
-        console.log(`\n✅ Local structure element updated successfully!`);
+      if (updatedActorBlock && updatedActorBlock.length > 20) {
+        currentMatrixData = updatedActorBlock.trim();
+        fs.writeFileSync(CACHE_FILE_PATH, currentMatrixData, 'utf8');
+        console.log(`\n✅ Master flowchart schema updated successfully inside cache!`);
       }
     }
-    
-    // ============================================================================
-    // ⚡ CONVERSION VALVE: ASSEMBLES AND MERGES CLEAN MERMAID SCRIPT CHUNKS
-    // ============================================================================
-    let integratedMermaidDiagram = `graph TD\n`;
-    
-    currentMatrixData.forEach(block => {
-      if (block.mermaid_blueprint) {
-        // Strip away child "graph TD" string indicators if the model added them inside row nodes
-        let cleanedSegment = block.mermaid_blueprint
-          .replace(/graph TD/gi, '')
-          .replace(/graph LR/gi, '')
-          .trim();
-          
-        integratedMermaidDiagram += `\n    %% Subgraph Matrix Flow for Actor: ${block.actor_name}\n    ${cleanedSegment}\n`;
-      }
-    });
     
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const finalOutputPath = path.join(OUTPUT_DIR, `${CONFIG.PATHS.EXPORT_PREFIX}${timestamp}.txt`);
     
     fs.writeFileSync(
       finalOutputPath,
-      `=== Final Service Blueprint Structural Architecture Graph for domain :${domainData.domain} and niche :(${domainData.niche}) ===\n\n${integratedMermaidDiagram}`,
+      `=== Final Service Blueprint Structural Architecture Graph for domain :${domainData.domain} and niche :(${domainData.niche}) ===\n\n${currentMatrixData}`,
       'utf8'
     );
-    console.log(`\n\x1b[32m✔ Success! Complete merged Mermaid diagram compiled and exported to: ${finalOutputPath}\x1b[0m`);
+    console.log(`\n\x1b[32m✔ Success! Complete cross-domain architecture graph exported to: ${finalOutputPath}\x1b[0m`);
     
   } catch (err) {
     console.error(`\n\x1b[31m✕ Pipeline Run Error:\x1b[0m`, err.message);
