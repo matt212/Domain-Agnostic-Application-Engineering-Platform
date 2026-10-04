@@ -1,0 +1,226 @@
+=== STRUCTURED BUSINESS FLOW for domain :Quick Commerce (Q-Commerce) and niche :Hyperlocal Grocery Delivery  === and niche :(Unknown Niche) ===
+
+[
+  {
+    "actor_name": "End-User Customer",
+    "lifecycle_matrix": [
+      {
+        "activity": "Identity Verification and Profile Initialization",
+        "happy_path": "End-User Customer submits registration details; IAM Security Officer validates credentials; System outputs authenticated session token.",
+        "exception_scenario": "[IAM Security Officer] blocks account creation because PII does not match policy or identity verification fails.",
+        "process_state_transition": "[System] routes actor to 'Identity Verification Error' state; [IAM Security Officer] initiates 'Compromised User Account' flag."
+      },
+      {
+        "activity": "Service Area Validation and Zone Mapping",
+        "happy_path": "End-User Customer submits GPS coordinates; System validates against Merchant Inventory Stock locations; outputs confirmed delivery pin.",
+        "exception_scenario": "[System] rejects Geolocation Request because coordinates fall outside mapped service zones; [End-User Customer] cannot create a Cart Item.",
+        "process_state_transition": "[System] routes actor to 'Service Area Denied' state; [End-User Customer] receives 'Out of Zone' notification."
+      },
+      {
+        "activity": "Inventory Availability Check and Price Calculation",
+        "happy_path": "End-User Customer selects products; System executes real-time inventory availability checks; outputs updated cart state.",
+        "exception_scenario": "[End-User Customer] attempts to change Cart Item quantity after 'Order Header' status becomes 'Authorized'; [System] blocks mutation per Order Lock guardrail.",
+        "process_state_transition": "[System] locks Cart Item state; [End-User Customer] is routed to 'Checkout Failed' state requiring new session."
+      },
+      {
+        "activity": "Slot Allocation and Time-Window Enforcement Logic",
+        "happy_path": "End-User Customer requests time window; Logistics Dispatcher validates courier availability; outputs assigned timestamps.",
+        "exception_scenario": "[End-User Customer] requests a Delivery Slot outside available courier capacity; [Logistics Dispatcher] enforces Time-Window Constraints and blocks allocation.",
+        "process_state_transition": "[System] routes actor to 'Slot Unavailable' state; [Logistics Dispatcher] removes over-allocated Delivery Slots."
+      },
+      {
+        "activity": "Order Creation and Initial Payment Authorization",
+        "happy_path": "End-User Customer submits Order Header and Line Items; Payment Transaction processes funds; outputs unique Order ID.",
+        "exception_scenario": "[End-User Customer] modifies Cart Item post-payment; [System] rejects Order Header creation due to Order Lock rule violation.",
+        "process_state_transition": "[System] rolls back Payment Transaction to 'Pending'; [Finance & Billing Agent] initiates refund initiation logic for released stock."
+      },
+      {
+        "activity": "Route Optimization and Driver Assignment Validation",
+        "happy_path": "System runs route optimization; Logistics Dispatcher assigns courier; outputs active delivery task.",
+        "exception_scenario": "[Logistics Dispatcher] cannot assign courier due to 'Courier Availability Status' being 'Offline'; [System] blocks Active Delivery Task creation.",
+        "process_state_transition": "[System] routes order to 'Pending Courier' state; [Logistics Dispatcher] triggers re-assign courier workflow."
+      },
+      {
+        "activity": "Item Verification and Quality Check Verification",
+        "happy_path": "Store Associate validates Handover Receipt; compares signature and count; outputs delivered status update.",
+        "exception_scenario": "[Store Associate] discovers item count mismatch during Handover Receipt validation; [System] blocks 'Delivered Status' update.",
+        "process_state_transition": "[Store Associate] initiates 'Refund Claim' workflow; [System] routes to 'Damaged/Discrepancy' state."
+      },
+      {
+        "activity": "Completion Validation and Quality Check Verification",
+        "happy_path": "End-User Customer provides digital signature; System confirms quality; outputs final payment capture.",
+        "exception_scenario": "[End-User Customer] refuses to verify Handover Receipt due to damaged goods; [Store Associate] cannot confirm item readiness.",
+        "process_state_transition": "[System] halts 'Delivered Status' update; [Finance & Billing Agent] awaits Refund Claim validation."
+      },
+      {
+        "activity": "Claim Validation and Partial/Full Fund Reversal",
+        "happy_path": "End-User Customer submits Refund Claim with evidence; Finance & Billing Agent validates; outputs refund approval.",
+        "exception_scenario": "[End-User Customer] submits Refund Claim without original order ID; [Finance & Billing Agent] rejects claim validation.",
+        "process_state_transition": "[Finance & Billing Agent] routes actor to 'Claim Rejected' state; [End-User Customer] must re-submit with valid evidence."
+      },
+      {
+        "activity": "Fee Calculation and Recurring Billing Cycle Setup",
+        "happy_path": "End-User Customer activates Subscription Plan; System calculates fees; outputs active membership tier.",
+        "exception_scenario": "[End-User Customer] attempts to activate plan without valid payment method; [Finance & Billing Agent] blocks subscription setup.",
+        "process_state_transition": "[System] routes actor to 'Subscription Pending' state; [Finance & Billing Agent] requests new Payment Transaction Records."
+      },
+      {
+        "activity": "Point Accrual Calculation and Redemption Validation",
+        "happy_path": "End-User Customer redeems Loyalty Points; System calculates accrual; outputs updated points balance.",
+        "exception_scenario": "[End-User Customer] attempts redemption exceeding Loyalty Points Ledger balance; [System] blocks discount application.",
+        "process_state_transition": "[System] routes actor to 'Insufficient Balance' state; [Finance & Billing Agent] updates Loyalty Points Ledger to show error."
+      },
+      {
+        "activity": "Inventory Release and Refund Initiation Logic",
+        "happy_path": "End-User Customer requests Cancellation; Merchant Inventory Manager executes release; outputs cancelled order status.",
+        "exception_scenario": "[End-User Customer] requests Cancellation after 'Order Header' is 'Captured'; [System] blocks cancellation due to Order Lock.",
+        "process_state_transition": "[System] routes actor to 'Order Finalized' state; [Merchant Inventory Manager] retains reserved stock hold."
+      }
+    ]
+  },
+  {
+    "actor_name": "Store Associate",
+    "lifecycle_matrix": [
+      {
+        "activity": "Store Associate task generation and item verification",
+        "happy_path": "Store Associate receives Pickup Manifest; generates task list; outputs item verification log.",
+        "exception_scenario": "[Store Associate] attempts to view Customer PII beyond necessary contact info; [System] blocks access per Data Privacy guardrail.",
+        "process_state_transition": "[System] routes actor to 'Access Denied' state; [IAM Security Officer] logs security incident report."
+      },
+      {
+        "activity": "Line-level inventory reservation and weight estimation",
+        "happy_path": "Store Associate scans Order Line Items; validates specs; outputs collected items list.",
+        "exception_scenario": "[Store Associate] attempts to modify Order Header financial details; [System] blocks modification per Order Lock rule.",
+        "process_state_transition": "[System] rejects Line Item update; [Store Associate] must report discrepancy to Merchant Inventory Manager."
+      },
+      {
+        "activity": "Batch deduction and shelf-space allocation update",
+        "happy_path": "Store Associate executes Merchant Inventory Stock update; outputs adjusted available quantity.",
+        "exception_scenario": "[Store Associate] attempts to remove invalid Line Items before Cancellation Request validation; [System] blocks removal.",
+        "process_state_transition": "[System] retains Reserved Stock Hold; [Store Associate] must wait for [Merchant Inventory Manager] to trigger inventory release."
+      },
+      {
+        "activity": "Collected items list and ready-for-pickup status",
+        "happy_path": "Store Associate updates Pickup Manifest status to Ready; outputs ready-for-pickup status flag.",
+        "exception_scenario": "[Store Associate] fails to confirm item readiness; [Logistics Dispatcher] cannot assign courier.",
+        "process_state_transition": "[System] routes task to 'Pending Pickup' state; [Logistics Dispatcher] delays route optimization."
+      },
+      {
+        "activity": "Completion validation and quality check verification",
+        "happy_path": "Store Associate validates Handover Receipt; outputs delivered status update.",
+        "exception_scenario": "[Store Associate] attempts to update stock status flags incorrectly; [System] blocks update due to invalid SKU Entry.",
+        "process_state_transition": "[System] routes actor to 'Stock Discrepancy' state; [Merchant Inventory Manager] must reconcile system stock."
+      }
+    ]
+  },
+  {
+    "actor_name": "Logistics Dispatcher",
+    "lifecycle_matrix": [
+      {
+        "activity": "Slot allocation and time-window enforcement logic",
+        "happy_path": "Logistics Dispatcher analyzes requested windows; executes allocation; outputs assigned timestamps.",
+        "exception_scenario": "[Logistics Dispatcher] attempts to remove inactive Courier Assignment for active order; [System] blocks removal due to active task status.",
+        "process_state_transition": "[System] retains Courier Assignment; [Logistics Dispatcher] must complete handover first."
+      },
+      {
+        "activity": "Route optimization and driver assignment validation",
+        "happy_path": "Logistics Dispatcher runs optimization; outputs active delivery task and assigned courier ID.",
+        "exception_scenario": "[Logistics Dispatcher] attempts to alter Order Header payment status; [System] blocks alteration per Order Lock rule.",
+        "process_state_transition": "[System] rejects status change; [Finance & Billing Agent] retains payment control."
+      },
+      {
+        "activity": "Courier assignment mapping and route optimization parameters",
+        "happy_path": "Logistics Dispatcher modifies mapping; outputs updated route parameters.",
+        "exception_scenario": "[Logistics Dispatcher] assigns courier to order already assigned to another active task; [System] blocks assignment due to over-allocation.",
+        "process_state_transition": "[System] routes actor to 'Resource Conflict' state; [Logistics Dispatcher] must remove over-allocated Delivery Slots."
+      },
+      {
+        "activity": "Enforce time-window constraints",
+        "happy_path": "Logistics Dispatcher monitors status; enforces constraints; outputs updated enforcement status.",
+        "exception_scenario": "[Logistics Dispatcher] attempts to enforce constraints on non-existent order; [System] blocks enforcement due to invalid Order Header reference.",
+        "process_state_transition": "[System] routes actor to 'Invalid Reference' state; [Logistics Dispatcher] must retrieve valid Order Header data."
+      }
+    ]
+  },
+  {
+    "actor_name": "Merchant Inventory Manager",
+    "lifecycle_matrix": [
+      {
+        "activity": "Batch deduction and shelf-space allocation update",
+        "happy_path": "Merchant Inventory Manager reviews stock input; performs reconciliation; outputs batch deduction logs.",
+        "exception_scenario": "[Merchant Inventory Manager] attempts to directly cancel active Orders; [System] blocks cancellation per Order Lock rule.",
+        "process_state_transition": "[System] rejects cancellation request; [Merchant Inventory Manager] must trigger Inventory Release via Cancellation Request workflow."
+      },
+      {
+        "activity": "Line-level inventory reservation and weight estimation",
+        "happy_path": "Merchant Inventory Manager manages reservations; outputs adjusted available quantity.",
+        "exception_scenario": "[Merchant Inventory Manager] attempts to remove Expired Batch Records incorrectly; [System] blocks removal due to active order dependency.",
+        "process_state_transition": "[System] retains Batch Record; [Merchant Inventory Manager] must validate order status first."
+      },
+      {
+        "activity": "Inventory Release and Refund Initiation Logic",
+        "happy_path": "Merchant Inventory Manager handles Cancellation Request; executes release; outputs released stock availability.",
+        "exception_scenario": "[Merchant Inventory Manager] attempts to update shelf-space allocation rules without valid SKU Entry; [System] blocks update.",
+        "process_state_transition": "[System] routes actor to 'Invalid SKU' state; [Merchant Inventory Manager] must create New Inventory SKU Entries."
+      },
+      {
+        "activity": "Restock Orders and New Inventory SKU Entries",
+        "happy_path": "Merchant Inventory Manager creates Restock Orders; outputs updated inventory levels.",
+        "exception_scenario": "[Merchant Inventory Manager] attempts to remove Invalid SKU Entries for active stock; [System] blocks removal to prevent data loss.",
+        "process_state_transition": "[System] retains Invalid SKU Entry; [Merchant Inventory Manager] must validate line-level inventory reservation."
+      }
+    ]
+  },
+  {
+    "actor_name": "IAM Security Officer",
+    "lifecycle_matrix": [
+      {
+        "activity": "Identity verification and profile initialization",
+        "happy_path": "IAM Security Officer audits authentication credentials; enforces privacy; outputs security incident reports.",
+        "exception_scenario": "[IAM Security Officer] attempts to view Customer PII; [System] blocks access due to Zero-knowledge access policy.",
+        "process_state_transition": "[System] routes actor to 'Restricted Access' state; [IAM Security Officer] must view only hashes and masked identifiers."
+      },
+      {
+        "activity": "Auditing Access Authorization logs",
+        "happy_path": "IAM Security Officer reviews audit trails; validates session tokens; outputs compliance reports.",
+        "exception_scenario": "[IAM Security Officer] attempts to modify business logic flows; [System] blocks modification per Order Lock rule.",
+        "process_state_transition": "[System] rejects logic change; [IAM Security Officer] must only suspend actor access during investigation."
+      },
+      {
+        "activity": "Force Account Lockout and Reset Authentication Credentials",
+        "happy_path": "IAM Security Officer executes Lockout; outputs updated user account status.",
+        "exception_scenario": "[IAM Security Officer] attempts to remove Compromised User Accounts without evidence; [System] blocks removal.",
+        "process_state_transition": "[System] retains User Account; [IAM Security Officer] must review Compliance Reports first."
+      }
+    ]
+  },
+  {
+    "actor_name": "Finance & Billing Agent",
+    "lifecycle_matrix": [
+      {
+        "activity": "Secure fund transfer and receipt generation",
+        "happy_path": "Finance & Billing Agent processes Payment Transaction; outputs paid status flag.",
+        "exception_scenario": "[Finance & Billing Agent] attempts to modify Order Line Items; [System] blocks modification per Order Lock rule.",
+        "process_state_transition": "[System] rejects line item change; [Finance & Billing Agent] can only adjust financial settlement states."
+      },
+      {
+        "activity": "Claim validation and partial/full fund reversal",
+        "happy_path": "Finance & Billing Agent evaluates Refund Claim; validates evidence; outputs refund approval.",
+        "exception_scenario": "[Finance & Billing Agent] attempts to adjust Loyalty Points Balance without valid order total; [System] blocks adjustment.",
+        "process_state_transition": "[System] routes actor to 'Invalid Calculation' state; [Finance & Billing Agent] must recalculate point accrual."
+      },
+      {
+        "activity": "Fee calculation and recurring billing cycle setup",
+        "happy_path": "Finance & Billing Agent manages Subscription Plan; calculates fees; outputs active membership tier.",
+        "exception_scenario": "[Finance & Billing Agent] attempts to remove Expired Subscription Plans incorrectly; [System] blocks removal due to active billing cycle.",
+        "process_state_transition": "[System] retains Subscription Plan; [Finance & Billing Agent] must verify cycle completion."
+      },
+      {
+        "activity": "Point accrual calculation and redemption validation",
+        "happy_path": "Finance & Billing Agent executes Loyalty Points Ledger updates; modifies order total; outputs updated points balance.",
+        "exception_scenario": "[Finance & Billing Agent] attempts to execute redemption without valid offer codes; [System] blocks discounted order total application.",
+        "process_state_transition": "[System] routes actor to 'Invalid Offer' state; [Finance & Billing Agent] must validate promotional codes."
+      }
+    ]
+  }
+]

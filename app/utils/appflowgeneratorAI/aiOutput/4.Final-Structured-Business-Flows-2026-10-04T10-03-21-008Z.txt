@@ -1,0 +1,337 @@
+=== STRUCTURED BUSINESS FLOW for domain :Quick Commerce (Q-Commerce) and niche :Hyperlocal Grocery Delivery  === and niche :(Unknown Niche) ===
+
+[
+  {
+    "actor_name": "End-User Customer",
+    "operational_role_context": "Hyperlocal shopper executing grocery acquisition lifecycle",
+    "structured_business_flow": [
+      {
+        "step": "1",
+        "actor_action": "Initiates account registration with personal identity information",
+        "business_object": "User Account",
+        "system_activity": "Validates identity verification inputs and issues authenticated session token",
+        "supporting_actor": "IAM Security Officer",
+        "input": "Personal PII",
+        "business_rule": "IAM Security Officer validates identity verification inputs against policy",
+        "outcome": "Authenticated session token and user context enabling subsequent access",
+        "transition": "Unregistered → Authenticated User"
+      },
+      {
+        "step": "2",
+        "actor_action": "Submits geolocation request to determine service eligibility",
+        "business_object": "Geolocation Request",
+        "system_activity": "Performs service area validation and delivery zone mapping",
+        "supporting_actor": null,
+        "input": "Mobile GPS coordinates",
+        "business_rule": "System performs service area validation and delivery zone mapping against Merchant Inventory Stock locations",
+        "outcome": "Confirmed delivery pin and applicable service fee",
+        "transition": "Location Unknown → Confirmed Delivery Pin"
+      },
+      {
+        "step": "3",
+        "actor_action": "Selects products to create cart items",
+        "business_object": "Cart Item",
+        "system_activity": "Executes real-time inventory availability checks and price calculation logic",
+        "supporting_actor": null,
+        "input": "SKU and quantity",
+        "business_rule": null,
+        "outcome": "Updated cart state with confirmed stock levels",
+        "transition": "Empty Cart → Populated Cart"
+      },
+      {
+        "step": "4",
+        "actor_action": "Requests a delivery slot based on preferred time window",
+        "business_object": "Delivery Slot",
+        "system_activity": "Validates courier availability data and allocates slot",
+        "supporting_actor": "Logistics Dispatcher",
+        "input": "Preferred time window",
+        "business_rule": "Logistics Dispatcher validates courier availability data and allocates slot",
+        "outcome": "Assigned pickup and delivery timestamps",
+        "transition": "Slot Unassigned → Slot Assigned"
+      },
+      {
+        "step": "5",
+        "actor_action": "Finalizes transaction by submitting order details and payment method",
+        "business_object": "Order Header and Order Line Item",
+        "system_activity": "Processes fund transfer and generates digital invoice",
+        "supporting_actor": "Finance & Billing Agent",
+        "input": "Payment method",
+        "business_rule": null,
+        "outcome": "Unique Order ID and confirmed receipt",
+        "transition": "Order Pending → Order Confirmed"
+      },
+      {
+        "step": "6",
+        "actor_action": "Views assigned courier details during transit",
+        "business_object": "Assigned Courier",
+        "system_activity": "Executes route optimization and assigns active delivery task",
+        "supporting_actor": "Logistics Dispatcher",
+        "input": null,
+        "business_rule": null,
+        "outcome": "Courier ID and real-time location updates",
+        "transition": "Order Confirmed → In Transit"
+      },
+      {
+        "step": "7",
+        "actor_action": "Provides handover receipt via digital signature and item count verification",
+        "business_object": "Handover Receipt",
+        "system_activity": "Confirms quality check and updates delivered status",
+        "supporting_actor": "Store Associate",
+        "input": "Digital signature and item count",
+        "business_rule": "Store Associate confirms quality check",
+        "outcome": "Delivered status update and final payment capture confirmation",
+        "transition": "In Transit → Delivered"
+      },
+      {
+        "step": "8",
+        "actor_action": "Manages post-order lifecycle via loyalty redemptions, refund claims, or cancellation requests",
+        "business_object": "Loyalty Points Ledger, Refund Claim, Cancellation Request",
+        "system_activity": "Validates claims and adjusts balances",
+        "supporting_actor": "Finance & Billing Agent",
+        "input": "Redemption request, damage evidence, or cancellation intent",
+        "business_rule": "Finance & Billing Agent validates claims and adjusts balances",
+        "outcome": "Updated account balance or order status change",
+        "transition": "Delivered → Post-Order Status (Refunded/Cancelled/Redeemed)"
+      }
+    ]
+  },
+  {
+    "actor_name": "Store Associate",
+    "operational_role_context": "On-site inventory handler executing pickup and packing workflows",
+    "structured_business_flow": [
+      {
+        "step": "1",
+        "actor_action": "Receives and processes system-generated pickup manifest",
+        "business_object": "Pickup Manifest",
+        "system_activity": "Generates task list for store floor and initiates item verification log",
+        "supporting_actor": null,
+        "input": "Items to collect and store location coordinates",
+        "business_rule": null,
+        "outcome": "Item verification log initiation",
+        "transition": "Manifest Received → Task List Active"
+      },
+      {
+        "step": "2",
+        "actor_action": "Scans SKUs against physical shelf-space to validate item specifications",
+        "business_object": "Order Line Item",
+        "system_activity": "Validates item specifications and estimates weight",
+        "supporting_actor": null,
+        "input": "Order Line Item SKUs",
+        "business_rule": null,
+        "outcome": "Collected items list and ready-for-pickup status flag",
+        "transition": "Items Unpicked → Items Ready for Pickup"
+      },
+      {
+        "step": "3",
+        "actor_action": "Executes merchant inventory stock update by performing batch deduction",
+        "business_object": "Merchant Inventory Stock",
+        "system_activity": "Allocates shelf-space and updates stock status flags",
+        "supporting_actor": "Merchant Inventory Manager",
+        "input": "Collected items list",
+        "business_rule": "Update shelf-space allocation rules based on SKU demand",
+        "outcome": "Adjusted available quantity and updated stock status flags",
+        "transition": "In-Stock → Out-of-Stock"
+      },
+      {
+        "step": "4",
+        "actor_action": "Validates handover receipt by comparing customer confirmation against manifest",
+        "business_object": "Handover Receipt",
+        "system_activity": "Performs quality check verification and confirms final payment capture",
+        "supporting_actor": "End-User Customer",
+        "input": "Customer signature and item count verification",
+        "business_rule": "Store Associate confirms quality check",
+        "outcome": "Delivered status update and confirms final payment capture",
+        "transition": "Handover Initiated → Delivery Completed"
+      }
+    ]
+  },
+  {
+    "actor_name": "Logistics Dispatcher",
+    "operational_role_context": "Fleet manager optimizing courier assignments and route efficiency",
+    "structured_business_flow": [
+      {
+        "step": "1",
+        "actor_action": "Processes delivery slot input by analyzing customer requested time windows",
+        "business_object": "Delivery Slot",
+        "system_activity": "Executes slot allocation and time-window enforcement logic",
+        "supporting_actor": null,
+        "input": "Customer requested time windows",
+        "business_rule": "Enforces time-window constraints based on real-time courier availability",
+        "outcome": "Assigned timestamps",
+        "transition": "Slot Requested → Slot Allocated"
+      },
+      {
+        "step": "2",
+        "actor_action": "Receives order header and assigns a specific courier to the task",
+        "business_object": "Order Header and Assigned Courier",
+        "system_activity": "Runs route optimization algorithms to minimize fleet idle time",
+        "supporting_actor": null,
+        "input": "Order Header and Available Courier data",
+        "business_rule": "Optimize routing to minimize fleet idle time",
+        "outcome": "Active delivery task and assigned courier ID",
+        "transition": "Order Confirmed → Courier Assigned"
+      },
+      {
+        "step": "3",
+        "actor_action": "Monitors courier status and modifies assignments upon deviation",
+        "business_object": "Assigned Courier",
+        "system_activity": "Modifies courier assignment mapping or re-assigns upon deviation",
+        "supporting_actor": null,
+        "input": "Real-time Driver Location Data",
+        "business_rule": "Enforcement of time-window constraints upon deviation",
+        "outcome": "Updated route parameters and enforcement of time-window constraints",
+        "transition": "Courier Active → Route Adjusted"
+      },
+      {
+        "step": "4",
+        "actor_action": "Validates handover receipt completion and clears courier assignment",
+        "business_object": "Handover Receipt",
+        "system_activity": "Removes inactive courier assignments from active queues",
+        "supporting_actor": "Store Associate",
+        "input": "Handover Receipt completion status",
+        "business_rule": null,
+        "outcome": "Cleared delivery task status",
+        "transition": "Courier Active → Courier Inactive"
+      }
+    ]
+  },
+  {
+    "actor_name": "Merchant Inventory Manager",
+    "operational_role_context": "Store operations lead managing shelf-space and stock integrity",
+    "structured_business_flow": [
+      {
+        "step": "1",
+        "actor_action": "Reviews merchant inventory stock input from local store database",
+        "business_object": "Merchant Inventory Stock",
+        "system_activity": "Performs reconciliation of system stock with physical counts",
+        "supporting_actor": null,
+        "input": "System stock data",
+        "business_rule": null,
+        "outcome": "Batch deduction logs and stock status flags",
+        "transition": "Stock Uncertain → Stock Reconciled"
+      },
+      {
+        "step": "2",
+        "actor_action": "Manages order line item line-level inventory reservations",
+        "business_object": "Order Line Item",
+        "system_activity": "Updates shelf-space allocation rules based on SKU demand",
+        "supporting_actor": null,
+        "input": "Order Line Item details",
+        "business_rule": "Update shelf-space allocation rules based on SKU demand",
+        "outcome": "Adjusted available quantity and stock status flags",
+        "transition": "Stock Available → Stock Reserved"
+      },
+      {
+        "step": "3",
+        "actor_action": "Handles cancellation request triggers by executing inventory release logic",
+        "business_object": "Cancellation Request",
+        "system_activity": "Removes reserved stock holds upon validation",
+        "supporting_actor": "End-User Customer",
+        "input": "Cancellation request",
+        "business_rule": "Remove reserved stock holds upon validation",
+        "outcome": "Released stock availability flags",
+        "transition": "Stock Reserved → Stock Available"
+      },
+      {
+        "step": "4",
+        "actor_action": "Creates restock orders and new inventory SKU entries to replenish shelf-space",
+        "business_object": "Restock Orders and New Inventory SKU Entries",
+        "system_activity": "Removes expired or damaged batch records",
+        "supporting_actor": null,
+        "input": "Low-stock alerts",
+        "business_rule": null,
+        "outcome": "Updated inventory levels and low-stock alerts",
+        "transition": "Low Stock → Stock Replenished"
+      }
+    ]
+  },
+  {
+    "actor_name": "IAM Security Officer",
+    "operational_role_context": "Identity and access governance specialist ensuring system integrity",
+    "structured_business_flow": [
+      {
+        "step": "1",
+        "actor_action": "Audits user account authentication credentials and geolocation request authentications",
+        "business_object": "User Account and Geolocation Request",
+        "system_activity": "Enforces data privacy boundaries and validates identity verification steps",
+        "supporting_actor": "End-User Customer",
+        "input": "Authentication credentials",
+        "business_rule": "Enforces data privacy boundaries",
+        "outcome": "Security incident reports",
+        "transition": "Audit Initiated → Incident Reported"
+      },
+      {
+        "step": "2",
+        "actor_action": "Reviews full audit trails of create, change, and remove actions",
+        "business_object": "Audit Trails",
+        "system_activity": "Validates session token expiry logs",
+        "supporting_actor": null,
+        "input": "Action logs",
+        "business_rule": null,
+        "outcome": "Compliance reports",
+        "transition": "Audit Review → Compliance Verified"
+      },
+      {
+        "step": "3",
+        "actor_action": "Executes force account lockout or reset authentication credentials for compromised users",
+        "business_object": "User Account",
+        "system_activity": "Removes expired session tokens and invalid role assignments",
+        "supporting_actor": null,
+        "input": "Compromised user data",
+        "business_rule": null,
+        "outcome": "Updated user account status",
+        "transition": "Account Active → Account Locked"
+      }
+    ]
+  },
+  {
+    "actor_name": "Finance & Billing Agent",
+    "operational_role_context": "Payment operations specialist managing transactions and settlements",
+    "structured_business_flow": [
+      {
+        "step": "1",
+        "actor_action": "Processes payment transaction input via secure gateway",
+        "business_object": "Payment Transaction",
+        "system_activity": "Validates fund transfer and generates receipt",
+        "supporting_actor": "End-User Customer",
+        "input": "Order total, tax, and fees",
+        "business_rule": null,
+        "outcome": "Paid status flag and digital invoice record",
+        "transition": "Payment Pending → Payment Complete"
+      },
+      {
+        "step": "2",
+        "actor_action": "Evaluates refund claim input including reason and evidence",
+        "business_object": "Refund Claim",
+        "system_activity": "Performs claim validation and partial/full fund reversal",
+        "supporting_actor": "End-User Customer",
+        "input": "Reason and evidence",
+        "business_rule": null,
+        "outcome": "Refund approval and adjusted account balance",
+        "transition": "Claim Submitted → Refund Processed"
+      },
+      {
+        "step": "3",
+        "actor_action": "Manages subscription plan input for recurring billing cycles",
+        "business_object": "Subscription Plan",
+        "system_activity": "Calculates fees and sets up automated billing",
+        "supporting_actor": null,
+        "input": "Subscription plan details",
+        "business_rule": null,
+        "outcome": "Active membership tier and priority delivery rights confirmation",
+        "transition": "Subscription Inactive → Subscription Active"
+      },
+      {
+        "step": "4",
+        "actor_action": "Executes loyalty points ledger updates by calculating point accrual and redemption validation",
+        "business_object": "Loyalty Points Ledger",
+        "system_activity": "Modifies order total based on points used",
+        "supporting_actor": "End-User Customer",
+        "input": "Point accrual or redemption request",
+        "business_rule": null,
+        "outcome": "Updated points balance and discounted total",
+        "transition": "Points Unredeemed → Points Redeemed"
+      }
+    ]
+  }
+]

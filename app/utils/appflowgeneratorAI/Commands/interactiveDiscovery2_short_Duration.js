@@ -283,7 +283,7 @@ console.log("Node.js instantly patches the master tracking structure");
     const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
     const finalJourneyPath = path.join(OUTPUT_DIR, `3.Final-End-to-End-Actor-Journeys-${timestamp}.txt`);
     
-    fs.writeFileSync(finalJourneyPath, `=== E2E ACTOR TRANSACTION JOURNEYS ===\n\n${JSON.stringify(currentJourneys, null, 2)}`, 'utf8');
+    fs.writeFileSync(finalJourneyPath, `=== E2E ACTOR TRANSACTION JOURNEYS for domain :${domainData.domain} and niche :(${domainData.niche} ===\n\n${JSON.stringify(currentJourneys, null, 2)}`, 'utf8');
     console.log(`\n\x1b[32m✔ Success! Full journey configuration saved to: ${finalJourneyPath}\x1b[0m`);
 
   } catch (err) {

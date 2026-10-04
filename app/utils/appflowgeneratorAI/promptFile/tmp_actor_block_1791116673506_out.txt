@@ -1,0 +1,212 @@
+User:
+You are a DOMAIN-AGNOSTIC SYSTEMS INTEGRATION ENGINE. Map exception layers for ONE specific actor.
+
+=== CONTEXT VARIABLES ===
+BUSINESS DOMAIN: Quick Commerce (Q-Commerce)
+BUSINESS NICHE: Hyperlocal Grocery Delivery
+
+=== TARGET SPECIFIC ACTOR DATA ===
+{
+  "actor_name": "Store Associate",
+  "operational_role_context": "On-site inventory handler executing pickup and packing workflows",
+  "chronological_milestones_and_data_inputs": [
+    {
+      "step": "1",
+      "data_object_layer": "Receives system-generated 'Pickup Manifest' input listing items to collect and store location coordinates; generates task list for store floor; outputs item verification log initiation."
+    },
+    {
+      "step": "2",
+      "data_object_layer": "Scans 'Order Line Item' SKUs against physical shelf-space; validates item specifications and estimates weight; outputs collected items list and ready-for-pickup status flag."
+    },
+    {
+      "step": "3",
+      "data_object_layer": "Executes 'Merchant Inventory Stock' update by performing batch deduction and allocating shelf-space; outputs adjusted available quantity and updated stock status flags (e.g., In-Stock to Out-of-Stock)."
+    },
+    {
+      "step": "4",
+      "data_object_layer": "Validates 'Handover Receipt' input by comparing customer signature/digital confirmation against manifest item counts; performs quality check verification; outputs delivered status update and confirms final payment capture."
+    }
+  ]
+}
+
+=== GROUNDING MATRICES ===
+--- DATA SCHEMA REFERENCE ---
+=== Final DATA MATRIX for domain :Quick Commerce (Q-Commerce) and niche :Hyperlocal Grocery Delivery  ===
+
+[
+  {
+    "object_name": "User Account",
+    "input": "Customer registration details and authentication credentials",
+    "activity": "Identity verification and profile initialization",
+    "output": "Authenticated session token and user context"
+  },
+  {
+    "object_name": "Geolocation Request",
+    "input": "Mobile device GPS coordinates and address verification data",
+    "activity": "Service area validation and delivery zone mapping",
+    "output": "Confirmed delivery pin and applicable service fee"
+  },
+  {
+    "object_name": "Cart Item",
+    "input": "Product selection, quantity, and selected delivery slot",
+    "activity": "Inventory availability check and price calculation",
+    "output": "Updated cart state with real-time stock confirmation"
+  },
+  {
+    "object_name": "Order Header",
+    "input": "Finalized cart contents, delivery address, and payment method",
+    "activity": "Order creation and initial payment authorization",
+    "output": "Unique Order ID and confirmed order receipt"
+  },
+  {
+    "object_name": "Order Line Item",
+    "input": "Detailed product specifications, SKU, and unit price per order header",
+    "activity": "Line-level inventory reservation and weight estimation",
+    "output": "Reserved stock hold and aggregated line subtotal"
+  },
+  {
+    "object_name": "Delivery Slot",
+    "input": "Customer requested time window and driver availability data",
+    "activity": "Slot allocation and time-window enforcement logic",
+    "output": "Assigned pickup and delivery timestamps"
+  },
+  {
+    "object_name": "Merchant Inventory Stock",
+    "input": "Real-time stock levels from local store database",
+    "activity": "Batch deduction and shelf-space allocation update",
+    "output": "Adjusted available quantity and stock status flags"
+  },
+  {
+    "object_name": "Assigned Courier",
+    "input": "Order ID, delivery address, and courier availability status",
+    "activity": "Route optimization and driver assignment validation",
+    "output": "Active delivery task and assigned courier ID"
+  },
+  {
+    "object_name": "Pickup Manifest",
+    "input": "List of items to collect and store location coordinates",
+    "activity": "Store associate task generation and item verification",
+    "output": "Collected items list and ready-for-pickup status"
+  },
+  {
+    "object_name": "Handover Receipt",
+    "input": "Customer signature or digital confirmation and item count",
+    "activity": "Completion validation and quality check verification",
+    "output": "Delivered status update and final payment capture"
+  },
+  {
+    "object_name": "Payment Transaction",
+    "input": "Order total, tax, fees, and selected payment gateway data",
+    "activity": "Secure fund transfer and receipt generation",
+    "output": "Paid status flag and digital invoice record"
+  },
+  {
+    "object_name": "Refund Claim",
+    "input": "Reason for return, damaged i
+
+--- RULE SET BOUNDARIES ---
+=== Final SYSTEM ACTORS & AUTHORIZATION MATRIX ===
+
+[
+  {
+    "actor_name": "End-User Customer",
+    "operational_role": "Hyperlocal shopper executing grocery acquisition lifecycle",
+    "core_responsibilities": [
+      "Registering identity and managing authentication credentials",
+      "Requesting geolocation for delivery zone validation",
+      "Selecting items, quantities, and delivery slots",
+      "Authorizing payments and managing loyalty points",
+      "Initiating cancellations or refund claims"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "My User Account Profile",
+        "Available Delivery Slots",
+        "Real-time Cart State and Stock",
+        "Assigned Courier Details",
+        "Order History and Invoices"
+      ],
+      "What_They_Can_Create": [
+        "New User Account",
+        "Cart Item",
+        "Order Header",
+        "Delivery Slot Request",
+        "Refund Claim"
+      ],
+      "What_They_Can_Change": [
+        "User Profile Details",
+        "Cart Item Quantities and Selections",
+        "Delivery Address and Slot Preference",
+        "Payment Method Selection"
+      ],
+      "What_They_Can_Remove": [
+        "Cart Items Pending Checkout",
+        "Active Delivery Slot Request"
+      ],
+      "Operations_They_Can_Run": [
+        "Place Order",
+        "Cancel Order",
+        "Verify Handover Receipt",
+        "Redeem Loyalty Points"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "Personal PII and payment tokens encrypted; visible only to self and authorized support agents",
+        "Order_Lock": "Cannot modify Order Header or Order Line Items after Payment Transaction status is 'Authorized' or 'Captured'"
+      }
+    }
+  },
+  {
+    "actor_name": "Store Associate",
+    "operational_role": "On-site inventory handler executing pickup and packing workflows",
+    "core_responsibilities": [
+      "Generating and managing Pickup Manifests",
+      "Verifying item counts and quality",
+      "Updating real-time stock levels",
+      "Confirming item readiness for courier"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Assigned Pickup Manifests",
+        "Current Merchant Inventory Stock",
+        "Store Location Coordinates",
+        "Pending Order Line Items for Store"
+      ],
+      "What_They_Can_Create": [
+        "Pickup Manifest",
+        "Inventory Adjustment Records",
+        "Item Verification Log"
+      ],
+      "What_They_Can_Change": [
+        "Merchant Inventory Stock Levels",
+        "Pickup Manifest Status (Pending -> Ready)",
+        "Item Status Flags (Damaged/Available)"
+      ],
+      "What_They_Can_Remove": [
+        "Reserved Stock Hold upon Cancellation Request validation",
+        "Invalid Line Items from Manifest"
+      ],
+      "Operations_They_Can_Run": [
+        "Initiate Stock Deduction",
+        "Complete Item Verification",
+        "Update Stock Status Flags"
+      ],
+      "Business_Rules_And_Guar
+
+=== OUTPUT SCHEMATIC FORMAT ===
+{
+  "actor_name": "Store Associate",
+  "lifecycle_matrix": [
+    {
+      "activity": "Short Punchy Title",
+      "happy_path": "Clear narrative summary of step execution",
+      "exception_scenario": "[Actor/System] does [Action] because rule violation happened",
+      "process_state_transition": "[Actor/System] executes state shift to route variance"
+    }
+  ]
+}
+Return ONLY a valid minified JSON object wrapper matching the structural block requested. No code fences. No dialogue.
+
+Assistant:
+
+Assistant:
+
