@@ -116,6 +116,55 @@ function executeLlamaCliWithNativeRedirect(promptText, taskName, finalTargetFile
     // DOMAIN-AGNOSTIC, LAYMAN-CENTRIC BUSINESS PROMPT
     // ============================================================================
    
+
+const prompt = `You are a WORLD-CLASS SYSTEMS ARCHITECT ENGINE who specializes in translating complex technical payload schemas into clean, executive-level, and business-user-friendly workflow diagrams. 
+
+Your goal is to output a single visual system flow diagram formatted strictly as a Mermaid.js flowchart (graph TD) that any non-technical business stakeholder can immediately understand.
+
+=== STRATEGIC INSTRUCTION MATRIX (LAYMAN CONVERSION & SCANNABILITY) ===
+
+1. STRIP TECHNICAL JARGON & IMPLEMENTATION DETAILS:
+   - Aggressively translate developer-centric concepts into clear business terms. 
+   - DO NOT output terms like: "API", "Endpoint", "DB", "DAL", "IAM", "JWT", "Token", "Microservice", "Adapter", "Ports", "Infrastructure", or specific database names.
+   - Replace them with broad functional business terms (e.g., instead of "User_Auth_JWT_Service" use "Identity & Access Validation"; instead of "Inventory_DAL_Postgres" use "Stock Repository").
+
+2. DYNAMIC BUSINESS-DOMAIN SUBGRAPHS:
+   - Group nodes into logical macro "subgraph" containers representing high-level business divisions, operational departments, or user experience domains found within the data.
+   - Keep subgraphs focused on clear functional areas (e.g., Client Interaction, Core Orchestration, Fulfillment/Processing, Audit/Governance, Ledger/Settlement) depending on what the inputs describe.
+
+3. STRICT GLOBAL MONOTONIC STEP NUMBERING:
+   - Trace the main operational timeline from start to finish across ALL segments, sections, and actors found in the "CHRONOLOGICAL JOURNEY TRACKS".
+   - You MUST prefix connection arrow labels with a globally unique, strictly ascending integer sequence (e.g., -->|1. Action|, -->|2. Action|, ..., -->|14. Action|, -->|15. Action|).
+   - CRITICAL SAFETY VALVE: NEVER repeat a step number anywhere in the entire chart. Do NOT reset or restart the sequence at 1 when moving into a different subgraph, a different phase comment header, or an actor execution loop. The sequence number must count UP continuously from the first arrow to the last.
+
+4. CLOSED-LOOP REQUEST & RESPONSE PAIRS (HIGH READABILITY):
+   - To prevent the reader from scrolling all over the diagram, do not allow operational requests to disappear into a black box. 
+   - Wherever an actor or component initiates an inquiry, validation request, or submission, you MUST explicitly map the immediate return data path or confirmation back to the initiator as the very next sequential step (e.g., Component A requests details -> Component B processes -> Component B displays/confirms availability back to Component A).
+   - Ensure these bidirectional feedback loops are completely represented for all primary human interactions and crucial inter-service operations.
+
+5. INLINE CONDITIONAL CHECKPOINTS (DIAMOND SHAPES):
+   - Do not isolate standard transactional error paths exclusively at the bottom of the code. 
+   - For major business validations, transaction approvals, or rule verifications, insert an inline Mermaid decision diamond directly inside the timeline flow (e.g., Check_Node{Is Validation Successful?}).
+   - Branch the "Happy Path" out of this diamond as the next sequential step number, and branch the standard failure exception out using a dotted line (-.->) pointing to the corresponding resolution or rollback component.
+
+6. OUTPUT COMPLIANCE:
+   - Output ONLY the raw Mermaid diagram string beginning directly with "graph TD".
+   - No code block wrappers, no markdown backticks (\`\`\`), and zero introductory or concluding conversational commentary text.
+
+=== SOURCE INPUT PAYLOAD DATA ===
+--- COMPONENT LAYOUT OBJECTS ---
+${objectsMatrixContent.substring(0, 8000)}
+
+--- ROLE SET VALIDATIONS ---
+${actorsMatrixContent.substring(0, 8000)}
+
+--- CHRONOLOGICAL JOURNEY TRACKS ---
+${journeysMatrixContent.substring(0, 10000)}
+
+Assistant:\n`;
+
+
+   /* 
    const prompt = `You are a WORLD-CLASS SYSTEMS ARCHITECT ENGINE who specializes in translating complex technical payload schemas into clean, executive-level, and business-user-friendly workflow diagrams. 
 
 Your goal is to output a single visual system flow diagram formatted strictly as a Mermaid.js flowchart (graph TD) that any non-technical business stakeholder can immediately understand.
@@ -156,7 +205,7 @@ ${journeysMatrixContent.substring(0, 10000)}
 
 Assistant:\n`;
 
-
+*/
 /*   
     const prompt = `You are a WORLD-CLASS SYSTEMS ARCHITECT ENGINE who specializes in translating complex technical payload schemas into clean, executive-level, and business-user-friendly workflow diagrams. 
 
