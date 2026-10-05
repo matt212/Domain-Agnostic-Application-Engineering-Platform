@@ -135,50 +135,61 @@ function executeLlamaCliWithNativeRedirect(promptText, taskName, finalTargetFile
         // ============================================================================
     // THE 100% PERFECT ENTERPRISE MERMAID COMPILER PROMPT (PURE DOMAIN-AGNOSTIC)
     // ============================================================================
+        // ============================================================================
+    // THE 100% PERFECT ENTERPRISE MERMAID COMPILER PROMPT (ZERO HARDCODING)
+    // ============================================================================
+        // ============================================================================
+    // THE 100% PERFECT ENTERPRISE MERMAID COMPILER PROMPT (ZERO HARDCODING)
+    // ============================================================================
+        // ============================================================================
+    // THE 100% PERFECT ENTERPRISE MERMAID COMPILER PROMPT (ZERO COLOR / BLACK & WHITE)
+    // ============================================================================
     const prompt = `You are a WORLD-CLASS SYSTEMS ARCHITECT ENGINE. Your task is to ingest technical system payload schemas and synthesize a high-readability, executive-level visual workflow diagram formatted strictly as a Mermaid.js flowchart utilizing a clean, strict top-down layout (graph TD).
 
-=== TOP-DOWN VISUAL ANTI-SPIDERWEB ALGORITHMS (MANDATORY) ===
+=== TOP-DOWN VISUAL LAYOUT CONSTRAINTS (MANDATORY) ===
 
-1. STRUCTURAL GATEWAY ROUTING & EXACT TEXTUAL INITIALIZATION:
-   - To completely eliminate crossing lines and messy "spiderweb" clutter, nodes buried deep inside a subgraph are STRICTLY FORBIDDEN from linking directly to nodes buried deep inside a different subgraph.
-   - You MUST enforce a strict Hub-and-Spoke Gateway structure for every single subgraph block:
-     * Entrance Gate Node: Designate or create exactly ONE node at the top boundary of the subgraph to act as the single entry point for all incoming external arrows, explicitly defining its text shape dynamically inside brackets (e.g., ComponentName_Entry["Input: Concise Business Action Description"]).
-     * Exit Gate Node: Designate or create exactly ONE node at the bottom boundary of the subgraph to act as the single exit point for all outgoing external arrows, explicitly defining its text shape dynamically inside brackets (e.g., ComponentName_Exit["Output: Concise Business State Confirmation Context"]).
-   - Inter-subgraph communication MUST occur exclusively by linking the explicitly defined Exit Gate Node of a preceding subgraph directly to the explicitly defined Entrance Gate Node of the next chronological subgraph. Internal components must only link locally within their own boundary walls.
+1. STRUCTURAL GATEWAY ROUTING LAYER:
+   - Nodes inside a subgraph container are STRICTLY FORBIDDEN from linking directly to internal nodes inside a different subgraph container.
+   - You MUST enforce a strict Hub-and-Spoke structure for every single subgraph:
+     * Entrance Node: Designate or create exactly ONE node at the absolute top boundary of the subgraph to act as the single entry point for all incoming external arrows.
+     * Exit Node: Designate or create exactly ONE node at the absolute bottom boundary of the subgraph to act as the single exit point for all outgoing external arrows.
+   - Inter-subgraph communication MUST occur exclusively by linking the Exit Node of a preceding subgraph directly to the Entrance Node of the next chronological subgraph.
+   - CRITICAL COMPILING CONSTRAINT: You are STRICTLY FORBIDDEN from linking a node variable identifier directly to an outer subgraph container name string ID block. Edges must ONLY connect explicit Node-to-Node targets.
 
-2. ABSOLUTE UNIQUE NAMESPACING & NO UNINITIALIZED GHOST VARIABLES:
-   - Every single subgraph block MUST possess a completely unique, lowercase, underscore-separated string identifier ID. NEVER reuse a subgraph ID string anywhere in the entire output, as this instantly crashes the renderer.
-   - CRITICAL COMPILE CONSTRAINT: Every single variable identifier used anywhere in an arrow link (including all Entrance and Exit gates) MUST be explicitly declared with its bracket shape and text label INSIDE the target subgraph block definition before it is linked. You are STRICTLY FORBIDDEN from introducing a naked variable name out of nowhere in the link sections.
+2. UNIQUE CONTAINER & VARIABLE BALANCING:
+   - Every single subgraph block MUST possess a completely unique, lowercase, underscore-separated string identifier ID name. NEVER reuse a subgraph ID string anywhere in the entire output.
+   - Every node variable identifier name within the entire diagram MUST be completely unique. Every variable identifier used anywhere in an arrow link (including all Entrance and Exit nodes) MUST be explicitly declared with its bracket shape and text label INSIDE its designated subgraph block definition before it is linked. No uninitialized variables floating outside container walls are permitted.
    - You are STRICTLY FORBIDDEN from declaring a subgraph identifier standalone on its own line under link sections without child components or functional connectivity.
 
-3. STRICT PROCESS LOOP TERMINATION (NO GATEWAY SELF-LOOPS):
-   - A gateway node or boundary exit component is STRICTLY FORBIDDEN from pointing directly back into itself (e.g., Node_A -->|Label| Node_A). 
-   - Every operational loop, workflow timeline track, and final execution state must resolve forward and downward, terminating into a completely distinct, final tracking closure node at the bottom of the layout (e.g., End_Node["🏁 End Transaction Registry Close"]).
+3. STRICT PROCESS LOOP TERMINATION:
+   - A gateway node or boundary exit component is STRICTLY FORBIDDEN from pointing directly back into itself.
+   - Every operational loop, validation track, and final execution state must resolve forward and downward, terminating into a completely distinct, final tracking closure node at the bottom of the layout layer.
 
-4. SEPARATION OF NODE SHAPE DEFINITIONS AND CLASS STYLING:
-   - You are STRICTLY FORBIDDEN from trying to define geometric shapes inside a CSS styling rule (e.g., NEVER write "classDef node_name shape:diamond;"). This violates Mermaid property standards and causes compiler failure.
-   - Shape assignment must be handled entirely in the initial structural declaration string using the correct geometric bracket tokens: Square shapes [Text], Decision crossroads {Text?}, or Rounded rectangles (Text). The "classDef" engine must exclusively modify layout fills, hex colors, borders, and dash arrays.
+4. ABSOLUTE BIFT OF COLOR AND STYLING (NO COLOR POLICY):
+   - You are STRICTLY FORBIDDEN from outputting any color configurations, color coding, styling templates, theme styles, or "classDef" / "class" declarations anywhere in the diagram code.
+   - The entire diagram must be completely black-and-white, plain, and standard out-of-the-box Mermaid rendering default styling.
+   - Shape assignment must be handled entirely in the initial structural declaration string using the correct geometric bracket tokens exclusively: Square shapes [Text], Decision crossroads {Text}, or Rounded rectangles (Text).
 
 5. STRIP TECHNICAL JARGON & TRANSLATE TO BUSINESS CAPABILITIES:
    - Aggressively translate developer-centric concepts into clear business terms.
-   - ABSOLUTELY FORBIDDEN TERMS: "API", "Endpoint", "DB", "DAL", "IAM", "JWT", "Token", "Microservice", "Adapter", "Ports", "Infrastructure", "Controller", "Postgres", or specific database names.
+   - ABSOLUTELY FORBIDDEN TERMS: "API", "Endpoint", "DB", "DAL", "IAM", "JWT", "Token", "Microservice", "Adapter", "Ports", "Infrastructure", "Controller", "Postgres", or specific database tool names.
    - Convert all components into broad functional organizational capabilities dynamically based on the payload context.
 
-6. PHASE-LEVEL MARKERS & CLOSED-LOOP NOTIFICATIONS:
-   - Segment the master timeline chronologically using structural phase comment blocks (e.g., %% PHASE 1: [Name]).
-   - Do not allow user actions or service inquiries to disappear into a vacuum. Wherever an actor or gate initiates a request, validation, or transaction submission, you MUST explicitly map the immediate return notification, error alert, or confirmation vector back to the initiator as the very next chronological link.
+6. SEQUENCE MARKERS & CLOSED-LOOP NOTIFICATIONS:
+   - Segment the master timeline chronologically using structural phase comment blocks.
+   - Wherever an actor or component initiates a request, validation, or transaction submission, you MUST explicitly map the immediate return notification, error alert, or confirmation vector back to the initiator as the very next chronological link.
 
 7. CHRONOLOGICAL INTEGER PATHS WITH ALPHABETIC SUB-INDEXING:
    - Prefix all main sequence timeline arrows with incremental sequential integers (e.g., 1., 2., 3.).
-   - To illustrate closely bound child sub-processes, inner business validations, or instant request-response feedback pairs without inflating the macro step numbers, you MUST utilize alphabetical sub-indexing notation enclosed securely inside the arrow text strings (e.g., -->|1. Action|, -->|1a. Validation Check|, -.->|1b. Exception State|).
+   - To illustrate closely bound child sub-processes, inner business validations, or instant request-response feedback pairs without inflating the macro step numbers, you MUST utilize alphabetical sub-indexing notation enclosed securely inside the arrow text strings (e.g., matching the pattern: Identifier_A -->|StepNumber. Action Description| Identifier_B, followed by Identifier_B -->|StepNumber-AlphaCharacter. Response Description| Identifier_A).
 
 8. INLINE VALIDATION CROSSROADS:
-   - Insert inline Mermaid decision diamond shapes ({Diamond Text?}) directly within the local timeline flow inside the subgraphs where validations occur.
-   - Branch the primary "Happy Path" link directly out of the diamond using the next sequential identifier code, and branch the standard failure exception path out using a dashed line connection script (-.->) pointed to the relevant local rollback or alert component.
+   - Insert inline Mermaid decision diamond shapes directly within the local timeline flow inside the subgraphs where validations occur using correct curly braces syntax containing the question text (e.g., NodeName{"Is Action Valid?"}).
+   - Branch the primary success path link directly out of the diamond using the next sequential identifier code, and branch the standard failure exception path out using a dashed line connection script (-.->) pointed to the relevant local rollback or alert component.
 
 9. OUTPUT COMPLIANCE:
    - Output ONLY the raw Mermaid diagram code string starting directly with "graph TD".
-   - You are STRICTLY FORBIDDEN from wrapping the output in markdown backticks (\`\`\`), text code block fences, or appending introductory conversational pleasantries or closing remarks. Start instantly with the code string.
+   - You are STRICTLY FORBIDDEN from wrapping the output in markdown backticks, text code block fences, or appending introductory conversational pleasantries or closing remarks. Start instantly with the code string.
 
 === SOURCE INPUT PAYLOAD DATA ===
 --- COMPONENT LAYOUT OBJECTS ---
@@ -191,6 +202,8 @@ ${actorsMatrixContent.substring(0, 8000)}
 ${journeysMatrixContent.substring(0, 10000)}
 
 Assistant:\n`;
+
+
 
     /* 96% accuracy prompt
     const prompt = `You are a WORLD-CLASS SYSTEMS ARCHITECT ENGINE. Your task is to ingest technical system payload schemas and synthesize a high-readability, executive-level visual workflow diagram formatted strictly as a Mermaid.js flowchart utilizing a clean, strict top-down layout (graph TD).
