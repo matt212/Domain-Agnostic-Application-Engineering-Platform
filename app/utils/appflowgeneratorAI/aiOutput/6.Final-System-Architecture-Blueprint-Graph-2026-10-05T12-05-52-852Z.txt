@@ -1,0 +1,515 @@
+User:
+You are a WORLD-CLASS SYSTEMS ARCHITECT ENGINE. Your task is to ingest technical system payload schemas and synthesize a high-readability, executive-level visual workflow diagram formatted strictly as a Mermaid.js flowchart (graph TD). 
+
+The output must be optimized for non-technical business stakeholders to instantly track user experience journeys, cross-department responsibilities, and financial/governance lifecycles.
+
+=== DYNAMIC SYSTEMIC STRUCTURAL ARCHITECTURE DIRECTIVES ===
+
+1. STRIP IMPLEMENTATION JARGON & TRANSLATE TO BUSINESS CAPABILITIES:
+   - Aggressively translate developer-centric concepts into clear business terms.
+   - STRICTLY FORBIDDEN terms: "API", "Endpoint", "DB", "DAL", "IAM", "JWT", "Token", "Microservice", "Adapter", "Ports", "Infrastructure", "Controller", "Postgres", or specific technical tooling strings.
+   - Dynamic Equivalence Mapping: Convert "User_Auth_JWT" into "Identity Validation & Trust Layer"; convert "Inventory_DAL_Postgres" into "Stock & Material Availability Repository". Focus purely on broad organizational capabilities.
+
+2. LOGICAL BUSINESS-DOMAIN SUBGRAPHS (UNIQUE NAMESPACING):
+   - Categorize nodes into macro "subgraph" containers representing distinct organizational divisions, user experience views, or operational departments discovered dynamically in the data.
+   - CRITICAL COMPILE MANDATE: Every subgraph MUST possess a completely unique, lowercase, underscore-separated identifier name string (e.g., Client_Facing_Identity, Backend_Orchestration_Ledger). 
+   - NEVER reuse a subgraph identifier ID string anywhere in the script, as this causes compiler rendering overlap errors.
+
+3. ALIGN TRANSITIONS TO OPERATIONAL REALITY:
+   - Trace interactions so that background automated processes or processing engines execute background operational tasks. 
+   - Do NOT link a human end-user actor to initiate internal system database modifications or route background worker scripts unless they are actively clicking a front-end screen component interface to execute that explicit command.
+   - Prohibit circular self-looping connectors (Node_A --> Node_A). Route informational outputs out to the actual system consumer node.
+
+4. PHASE-LEVEL CRITERIA WITH BIDIRECTIONAL "CLOSED-LOOP" CONFIRMATIONS:
+   - Organize the layout timeline chronologically using structural phase comment headers (e.g., %% PHASE 1: [Name]).
+   - Do not let user actions or system inquiries drop into a visual vacuum. Wherever a node triggers a request, inquiry, or transaction validation submission, you MUST explicitly map the immediate return data path, error notification, or confirmation vector back to the initiating node as the very next chronological step.
+   - This visual round-trip loop closure must be preserved for all primary human interactions and cross-service data handshakes to maintain total scannability.
+
+5. PHASING NUMBER MATRIX WITH ALPHABETIC SUB-INDEXING:
+   - Prefix all main sequence timeline paths with incremental sequential integers (e.g., 1., 2., 3.).
+   - To illustrate closely bound child sub-processes, real-time validations, or instant request-response feedback pairs without inflating the macro step numbers, you MUST utilize alphabetical sub-indexing notation enclosed securely inside the arrow text boundary strings (e.g., Node_A -->|1. Submit Request| Node_B, Node_B -->|1a. Success: Grant Authorization| Node_A, Node_B -.->|1b. Failure Exception| Node_C).
+
+6. INLINE CONDITIONAL DIAMOND CROSSROADS:
+   - Do not isolate error exceptions or alternate routes at the extreme end of the file text.
+   - For major processing rule gates, risk verifications, or payment/credential checking nodes, inject an inline Mermaid decision diamond shape directly into the primary path (e.g., Auth_Gate{Is Transaction Valid?}).
+   - Route the primary "Happy Path" link directly out of this diamond using the next sequential integer code, and route the standard failure exception path out using a dashed line connection script (-.->) pointed to the relevant rollback component.
+
+7. RETENTION FLYWHEEL LIFECYCLE CLOSURE:
+   - Ensure the diagram traces the lifecycle completely to post-execution events, balance adjustments, auditing trails, and loyalty tracking syncs. 
+   - The final phase must link system status metrics back to the primary user or initiator profile node, visually demonstrating a cyclical customer retention flywheel loop.
+
+8. ABSOLUTE COMPLIANCE SANITIZATION OUTPUT RULE:
+   - Output ONLY the raw Mermaid diagram code string starting directly with "graph TD".
+   - You are STRICTLY FORBIDDEN from wrapping the output in markdown backticks (```), text code block fences, or appending introductory conversational pleasantries or closing remarks. Start instantly with the code.
+
+=== SOURCE INPUT PAYLOAD DATA ===
+--- COMPONENT LAYOUT OBJECTS ---
+=== Final DATA MATRIX for domain :Quick Commerce (Q-Commerce) and niche :Hyperlocal Grocery Delivery  ===
+
+[
+  {
+    "object_name": "User Account",
+    "input": "Customer registration details and authentication credentials",
+    "activity": "Identity verification and profile initialization",
+    "output": "Authenticated session token and user context"
+  },
+  {
+    "object_name": "Geolocation Request",
+    "input": "Mobile device GPS coordinates and address verification data",
+    "activity": "Service area validation and delivery zone mapping",
+    "output": "Confirmed delivery pin and applicable service fee"
+  },
+  {
+    "object_name": "Cart Item",
+    "input": "Product selection, quantity, and selected delivery slot",
+    "activity": "Inventory availability check and price calculation",
+    "output": "Updated cart state with real-time stock confirmation"
+  },
+  {
+    "object_name": "Order Header",
+    "input": "Finalized cart contents, delivery address, and payment method",
+    "activity": "Order creation and initial payment authorization",
+    "output": "Unique Order ID and confirmed order receipt"
+  },
+  {
+    "object_name": "Order Line Item",
+    "input": "Detailed product specifications, SKU, and unit price per order header",
+    "activity": "Line-level inventory reservation and weight estimation",
+    "output": "Reserved stock hold and aggregated line subtotal"
+  },
+  {
+    "object_name": "Delivery Slot",
+    "input": "Customer requested time window and driver availability data",
+    "activity": "Slot allocation and time-window enforcement logic",
+    "output": "Assigned pickup and delivery timestamps"
+  },
+  {
+    "object_name": "Merchant Inventory Stock",
+    "input": "Real-time stock levels from local store database",
+    "activity": "Batch deduction and shelf-space allocation update",
+    "output": "Adjusted available quantity and stock status flags"
+  },
+  {
+    "object_name": "Assigned Courier",
+    "input": "Order ID, delivery address, and courier availability status",
+    "activity": "Route optimization and driver assignment validation",
+    "output": "Active delivery task and assigned courier ID"
+  },
+  {
+    "object_name": "Pickup Manifest",
+    "input": "List of items to collect and store location coordinates",
+    "activity": "Store associate task generation and item verification",
+    "output": "Collected items list and ready-for-pickup status"
+  },
+  {
+    "object_name": "Handover Receipt",
+    "input": "Customer signature or digital confirmation and item count",
+    "activity": "Completion validation and quality check verification",
+    "output": "Delivered status update and final payment capture"
+  },
+  {
+    "object_name": "Payment Transaction",
+    "input": "Order total, tax, fees, and selected payment gateway data",
+    "activity": "Secure fund transfer and receipt generation",
+    "output": "Paid status flag and digital invoice record"
+  },
+  {
+    "object_name": "Refund Claim",
+    "input": "Reason for return, damaged item evidence, and original order ID",
+    "activity": "Claim validation and partial/full fund reversal",
+    "output": "Refund approval and adjusted account balance"
+  },
+  {
+    "object_name": "Subscription Plan",
+    "input": "User eligibility and recurring payment authorization",
+    "activity": "Fee calculation and recurring billing cycle setup",
+    "output": "Active membership tier and priority delivery rights"
+  },
+  {
+    "object_name": "Loyalty Points Ledger",
+    "input": "Purchase total and promotional offer codes",
+    "activity": "Point accrual calculation and redemption validation",
+    "output": "Updated points balance and discounted order total"
+  },
+  {
+    "object_name": "Cancellation Request",
+    "input": "User cancellation reason and current order status",
+    "activity": "Inventory release and refund initiation logic",
+    "output": "Cancelled order status and released stock availability"
+  }
+]
+
+--- ROLE SET VALIDATIONS ---
+=== Final SYSTEM ACTORS & AUTHORIZATION MATRIX ===
+
+[
+  {
+    "actor_name": "End-User Customer",
+    "operational_role": "Hyperlocal shopper executing grocery acquisition lifecycle",
+    "core_responsibilities": [
+      "Registering identity and managing authentication credentials",
+      "Requesting geolocation for delivery zone validation",
+      "Selecting items, quantities, and delivery slots",
+      "Authorizing payments and managing loyalty points",
+      "Initiating cancellations or refund claims"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "My User Account Profile",
+        "Available Delivery Slots",
+        "Real-time Cart State and Stock",
+        "Assigned Courier Details",
+        "Order History and Invoices"
+      ],
+      "What_They_Can_Create": [
+        "New User Account",
+        "Cart Item",
+        "Order Header",
+        "Delivery Slot Request",
+        "Refund Claim"
+      ],
+      "What_They_Can_Change": [
+        "User Profile Details",
+        "Cart Item Quantities and Selections",
+        "Delivery Address and Slot Preference",
+        "Payment Method Selection"
+      ],
+      "What_They_Can_Remove": [
+        "Cart Items Pending Checkout",
+        "Active Delivery Slot Request"
+      ],
+      "Operations_They_Can_Run": [
+        "Place Order",
+        "Cancel Order",
+        "Verify Handover Receipt",
+        "Redeem Loyalty Points"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "Personal PII and payment tokens encrypted; visible only to self and authorized support agents",
+        "Order_Lock": "Cannot modify Order Header or Order Line Items after Payment Transaction status is 'Authorized' or 'Captured'"
+      }
+    }
+  },
+  {
+    "actor_name": "Store Associate",
+    "operational_role": "On-site inventory handler executing pickup and packing workflows",
+    "core_responsibilities": [
+      "Generating and managing Pickup Manifests",
+      "Verifying item counts and quality",
+      "Updating real-time stock levels",
+      "Confirming item readiness for courier"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Assigned Pickup Manifests",
+        "Current Merchant Inventory Stock",
+        "Store Location Coordinates",
+        "Pending Order Line Items for Store"
+      ],
+      "What_They_Can_Create": [
+        "Pickup Manifest",
+        "Inventory Adjustment Records",
+        "Item Verification Log"
+      ],
+      "What_They_Can_Change": [
+        "Merchant Inventory Stock Levels",
+        "Pickup Manifest Status (Pending -> Ready)",
+        "Item Status Flags (Damaged/Available)"
+      ],
+      "What_They_Can_Remove": [
+        "Reserved Stock Hold upon Cancellation Request validation",
+        "Invalid Line Items from Manifest"
+      ],
+      "Operations_They_Can_Run": [
+        "Initiate Stock Deduction",
+        "Complete Item Verification",
+        "Update Stock Status Flags"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "Access restricted to current store shift and assigned orders; cannot view customer PII beyond necessary contact info",
+        "Order_Lock": "Cannot modify Order Header financial details; can only adjust inventory reserves for active orders"
+      }
+    }
+  },
+  {
+    "actor_name": "Logistics Dispatcher",
+    "operational_role": "Fleet manager optimizing courier assignments and route efficiency",
+    "core_responsibilities": [
+      "Validating courier availability status",
+      "Optimizing routes for assigned couriers",
+      "Managing delivery slot allocations",
+      "Monitoring active delivery tasks"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "All Assigned Courier IDs and Status",
+        "Order Headers with Delivery Addresses",
+        "Real-time Driver Location Data",
+        "Global Delivery Slot Availability"
+      ],
+      "What_They_Can_Create": [
+        "Assigned Courier Task",
+        "New Delivery Slot Allocation"
+      ],
+      "What_They_Can_Change": [
+        "Courier Assignment Mapping",
+        "Delivery Slot Timestamps",
+        "Route Optimization Parameters"
+      ],
+      "What_They_Can_Remove": [
+        "Inactive Courier Assignments",
+        "Over-allocated Delivery Slots"
+      ],
+      "Operations_They_Can_Run": [
+        "Assign Courier to Order",
+        "Re-assign Courier upon deviation",
+        "Enforce Time-Window Constraints"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "Can view addresses and contact info; cannot view customer personal profile history",
+        "Order_Lock": "Cannot alter Order Header payment status; can only reassign logistics resources"
+      }
+    }
+  },
+  {
+    "actor_name": "Merchant Inventory Manager",
+    "operational_role": "Store operations lead managing shelf-space and stock integrity",
+    "core_responsibilities": [
+      "Managing bulk stock deductions",
+      "Allocating shelf-space",
+      "Reconciling system stock with physical counts",
+      "Setting stock status flags"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "Total Merchant Inventory Stock per SKU",
+        "Batch Deduction Logs",
+        "Stock Status Flags across all zones",
+        "Low-stock Alerts"
+      ],
+      "What_They_Can_Create": [
+        "Restock Orders",
+        "New Inventory SKU Entries"
+      ],
+      "What_They_Can_Change": [
+        "Merchant Inventory Stock Levels",
+        "Stock Status Flags (In-Stock, Out-of-Stock, Restocking)",
+        "Shelf-Space Allocation Rules"
+      ],
+      "What_They_Can_Remove": [
+        "Expired or Damaged Batch Records",
+        "Invalid SKU Entries"
+      ],
+      "Operations_They_Can_Run": [
+        "Execute Batch Deduction",
+        "Update Shelf-Space Allocation",
+        "Trigger Out-of-Stock Notifications"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "Access limited to inventory data; no access to customer or courier PII",
+        "Order_Lock": "Cannot directly cancel active Orders; must trigger Inventory Release via Cancellation Request workflow"
+      }
+    }
+  },
+  {
+    "actor_name": "IAM Security Officer",
+    "operational_role": "Identity and access governance specialist ensuring system integrity",
+    "core_responsibilities": [
+      "Managing User Account authentication credentials",
+      "Auditing Access Authorization logs",
+      "Enforcing Data Privacy boundaries",
+      "Validating Identity Verification steps"
+    ],
+    "access_authorization_and_scope": {
+      "What_They_Can_See": [
+        "All User Account Login Attempts",
+        "Full Audit Trails of Create/Change/Remove actions",
+        "Session Token Expiry Logs",
+        "Geolocation Request Authentications"
+      ],
+      "What_They_Can_Create": [
+        "New User Account (Admin Initiated)",
+        "Role-Based Access Control Policies",
+        "Security Incident Reports"
+      ],
+      "What_They_Can_Change": [
+        "User Account Status (Active, Suspended, Locked)",
+        "Password Policy Parameters",
+        "Session Token TTL"
+      ],
+      "What_They_Can_Remove": [
+        "Expired Session Tokens",
+        "Compromised User Accounts",
+        "Invalid Role Assignments"
+      ],
+      "Operations_They_Can_Run": [
+        "Force Account Lockout",
+        "Reset Authentication Credentials",
+        "Review Compliance Reports"
+      ],
+      "Business_Rules_And_Guardrails": {
+        "Data_Privacy": "Zero-knowledge access to PII; view only hashes and masked identifiers",
+        "Order_Lock": "Cannot modify business logic flows; can only suspend actor access during investigation"
+      }
+    }
+  },
+  {
+    "actor_name": "Finance & Billing Agent",
+    "operational_role": "Payment operations specialist managing transactions and settlements",
+    "core_responsibilities": [
+      "Processing Payment Transactions",
+      "Validating Refund Claims",
+      "Managing Subscription 
+
+--- CHRONOLOGICAL JOURNEY TRACKS ---
+=== E2E ACTOR TRANSACTION JOURNEYS for domain :Quick Commerce (Q-Commerce) and niche :Hyperlocal Grocery Delivery  ===
+
+[
+  {
+    "actor_name": "End-User Customer",
+    "operational_role_context": "Hyperlocal shopper executing grocery acquisition lifecycle",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Initiates 'User Account' registration with personal PII; IAM Security Officer validates identity verification inputs against policy; outputs authenticated session token and user context enabling subsequent access."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Submits 'Geolocation Request' via mobile GPS coordinates; system performs service area validation and delivery zone mapping against 'Merchant Inventory Stock' locations; outputs confirmed delivery pin and applicable service fee."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Selects products to create 'Cart Item' inputs including SKU and quantity; system executes real-time inventory availability checks and price calculation logic; outputs updated cart state with confirmed stock levels."
+      },
+      {
+        "step": "4",
+        "data_object_layer": "Requests a 'Delivery Slot' based on preferred time window; Logistics Dispatcher validates courier availability data and allocates slot; outputs assigned pickup and delivery timestamps."
+      },
+      {
+        "step": "5",
+        "data_object_layer": "Finalizes transaction by submitting 'Order Header' and 'Order Line Item' details including payment method; 'Payment Transaction' component processes fund transfer and generates digital invoice; outputs unique Order ID and confirmed receipt."
+      },
+      {
+        "step": "6",
+        "data_object_layer": "During transit, views 'Assigned Courier' details via app; Logistics Dispatcher executes route optimization and assigns active delivery task; outputs courier ID and real-time location updates."
+      },
+      {
+        "step": "7",
+        "data_object_layer": "Upon arrival, provides 'Handover Receipt' input via digital signature and item count verification; Store Associate confirms quality check; outputs delivered status update and final payment capture confirmation."
+      },
+      {
+        "step": "8",
+        "data_object_layer": "Participates in post-order lifecycle by managing 'Loyalty Points Ledger' for redemptions, requesting 'Refund Claim' with damage evidence, or initiating 'Cancellation Request' before handover; Finance & Billing Agent validates claims and adjusts balances."
+      }
+    ]
+  },
+  {
+    "actor_name": "Store Associate",
+    "operational_role_context": "On-site inventory handler executing pickup and packing workflows",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Receives system-generated 'Pickup Manifest' input listing items to collect and store location coordinates; generates task list for store floor; outputs item verification log initiation."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Scans 'Order Line Item' SKUs against physical shelf-space; validates item specifications and estimates weight; outputs collected items list and ready-for-pickup status flag."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Executes 'Merchant Inventory Stock' update by performing batch deduction and allocating shelf-space; outputs adjusted available quantity and updated stock status flags (e.g., In-Stock to Out-of-Stock)."
+      },
+      {
+        "step": "4",
+        "data_object_layer": "Validates 'Handover Receipt' input by comparing customer signature/digital confirmation against manifest item counts; performs quality check verification; outputs delivered status update and confirms final payment capture."
+      }
+    ]
+  },
+  {
+    "actor_name": "Logistics Dispatcher",
+    "operational_role_context": "Fleet manager optimizing courier assignments and route efficiency",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Processes 'Delivery Slot' input by analyzing customer requested time windows against real-time courier availability data; executes slot allocation and time-window enforcement logic; outputs assigned timestamps."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Receives 'Order Header' and 'Assigned Courier' inputs; runs route optimization algorithms to minimize fleet idle time; outputs active delivery task and assigned courier ID."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Monitors 'Assigned Courier' status and 'Real-time Driver Location Data'; modifies courier assignment mapping or re-assigns upon deviation; outputs updated route parameters and enforcement of time-window constraints."
+      },
+      {
+        "step": "4",
+        "data_object_layer": "Validates 'Handover Receipt' completion from the courier perspective; removes inactive courier assignments from active queues; outputs cleared delivery task status."
+      }
+    ]
+  },
+  {
+    "actor_name": "Merchant Inventory Manager",
+    "operational_role_context": "Store operations lead managing shelf-space and stock integrity",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Reviews 'Merchant Inventory Stock' input from local store database; performs reconciliation of system stock with physical counts; outputs batch deduction logs and stock status flags."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Manages 'Order Line Item' line-level inventory reservations; updates shelf-space allocation rules based on SKU demand; outputs adjusted available quantity and stock status flags."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Handles 'Cancellation Request' triggers by executing inventory release logic; removes reserved stock holds upon validation; outputs released stock availability flags."
+      },
+      {
+        "step": "4",
+        "data_object_layer": "Creates 'Restock Orders' and 'New Inventory SKU Entries' to replenish shelf-space; removes expired or damaged batch records; outputs updated inventory levels and low-stock alerts."
+      }
+    ]
+  },
+  {
+    "actor_name": "IAM Security Officer",
+    "operational_role_context": "Identity and access governance specialist ensuring system integrity",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Audits 'User Account' authentication credentials and 'Geolocation Request' authentications; enforces data privacy boundaries and validates identity verification steps; outputs security incident reports."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Reviews full audit trails of 'Create', 'Change', and 'Remove' actions across all actors; validates session token expiry logs; outputs compliance reports."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Executes 'Force Account Lockout' or 'Reset Authentication Credentials' operations for compromised users; removes expired session tokens and invalid role assignments; outputs updated user account status."
+      }
+    ]
+  },
+  {
+    "actor_name": "Finance & Billing Agent",
+    "operational_role_context": "Payment operations specialist managing transactions and settlements",
+    "chronological_milestones_and_data_inputs": [
+      {
+        "step": "1",
+        "data_object_layer": "Processes 'Payment Transaction' input (Order total, tax, fees) via secure gateway; validates fund transfer and generates receipt; outputs paid status flag and digital invoice record."
+      },
+      {
+        "step": "2",
+        "data_object_layer": "Evaluates 'Refund Claim' input including reason and evidence; performs claim validation and partial/full fund reversal; outputs refund approval and adjusted account balance."
+      },
+      {
+        "step": "3",
+        "data_object_layer": "Manages 'Subscription Plan' input for recurring billing cycles; calculates fees and sets up automated billing; outputs active membership tier and priority delivery rights confirmation."
+      },
+      {
+        "step": "4",
+        "data_object_layer": "Executes 'Loyalty Points Ledger' updates by calculating point accrual and redemption validation; modifies order total based on points used; outputs updated points balance and discounted total."
+      }
+    ]
+  }
+]
+
+Assistant:
+
