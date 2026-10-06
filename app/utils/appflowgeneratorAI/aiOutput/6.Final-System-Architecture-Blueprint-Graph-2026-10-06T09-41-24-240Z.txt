@@ -1,0 +1,234 @@
+User:
+You are a WORLD-CLASS SYSTEMS ARCHITECT ENGINE. Your task is to ingest technical system payload schemas and synthesize a high-readability, executive-level visual workflow diagram formatted strictly as a Mermaid.js flowchart utilizing a clean, strict top-down layout (graph TD).
+
+=== TOP-DOWN VISUAL LAYOUT CONSTRAINTS (MANDATORY) ===
+
+1. STRUCTURAL GATEWAY ROUTING LAYER (HUB-AND-SPOKE SANITIZATION):
+   - Nodes inside a subgraph container are STRICTLY FORBIDDEN from linking directly to internal nodes inside a different subgraph container.
+   - You MUST enforce a strict Hub-and-Spoke topology for every single subgraph block:
+     * Entrance Node: Designate or create exactly ONE node at the absolute top boundary of the subgraph to act as the single entry point for all incoming external arrows.
+     * Exit Node: Designate or create exactly ONE node at the absolute bottom boundary of the subgraph to act as the single exit point for all outgoing external arrows.
+   - Inter-subgraph communication MUST occur exclusively by linking the Exit Node of a preceding subgraph directly to the Entrance Node of the next chronological subgraph.
+   - CRITICAL COMPILING CONSTRAINT: You are STRICTLY FORBIDDEN from linking a node variable identifier directly to an outer subgraph container name string ID block. Edges must ONLY connect explicit Node-to-Node targets.
+
+2. UNIQUE CONTAINER & VARIABLE BALANCING:
+   - Every single subgraph block MUST possess a completely unique, lowercase, underscore-separated string identifier ID name. NEVER reuse a subgraph ID string anywhere in the entire output.
+   - Every node variable identifier name within the entire diagram MUST be completely unique. Every variable identifier used anywhere in an arrow link (including all Entrance and Exit nodes) MUST be explicitly declared with its bracket shape and text label INSIDE its designated subgraph block definition before it is linked. No uninitialized variables floating outside container walls are permitted.
+   - You are STRICTLY FORBIDDEN from declaring a subgraph identifier standalone on its own line under link sections without child components or functional connectivity.
+
+3. STRICT PROCESS TERMINATION & FORWARD RESOLUTION (NO DEAD ENDS):
+   - Every operational loop, validation track, and final execution state must resolve forward and downward.
+   - You are STRICTLY FORBIDDEN from leaving a failure path or error alert node hanging in isolation inside a subgraph block. Every validation failure path MUST lead to a clean terminal closure node or route directly down into a global system tracking closure node at the bottom of the layout layer.
+
+4. ABSOLUTE SHAPE DEFINITION & SYNTAX VALIDATION RULES:
+   - Every node variable identifier name MUST be short, plain lowercase alphanumeric strings without any symbols or brackets embedded inside them.
+   - Text contents must be nested cleanly within structural geometric tokens exactly matching these layout patterns:
+     * Correct: node_variable_name["Business Process Box Label String Text"]
+     * Correct: decision_variable_name{"Business Evaluation Diamond Question Text"}
+   - YOU ARE STRICTLY FORBIDDEN from wrapping bracket structural notation within other bracket notation (e.g., Never write: node_name["node_name{Text}"]).
+   - Nodes are strictly forbidden from pointing directly back into themselves as an isolated arrow link loop.
+
+=== UNIVERSAL TRANSACTIONAL STATE INVARIANTS (NO LOOSE ENDS) ===
+
+5. THE INITIAL DISCOVERY & CURATION LAYER STATE:
+   - Before any transactional commit, resource allocation, or logistical verification occurs, you MUST explicitly establish a logical Discovery & Curation layer immediately following the root initialization/access step.
+   - The workflow must natively map the interactive sequence where an actor navigates classifications, queries datasets, evaluates item metrics, and aggregates choices into a temporary staging state (e.g., shopping cart, queue, staging list) before triggering target actions.
+
+6. POST-SETTLEMENT TRANSACTION COMMIT SYNCHRONIZATION:
+   - You must enforce a strict chronological state dependency regarding financial settlement and structural record creation. 
+   - A core Transactional Record or Final Order Document cannot be officially designated as "Created," "Committed," or "Finalized" until AFTER a successful authorization/settlement status is achieved in the payment/billing validation node.
+   - The flow must strictly map: Financial Settlement Verification -> Authorized Status -> Post-Settlement Document Creation -> Downstream Fulfillment/Resource Assignment Execution.
+
+7. MID-FLIGHT EXCEPTION HANDLING & TRANSACTIONAL ROLLBACKS:
+   - You must ensure there are ZERO dead ends or unhandled operational loops for failures occurring mid-process.
+   - If a failure, exception, or cancellation trigger occurs AFTER a successful transaction settlement status but BEFORE final delivery/handover, the exception path must immediately branch via a dashed line connection script (-.->) out of the validation diamond.
+   - This failure track must bypass normal forward progression, route directly through a reversing ledger/compensation action, and terminate cleanly into a distinct, final system disruption closure node at the bottom of the architecture.
+
+=== DATA MATRIX RECONCILIATION & SYNTHESIS (HYPER-INTELLIGENCE) ===
+
+8. TRIPLE-MATRIX CROSS-REFERENCE ENFORCEMENT:
+    - You MUST concurrently analyze all three provided data matrices to build a seamless workflow with zero disconnected blocks:
+      * The Structural Map: Use the 'COMPONENT LAYOUT OBJECTS' matrix to identify your core system entities, inputs, activities, and outputs.
+      * The Security Permissions: Use the 'ROLE SET VALIDATIONS' matrix to determine which operational actions, creations, mutations, and status modifications are authorized for specific actors.
+      * The Chronological Timeline: Use the 'CHRONOLOGICAL JOURNEY TRACKS' matrix as the master timeline blueprint to establish the exact sequential ordering of execution steps.
+    - RECONCILIATION RULE: For every step derived from the Chronological Journey Tracks, cross-reference the Component Layout Objects to extract its specific processing activity, inputs, and outputs. Then, cross-reference the Role Set Validations to ensure the node descriptions reflect the authorized capabilities and business guardrails of the acting role. Do not let any data element from one matrix contradict or become isolated from the others.
+
+9. ABSOLUTE SHAPE DEFINITION & SYNTAX VALIDATION RULES:
+   - Every node variable identifier name MUST be short, plain lowercase alphanumeric strings without any symbols or brackets embedded inside them.
+   - Text contents must be nested cleanly within structural geometric tokens exactly matching these layout patterns:
+     * Correct: node_variable_name["Business Process Box Label String Text"]
+     * Correct: decision_variable_name{"Business Evaluation Diamond Question Text"}
+   - YOU ARE STRICTLY FORBIDDEN from wrapping bracket structural notation within other bracket notation (e.g., Never write: node_name["node_name{Text}"]).
+   - Nodes are strictly forbidden from pointing directly back into themselves as an isolated arrow link loop.
+
+=== STYLING, PARSING, AND INTERFACE LANGUAGE TRANSLATION ===
+
+10. ABSOLUTE BIFT OF COLOR AND STYLING (NO COLOR POLICY):
+   - You are STRICTLY FORBIDDEN from outputting any color configurations, color coding, styling templates, theme styles, or "classDef" / "class" declarations anywhere in the diagram code.
+   - The entire diagram must be completely black-and-white, plain, and standard out-of-the-box Mermaid rendering default styling.
+
+11. TECHNICAL JARGON REPLACEMENT GLOSSARY (DOMAIN AGNOSTIC):
+   - Aggressively translate developer-centric engineering syntax into clear business capability terms.
+   - Use the following token translation map to intercept and convert forbidden architectural vocabulary:
+
+     | Forbidden Technical/Engineering Jargon | Mandatory Business Translation Equivalent |
+     |---------------------------------------|--------------------------------------------|
+     | API / Endpoint / Microservice         | Service Interface / Functional Capability  |
+     | DB / DAL / Postgres / Database / SQL  | Information Registry / Ledger / Data Base |
+     | IAM / JWT / Token / Auth Cookie       | Access Credentials / Verified Identity Sec |
+     | Webhook / Event Trigger / Kafka       | State Change Update / Notification Vector  |
+     | UI / Frontend / Screen / View / Page  | Visual Interface / Interactive Presentation|
+
+12. SEQUENCE MARKERS & CLOSED-LOOP NOTIFICATIONS:
+   - Segment the master timeline chronologically using structural phase comment blocks.
+   - Wherever an actor or component initiates a request, validation, or transaction submission, you MUST explicitly map the immediate return notification, error alert, or confirmation vector back to the initiator as the very next chronological link.
+
+13. CHRONOLOGICAL PATHS WITH HYPHENATED ALPHABETIC SUB-INDEXING:
+    - Prefix macro timeline arrows with incremental sequential integers (e.g., 1., 2., 3.).
+    - To illustrate closely bound child sub-processes, inner business validations, or instant request-response feedback loops, you MUST utilize a strict hyphenated alphabetic modifier for exception/failure tracks, following this exact template pattern:
+      * Primary Success Path: |3.2. Action Validation Success|
+      * Secondary Failure/Exception Path: |3.2-A. Action Validation Failure Rollback|
+
+14. INLINE VALIDATION CROSSROADS:
+    - Insert inline Mermaid decision diamond shapes directly within the local timeline flow inside the subgraphs where validations occur using correct curly braces syntax containing the question text (e.g., NodeName{"Is Action Valid?"}).
+    - Branch the primary success path link directly out of the diamond using the next sequential identifier code, and branch the standard failure exception path out using a dashed line connection script (-.->) pointed to the relevant local rollback or alert component.
+
+ 
+
+Assistant:
+```mermaid
+graph TD
+    %% ---------------------------------------------------------------------------
+    %% PHASE 0: INITIALIZATION & ACCESS PROTOCOL
+    %% ---------------------------------------------------------------------------
+    subgraph Phase_0_Init["INITIALIZATION & ACCESS PROTOCOL"]
+        direction TB
+        EntryRoot["Entry Root: System Access Request"]
+        RoleValidator{"Is Identity Verified? <br/> Role: Admin/Service"}
+        AccessGranted["Access Granted: Service Interface"]
+        AccessDenied["Access Denied: Credential Rejection"]
+    end
+
+    %% ---------------------------------------------------------------------------
+    %% PHASE 1: DISCOVERY & CURATION LAYER (MANDATORY STATE INVARIANT #5)
+    %% ---------------------------------------------------------------------------
+    subgraph Phase_1_Curation["DISCOVERY & CURATION LAYER"]
+        direction TB
+        EntrNode1["Entrance: Service Interface"]
+        QueryInit["Query Datasets & Classifications"]
+        MetricEval["Evaluate Item Metrics"]
+        SelectionAdd["Aggregate Choices to Staging Queue"]
+        StagingState["Staging State: Pending Review"]
+        ExitNode1["Exit: Staging List Ready"]
+    end
+
+    %% ---------------------------------------------------------------------------
+    /// LINK LAYER: Phase 0 -> Phase 1
+    %% ---------------------------------------------------------------------------
+    AccessGranted --> EntrNode1
+
+    %% ---------------------------------------------------------------------------
+    %% PHASE 2: VALIDATION & AUTHORIZATION CHECK
+    %% ---------------------------------------------------------------------------
+    subgraph Phase_2_Validation["VALIDATION & AUTHORIZATION CHECK"]
+        direction TB
+        EntrNode2["Entrance: Staging List Ready"]
+        PolicyCheck{"Does Policy Allow? <br/> Role Set Validations"}
+        PolicyPass["Validation Success: Policy Approved"]
+        PolicyFail["Validation Failure: Policy Blocked"]
+        ExitNode2["Exit: Authorization Verified"]
+    end
+
+    %% ---------------------------------------------------------------------------
+    /// LINK LAYER: Phase 1 -> Phase 2
+    %% ---------------------------------------------------------------------------
+    ExitNode1 --> EntrNode2
+
+    %% ---------------------------------------------------------------------------
+    %% PHASE 3: FINANCIAL SETTLEMENT & RECORD CREATION
+    %% ---------------------------------------------------------------------------
+    subgraph Phase_3_Settlement["FINANCIAL SETTLEMENT & RECORD CREATION"]
+        direction TB
+        EntrNode3["Entrance: Authorization Verified"]
+        AuthCheck{"Is Payment Authorized? <br/> Billing Validation"}
+        AuthSuccess["Status: Authorized"]
+        AuthFail["Status: Declined/Insufficient Funds"]
+        RecordCreate["Create Final Order Document"]
+        CommitState["Record State: Committed"]
+        ExitNode3["Exit: Settlement Complete"]
+    end
+
+    %% ---------------------------------------------------------------------------
+    /// LINK LAYER: Phase 2 -> Phase 3
+    %% ---------------------------------------------------------------------------
+    ExitNode2 --> EntrNode3
+
+    %% ---------------------------------------------------------------------------
+    /// LINK LAYER: Internal Logic within Phase 3
+    %% ---------------------------------------------------------------------------
+    AuthSuccess --> RecordCreate
+    AuthFail -.->|3.3-A. Payment Failure Rollback| AuthFailEnd["Exception: Payment Rejected"]
+    RecordCreate --> CommitState
+    CommitState --> ExitNode3
+
+    %% ---------------------------------------------------------------------------
+    %% PHASE 4: FULFILLMENT & EXECUTION
+    %% ---------------------------------------------------------------------------
+    subgraph Phase_4_Fulfillment["FULFILLMENT & RESOURCE ASSIGNMENT"]
+        direction TB
+        EntrNode4["Entrance: Settlement Complete"]
+        ResAlloc["Assign Resources & Fulfill Order"]
+        DispatchAction["Dispatch Functional Capability"]
+        FinalHandoff["Final Handoff: Delivery Confirmed"]
+        ExitNode4["Exit: Transaction Closed"]
+    end
+
+    %% ---------------------------------------------------------------------------
+    /// LINK LAYER: Phase 3 -> Phase 4
+    %% ---------------------------------------------------------------------------
+    ExitNode3 --> EntrNode4
+
+    %% ---------------------------------------------------------------------------
+    /// LINK LAYER: Internal Logic within Phase 4
+    %% ---------------------------------------------------------------------------
+    EntrNode4 --> ResAlloc
+    ResAlloc --> DispatchAction
+    DispatchAction --> FinalHandoff
+    FinalHandoff --> ExitNode4
+
+    %% ---------------------------------------------------------------------------
+    %% EXCEPTION HANDLING & TERMINAL CLOSURE (MANDATORY STATE INVARIANT #7)
+    %% ---------------------------------------------------------------------------
+    subgraph Global_Closure["GLOBAL SYSTEM TRACKING CLOSURE"]
+        direction TB
+        ClosureFail["System Disruption Closure: Rollback Initiated"]
+        ClosureEnd["Terminal State: Aborted"]
+        ClosureEnd2["Terminal State: Aborted"]
+    end
+
+    %% ---------------------------------------------------------------------------
+    /// LINK LAYER: Exception Routing (Phase 0 -> Closure)
+    %% ---------------------------------------------------------------------------
+    AccessDenied -.->|0.1-A. Auth Failure| ClosureFail
+
+    %% ---------------------------------------------------------------------------
+    /// LINK LAYER: Exception Routing (Phase 2 -> Closure)
+    %% ---------------------------------------------------------------------------
+    PolicyFail -.->|2.1-A. Policy Failure| ClosureFail
+
+    %% ---------------------------------------------------------------------------
+    /// LINK LAYER: Exception Routing (Phase 3 -> Closure)
+    %% ---------------------------------------------------------------------------
+    AuthFailEnd --> ClosureFail
+    ClosureFail --> ClosureEnd
+    ClosureEnd --> ClosureEnd2
+
+    %% ---------------------------------------------------------------------------
+    /// GLOBAL TERMINAL NODES (Visual Anchors)
+    %% ---------------------------------------------------------------------------
+    ClosureEnd2 --> ClosureEnd
+    AccessDenied --> ClosureEnd
+    PolicyFail --> ClosureEnd
+    AuthFailEnd --> ClosureEnd
+```
+

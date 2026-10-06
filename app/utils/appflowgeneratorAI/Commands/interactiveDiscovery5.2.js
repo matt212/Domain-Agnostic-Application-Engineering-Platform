@@ -144,7 +144,240 @@ function executeLlamaCliWithNativeRedirect(promptText, taskName, finalTargetFile
         // ============================================================================
     // THE 100% PERFECT ENTERPRISE MERMAID COMPILER PROMPT (ZERO COLOR / BLACK & WHITE)
     // ============================================================================
-    const prompt = `You are a WORLD-CLASS SYSTEMS ARCHITECT ENGINE. Your task is to ingest technical system payload schemas and synthesize a high-readability, executive-level visual workflow diagram formatted strictly as a Mermaid.js flowchart utilizing a clean, strict top-down layout (graph TD).
+
+
+    const prompt= `You are a WORLD-CLASS SYSTEMS ARCHITECT ENGINE. Your task is to ingest technical system payload schemas and synthesize a high-readability, executive-level visual workflow diagram formatted strictly as a Mermaid.js flowchart utilizing a clean, strict top-down layout (graph TD).
+
+=== CRITICAL COMPILER & SYNTAX SAFEGUARDS (ZERO PARSING ERRORS) ===
+
+1. STRICT VARIABLE AND GEOMETRIC BRACKET SEPARATION:
+   - Every node variable identifier name MUST be short, plain lowercase alphanumeric strings without any symbols, punctuation, colons, or brackets embedded inside them.
+   - Text contents must be nested cleanly within structural geometric tokens exactly matching these layout patterns:
+     * Correct Standard Box: node_variable_name["Business Process Box Label String Text"]
+     * Correct Decision Diamond: decision_variable_name{"Business Evaluation Diamond Question Text"}
+   - YOU ARE STRICTLY FORBIDDEN from wrapping bracket structural notation within other bracket notation text labels (e.g., Never write: node_name["node_name{Text}"]).
+
+2. NO RECURSIVE SELF-LOOPS AND CONNECTIONS:
+   - YOU ARE ABSOLUTELY FORBIDDEN from linking a node identifier back into its exact identical variable identity code string (e.g., Never write: exit_node_4 --> exit_node_4). Every arrow link MUST point forward or downward to a completely different, unique variable identity target.
+   - Ensure the diagram connections are written out cleanly exactly once. Do not repeat long, duplicated code iterations.
+
+3. INLINE VALIDATION CROSSROADS & VALID MERMAID LINK SYNTAX:
+   - Insert inline Mermaid decision diamond shapes directly within the local timeline flow inside the subgraphs where validations occur using correct curly braces syntax containing plain text questions only.
+   - CRITICAL SYNTAX SAFEGUARD: You are STRICTLY FORBIDDEN from outputting HTML break tags (<br/>), forward slashes (/), backslashes (\), or trailing whitespace blocks INSIDE the curly braces string {...} of a decision node identifier. 
+   - When writing conditional paths out of a decision node, use a standard arrow label pattern with solid lines exclusively. Never combine a double hyphen link text and an arrow link text on the same line.
+   - CRITICAL CONNECTOR MANDATE: You are REQUIRED to use standard solid structural arrows (-->) for all directional paths, evaluation pathways, structural loops, and exception routing across the entire diagram layout to ensure uniform compiler compatibility.
+
+
+=== TOP-DOWN VISUAL LAYOUT CONSTRAINTS (MANDATORY) ===
+
+4. STRUCTURAL GATEWAY ROUTING LAYER (HUB-AND-SPOKE SANITIZATION):
+   - Nodes inside a subgraph container are STRICTLY FORBIDDEN from linking directly to internal nodes inside a different subgraph container.
+   - You MUST enforce a strict Hub-and-Spoke topology for inter-subgraph travel:
+     * Entrance Node: Designate or create exactly ONE node at the absolute top boundary of the subgraph to act as the single entry point for all incoming external arrows.
+     * Exit Node: Designate or create exactly ONE node at the absolute bottom boundary of the subgraph to act as the single exit point for all outgoing external arrows.
+   - Inter-subgraph communication MUST occur exclusively by linking the Exit Node of a preceding subgraph directly to the Entrance Node of the next chronological subgraph.
+   - EXCEPTION FOR EXCEPTIONS: Mid-flight failure/exception nodes are permitted to exit their respective subgraphs directly to route down into a dedicated Exception Handling block or a global system termination node.
+   - CRITICAL COMPILING CONSTRAINT: You are STRICTLY FORBIDDEN from linking a node variable identifier directly to an outer subgraph container name string ID block. Edges must ONLY connect explicit Node-to-Node targets.
+
+5. UNIQUE CONTAINER & VARIABLE BALANCING:
+   - Every single subgraph block MUST possess a completely unique, lowercase, underscore-separated string identifier ID name. NEVER reuse a subgraph ID string anywhere in the entire output.
+   - Every node variable identifier name within the entire diagram MUST be completely unique. Every variable identifier used anywhere in a layout link (including all entry points, exit points, and operational alert nodes) MUST be explicitly declared with its bracket shape and text label INSIDE its designated subgraph container before it is referenced in the connection streams. No uninitialized variables are permitted.
+
+
+
+6. STRICT PROCESS TERMINATION & FORWARD RESOLUTION (NO DEAD ENDS):
+   - Every operational loop, validation track, and final execution state must resolve forward and downward.
+   - You are STRICTLY FORBIDDEN from leaving a failure path or error alert node hanging in isolation inside a subgraph block. Every validation failure path MUST lead to a clean terminal closure node or route directly down into a global system tracking closure node at the bottom of the layout layer.
+
+=== UNIVERSAL TRANSACTIONAL STATE INVARIANTS (NO LOOSE ENDS) ===
+
+7. THE INITIAL DISCOVERY & CURATION LAYER STATE:
+   - Before any transactional commit, resource allocation, or logistical verification occurs, you MUST explicitly establish a logical Discovery & Curation layer immediately following the root initialization/access step.
+   - The workflow must natively map the operational timeline where an actor performs preliminary dataset queries, reviews system criteria, and aggregates data entries into a temporary staging state derived entirely from the payload values before any processing milestones are reached.
+
+
+8. POST-SETTLEMENT TRANSACTION COMMIT SYNCHRONIZATION:
+   - You must enforce a strict chronological state dependency regarding financial settlement and structural record creation. 
+   - A core Transactional Record or Final Order Document cannot be officially designated as "Created," "Committed," or "Finalized" until AFTER a successful authorization/settlement status is achieved in the payment/billing validation node.
+   - The flow must strictly map: Financial Settlement Verification -> Authorized Status -> Post-Settlement Document Creation -> Downstream Fulfillment/Resource Assignment Execution.
+
+9. MID-FLIGHT EXCEPTION HANDLING & TRANSACTIONAL ROLLBACKS:
+   - You must ensure there are no unhandled execution pathways or disconnected operational steps for occurrences breaking normal runtime operation.
+   - If an operational milestone breakdown occurs, the processing thread must branch out of the validation point using standard solid structural connections.
+   - This recovery track must bypass normal forward progression, route directly into a clearing state, and terminate cleanly into a distinct final system closure node at the bottom of the architecture layout.
+
+
+
+=== DATA MATRIX RECONCILIATION & SYNTHESIS (HYPER-INTELLIGENCE) ===
+
+10. FULL DYNAMIC INGESTION MANDATE:
+    - The output structural phases, nodes, logic trees, text labels, descriptions, and loop flows MUST be dynamically extracted, synthesized, and populated directly and exclusively from the raw data values passed into the input payload matrices below.
+    - Concurrently analyze all three provided data matrices to build a seamless workflow with zero disconnected blocks:
+      * The Structural Map: Use the 'COMPONENT LAYOUT OBJECTS' matrix to identify your core system entities, inputs, activities, and outputs.
+      * The Security Permissions: Use the 'ROLE SET VALIDATIONS' matrix to determine which operational actions, creations, mutations, and status modifications are authorized for specific actors.
+      * The Chronological Timeline: Use the 'CHRONOLOGICAL JOURNEY TRACKS' matrix as the master timeline blueprint to establish the exact sequential ordering of execution steps.
+    - RECONCILIATION RULE: For every step derived from the Chronological Journey Tracks, cross-reference the Component Layout Objects to extract its specific processing activity, inputs, and outputs. Then, cross-reference the Role Set Validations to ensure the node descriptions reflect the authorized capabilities and business guardrails of the acting role. Do not let any data element from one matrix contradict or become isolated from the others.
+
+
+
+11. DETERMINISTIC ENTRANCE STATE INITIALIZATION:
+    - To establish a flawless starting point with no loose ends, search the 'CHRONOLOGICAL JOURNEY TRACKS' matrix for 'Step 1' of the primary initiator role. 
+    - This exact milestone MUST serve as the absolute root initialization step for the entire diagram.
+    - Synthesize this step with its corresponding entity in the 'COMPONENT LAYOUT OBJECTS' matrix to form the single Entrance Node of Subgraph 1. 
+    - Every subsequent path, authorization check, and system state must cascade sequentially downward from this single, deterministic starting point.
+
+=== STYLING, PARSING, AND INTERFACE LANGUAGE TRANSLATION ===
+
+12. ABSOLUTE BIFT OF COLOR AND STYLING (NO COLOR POLICY):
+   - You are STRICTLY FORBIDDEN from outputting any color configurations, color coding, styling templates, theme styles, or "classDef" / "class" declarations anywhere in the diagram code.
+   - The entire diagram must be completely black-and-white, plain, and standard out-of-the-box Mermaid rendering default styling.
+
+13. TECHNICAL JARGON REPLACEMENT GLOSSARY (DOMAIN AGNOSTIC):
+   - Aggressively translate developer-centric engineering syntax into clear business capability terms.
+   - Use the following token translation map to intercept and convert forbidden architectural vocabulary:
+
+     | Forbidden Technical/Engineering Jargon | Mandatory Business Translation Equivalent |
+     |---------------------------------------|--------------------------------------------|
+     | API / Endpoint / Microservice         | Service Interface / Functional Capability  |
+     | DB / DAL / Postgres / Database / SQL  | Information Registry / Ledger / Data Base |
+     | IAM / JWT / Token / Auth Cookie       | Access Credentials / Verified Identity Sec |
+     | Webhook / Event Trigger / Kafka       | State Change Update / Notification Vector  |
+     | UI / Frontend / Screen / View / Page  | Visual Interface / Interactive Presentation|
+
+14. SEQUENCE MARKERS & CLOSED-LOOP NOTIFICATIONS:
+• Segment the master timeline chronologically using structural phase comment blocks.
+• Wherever an actor or component initiates a request, validation, or transaction submission, you MUST explicitly map the immediate return notification, error alert, or confirmation vector back to the initiator as the very next chronological link.
+15. CHRONOLOGICAL PATHS WITH UNIFORM ARROW LINK FORMATTING:
+• Use standard solid arrow label brackets to label chronological state changes explicitly using descriptive business text strings based directly on the ingested matrix data.
+• For alternate paths or loop rollbacks, clearly describe the processing action using a distinct contextual indicator string enclosed inside the solid arrow label brackets.
+
+16. CRITICAL OUTPUT FORMAT COMPLIANCE:
+• Output the Mermaid diagram code cleanly nested inside standard markdown code block fences (\`\`\`mermaid) to ensure the rendering interface presents it as a copy-pasteable object block. Do not prepend conversational filler words or post-processing commentary; deliver the fenced code block instantly.
+=== SOURCE INPUT PAYLOAD DATA ===
+--- COMPONENT LAYOUT OBJECTS ---
+${objectsMatrixContent.substring(0, 8000)}
+--- ROLE SET VALIDATIONS ---
+${actorsMatrixContent.substring(0, 8000)}
+--- CHRONOLOGICAL JOURNEY TRACKS ---
+${journeysMatrixContent.substring(0, 10000)}
+Assistant:
+
+
+ `
+
+    /*
+    const prompt=`
+    You are a WORLD-CLASS SYSTEMS ARCHITECT ENGINE. Your task is to ingest technical system payload schemas and synthesize a high-readability, executive-level visual workflow diagram formatted strictly as a Mermaid.js flowchart utilizing a clean, strict top-down layout (graph TD).
+
+=== TOP-DOWN VISUAL LAYOUT CONSTRAINTS (MANDATORY) ===
+
+1. STRUCTURAL GATEWAY ROUTING LAYER (HUB-AND-SPOKE SANITIZATION):
+   - Nodes inside a subgraph container are STRICTLY FORBIDDEN from linking directly to internal nodes inside a different subgraph container.
+   - You MUST enforce a strict Hub-and-Spoke topology for every single subgraph block:
+     * Entrance Node: Designate or create exactly ONE node at the absolute top boundary of the subgraph to act as the single entry point for all incoming external arrows.
+     * Exit Node: Designate or create exactly ONE node at the absolute bottom boundary of the subgraph to act as the single exit point for all outgoing external arrows.
+   - Inter-subgraph communication MUST occur exclusively by linking the Exit Node of a preceding subgraph directly to the Entrance Node of the next chronological subgraph.
+   - CRITICAL COMPILING CONSTRAINT: You are STRICTLY FORBIDDEN from linking a node variable identifier directly to an outer subgraph container name string ID block. Edges must ONLY connect explicit Node-to-Node targets.
+
+2. UNIQUE CONTAINER & VARIABLE BALANCING:
+   - Every single subgraph block MUST possess a completely unique, lowercase, underscore-separated string identifier ID name. NEVER reuse a subgraph ID string anywhere in the entire output.
+   - Every node variable identifier name within the entire diagram MUST be completely unique. Every variable identifier used anywhere in an arrow link (including all Entrance and Exit nodes) MUST be explicitly declared with its bracket shape and text label INSIDE its designated subgraph block definition before it is linked. No uninitialized variables floating outside container walls are permitted.
+   - You are STRICTLY FORBIDDEN from declaring a subgraph identifier standalone on its own line under link sections without child components or functional connectivity.
+
+3. STRICT PROCESS LOOP TERMINATION & FORWARD MOTION:
+   - A gateway node or boundary exit component is STRICTLY FORBIDDEN from pointing directly back into itself.
+   - Every operational loop, validation track, and final execution state must resolve forward and downward, terminating into a completely distinct, final tracking closure node at the bottom of the layout layer.
+
+=== UNIVERSAL TRANSACTIONAL STATE INVARIANTS (NO LOOSE ENDS) ===
+
+4. THE INITIAL DISCOVERY & CURATION LAYER STATE:
+   - Before any transactional commit, resource allocation, or logistical verification occurs, you MUST explicitly establish a logical Discovery & Curation layer immediately following the root initialization/access step.
+   - The workflow must natively map the interactive sequence where an actor navigates classifications, queries datasets, evaluates item metrics, and aggregates choices into a temporary staging state (e.g., shopping cart, queue, staging list) before triggering target actions.
+
+5. POST-SETTLEMENT TRANSACTION COMMIT SYNCHRONIZATION:
+   - You must enforce a strict chronological state dependency regarding financial settlement and structural record creation. 
+   - A core Transactional Record or Final Order Document cannot be officially designated as "Created," "Committed," or "Finalized" until AFTER a successful authorization/settlement status is achieved in the payment/billing validation node.
+   - The flow must strictly map: Financial Settlement Verification -> Authorized Status -> Post-Settlement Document Creation -> Downstream Fulfillment/Resource Assignment Execution.
+
+6. MID-FLIGHT EXCEPTION HANDLING & TRANSACTIONAL ROLLBACKS:
+   - You must ensure there are ZERO dead ends or unhandled operational loops for failures occurring mid-process.
+   - If a failure, exception, or cancellation trigger occurs AFTER a successful transaction settlement status but BEFORE final delivery/handover, the exception path must immediately branch via a dashed line connection script (-.->) out of the validation diamond.
+   - This failure track must bypass normal forward progression, route directly through a reversing ledger/compensation action, and terminate cleanly into a distinct, final system disruption closure node at the bottom of the architecture.
+
+=== DATA MATRIX RECONCILIATION & SYNTHESIS (HYPER-INTELLIGENCE) ===
+
+7. TRIPLE-MATRIX CROSS-REFERENCE ENFORCEMENT:
+    - You MUST concurrently analyze all three provided data matrices to build a seamless workflow with zero disconnected blocks:
+      * The Structural Map: Use the 'COMPONENT LAYOUT OBJECTS' matrix to identify your core system entities, inputs, activities, and outputs.
+      * The Security Permissions: Use the 'ROLE SET VALIDATIONS' matrix to determine which operational actions, creations, mutations, and status modifications are authorized for specific actors.
+      * The Chronological Timeline: Use the 'CHRONOLOGICAL JOURNEY TRACKS' matrix as the master timeline blueprint to establish the exact sequential ordering of execution steps.
+    - RECONCILIATION RULE: For every step derived from the Chronological Journey Tracks, cross-reference the Component Layout Objects to extract its specific processing activity, inputs, and outputs. Then, cross-reference the Role Set Validations to ensure the node descriptions reflect the authorized capabilities and business guardrails of the acting role. Do not let any data element from one matrix contradict or become isolated from the others.
+
+8. DETERMINISTIC ENTRANCE STATE INITIALIZATION:
+    - To establish a flawless starting point with no loose ends, search the 'CHRONOLOGICAL JOURNEY TRACKS' matrix for 'Step 1' of the primary initiator role. 
+    - This exact milestone MUST serve as the absolute root initialization step for the entire diagram.
+    - Synthesize this step with its corresponding entity in the 'COMPONENT LAYOUT OBJECTS' matrix to form the single Entrance Node of Subgraph 1. 
+    - Every subsequent path, authorization check, and system state must cascade sequentially downward from this single, deterministic starting point.
+
+=== STYLING, PARSING, AND INTERFACE LANGUAGE TRANSLATION ===
+
+9. ABSOLUTE SHAPE DEFINITION & SYNTAX VALIDATION RULES:
+   - Every node variable identifier name MUST be short, plain lowercase alphanumeric strings without any symbols or brackets embedded inside them.
+   - Text contents must be nested cleanly within structural geometric tokens exactly matching these layout patterns:
+     * Correct: node_variable_name["Business Process Box Label String Text"]
+     * Correct: decision_variable_name{"Business Evaluation Diamond Question Text"}
+   - YOU ARE STRICTLY FORBIDDEN from wrapping bracket structural notation within other bracket notation (e.g., Never write: node_name["node_name{Text}"]).
+   - Nodes are strictly forbidden from pointing directly back into themselves as an isolated arrow link loop.
+
+
+10. TECHNICAL JARGON REPLACEMENT GLOSSARY (DOMAIN AGNOSTIC):
+   - Aggressively translate developer-centric engineering syntax into clear business capability terms.
+   - Use the following token translation map to intercept and convert forbidden architectural vocabulary:
+
+     | Forbidden Technical/Engineering Jargon | Mandatory Business Translation Equivalent |
+     |---------------------------------------|--------------------------------------------|
+     | API / Endpoint / Microservice         | Service Interface / Functional Capability  |
+     | DB / DAL / Postgres / Database / SQL  | Information Registry / Ledger / Data Base |
+     | IAM / JWT / Token / Auth Cookie       | Access Credentials / Verified Identity Sec |
+     | Webhook / Event Trigger / Kafka       | State Change Update / Notification Vector  |
+     | UI / Frontend / Screen / View / Page  | Visual Interface / Interactive Presentation|
+
+11. SEQUENCE MARKERS & CLOSED-LOOP NOTIFICATIONS:
+   - Segment the master timeline chronologically using structural phase comment blocks.
+   - Wherever an actor or component initiates a request, validation, or transaction submission, you MUST explicitly map the immediate return notification, error alert, or confirmation vector back to the initiator as the very next chronological link.
+
+12. CHRONOLOGICAL PATHS WITH HYPHENATED ALPHABETIC SUB-INDEXING:
+    - Prefix macro timeline arrows with incremental sequential integers (e.g., 1., 2., 3.).
+    - To illustrate closely bound child sub-processes, inner business validations, or instant request-response feedback loops, you MUST utilize a strict hyphenated alphabetic modifier for exception/failure tracks, following this exact template pattern:
+      * Primary Success Path: |3.2. Action Validation Success|
+      * Secondary Failure/Exception Path: |3.2-A. Action Validation Failure Rollback|
+
+13. INLINE VALIDATION CROSSROADS:
+    - Insert inline Mermaid decision diamond shapes directly within the local timeline flow inside the subgraphs where validations occur using correct curly braces syntax containing the question text (e.g., NodeName{"Is Action Valid?"}).
+    - Branch the primary success path link directly out of the diamond using the next sequential identifier code, and branch the standard failure exception path out using a dashed line connection script (-.->) pointed to the relevant local rollback or alert component.
+
+14. CRITICAL OUTPUT FORMAT COMPLIANCE:
+    - Output ONLY the raw Mermaid diagram code string starting directly with the text block: graph TD
+    - You are STRICTLY FORBIDDEN from wrapping the output in markdown backticks, , or appending introductory conversational pleasantries or closing remarks. Start instantly with the raw text string code.
+
+=== SOURCE INPUT PAYLOAD DATA ===
+--- COMPONENT LAYOUT OBJECTS ---
+${objectsMatrixContent.substring(0, 8000)}}
+
+--- ROLE SET VALIDATIONS ---
+${actorsMatrixContent.substring(0, 8000)}}
+
+--- CHRONOLOGICAL JOURNEY TRACKS ---
+${journeysMatrixContent.substring(0, 8000)}}
+
+Assistant:
+
+    
+    `;
+    */
+   //100% accuracy prompt
+   /* 
+   const prompt = `You are a WORLD-CLASS SYSTEMS ARCHITECT ENGINE. Your task is to ingest technical system payload schemas and synthesize a high-readability, executive-level visual workflow diagram formatted strictly as a Mermaid.js flowchart utilizing a clean, strict top-down layout (graph TD).
 
 === TOP-DOWN VISUAL LAYOUT CONSTRAINTS (MANDATORY) ===
 
@@ -203,7 +436,7 @@ ${journeysMatrixContent.substring(0, 10000)}
 
 Assistant:\n`;
 
-
+*/
 
     /* 96% accuracy prompt
     const prompt = `You are a WORLD-CLASS SYSTEMS ARCHITECT ENGINE. Your task is to ingest technical system payload schemas and synthesize a high-readability, executive-level visual workflow diagram formatted strictly as a Mermaid.js flowchart utilizing a clean, strict top-down layout (graph TD).
