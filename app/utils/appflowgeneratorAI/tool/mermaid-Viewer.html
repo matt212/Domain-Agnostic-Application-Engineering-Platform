@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mermaid Diagram Viewer & Editor</title>
+    <!-- Include Mermaid.js from CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #f8f9fa;
+            --panel-bg: #ffffff;
+            --text-color: #212529;
+            --border-color: #dee2e6;
+            --header-bg: #e9ecef;
+            --btn-bg: #ffffff;
+            --btn-text: #495057;
+            --btn-border: #ced4da;
+            --btn-hover-bg: #e2e6ea;
+            --editor-bg: #ffffff;
+            --editor-text: #212529;
+        }
+
+        [data-theme="dark"] {
+            --bg-color: #121212;
+            --panel-bg: #1e1e1e;
+            --text-color: #e0e0e0;
+            --border-color: #333333;
+            --header-bg: #2d2d2d;
+            --btn-bg: #333333;
+            --btn-text: #e0e0e0;
+            --btn-border: #444444;
+            --btn-hover-bg: #444444;
+            --editor-bg: #1e1e1e;
+            --editor-text: #e0e0e0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        header {
+            height: 50px;
+            background-color: var(--header-bg);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 20px;
+            z-index: 10;
+        }
+
+        .title {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .top-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 6px 12px;
+            background-color: var(--btn-bg);
+            color: var(--btn-text);
+            border: 1px solid var(--btn-border);
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            transition: background-color 0.2s, border-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--btn-hover-bg);
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: 0;
+            top: 0;
+            opacity: 0;
+            font-size: 100px;
+            cursor: pointer;
+        }
+
+        .main-container {
+            flex: 1;
+            display: flex;
+            position: relative;
+            height: calc(100vh - 50px);
+            overflow: hidden;
+        }
+
+        .panel {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--panel-bg);
+        }
+
+        #editor-panel {
+            width: 400px;
+            min-width: 250px;
+            max-width: 600px;
+            border-right: 1px solid var(--border-color);
+            z-index: 2;
+        }
+
+        #viewer-panel {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            background-color: var(--bg-color);
+            user-select: none;
+        }
+
+        .resizer {
+            width: 5px;
+            cursor: col-resize;
+            background-color: var(--border-color);
+            z-index: 3;
+            position: relative;
+        }
+
+        .resizer:hover, .resizer:active {
+            background-color: #007bff;
+        }
+
+        .panel-header {
+            padding: 10px 15px;
+            background-color: var(--header-bg);
+            border-bottom: 1px solid var(--border-color);
+            font-size: 13px;
+            font-weight: 600;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        textarea {
+            flex: 1;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            resize: none;
+            font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+            background-color: var(--editor-bg);
+            color: var(--editor-text);
+            outline: none;
+        }
+
+        /* Floating View Controls Menu at Top-Middle of Viewer */
+        .view-controls {
+            position: absolute;
+            top: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 5;
+            background-color: var(--panel-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 6px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .view-controls .btn {
+            padding: 4px 8px;
+            font-weight: bold;
+        }
+
+        .canvas-container {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: relative;
+            cursor: grab;
+        }
+
+        .canvas-container:active {
+            cursor: grabbing;
+        }
+
+        .canvas-content {
+            position: absolute;
+            transform-origin: 0 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 100px;
+        }
+
+        .error-badge {
+            position: absolute;
+            bottom: 15px;
+            left: 15px;
+            background-color: #dc3545;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            z-index: 5;
+            max-width: 350px;
+            display: none;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* Drop overlay styling */
+        .drop-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 123, 255, 0.15);
+            border: 3px dashed #007bff;
+            z-index: 100;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            pointer-events: none;
+        }
+
+        .drop-overlay-text {
+            background-color: var(--panel-bg);
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-weight: 600;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="title">Mermaid Workspace</div>
+        <div class="top-controls">
+            <div class="file-input-wrapper">
+                <button class="btn">📂 Open File</button>
+                <input type="file" id="file-loader" accept=".mmd,.mermaid,.txt,.md">
+            </div>
+            <button class="btn" id="export-svg">💾 Download SVG</button>
+            <button class="btn" id="theme-toggle">🌙 Dark Mode</button>
+        </div>
+    </header>
+
+    <div class="main-container" id="drop-zone">
+        <div class="drop-overlay" id="drop-overlay">
+            <div class="drop-overlay-text">Drop your Mermaid file here to load</div>
+        </div>
+
+        <!-- Left Side: Live Editor Panel -->
+        <div class="panel" id="editor-panel">
+            <div class="panel-header">
+                <span>Live Mermaid Code</span>
+            </div>
+            <textarea id="mermaid-code" placeholder="Enter your mermaid code here..." spellcheck="false">graph TD
+    A[Start] --> B(Upload File)
+    B --> C{Live Updates}
+    C -->|Instantly| D[Rendered View]
+    C -->|Interactive| E[Pan & Zoom]
+    D --> F[Export SVG]
+    E --> F</textarea>
+        </div>
+
+        <!-- Dynamic Resizer Column -->
+        <div class="resizer" id="drag-bar"></div>
+
+        <!-- Right Side: Diagram Interactive Canvas -->
+        <div class="panel" id="viewer-panel">
+            <!-- Centered Floating Controls View -->
+            <div class="view-controls">
+                <button class="btn" id="zoom-out" title="Zoom Out">−</button>
+                <span id="zoom-level" style="font-size: 12px; min-width: 40px; text-align: center; font-weight: 600;">100%</span>
+                <button class="btn" id="zoom-in" title="Zoom In">+</button>
+                <button class="btn" id="zoom-fit">Fit Screen</button>
+                <button class="btn" id="zoom-reset">Reset</button>
+            </div>
+
+            <!-- Interactive Pan Container -->
+            <div class="canvas-container" id="canvas-container">
+                <div class="canvas-content" id="canvas-content">
+                    <div id="mermaid-render-output"></div>
+                </div>
+            </div>
+
+            <div class="error-badge" id="error-badge"></div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Mermaid
+        mermaid.initialize({
+            startOnLoad: false,
+            theme: 'default',
+            securityLevel: 'loose'
+        });
+
+        // State Management
+        let scale = 1.0;
+        let panX = 0;
+        let panY = 0;
+        let isDragging = false;
+        let startX, startY;
+
+        // Elements
+        const codeTextarea = document.getElementById('mermaid-code');
+        const renderOutput = document.getElementById('mermaid-render-output');
+        const canvasContent = document.getElementById('canvas-content');
+        const canvasContainer = document.getElementById('canvas-container');
+        const errorBadge = document.getElementById('error-badge');
+        const zoomLevelDisplay = document.getElementById('zoom-level');
+        const themeToggle = document.getElementById('theme-toggle');
+
+        // Theme Toggle Handler
+        themeToggle.addEventListener('click', () => {
+            const currentTheme = document.documentElement.getAttribute('data-theme');
+            if (currentTheme === 'dark') {
+                document.documentElement.removeAttribute('data-theme');
+                themeToggle.innerHTML = '🌙 Dark Mode';
+                updateMermaidTheme('default');
+            } else {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                themeToggle.innerHTML = '☀️ Light Mode';
+                updateMermaidTheme('dark');
+            }
+        });
+
+        function updateMermaidTheme(themeName) {
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: themeName,
+                securityLevel: 'loose'
+            });
+            triggerRender();
+        }
+
+        // Live Pan Engine Implementation
+        canvasContainer.addEventListener('mousedown', (e) => {
+            // Only allow panning with left click
+            if (e.button !== 0) return;
+            isDragging = true;
+            startX = e.clientX - panX;
+            startY = e.clientY - panY;
+            canvasContainer.style.cursor = 'grabbing';
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isDragging) return;
+            panX = e.clientX - startX;
+            panY = e.clientY - startY;
+            applyTransform();
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (isDragging) {
+                isDragging = false;
+                canvasContainer.style.cursor = 'grab';
+            }
+        });
+
+        // Mouse Wheel Zoom Support
+        canvasContainer.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const zoomFactor = 0.05;
+            if (e.deltaY < 0) {
+                adjustZoom(zoomFactor);
+            } else {
+                adjustZoom(-zoomFactor);
+            }
+        });
+
+        // Handle Zoom Controls
+        document.getElementById('zoom-in').addEventListener('click', () => adjustZoom(0.1));
+        document.getElementById('zoom-out').addEventListener('click', () => adjustZoom(-0.1));
+        document.getElementById('zoom-reset').addEventListener('click', () => resetView());
+        document.getElementById('zoom-fit').addEventListener('click', () => fitToScreen());
+
+        function adjustZoom(amount) {
+            scale = Math.min(Math.max(scale + amount, 0.15), 4.0);
+            applyTransform();
+        }
+
+        function resetView() {
+            scale = 1.0;
+            // Center the content box nicely inside container bounds
+            const contRect = canvasContainer.getBoundingClientRect();
+            const contentRect = canvasContent.getBoundingClientRect();
+            panX = (contRect.width - contentRect.width) / 2;
+            panY = 30; // giving space below floating controls
+            applyTransform();
+        }
+
+        function fitToScreen() {
+            const svgElement = renderOutput.querySelector('svg');
+            if (!svgElement) return;
+
+            const containerWidth = canvasContainer.clientWidth;
+            const containerHeight = canvasContainer.clientHeight;
+            
+            // Get original SVG bounding metrics
+            const svgWidth = svgElement.viewBox.baseVal.width || svgElement.clientWidth || 600;
+            const svgHeight = svgElement.viewBox.baseVal.height || svgElement.clientHeight || 400;
+
+            const scaleX = (containerWidth - 60) / svgWidth;
+            const scaleY = (containerHeight - 120) / svgHeight;
+            scale = Math.min(scaleX, scaleY, 2.0); // capped max scale
+            scale = Math.max(scale, 0.2); // floor min scale
+
+            // Re-center coordinates
+            panX = (containerWidth - (svgWidth * scale)) / 2;
+            panY = (containerHeight - (svgHeight * scale)) / 2;
+            if (panY < 40) panY = 50; 
+            
+            applyTransform();
+        }
+
+        function applyTransform() {
+            canvasContent.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+            zoomLevelDisplay.textContent = `${Math.round(scale * 100)}%`;
+        }
+
+        // Live Instant Compilation Pipeline
+        let renderTimeout;
+        function updateDiagramWithDebounce() {
+            clearTimeout(renderTimeout);
+            renderTimeout = setTimeout(triggerRender, 250);
+        }
+
+        async function triggerRender() {
+            const code = codeTextarea.value.trim();
+            if (!code) {
+                renderOutput.innerHTML = '';
+                errorBadge.style.display = 'none';
+                return;
+            }
+
+            try {
+                // Clear errors on fresh attempt
+                errorBadge.style.display = 'none';
+                
+                // Unique element id required for dynamic re-evaluation
+                const id = 'mermaid-svg-' + Date.now();
+                
+                // Clear out prior content securely before writing new SVG context
+                renderOutput.innerHTML = '';
+                
+                const { svg } = await mermaid.render(id, code);
+                renderOutput.innerHTML = svg;
+                
+                // Ensure layout structural dimensions propagate well
+                const generatedSvg = renderOutput.querySelector('svg');
+                if (generatedSvg) {
+                    generatedSvg.style.maxWidth = '100%';
+                    generatedSvg.style.height = 'auto';
+                }
+            } catch (err) {
+                console.error(err);
+                errorBadge.textContent = err.message || 'Syntax error inside Mermaid structural code definitions.';
+                errorBadge.style.display = 'block';
+                
+                // Retain historical functional SVG on screen, just flag visual alert badges
+            }
+        }
+
+        codeTextarea.addEventListener('input', updateDiagramWithDebounce);
+
+        // Sidebar Horizontal Split Resizing Mechanics
+        const dragBar = document.getElementById('drag-bar');
+        const editorPanel = document.getElementById('editor-panel');
+        let isResizing = false;
+
+        dragBar.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            document.body.style.cursor = 'col-resize';
+        });
+
+        window.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            let offsetRight = e.clientX;
+            if (offsetRight >= 250 && offsetRight <= 600) {
+                editorPanel.style.width = offsetRight + 'px';
+            }
+        });
+
+        window.addEventListener('mouseup', () => {
+            if (isResizing) {
+                isResizing = false;
+                document.body.style.cursor = 'default';
+            }
+        });
+
+        // File Parsing Logic (.mmd, .mermaid, .txt, .md syntax isolated parser)
+        const fileLoader = document.getElementById('file-loader');
+        fileLoader.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) handleUploadedFile(file);
+        });
+
+        function handleUploadedFile(file) {
+            const reader = new FileReader();
+            reader.onload = function(evt) {
+                let content = evt.target.result;
+                
+                // Extract code blocks cleanly from standard markdown wrappers if present
+                if (file.name.endsWith('.md')) {
+                    const match = content.match(/```mermaid([\s\S]*?)```/);
+                    if (match && match[1]) {
+                        content = match[1].trim();
+                    }
+                }
+                
+                codeTextarea.value = content;
+                triggerRender();
+                setTimeout(resetView, 350);
+            };
+            reader.readAsText(file);
+        }
+
+        // Drag and Drop File Handlers
+        const dropZone = document.getElementById('drop-zone');
+        const dropOverlay = document.getElementById('drop-overlay');
+
+        window.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropOverlay.style.display = 'flex';
+        });
+
+        dropZone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            dropOverlay.style.display = 'none';
+        });
+
+        window.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropOverlay.style.display = 'none';
+            if (e.dataTransfer.files.length > 0) {
+                handleUploadedFile(e.dataTransfer.files[0]);
+            }
+        });
+
+        // SVG Vector Download Asset Packaging Engine
+        document.getElementById('export-svg').addEventListener('click', () => {
+            const svgEl = renderOutput.querySelector('svg');
+            if (!svgEl) {
+                alert('No render graph available to download.');
+                return;
+            }
+            const svgData = new XMLSerializer().serializeToString(svgEl);
+            const blob = new Blob([svgData], { type: 'image/svg+xml;charset=utf-8' });
+            const url = URL.createObjectURL(blob);
+            
+            const downloadLink = document.createElement('a');
+            downloadLink.href = url;
+            downloadLink.download = `mermaid-diagram-${Date.now()}.svg`;
+            document.body.appendChild(downloadLink);
+            downloadLink.click();
+            document.body.removeChild(downloadLink);
+            URL.revokeObjectURL(url);
+        });
+
+        // Kick off initialization sequence
+        window.addEventListener('DOMContentLoaded', () => {
+            triggerRender();
+            setTimeout(resetView, 500);
+        });
+    </script>
+</body>
+</html>
