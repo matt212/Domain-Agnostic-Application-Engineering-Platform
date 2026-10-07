@@ -91,15 +91,26 @@ You are a WORLD-CLASS SYSTEMS ARCHITECT ENGINE. Your task is to ingest abstract 
    - Do NOT allow returned or failed assets to trigger an instantaneous "Resource Release" update until an active evaluation lifecycle marks the entities as viable for re-allocation.
 
 
-14. SEQUENCE MARKERS & CLOSED-LOOP NOTIFICATIONS:
-   - Segment the master timeline chronologically using structural phase comment blocks.
+14. MANDATORY HIERARCHICAL STEP SERIALIZATION:
+   - Every single functional component step, decision gate, and staging node label text string MUST be strictly prefixed with its explicit hierarchical chronological position identifier.
+   - Use strict numeric markers for primary system subgraphs and phased tracks, and lower-case alphabetical dot-notation identifiers for internal sequential actions and nested steps.
+   - You MUST enforce the following layout pattern inside geometric tokens:
+     * Phase Level: "Phase 1: ...", "Phase 2: ..."
+     * Sub-Process Level Node Box: node_variable["1.a Step Name Text"]
+     * Downstream Progress Node Box: node_variable["1.b Next Step Name Text"]
+     * Follow-up Chronological Step: node_variable["2.a Subsequent Step Name Text"]
+   - You are strictly forbidden from outputting unnumbered, orphaned, or un-indexed functional text labels across the entire diagram canvas.
+
+15. SEQUENCE MARKERS & CLOSED-LOOP NOTIFICATIONS:
+   - Segment the master timeline chronologically using structural phase comment blocks matching the major serialized prefixes.
    - Wherever an actor or component initiates a request, validation, or transaction submission, you MUST explicitly map the immediate return notification, error alert, or confirmation vector back to the initiator as the very next chronological link.
 
-15. CHRONOLOGICAL PATHS WITH UNIFORM ARROW LINK FORMATTING:
-   - Use standard solid arrow label brackets to label chronological state changes explicitly using descriptive business text strings based directly on the ingested matrix data.
-   - For alternate paths or loop rollbacks, clearly describe the processing action using a distinct contextual indicator string enclosed inside the solid arrow label brackets.
+16. CHRONOLOGICAL PATHS WITH UNIFORM ARROW LINK FORMATTING:
+• Use standard solid arrow label brackets to label chronological state changes explicitly using descriptive business text strings based directly on the ingested matrix data.
+• For alternate paths or loop rollbacks, clearly describe the processing action using a distinct contextual indicator string enclosed inside the solid arrow label brackets.
 
-16. CRITICAL OUTPUT FORMAT COMPLIANCE:
+
+17. CRITICAL OUTPUT FORMAT COMPLIANCE:
 • Output the Mermaid diagram code cleanly nested inside standard markdown code block fences (```mermaid) to ensure the rendering interface presents it as a copy-pasteable object block. Do not prepend conversational filler words or post-processing commentary; deliver the fenced code block instantly.
 === SOURCE INPUT PAYLOAD DATA ===
 --- COMPONENT LAYOUT OBJECTS ---
@@ -575,69 +586,139 @@ Assistant:
 Assistant:
 ```mermaid
 graph TD
-    %% ==============================================================================
-    %% SUBGRAPH 1: USER ONBOARDING & INITIALIZATION
-    %% ==============================================================================
-    subgraph subgraph_user_onboarding_init["subgraph_user_onboarding_init"]
-        direction TB
-        EntranceNode_user_onboarding_init["Entrance Node: System Initialization"]
+    %% ==========================================
+    %% PHASE 1: INITIALIZATION & AUTHORIZATION
+    %% ==========================================
+    subgraph "PHASE 1: Identity & Auth Init"
+        entry_node_1["1.a User Account Registration Init"]
+        decision_auth{"1.b Identity Verification Check"}
         
-        user_account_reg["User Account: Identity Verification"]
-        iam_audit_check{"IAM Security Officer: Validate Credentials"}
-        auth_token_gen["Authenticated Session Token"]
-        
-        exit_node_user_onboarding_init["Exit Node: Authenticated User Context"]
-        
-        EntranceNode_user_onboarding_init --> user_account_reg
-        user_account_reg --> iam_audit_check
-        iam_audit_check -- "Valid Credentials" --> auth_token_gen
-        iam_audit_check -- "Invalid Credentials" --> exit_node_user_onboarding_init
-        auth_token_gen --> exit_node_user_onboarding_init
+        fail_auth_1["1.c Global Infrastructure Audit Ledger"]
+        success_auth_node["1.d Authenticated Session Token Issued"]
     end
 
-    %% ==============================================================================
-    %% SUBGRAPH 2: SERVICE AREA VALIDATION & GEOLOCATION
-    %% ==============================================================================
-    subgraph subgraph_geolocation_validation["subgraph_geolocation_validation"]
-        direction TB
-        EntranceNode_geolocation_validation["Entrance Node: Authenticated User Context"]
+    entry_node_1 --> decision_auth
+    decision_auth -- "1. Verification Failed" --> fail_auth_1
+    decision_auth -- "2. Identity Validated" --> success_auth_node
+    success_auth_node --> exit_phase_1["1.e Authenticated State Handover"]
+
+    %% ==========================================
+    %% PHASE 2: GEOLOCATION & ZONE VALIDATION
+    %% ==========================================
+    subgraph "PHASE 2: Geolocation & Zone Mapping"
+        entry_node_2["2.a Geolocation Request Submission"]
+        decision_zone{"2.b Service Area Validation"}
         
-        geo_request["Geolocation Request: GPS Coordinates"]
-        zone_mapping["Service Area Validation"]
-        delivery_pin_confirmed["Confirmed Delivery Pin"]
-        
-        exit_node_geolocation_validation["Exit Node: Confirmed Delivery Pin"]
-        
-        EntranceNode_geolocation_validation --> geo_request
-        geo_request --> zone_mapping
-        zone_mapping --> delivery_pin_confirmed
-        delivery_pin_confirmed --> exit_node_geolocation_validation
+        fail_zone_1["2.c Inventory Zone Failure"]
+        success_zone_node["2.d Confirmed Delivery Pin & Fee"]
     end
 
-    %% ==============================================================================
-    %% SUBGRAPH 3: CART CONSTRUCTION & INVENTORY PREVIEW
-    %% ==============================================================================
-    subgraph subgraph_cart_construction["subgraph_cart_construction"]
-        direction TB
-        EntranceNode_cart_construction["Entrance Node: Confirmed Delivery Pin"]
+    exit_phase_1 --> entry_node_2
+    entry_node_2 --> decision_zone
+    decision_zone -- "1. Invalid Zone Detected" --> fail_zone_1
+    decision_zone -- "2. Zone Valid" --> success_zone_node
+    success_zone_node --> exit_phase_2["2.e Delivery Zone State Established"]
+
+    %% ==========================================
+    %% PHASE 3: CART CONSTRUCTION & INVENTORY CHECK
+    %% ==========================================
+    subgraph "PHASE 3: Cart & Stock Reservation"
+        entry_node_3["3.a Cart Item Selection"]
+        decision_stock{"3.b Real-time Inventory Check"}
         
-        cart_item_sel["Cart Item: SKU Selection"]
-        stock_check{"Cart Item: Inventory Availability Check"}
-        price_calc["Real-Time Price Calculation"]
-        cart_state_update["Updated Cart State"]
-        
-        exit_node_cart_construction["Exit Node: Updated Cart State"]
-        
-        EntranceNode_cart_construction --> cart_item_sel
-        cart_item_sel --> stock_check
-        stock_check -- "Stock Available" --> price_calc
-        stock_check -- "Stock Unavailable" --> exit_node_geolocation_validation
-        price_calc --> cart_state_update
-        cart_state_update --> exit_node_cart_construction
+        fail_stock_1["3.c Stock Reservation Failure"]
+        success_stock_node["3.d Updated Cart State & Stock Confirm"]
     end
 
-    %% ==============================================================================
-    %% SUBGRAPH 4: SLOT ALLOCATION & LOGISTICS PREP
-    %% ==============================================================================
-    subgraph sub
+    exit_phase_2 --> entry_node_3
+    entry_node_3 --> decision_stock
+    decision_stock -- "1. Out of Stock/Error" --> fail_stock_1
+    decision_stock -- "2. Stock Available" --> success_stock_node
+    success_stock_node --> exit_phase_3["3.e Cart Ready for Checkout"]
+
+    %% ==========================================
+    %% PHASE 4: LOGISTICS SLOT ALLOCATION
+    %% ==========================================
+    subgraph "PHASE 4: Delivery Slot Allocation"
+        entry_node_4["4.a Delivery Slot Request"]
+        decision_slot{"4.b Courier Availability Check"}
+        
+        fail_slot_1["4.c Slot Allocation Failure"]
+        success_slot_node["4.d Assigned Pickup & Delivery Timestamps"]
+    end
+
+    exit_phase_3 --> entry_node_4
+    entry_node_4 --> decision_slot
+    decision_slot -- "1. No Courier Available" --> fail_slot_1
+    decision_slot -- "2. Slot Allocated" --> success_slot_node
+    success_slot_node --> exit_phase_4["4.e Delivery Window Locked"]
+
+    %% ==========================================
+    %% PHASE 5: ORDER CREATION & PAYMENT GATING
+    %% ==========================================
+    subgraph "PHASE 5: Order & Payment Gating"
+        entry_node_5["5.a Order Header & Line Item Submission"]
+        decision_payment{"5.b Payment Transaction Gating"}
+        
+        fail_payment_1["5.c Payment Rejection Ledger"]
+        success_payment_node["5.d Authorized State & Order ID Created"]
+    end
+
+    exit_phase_4 --> entry_node_5
+    entry_node_5 --> decision_payment
+    decision_payment -- "1. Payment Declined/Invalid" --> fail_payment_1
+    decision_payment -- "2. Payment Authorized" --> success_payment_node
+    success_payment_node --> exit_phase_5["5.e Finalized Order Receipt"]
+
+    %% ==========================================
+    %% PHASE 6: COURIER ASSIGNMENT & ROUTING
+    %% ==========================================
+    subgraph "PHASE 6: Courier Assignment & Routing"
+        entry_node_6["6.a Assigned Courier Task Init"]
+        decision_route{"6.b Route Optimization Validation"}
+        
+        fail_route_1["6.c Courier Re-assignment Trigger"]
+        success_route_node["6.d Active Delivery Task & Courier ID"]
+    end
+
+    exit_phase_5 --> entry_node_6
+    entry_node_6 --> decision_route
+    decision_route -- "1. Route/Driver Error" --> fail_route_1
+    decision_route -- "2. Route Optimized" --> success_route_node
+    success_route_node --> exit_phase_6["6.e Transit State Active"]
+
+    %% ==========================================
+    %% PHASE 7: HANDOVER & FINAL VERIFICATION
+    %% ==========================================
+    subgraph "PHASE 7: Handover & Quality Check"
+        entry_node_7["7.a Handover Receipt Verification"]
+        decision_quality{"7.b Quality & Count Validation"}
+        
+        fail_quality_1["7.c Verification Quarantine & Inspection"]
+        success_quality_node["7.d Delivered Status & Final Payment Capture"]
+    end
+
+    exit_phase_6 --> entry_node_7
+    entry_node_7 --> decision_quality
+    decision_quality -- "1. Mismatch/Damage Detected" --> fail_quality_1
+    decision_quality -- "2. Quality Verified" --> success_quality_node
+    success_quality_node --> exit_phase_7["7.e Order Complete"]
+
+    %% ==========================================
+    %% PHASE 8: POST-ORDER & RESILIENCE
+    %% ==========================================
+    subgraph "PHASE 8: Post-Order Lifecycle"
+        entry_node_8["8.a Post-Order Lifecycle Request"]
+        decision_claim{"8.b Claim/Cancellation Logic"}
+        
+        fail_claim_1["8.c Refund/Cancellation Processing"]
+        success_claim_node["8.d Loyalty Points Update & Balance Adjustment"]
+    end
+
+    exit_phase_7 --> entry_node_8
+    entry_node_8 --> decision_claim
+    decision_claim -- "1. Refund/Cancel Initiated" --> fail_claim_1
+    decision_claim -- "2. Loyalty/Points Action" --> success_claim_node
+    success_claim_node --> exit_phase_8["8.e System State Finalized"]
+```
 
