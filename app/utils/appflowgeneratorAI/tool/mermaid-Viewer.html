@@ -408,7 +408,7 @@
         document.getElementById('zoom-fit').addEventListener('click', () => fitToScreen());
 
         function adjustZoom(amount) {
-            scale = Math.min(Math.max(scale + amount, 0.15), 4.0);
+            scale = Math.min(Math.max(scale + amount, 0.15), 10.0);
             applyTransform();
         }
 
