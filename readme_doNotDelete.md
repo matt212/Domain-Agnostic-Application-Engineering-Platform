@@ -603,3 +603,6 @@ below are customer's activities not output, till 1.e .
 14. Vendor Inventory should be supplier/seller ,who add, updates products in the platform under its activity, Inventory Log should be part of this
  
 
+ ---comfyui
+ python main.py --cpu --lowvram --disable-smart-memory --fp32-vae --force-fp32
+
