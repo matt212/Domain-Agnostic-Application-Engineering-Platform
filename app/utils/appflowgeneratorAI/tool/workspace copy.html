@@ -104,9 +104,6 @@ so do not change anything keep everything as is . only change phase 1 section in
     </div>
                 </div>
             </div>
-             <button id="downloadPlantUMLBtn" class="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white font-semibold text-sm py-2.5 px-4 rounded-lg transition-all active:scale-[0.98] shadow-lg shadow-green-900/20 flex items-center justify-center gap-2">
-                        🔄 Download downloadPlantUML
-                    </button>
 
             <!-- Editable Source Text Code Panel -->
             <div class="flex-1 flex flex-col min-h-0">
@@ -847,108 +844,6 @@ document.getElementById('runDeterministicBtn').addEventListener('click', async (
     await executeSerialMermaidCommand(rawInputText);
 });
 
-
-document.getElementById('downloadPlantUMLBtn').addEventListener('click', async () => {
-    
-const rawSyntax = extractRawMermaid(codeEditor.value);
-            if (!rawSyntax) {
-                alert("No diagram syntax found to download.");
-                return;
-            }
-    const markdownContent = `\`\`\`mermaid\n${rawSyntax}\n\`\`\``;
-    const plantUmlResult = convertMermaidToPlantUML(markdownContent);
-    const blob = new Blob([plantUmlResult], { type: 'text/markdown;charset=utf-8' });
-    const url1 = URL.createObjectURL(blob);
-            
-            const anchor = document.createElement('a');
-            anchor.href = url1;
-            anchor.download = `mermaid-diagram-${Date.now()}.md`;
-            document.body.appendChild(anchor);
-            anchor.click();
-            document.body.removeChild(anchor);
-            URL.revokeObjectURL(url1);
-
-});
-
-/**
- * Surgically converts an automated Mermaid flowchart script string into a PlantUML document.
- * @param {string} mermaidCode - The raw multi-line Mermaid string input.
- * @returns {string} The fully compiled, infinite-scale PlantUML layout matrix.
- */
-function convertMermaidToPlantUML(mermaidCode) {
-    if (!mermaidCode) return "";
-
-    // Initialize the premium PlantUML canvas skin parameters and container blocks
-    const pumlLines = [
-        "@startuml",
-        "' Custom theme injection parameters matching high-end CAD blueprint studios",
-        "skinparam rectangle {",
-        "    BackgroundColor #090d16",
-        "    BorderColor #312e81",
-        "    FontColor #cbd5e1",
-        "    RoundCorner 12",
-        "}",
-        "skinparam ArrowColor #475569",
-        "skinparam ArrowFontColor #94a3b8",
-        ""
-    ];
-
-    const lines = mermaidCode.split('\n');
-
-    for (let line of lines) {
-        line = line.trim();
-        
-        // Skip initialization declarations and empty text frames
-        if (!line || /^graph\b/i.test(line) || /^flowchart\b/i.test(line)) {
-            continue;
-        }
-
-        // 1. OPERATION: TRANSLATE SUBGRAPHS TO COMPONENT PACKAGES
-        // Matches: subgraph phase_01 [Phase 1: Entry Sequence]
-        const subgraphMatch = line.match(/^subgraph\s+([a-zA-Z0-9_-]+)\s*\[(.*?)\]/i);
-        if (subgraphMatch) {
-            const [_, phaseId, phaseLabel] = subgraphMatch;
-            pumlLines.push(`package "${phaseLabel}" as ${phaseId} {`);
-            continue;
-        }
-
-        if (line === "end") {
-            pumlLines.push("}\n");
-            continue;
-        }
-
-        // 2. OPERATION: TRANSLATE SHAPE TEXT FIELDS TO RECTANGLES
-        // Matches: entrance_node1["Step 1.1: Text"] OR decision_auth1{"Step 1.2: Text"}
-        const nodeMatch = line.match(/^([a-zA-Z0-9_-]+)\s*(?:\[\vert{}\{\vert{}\(\vert{}\(\[)\s*"(.*?)"\s*(?:\]\vert{}\}\vert{}\)\vert{}\)\])/i);
-        if (nodeMatch) {
-            const [_, nodeId, nodeLabel] = nodeMatch;
-            pumlLines.push(`    rectangle "${nodeLabel}" as ${nodeId}`);
-            continue;
-        }
-
-        // 3. OPERATION: TRANSLATE CONNECTION ARROWS WITH INTERMEDIARY LABELS
-        // Matches: nodeA -- "Label Text" --> nodeB
-        const labeledArrowMatch = line.match(/^([a-zA-Z0-9_-]+)\s*--\s*"(.*?)"\s*-->\s*([a-zA-Z0-9_-]+)/i);
-        if (labeledArrowMatch) {
-            const [_, srcNode, edgeLabel, tgtNode] = labeledArrowMatch;
-            pumlLines.push(`    ${srcNode} --> ${tgtNode} : "${edgeLabel}"`);
-            continue;
-        }
-
-        // Matches: nodeA --> nodeB
-        const cleanArrowMatch = line.match(/^([a-zA-Z0-9_-]+)\s*-->\s*([a-zA-Z0-9_-]+)/i);
-        if (cleanArrowMatch) {
-            const [_, srcNode, tgtNode] = cleanArrowMatch;
-            pumlLines.push(`    ${srcNode} --> ${tgtNode}`);
-            continue;
-        }
-    }
-
-    pumlLines.push("@enduml");
-    return pumlLines.join('\n');
-}
-
     </script>
-    
 </body>
 </html>
