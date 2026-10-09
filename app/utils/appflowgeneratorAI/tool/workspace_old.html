@@ -7,18 +7,18 @@
     <!-- Tailwind CSS CDN for modern UI layout styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* Custom scrollbar adjustments for a clean technical UI look */
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
-/*Keep everything as is 
-so do not change anything keep everything as is . only change phase 1 section in diagram wherein invalid credentials arrow should not loop back to 1.2 it should direct to step1.1 rest  keep everything as is       
-        /* FIX: Prevents diagram from bunching up like a spiderweb */
-        #renderTarget svg {
-            max-width: none !important;
-            width: auto !important;
-            height: auto !important;
-        }
+        /* Add this exactly before your </style> tag */
+#renderTarget svg {
+    max-width: none !important;
+    width: auto !important;
+    height: auto !important;
+}
+
     </style>
 </head>
 <body class="bg-slate-900 text-slate-100 min-h-screen flex flex-col font-sans selection:bg-blue-600 selection:text-white">
@@ -32,12 +32,10 @@ so do not change anything keep everything as is . only change phase 1 section in
             </h1>
         </div>
         <div class="flex items-center gap-3">
+            <!-- File Input Action and Trigger Setup -->
             <input type="file" id="fileInput" accept=".mermaid,.txt,.md" class="hidden">
             <button id="openFileBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium text-sm py-2 px-4 rounded-lg transition-all flex items-center gap-2 active:scale-95 shadow-sm">
-                📂 Open File / Markdown
-            </button>
-            <button id="downloadMdBtn" class="bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-sm py-2 px-4 rounded-lg transition-all flex items-center gap-2 active:scale-95 shadow-md shadow-emerald-600/10">
-                📝 Download .MD
+                📂 Open File
             </button>
             <button id="downloadSvgBtn" class="bg-blue-600 hover:bg-blue-500 text-white font-medium text-sm py-2 px-4 rounded-lg transition-all flex items-center gap-2 active:scale-95 shadow-md shadow-blue-600/10">
                 💾 Download SVG
@@ -48,16 +46,16 @@ so do not change anything keep everything as is . only change phase 1 section in
     <!-- Main Container Workspace Split Layout Grid -->
     <main class="flex-1 grid grid-cols-1 lg:grid-cols-12 overflow-hidden min-h-0">
         
-        <!-- Left Controlling Column Side Panel Panel -->
+        <!-- Left Controlling Column Side Panel Panel (Controls, Code, AI Input) -->
         <section class="lg:col-span-4 border-r border-slate-800 bg-slate-950 flex flex-col overflow-hidden">
             
             <!-- Real-Time Telemetry System Logging Window Banner -->
             <div id="statusBanner" class="m-4 p-3 bg-slate-900 border border-slate-800 text-slate-300 rounded-lg text-xs font-mono flex flex-col gap-1 transition-all">
                 <div class="flex items-center gap-2 text-slate-400 font-semibold uppercase tracking-wider text-[10px]">
-                    <span class="h-2 w-2 rounded-full bg-green-500" id="statusDot"></span>
+                    <span class="h-2 w-2 rounded-full bg-yellow-500 animate-pulse" id="statusDot"></span>
                     Engine Telemetry Status
                 </div>
-                <div id="statusText" class="mt-1 leading-relaxed">System ready. Open a markdown file to view it in clean Top-Down flow.</div>
+                <div id="statusText" class="mt-1 leading-relaxed">System ready. Enter an AI command below to automatically load the WebGPU model infrastructure.</div>
             </div>
 
             <!-- Interactive AI Prompt Modification Input Field Wrapper -->
@@ -68,26 +66,29 @@ so do not change anything keep everything as is . only change phase 1 section in
                 <div class="flex flex-col gap-2">
                     <textarea id="aiPrompt" rows="3" 
                         class="w-full bg-slate-900 border border-slate-800 rounded-lg p-3 text-sm text-slate-200 placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none font-sans"
-                        placeholder="e.g., In phase 4, change step 4.1 text to 'Optimized Routing Assign'..."></textarea>
+                        placeholder="e.g., Add a database node called 'PostgreSQL' and link the Backend server directly to it..."></textarea>
                     <button id="runAiBtn" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold text-sm py-2.5 px-4 rounded-lg transition-all active:scale-[0.98] shadow-lg shadow-blue-900/20 flex items-center justify-center gap-2">
                         ✨ Update with Local AI
                     </button>
                 </div>
             </div>
 
-            <!-- Editable Source Text Code Panel -->
+            <!-- Editable Source Text Code Mirror/Editor Panel -->
             <div class="flex-1 flex flex-col min-h-0">
                 <div class="bg-slate-950 px-4 py-2 border-b border-slate-900 flex justify-between items-center shrink-0">
                     <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Live Mermaid Script Source</span>
-                    <span class="text-[10px] font-mono text-slate-500">Auto-Cleaning Converter</span>
+                    <span class="text-[10px] font-mono text-slate-500">Auto-Reactive</span>
                 </div>
                 <div class="flex-1 overflow-hidden relative">
                     <textarea id="codeEditor" 
                         class="w-full h-full bg-slate-950 p-4 font-mono text-sm text-emerald-400 border-none focus:outline-none focus:ring-0 resize-none leading-relaxed selection:bg-slate-800"
                         spellcheck="false">graph TD
-    A[Start] --> B(Upload Markdown File)
-    B --> C{Fixed Layout Rendering}
-    C -->|No More Spiderwebs| D[Beautiful Top Down Flow]</textarea>
+    A[Start] --> B(Upload File)
+    B --> C{Live Updates}
+    C -->|Instantly| D[Rendered View]
+    C -->|Interactive| E[Pan & Zoom]
+    D --> F[Export SVG]
+    E --> F</textarea>
                 </div>
             </div>
 
@@ -110,29 +111,33 @@ so do not change anything keep everything as is . only change phase 1 section in
             <div id="dragOverlay" class="absolute inset-0 bg-blue-600/10 border-4 border-dashed border-blue-500 z-20 hidden items-center justify-center backdrop-blur-sm pointer-events-none transition-all">
                 <div class="bg-slate-950 px-6 py-4 rounded-xl border border-blue-500 shadow-2xl flex items-center gap-3">
                     <span class="text-2xl">📥</span>
-                    <span class="text-sm font-semibold text-slate-200">Drop Markdown (.md) or Mermaid (.mermaid) File Here</span>
+                    <span class="text-sm font-semibold text-slate-200">Drop your file to auto-import script</span>
                 </div>
             </div>
 
-            <!-- Viewport Rendering Node Canvas -->
-            <div id="viewportContainer" class="flex-1 overflow-auto relative cursor-grab active:cursor-grabbing flex items-center justify-center p-8 select-none">
+            <!-- Master Interactive Vector SVG Viewport Rendering Node Canvas -->
+            <div id="viewportContainer" class="flex-1 overflow-hidden relative cursor-grab active:cursor-grabbing flex items-center justify-center p-8 select-none">
                 <div id="panZoomWrapper" class="origin-center transition-transform duration-75 will-change-transform">
-                    <div id="renderTarget" class="bg-transparent flex items-center justify-center"></div>
+                    <div id="renderTarget" class="bg-transparent flex items-center justify-center">
+                        <!-- Mermaid system dynamic inject targets go directly here -->
+                    </div>
                 </div>
             </div>
 
         </section>
     </main>
 
-    <!-- Global Application Engine Modules Integration Script -->
+    <!-- Global Application Engine Modules Integration Lifecycle Script Initialization -->
     <script type="module">
+        // 1. Module Importing Phase
         import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
         import { CreateMLCEngine } from "https://esm.run/@mlc-ai/web-llm";
 
+        // 2. DOM Node Reference Mappings
         const openFileBtn = document.getElementById('openFileBtn');
         const fileInput = document.getElementById('fileInput');
-        const downloadMdBtn = document.getElementById('downloadMdBtn');
         const downloadSvgBtn = document.getElementById('downloadSvgBtn');
+        const statusBanner = document.getElementById('statusBanner');
         const statusDot = document.getElementById('statusDot');
         const statusText = document.getElementById('statusText');
         const aiPrompt = document.getElementById('aiPrompt');
@@ -149,47 +154,51 @@ so do not change anything keep everything as is . only change phase 1 section in
         const fitScreenBtn = document.getElementById('fitScreenBtn');
         const resetViewBtn = document.getElementById('resetViewBtn');
 
+        // 3. Application State Configuration Parameters
         let webLlmEngine = null;
-       // const MODEL_ID = "Llama-3.2-1B-Instruct-q4f16_1-MLC"; 
-       // const MODEL_ID = "Llama-3-8B-Instruct-q4f16_1-MLC
-        const MODEL_ID = "Qwen2.5-Coder-7B-Instruct-q4f16_1-MLC";
-
+        const MODEL_ID = "Llama-3.2-1B-Instruct-q4f16_1-MLC"; // 1.2GB optimized WebGPU instruction set model
+        
         let transformState = { x: 0, y: 0, scale: 1 };
         let isDragging = false;
         let dragStart = { x: 0, y: 0 };
 
-        mermaid.initialize({
-            startOnLoad: false,
-            theme: 'dark',
-            securityLevel: 'loose',
-            flowchart: { 
-                useMaxWidth: false, 
-                htmlLabels: true,
-                curve: 'linear'
-            }
-        });
+        // Initialize Mermaid engine config matching darker technical palette layout schemas
+        // mermaid.initialize({
+        //     startOnLoad: false,
+        //     theme: 'dark',
+        //     securityLevel: 'loose',
+        //     flowchart: { useMaxWidth: false, htmlLabels: true }
+        // });
+mermaid.initialize({
+    startOnLoad: false,
+    theme: 'neutral',// 👈 CHANGE THIS VALUE (e.g., change 'dark' to 'forest' or 'neutral')
+    securityLevel: 'loose',
+    flowchart: { 
+        useMaxWidth: false,     /* CRITICAL: Stops layout compression */
+        htmlLabels: true,
+        curve: 'linear'          /* Makes flow lines follow clear straight tracks */
+    }
+});
 
+        // 4. Vector SVG Pan & Zoom Transform Matrix Controller Engine
         function extractRawMermaid(text) {
             if (!text) return "";
             let cleaned = text.trim();
-            const mermaidRegex = /```mermaid\s*([\s\S]*?)\s*```/i;
-            const genericRegex = /```\s*([\s\S]*?)\s*```/;
-            
+            const mermaidRegex = /```mermaid\s*([\s\(\S\)]*?)\s*```/i;
+            const genericRegex = /```\s*([\s\(\S\)]*?)\s*```/;
             if (mermaidRegex.test(cleaned)) {
-                const match = cleaned.match(mermaidRegex);
-                if(match && match[1]) cleaned = match[1];
+                cleaned = cleaned.match(mermaidRegex)[1];
             } else if (genericRegex.test(cleaned)) {
-                const match = cleaned.match(genericRegex);
-                if(match && match[1]) cleaned = match[1];
+                cleaned = cleaned.match(genericRegex)[1];
             }
             return cleaned.trim();
         }
-
         function updateTransform() {
             panZoomWrapper.style.transform = `translate(${transformState.x}px, ${transformState.y}px) scale(${transformState.scale})`;
             zoomLevelDisplay.textContent = `${Math.round(transformState.scale * 100)}%`;
         }
 
+        // Viewport Interaction Mouse Handlers for Pan functionality
         document.getElementById('viewportContainer').addEventListener('mousedown', (e) => {
             if (e.target.closest('#zoomInBtn, #zoomOutBtn, #zoomLevelDisplay, #fitScreenBtn, #resetViewBtn')) return;
             isDragging = true;
@@ -205,19 +214,21 @@ so do not change anything keep everything as is . only change phase 1 section in
 
         window.addEventListener('mouseup', () => isDragging = false);
 
+        // Zoom calculations handling wheel event metrics safely
         document.getElementById('viewportContainer').addEventListener('wheel', (e) => {
             e.preventDefault();
             const zoomFactor = 1.1;
             if (e.deltaY < 0) {
                 transformState.scale = Math.min(transformState.scale * zoomFactor, 5);
             } else {
-                transformState.scale = Math.max(transformState.scale / zoomFactor, 0.1);
+                transformState.scale = Math.max(transformState.scale / zoomFactor, 0.2);
             }
             updateTransform();
         }, { passive: false });
 
+        // Discrete View Controller Actions
         zoomInBtn.addEventListener('click', () => { transformState.scale = Math.min(transformState.scale * 1.2, 5); updateTransform(); });
-        zoomOutBtn.addEventListener('click', () => { transformState.scale = Math.max(transformState.scale / 1.2, 0.1); updateTransform(); });
+        zoomOutBtn.addEventListener('click', () => { transformState.scale = Math.max(transformState.scale / 1.2, 0.2); updateTransform(); });
         resetViewBtn.addEventListener('click', () => { transformState = { x: 0, y: 0, scale: 1 }; updateTransform(); });
 
         function autoFitLayout() {
@@ -229,55 +240,57 @@ so do not change anything keep everything as is . only change phase 1 section in
             
             if (!svgWidth || !svgHeight) return;
             
-            const scaleX = (container.clientWidth - 40) / svgWidth;
-            const scaleY = (container.clientHeight - 40) / svgHeight;
-            let finalScale = Math.min(scaleX, scaleY);
+            const scaleX = (container.clientWidth - 64) / svgWidth;
+            const scaleY = (container.clientHeight - 64) / svgHeight;
+            const finalScale = Math.min(scaleX, scaleY, 1.5);
             
-            finalScale = Math.max(Math.min(finalScale, 1.0), 0.1);
-            
-            transformState = { x: 0, y: 0, scale: finalScale };
+            transformState = { x: 0, y: 0, scale: Math.max(finalScale, 0.3) };
             updateTransform();
         }
         fitScreenBtn.addEventListener('click', autoFitLayout);
 
+        // 5. Native Code Renderer Core Logic
         async function renderDiagram() {
-            const rawSyntax = extractRawMermaid(codeEditor.value);
+            const rawSyntax = codeEditor.value.trim();
             if (!rawSyntax) {
-                renderTarget.innerHTML = `<div class="text-slate-500 font-mono text-sm">Editor target syntax workspace is empty.</div>`;
+                renderTarget.innerHTML = `<div class="text-slate-500 font-mono text-sm">Workspace text block is empty</div>`;
                 return;
             }
             try {
+                // Generate secure isolated instance rendering execution path
                 const uniqueId = `mermaid-render-${Date.now()}`;
                 renderTarget.innerHTML = `<div id="${uniqueId}" class="mermaid">${rawSyntax}</div>`;
                 await mermaid.run({ nodes: [document.getElementById(uniqueId)] });
                 
-                statusDot.className = "h-2 w-2 rounded-full bg-green-500";
-                statusText.textContent = "Syntax compilation successful. Diagram rendered.";
+                // Adjust layout boundaries configuration metrics post injection frame
+                const realSvg = renderTarget.querySelector('svg');
+                if(realSvg) {
+                    realSvg.style.maxWidth = 'none';
+                    realSvg.style.height = 'auto';
+                }
             } catch (err) {
-                statusDot.className = "h-2 w-2 rounded-full bg-red-500";
-                statusText.textContent = "Mermaid Syntax Error. Checking input format rules.";
+                console.warn("Mermaid structural runtime validation caught syntax error. Waiting corrections.");
+                // Retain layout error feedback within target DOM element context boundaries cleanly
+                const errorBlock = renderTarget.querySelector('.error-icon') || renderTarget;
             }
         }
 
-        codeEditor.addEventListener('input', () => {
-            const cleaned = extractRawMermaid(codeEditor.value);
-            if (codeEditor.value !== cleaned && codeEditor.value.includes('```')) {
-                codeEditor.value = cleaned;
-            }
-            renderDiagram();
-        });
+        // Add real-time text input binding pipeline configurations
+        codeEditor.addEventListener('input', renderDiagram);
 
+        // 6. WebLLM Browser Execution Matrix Integration
         async function lazyLoadAiEngine() {
             if (webLlmEngine) return webLlmEngine;
+            
             runAiBtn.disabled = true;
             statusDot.className = "h-2 w-2 rounded-full bg-orange-500 animate-pulse";
-            statusText.textContent = "Initializing local WebGPU core context vectors...";
+            statusText.textContent = "Initializing pipeline architecture. Preparing local WebGPU context memory fields...";
 
             try {
                 webLlmEngine = await CreateMLCEngine(MODEL_ID, {
                     initProgressCallback: (progress) => {
                         const percent = Math.round(progress.progress * 100);
-                        statusText.textContent = `Loading Local Model Matrix: ${percent}% (${progress.text})`;
+                        statusText.textContent = `Downloading Local Weights Asset Vector: ${percent}% (${progress.text})`;
                         if (percent >= 100) {
                             statusDot.className = "h-2 w-2 rounded-full bg-green-500 shadow-sm shadow-green-500/50";
                         }
@@ -286,76 +299,60 @@ so do not change anything keep everything as is . only change phase 1 section in
                 runAiBtn.disabled = false;
                 return webLlmEngine;
             } catch (error) {
-                statusDot.className = "h-2 w-2 rounded-full bg-red-500";
-                statusText.textContent = `GPU Error: Allocation rejected (${error.message})`;
+                statusDot.className = "h-2 w-2 rounded-full bg-red-500 shadow-sm shadow-red-500/50";
+                statusText.textContent = `Initialization Halt: WebGPU access failed or context allocation rejected (${error.message})`;
                 runAiBtn.disabled = false;
                 throw error;
             }
         }
 
-
         runAiBtn.addEventListener('click', async () => {
-    const instruction = aiPrompt.value.trim();
-    const currentCode = extractRawMermaid(codeEditor.value.trim());
-    if (!instruction) return;
+            const instruction = aiPrompt.value.trim();
+            const currentCode = codeEditor.value.trim();
+            if (!instruction) return;
 
-    try {
-        const engine = await lazyLoadAiEngine();
-        statusDot.className = "h-2 w-2 rounded-full bg-blue-500 animate-pulse";
-        statusText.textContent = "Processing layout instruction modifications locally on your device GPU...";
-        runAiBtn.disabled = true;
+            try {
+                const engine = await lazyLoadAiEngine();
+                statusDot.className = "h-2 w-2 rounded-full bg-blue-500 animate-pulse";
+                statusText.textContent = "Executing instruction processing passes inside private GPU runtime core...";
+                runAiBtn.disabled = true;
 
-        // The upgraded system prompt defined above
-       const sysPrompt = `You are a precision systems architect and master Mermaid JS developer.
-Your sole task is to analyze the user's natural language update instruction, locate the targeted sections in the current diagram layout code, and output the updated version.
+                const sysPrompt = `You are a Mermaid JS developer expert. Your task is to update the provided diagram syntax according to user requests.
+CRITICAL: Respond ONLY with the updated raw executable Mermaid code syntax. Do NOT write markdown code blocks like "\`\`\`mermaid" or enclosing backticks. Do not include introductory notes, conversational words, or pleasantries. Your response must be parsed directly by the software compiler. Always make sure to match the original architecture type (like 'graph TD' or 'sequenceDiagram').`;
 
-Follow these strict structural execution parameters:
-1. STRICT ARCHITECTURAL PRESERVATION: You must keep the rest of the diagram code perfectly intact and unchanged. Do not alter, delete, rewrite, or optimize a single phrase, label, node ID, subgraph name, or layout segment outside of the user's specific request scope.
-2. Apply the requested structural modifications surgically to the targeted nodes or routing vectors.
-3. Keep the output string clean. Do not wrap the final code block inside markdown syntax wrappers like \`\`\`mermaid or triple backticks. Start directly with the graph definition keyword (e.g., 'graph TD', 'sequenceDiagram').`;
+                const userTextPrompt = `Current Code:\n\${currentCode}\n\nModification Request Directive:\n\${instruction}\n\nUpdated Code Syntax Input Output:`;
 
+                const chatCompletion = await engine.chat.completions.create({
+                    messages: [
+                        { role: "system", content: sysPrompt },
+                        { role: "user", content: userTextPrompt }
+                    ],
+                    temperature: 0.1 // Locked low variance for reliable compiler parsing matrices
+                });
 
-        const userTextPrompt = `Current Code:\n${currentCode}\n\nModification Request Directive:\n${instruction}\n\nUpdated Code Syntax Input Output:`;
+                let parsedAiOutput = chatCompletion.choices[0].message.content.trim();
+                
+                // Clean away stray markdown enclosing blocks if the small model breaches baseline runtime compliance
+                parsedAiOutput = parsedAiOutput.replace(/^```mermaid\n?/i, "").replace(/^```\n?/i, "").replace(/```$/, "");
 
-        const chatCompletion = await engine.chat.completions.create({
-            messages: [
-                { role: "system", content: sysPrompt },
-                { role: "user", content: userTextPrompt }
-            ],
-            temperature: 0.1
+                codeEditor.value = parsedAiOutput;
+                aiPrompt.value = ""; // Clear instruction prompt box container area state upon completion
+                
+                statusDot.className = "h-2 w-2 rounded-full bg-green-500";
+                statusText.textContent = "Diagram updated successfully via local AI context transformation.";
+                
+                await renderDiagram();
+                autoFitLayout();
+
+            } catch (err) {
+                statusDot.className = "h-2 w-2 rounded-full bg-red-500";
+                statusText.textContent = `Execution Error: \${err.message}`;
+            } finally {
+                runAiBtn.disabled = false;
+            }
         });
 
-        // Safe evaluation fix to stop the crash bug
-        if (!chatCompletion?.choices?.[0]?.message?.content) {
-            throw new Error("Local AI failed to generate a coherent update patch. Please rephrase your business description slightly.");
-        }
-
-        let parsedAiOutput = chatCompletion.choices[0].message.content.trim();
-        parsedAiOutput = extractRawMermaid(parsedAiOutput);
-
-        if (parsedAiOutput.length < 10) {
-            throw new Error("Generated script structural integrity check failed.");
-        }
-
-        codeEditor.value = parsedAiOutput;
-        aiPrompt.value = ""; 
-        
-        statusDot.className = "h-2 w-2 rounded-full bg-green-500";
-        statusText.textContent = "Diagram updated successfully via local AI context transformation.";
-        
-        await renderDiagram();
-        setTimeout(autoFitLayout, 150);
-
-    } catch (err) {
-        statusDot.className = "h-2 w-2 rounded-full bg-red-500";
-        statusText.textContent = `Execution Error: ${err.message}`;
-    } finally {
-        runAiBtn.disabled = false;
-    }
-});
-
-
-
+        // 7. Local File Management Pipelines Handler Blocks
         openFileBtn.addEventListener('click', () => fileInput.click());
         fileInput.addEventListener('change', (e) => {
             const file = e.target.files[0];
@@ -363,6 +360,7 @@ Follow these strict structural execution parameters:
             processUploadedFile(file);
         });
 
+        // Support full screen workspace drag and drop event flows natively
         window.addEventListener('dragover', (e) => { e.preventDefault(); dragOverlay.classList.remove('hidden'); dragOverlay.classList.add('flex'); });
         window.addEventListener('dragleave', (e) => { if (e.relatedTarget === null) { dragOverlay.classList.add('hidden'); dragOverlay.classList.remove('flex'); } });
         dropZone.addEventListener('dragover', (e) => e.preventDefault());
@@ -376,39 +374,19 @@ Follow these strict structural execution parameters:
         function processUploadedFile(file) {
             const reader = new FileReader();
             reader.onload = (event) => {
-                const rawFileContent = event.target.result;
-                codeEditor.value = extractRawMermaid(rawFileContent);
+                codeEditor.value = extractRawMermaid(event.target.result);
                 renderDiagram();
-                setTimeout(autoFitLayout, 250);
-                statusText.textContent = `Loaded Top-Down Canvas: ${file.name}`;
+                setTimeout(autoFitLayout, 150);
+                statusText.textContent = `Successfully loaded file resource asset: \${file.name}`;
             };
             reader.readAsText(file);
         }
 
-        // NEW FEATURE: Download Diagram wrapped in Markdown block format
-        downloadMdBtn.addEventListener('click', () => {
-            const rawSyntax = extractRawMermaid(codeEditor.value);
-            if (!rawSyntax) {
-                alert("No diagram syntax found to download.");
-                return;
-            }
-            const markdownContent = `\`\`\`mermaid\n${rawSyntax}\n\`\`\``;
-            const blob = new Blob([markdownContent], { type: 'text/markdown;charset=utf-8' });
-            const url = URL.createObjectURL(blob);
-            
-            const anchor = document.createElement('a');
-            anchor.href = url;
-            anchor.download = `mermaid-diagram-${Date.now()}.md`;
-            document.body.appendChild(anchor);
-            anchor.click();
-            document.body.removeChild(anchor);
-            URL.revokeObjectURL(url);
-        });
-
+        // SVG Export Stream Serializer Downloader
         downloadSvgBtn.addEventListener('click', () => {
             const svgNode = renderTarget.querySelector('svg');
             if (!svgNode) {
-                alert("No compiled layout content found inside render canvas space.");
+                alert("No compiled layout content found currently inside render canvas space.");
                 return;
             }
             const serializedSvg = new XMLSerializer().serializeToString(svgNode);
@@ -417,15 +395,16 @@ Follow these strict structural execution parameters:
             
             const anchor = document.createElement('a');
             anchor.href = blobUrl;
-            anchor.download = `mermaid-topdown-${Date.now()}.svg`;
+            anchor.download = `mermaid-workspace-\${Date.now()}.svg`;
             document.body.appendChild(anchor);
             anchor.click();
             document.body.removeChild(anchor);
             URL.revokeObjectURL(blobUrl);
         });
 
+        // Initial entry render paint loop execution step
         renderDiagram();
-        setTimeout(autoFitLayout, 500);
+        setTimeout(autoFitLayout, 300);
     </script>
 </body>
 </html>
