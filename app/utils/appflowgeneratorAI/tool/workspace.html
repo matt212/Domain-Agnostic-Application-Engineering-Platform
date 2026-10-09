@@ -104,6 +104,7 @@ so do not change anything keep everything as is . only change phase 1 section in
                 <div class="h-4 w-px bg-slate-800 mx-1"></div>
                 <button id="fitScreenBtn" class="text-xs px-3 py-1.5 hover:bg-slate-800 text-slate-400 hover:text-white rounded-lg transition-all font-medium active:scale-95">Fit Screen</button>
                 <button id="resetViewBtn" class="text-xs px-3 py-1.5 hover:bg-slate-800 text-slate-400 hover:text-white rounded-lg transition-all font-medium active:scale-95">Reset</button>
+                <button id="reloadDiagramBtn" class="text-xs px-3 py-1.5 hover:bg-slate-800 text-slate-400 hover:text-white rounded-lg transition-all font-medium active:scale-95">Reload Diagram</button>
             </div>
 
             <!-- Drop Zone File Drag and Drop Visual Hint Overlay -->
@@ -240,24 +241,44 @@ so do not change anything keep everything as is . only change phase 1 section in
         }
         fitScreenBtn.addEventListener('click', autoFitLayout);
 
-        async function renderDiagram() {
-            const rawSyntax = extractRawMermaid(codeEditor.value);
-            if (!rawSyntax) {
-                renderTarget.innerHTML = `<div class="text-slate-500 font-mono text-sm">Editor target syntax workspace is empty.</div>`;
-                return;
-            }
-            try {
-                const uniqueId = `mermaid-render-${Date.now()}`;
-                renderTarget.innerHTML = `<div id="${uniqueId}" class="mermaid">${rawSyntax}</div>`;
-                await mermaid.run({ nodes: [document.getElementById(uniqueId)] });
+        // async function renderDiagram() {
+        //     const rawSyntax = extractRawMermaid(codeEditor.value);
+        //     if (!rawSyntax) {
+        //         renderTarget.innerHTML = `<div class="text-slate-500 font-mono text-sm">Editor target syntax workspace is empty.</div>`;
+        //         return;
+        //     }
+        //     try {
+        //         const uniqueId = `mermaid-render-${Date.now()}`;
+        //         renderTarget.innerHTML = `<div id="${uniqueId}" class="mermaid">${rawSyntax}</div>`;
+        //         await mermaid.run({ nodes: [document.getElementById(uniqueId)] });
                 
-                statusDot.className = "h-2 w-2 rounded-full bg-green-500";
-                statusText.textContent = "Syntax compilation successful. Diagram rendered.";
-            } catch (err) {
-                statusDot.className = "h-2 w-2 rounded-full bg-red-500";
-                statusText.textContent = "Mermaid Syntax Error. Checking input format rules.";
-            }
-        }
+        //         statusDot.className = "h-2 w-2 rounded-full bg-green-500";
+        //         statusText.textContent = "Syntax compilation successful. Diagram rendered.";
+        //     } catch (err) {
+        //         statusDot.className = "h-2 w-2 rounded-full bg-red-500";
+        //         statusText.textContent = "Mermaid Syntax Error. Checking input format rules.";
+        //     }
+        // }
+async function renderDiagram() {
+    let rawSyntax = extractRawMermaid(codeEditor.value);
+    if (!rawSyntax) return;
+    try {
+        // MINIMUM FIX: Strips text anomalies introduced by the local AI that cause font-overlapping layout crashes
+        rawSyntax = rawSyntax.replace(/[\u201C\u201D]/g, '"').replace(/&quot;/g, '"').replace(/\\"/g, '"');
+
+        const uniqueId = `mermaid-render-${Date.now()}`;
+        renderTarget.innerHTML = `<div id="${uniqueId}" class="mermaid">${rawSyntax}</div>`;
+        await mermaid.run({ nodes: [document.getElementById(uniqueId)] });
+        
+        const realSvg = renderTarget.querySelector('svg');
+        if(realSvg) { realSvg.style.maxWidth = 'none'; realSvg.style.height = 'auto'; }
+        statusDot.className = "h-2 w-2 rounded-full bg-green-500";
+        statusText.textContent = "Syntax compilation successful. Diagram rendered.";
+    } catch (err) {
+        statusDot.className = "h-2 w-2 rounded-full bg-red-500";
+        statusText.textContent = "Mermaid Syntax Error.";
+    }
+}
 
         codeEditor.addEventListener('input', () => {
             const cleaned = extractRawMermaid(codeEditor.value);
@@ -337,14 +358,18 @@ Follow these strict structural execution parameters:
             throw new Error("Generated script structural integrity check failed.");
         }
 
+                // 1. Inject the verified AI output into the text workspace editor
         codeEditor.value = parsedAiOutput;
         aiPrompt.value = ""; 
         
-        statusDot.className = "h-2 w-2 rounded-full bg-green-500";
-        statusText.textContent = "Diagram updated successfully via local AI context transformation.";
+        statusDot.className = "h-2 w-2 rounded-full bg-blue-400 animate-pulse";
+        statusText.textContent = "AI generation complete. Compiling vector tracks and mapping nodes...";
         
-        await renderDiagram();
-        setTimeout(autoFitLayout, 150);
+        // 2. Clear out any previous layout execution queues
+        renderTarget.innerHTML = "";
+
+        await initializeFreshCanvas(parsedAiOutput);
+
 
     } catch (err) {
         statusDot.className = "h-2 w-2 rounded-full bg-red-500";
@@ -426,6 +451,56 @@ Follow these strict structural execution parameters:
 
         renderDiagram();
         setTimeout(autoFitLayout, 500);
+
+        // NEW SEPARATE FUNCTION: Bundles the clean, file-upload style loading sequence
+async function initializeFreshCanvas(cleanCode) {
+    // 1. Completely clear and reset the graphics canvas containers
+    renderTarget.innerHTML = "";
+    codeEditor.value = "";
+    
+    // 2. Micro-task pause to force the browser to flush the layout tree
+    await new Promise(resolve => setTimeout(resolve, 60));
+    
+    // 3. Load text fresh into the editor view
+    codeEditor.value = cleanCode;
+    
+    // 4. Trigger the standard rendering loop
+    await renderDiagram();
+    
+    // 5. Verification check loop to ensure vector boxes are drawn
+    await new Promise((resolve) => {
+        const checkReady = () => {
+            const svg = renderTarget.querySelector('svg');
+            if (svg && svg.viewBox && svg.viewBox.baseVal.width > 0) {
+                resolve();
+            } else {
+                requestAnimationFrame(checkReady);
+            }
+        };
+        checkReady();
+    });
+    
+    // 6. Autofit the layout view camera coordinates
+    autoFitLayout();
+}
+// NEW SEPARATE FUNCTION: Reloads and completely repaints the active diagram state
+async function reloadCurrentDiagram() {
+    const currentCode = codeEditor.value.trim();
+    if (!currentCode) return;
+
+    statusDot.className = "h-2 w-2 rounded-full bg-blue-400 animate-pulse";
+    statusText.textContent = "Forcing full canvas structural refresh...";
+
+    // Call your extracted modular load pipeline function to reset layout vectors cleanly
+    await initializeFreshCanvas(currentCode);
+
+    statusDot.className = "h-2 w-2 rounded-full bg-green-500";
+    statusText.textContent = "Diagram reloaded and layout calculations updated successfully.";
+}
+
+// Bind the new button action to our separate reload function
+document.getElementById('reloadDiagramBtn').addEventListener('click', reloadCurrentDiagram);
+
     </script>
 </body>
 </html>
