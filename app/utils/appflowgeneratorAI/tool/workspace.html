@@ -72,6 +72,36 @@ so do not change anything keep everything as is . only change phase 1 section in
                     <button id="runAiBtn" class="w-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white font-semibold text-sm py-2.5 px-4 rounded-lg transition-all active:scale-[0.98] shadow-lg shadow-blue-900/20 flex items-center justify-center gap-2">
                         ✨ Update with Local AI
                     </button>
+                    <button id="runDeterministicBtn" class="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white font-semibold text-sm py-2.5 px-4 rounded-lg transition-all active:scale-[0.98] shadow-lg shadow-green-900/20 flex items-center justify-center gap-2">
+                        🔄 Update with Deterministic Parser
+                    </button>
+                    <div class="mt-2 p-3 bg-slate-900/60 border border-slate-800/80 rounded-lg">
+        <span class="block text-[10px] font-bold text-slate-400 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
+            📋 Reference Command Patterns:
+        </span>
+        <ul class="text-[11px] font-mono text-slate-400 space-y-1.5 max-h-[140px] overflow-y-auto pr-1">
+            <li class="bg-slate-950/40 p-1.5 rounded border border-slate-800/40 hover:border-slate-700/60 transition-colors">
+                <span class="text-blue-400 font-semibold">ADD:</span><br>
+                <code class="text-emerald-400">ADD NODE "Step 1.4: Reset Account" TO phase_01</code>
+            </li>
+            <li class="bg-slate-950/40 p-1.5 rounded border border-slate-800/40 hover:border-slate-700/60 transition-colors">
+                <span class="text-amber-400 font-semibold">UPDATE:</span><br>
+                <code class="text-emerald-400">UPDATE NODE Step 1.2 TO "Step 1.2: Updated Credentials Check"</code>
+            </li>
+            <li class="bg-slate-950/40 p-1.5 rounded border border-slate-800/40 hover:border-slate-700/60 transition-colors">
+                <span class="text-red-400 font-semibold">DELETE:</span><br>
+                <code class="text-emerald-400">DELETE NODE Step 1.3</code>
+            </li>
+            <li class="bg-slate-950/40 p-1.5 rounded border border-slate-800/40 hover:border-slate-700/60 transition-colors">
+                <span class="text-indigo-400 font-semibold">CONNECT:</span><br>
+                <code class="text-emerald-400">CONNECT Step 1.2 TO Step 1.1 WITH "Invalid Credentials"</code>
+            </li>
+            <li class="bg-slate-950/40 p-1.5 rounded border border-slate-800/40 hover:border-slate-700/60 transition-colors">
+                <span class="text-pink-400 font-semibold">DISCONNECT:</span><br>
+                <code class="text-emerald-400">DISCONNECT Step 1.2 FROM Step 1.2</code>
+            </li>
+        </ul>
+    </div>
                 </div>
             </div>
 
@@ -153,8 +183,9 @@ so do not change anything keep everything as is . only change phase 1 section in
         let webLlmEngine = null;
        // const MODEL_ID = "Llama-3.2-1B-Instruct-q4f16_1-MLC"; 
        // const MODEL_ID = "Llama-3-8B-Instruct-q4f16_1-MLC
-        const MODEL_ID = "Qwen2.5-Coder-7B-Instruct-q4f16_1-MLC";
-
+        //const MODEL_ID = "Qwen2.5-Coder-7B-Instruct-q4f16_1-MLC";
+        const MODEL_ID = "Qwen2.5-Coder-1.5B-Instruct-q4f16_1-MLC";
+        
         let transformState = { x: 0, y: 0, scale: 1 };
         let isDragging = false;
         let dragStart = { x: 0, y: 0 };
@@ -326,14 +357,30 @@ async function renderDiagram() {
         statusText.textContent = "Processing layout instruction modifications locally on your device GPU...";
         runAiBtn.disabled = true;
 
-        // The upgraded system prompt defined above
-       const sysPrompt = `You are a precision systems architect and master Mermaid JS developer.
-Your sole task is to analyze the user's natural language update instruction, locate the targeted sections in the current diagram layout code, and output the updated version.
+        // The upgraded system prompt defined above for Qwen2.5-Coder-7B-Instruct-q4f16_1-MLC
+//        const sysPrompt = `You are a precision systems architect and master Mermaid JS developer.
+// Your sole task is to analyze the user's natural language update instruction, locate the targeted sections in the current diagram layout code, and output the updated version.
 
-Follow these strict structural execution parameters:
-1. STRICT ARCHITECTURAL PRESERVATION: You must keep the rest of the diagram code perfectly intact and unchanged. Do not alter, delete, rewrite, or optimize a single phrase, label, node ID, subgraph name, or layout segment outside of the user's specific request scope.
-2. Apply the requested structural modifications surgically to the targeted nodes or routing vectors.
-3. Keep the output string clean. Do not wrap the final code block inside markdown syntax wrappers like \`\`\`mermaid or triple backticks. Start directly with the graph definition keyword (e.g., 'graph TD', 'sequenceDiagram').`;
+// Follow these strict structural execution parameters:
+// 1. STRICT ARCHITECTURAL PRESERVATION: You must keep the rest of the diagram code perfectly intact and unchanged. Do not alter, delete, rewrite, or optimize a single phrase, label, node ID, subgraph name, or layout segment outside of the user's specific request scope.
+// 2. Apply the requested structural modifications surgically to the targeted nodes or routing vectors.
+// 3. Keep the output string clean. Do not wrap the final code block inside markdown syntax wrappers like \`\`\`mermaid or triple backticks. Start directly with the graph definition keyword (e.g., 'graph TD', 'sequenceDiagram').`;
+
+//Qwen2.5-Coder-1.5B-Instruct-q4f16_1-MLC
+const sysPrompt = `You are a precision systems architect and master Mermaid JS developer. Your task is to update a specific node connection based on the user's instructions.
+
+Execute your update in two clear sections:
+
+PART 1: ANALYSIS
+Briefly list:
+- Which connection or label needs to change.
+- The exact node IDs involved.
+
+PART 2: STRUCTURE
+Output the updated diagram block.
+Rules:
+1. You must keep all other subgraphs, node names, and text strings perfectly verbatim. Do not truncate, omit, or change anything else.
+2. Output ONLY the raw diagram code starting directly with 'graph TD' or the chart type. Do not use markdown backticks (\`\`\`).`;
 
 
         const userTextPrompt = `Current Code:\n${currentCode}\n\nModification Request Directive:\n${instruction}\n\nUpdated Code Syntax Input Output:`;
@@ -500,6 +547,302 @@ async function reloadCurrentDiagram() {
 
 // Bind the new button action to our separate reload function
 document.getElementById('reloadDiagramBtn').addEventListener('click', reloadCurrentDiagram);
+// NEW DETERMINISTIC ENHANCEMENT FUNCTION: Serial Number Pattern Command Engine
+// async function executeSerialMermaidCommand(commandText) {
+//     let currentCode = codeEditor.value;
+//     if (!currentCode || !commandText) return;
+
+//     // --- PHASE 1: GENERATE BULLETPROOF TELEMETRY MAP INDEX ---
+//     const nodeMapping = {}; 
+    
+//     // Space-proof, quote-proof scanner that isolates the ID and stops exactly at the Step digits
+//     const labelScanner = /([a-zA-Z0-9_-]+)\s*(?:["'{(\\[])\s*["']?\s*Step\s*([0-9]+(?:\.[0-9a-zA-Z]+)*)/gi;
+    
+//     let match;
+//     while ((match = labelScanner.exec(currentCode)) !== null) {
+//         const nodeId = match[1];
+//         const serialNum = match[2].trim();
+//         nodeMapping[serialNum] = nodeId;
+//     }
+
+//     // Prints out the internal map directory to your F12 browser console for validation
+//     console.log("🚀 Non-AI Engine Successfully Indexed Map:", nodeMapping);
+
+//     // Dynamic Helper: Converts user prompt values safely into technical node IDs
+//     function resolveNodeId(inputStr) {
+//         if (!inputStr) return null;
+//         // Strip out words, spaces, and quotes to isolate the pure comparison key (e.g., "1.2")
+//         const cleanKey = inputStr.replace(/Step/i, '').replace(/["']/g, '').trim();
+//         return nodeMapping[cleanKey] || null;
+//     }
+
+//     // --- PHASE 2: PARSE AND EXECUTE OPERATIONAL STRUCTURES ---
+//     const commands = commandText.split('\n');
+//     let hasChanges = false;
+
+//     for (let cmd of commands) {
+//         cmd = cmd.trim();
+//         if (!cmd) continue;
+
+//         // 1. OPERATION: CONNECT BY SERIAL NUMBER
+//         const connectMatch = cmd.match(/^CONNECT\s+(?:Step\s+)?([a-zA-Z0-9._-]+)\s+TO\s+(?:Step\s+)?([a-zA-Z0-9._-]+)(?:\s+WITH\s+["']([\s\(\S\)]*?)["'])?/i);
+//         if (connectMatch) {
+//             const [_, serialA, serialB, linkLabel] = connectMatch;
+//             const nodeA = resolveNodeId(serialA);
+//             const nodeB = resolveNodeId(serialB);
+
+//             if (nodeA && nodeB) {
+//                 const arrowStr = linkLabel ? `    ${nodeA} -- "${linkLabel}" --> ${nodeB}\n` : `    ${nodeA} --> ${nodeB}\n`;
+//                 currentCode = currentCode.trim() + `\n${arrowStr}`;
+//                 hasChanges = true;
+//             } else {
+//                 console.warn(`Routing Failure: Could not resolve steps mapping for ${serialA} or ${serialB}`);
+//             }
+//             continue;
+//         }
+
+//         // 2. OPERATION: DISCONNECT BY SERIAL NUMBER
+//         const disconnectMatch = cmd.match(/^DISCONNECT\s+(?:Step\s+)?([a-zA-Z0-9._-]+)\s+FROM\s+(?:Step\s+)?([a-zA-Z0-9._-]+)/i);
+//         if (disconnectMatch) {
+//             const [_, serialA, serialB] = disconnectMatch;
+//             const nodeA = resolveNodeId(serialA);
+//             const nodeB = resolveNodeId(serialB);
+
+//             if (nodeA && nodeB) {
+//                 const specificLineRegex = new RegExp(`^[ \\t]*${nodeA}\\s*--.*?-->\\s*${nodeB}\\r?\\n?`, 'gm');
+//                 if (specificLineRegex.test(currentCode)) {
+//                     currentCode = currentCode.replace(specificLineRegex, '');
+//                     hasChanges = true;
+//                 }
+//             }
+//             continue;
+//         }
+
+//         // 3. OPERATION: UPDATE NODE TEXT BY SERIAL
+//         const updateMatch = cmd.match(/^UPDATE\s+NODE\s+(?:Step\s+)?([a-zA-Z0-9._-]+)\s+TO\s+["']([\s\(\S\)]*?)["']/i);
+//         if (updateMatch) {
+//             const [_, serialTarget, newFullLabel] = updateMatch;
+//             const targetNodeId = resolveNodeId(serialTarget);
+
+//             if (targetNodeId) {
+//                 const nodeLabelRegex = new RegExp(`(${targetNodeId}\\s*["'{(\\[])([\\s\\S]*?)(["'})\\]])`, 'g');
+//                 if (nodeLabelRegex.test(currentCode)) {
+//                     currentCode = currentCode.replace(nodeLabelRegex, `$1${newFullLabel}$3`);
+//                     hasChanges = true;
+//                 }
+//             }
+//             continue;
+//         }
+
+//         // 4. OPERATION: DELETE NODE BY SERIAL
+//         const deleteMatch = cmd.match(/^DELETE\s+NODE\s+(?:Step\s+)?([a-zA-Z0-9._-]+)/i);
+//         if (deleteMatch) {
+//             const [_, serialTarget] = deleteMatch;
+//             const targetNodeId = resolveNodeId(serialTarget);
+
+//             if (targetNodeId) {
+//                 const nodeLineRegex = new RegExp(`^[ \\t]*${targetNodeId}\\s*(?:["'{(\\[])\\s*Step\\s*${serialTarget}[\\s\\S]*?["'})\\]]\\r?\\n?`, 'gm');
+//                 const connectionRegex = new RegExp(`^[ \\t]*(?:${targetNodeId}\\s*--.*?-->.*?|.*?--.*?-->\\s*${targetNodeId})\\r?\\n?`, 'gm');
+//                 currentCode = currentCode.replace(nodeLineRegex, '').replace(connectionRegex, '');
+//                 hasChanges = true;
+//             }
+//             continue;
+//         }
+
+//         // 5. OPERATION: ADD NODE TO PHASE WITH GENERATED TARGET ID
+//         const addMatch = cmd.match(/^ADD\s+NODE\s+["']([\s\(\S\)]*?)["']\s+TO\s+([a-zA-Z0-9_-]+)/i);
+//         if (addMatch) {
+//             const [_, newFullLabel, phaseId] = addMatch;
+//             const uniqueNodeId = `gen_node_${Date.now()}_${Math.floor(Math.random() * 100)}`;
+//             const nodeDeclaration = `        ${uniqueNodeId}["${newFullLabel}"]\n`;
+            
+//             const phaseRegex = new RegExp(`(subgraph\\s+${phaseId}\\s*\\[[\\s\\S]*?\\])`, 'i');
+//             if (phaseRegex.test(currentCode)) {
+//                 currentCode = currentCode.replace(phaseRegex, `$1\n${nodeDeclaration}`);
+//                 hasChanges = true;
+//             }
+//             continue;
+//         }
+//     }
+
+//     // --- PHASE 3: COMPILER HANDSHAKE COMMIT PASS ---
+//     if (hasChanges) {
+//         await initializeFreshCanvas(currentCode.trim());
+//         statusDot.className = "h-2 w-2 rounded-full bg-green-500";
+//         statusText.textContent = "Surgical operations successfully executed using index mappings.";
+//     } else {
+//         statusDot.className = "h-2 w-2 rounded-full bg-orange-500";
+//         statusText.textContent = "Command executed, but no matching Step Numbers were located.";
+//     }
+// }
+async function executeSerialMermaidCommand(commandText) {
+    let currentCode = codeEditor.value;
+    if (!currentCode || !commandText) return;
+
+    // --- PHASE 1: GENERATE TELEMETRY INDEX MAPPING SYSTEMS ---
+    const serialMapping = {}; // Index directory tracker for numbers: {"1.1": "entrance_node1"}
+    const rawNodesFound = new Set(); // Directory tracker for raw node names: ["rollback_zone1"]
+
+    // 1. Scan and parse step serial structures: node_id["Step 1.1: Text"]
+    const labelScanner = /([a-zA-Z0-9_-]+)\s*(?:["'{(\\[])\s*["']?\s*Step\s*([0-9]+(?:\.[0-9a-zA-Z]+)*)/gi;
+    let match;
+    while ((match = labelScanner.exec(currentCode)) !== null) {
+        const nodeId = match[1];
+        const serialNum = match[2].trim();
+        serialMapping[serialNum] = nodeId;
+        rawNodesFound.add(nodeId);
+    }
+
+    // 2. Scan and discover raw node IDs that do not have Step labels (e.g., rollback_zone1)
+    // Matches standalone words pointing to shapes or arrows inside subgraphs
+    const structuralScanner = /\b([a-zA-Z0-9_-]+)\b(?=\s*(?:-->|--|["'{(\\[]))/g;
+    let structMatch;
+    while ((structMatch = structuralScanner.exec(currentCode)) !== null) {
+        const structuralId = structMatch[1];
+        // Skip common syntax definitions
+        if (!["graph", "TD", "LR", "subgraph", "end"].includes(structuralId)) {
+            rawNodesFound.add(structuralId);
+        }
+    }
+
+    // 💡 THE UPGRADED AGNOSTIC RESOLVER HELPER:
+    // This looks up the target element by serial prefix or fallback native name
+    function resolveNodeId(inputStr) {
+        if (!inputStr) return null;
+        const cleanInput = inputStr.trim().replace(/["']/g, '');
+        
+        // Strategy A: Clean out word prefixes to extract serial key (e.g., "Step 1.2" -> "1.2")
+        const serialKey = cleanInput.replace(/Step/i, '').trim();
+        if (serialMapping[serialKey]) {
+            return serialMapping[serialKey];
+        }
+
+        // Strategy B: Direct match check for raw node IDs (e.g., "rollback_zone1")
+        if (rawNodesFound.has(cleanInput)) {
+            return cleanInput;
+        }
+
+        // Strategy C: If it's a completely new node being declared in a CONNECT track, return it raw
+        return cleanInput;
+    }
+
+    // --- PHASE 2: PARSE AND SURGICALLY COMMIT CHANGES ---
+    const commands = commandText.split('\n');
+    let hasChanges = false;
+
+    for (let cmd of commands) {
+        cmd = cmd.trim();
+        if (!cmd) continue;
+
+        // 1. OPERATION: CONNECT (Agnostic Node/Serial Input Targets)
+        // Format: CONNECT rollback_zone1 TO Step 1.1 WITH "Reset Pipeline"
+        const connectMatch = cmd.match(/^CONNECT\s+(?:Step\s+)?([a-zA-Z0-9._-]+)\s+TO\s+(?:Step\s+)?([a-zA-Z0-9._-]+)(?:\s+WITH\s+["']([\s\(\S\)]*?)["'])?/i);
+        if (connectMatch) {
+            const [_, targetA, targetB, linkLabel] = connectMatch;
+            const nodeA = resolveNodeId(targetA);
+            const nodeB = resolveNodeId(targetB);
+
+            if (nodeA && nodeB) {
+                const arrowStr = linkLabel ? `    ${nodeA} -- "${linkLabel}" --> ${nodeB}\n` : `    ${nodeA} --> ${nodeB}\n`;
+                currentCode = currentCode.trim() + `\n${arrowStr}`;
+                hasChanges = true;
+            } else {
+                console.warn(`Routing Failure: Could not track structural match for ${targetA} or ${targetB}`);
+            }
+            continue;
+        }
+
+        // 2. OPERATION: DISCONNECT (Agnostic Node/Serial Input Targets)
+        // Format: DISCONNECT decision_zone1 FROM rollback_zone1
+        const disconnectMatch = cmd.match(/^DISCONNECT\s+(?:Step\s+)?([a-zA-Z0-9._-]+)\s+FROM\s+(?:Step\s+)?([a-zA-Z0-9._-]+)/i);
+        if (disconnectMatch) {
+            const [_, targetA, targetB] = disconnectMatch;
+            const nodeA = resolveNodeId(targetA);
+            const nodeB = resolveNodeId(targetB);
+
+            if (nodeA && nodeB) {
+                const specificLineRegex = new RegExp(`^[ \\t]*${nodeA}\\s*--.*?-->\\s*${nodeB}\\r?\\n?`, 'gm');
+                const cleanArrowRegex = new RegExp(`^[ \\t]*${nodeA}\\s*-->\\s*${nodeB}\\r?\\n?`, 'gm');
+                
+                if (specificLineRegex.test(currentCode) || cleanArrowRegex.test(currentCode)) {
+                    currentCode = currentCode.replace(specificLineRegex, '').replace(cleanArrowRegex, '');
+                    hasChanges = true;
+                }
+            }
+            continue;
+        }
+
+        // 3. OPERATION: UPDATE NODE TEXT
+        // Format: UPDATE NODE rollback_zone1 TO "Custom Rejection Sequence"
+        const updateMatch = cmd.match(/^UPDATE\s+NODE\s+(?:Step\s+)?([a-zA-Z0-9._-]+)\s+TO\s+["']([\s\(\S\)]*?)["']/i);
+        if (updateMatch) {
+            const [_, targetIdent, newFullLabel] = updateMatch;
+            const targetNodeId = resolveNodeId(targetIdent);
+
+            if (targetNodeId) {
+                const nodeLabelRegex = new RegExp(`(${targetNodeId}\\s*["'{(\\[])([\\s\\S]*?)(["'})\\]])`, 'g');
+                if (nodeLabelRegex.test(currentCode)) {
+                    currentCode = currentCode.replace(nodeLabelRegex, `$1${newFullLabel}$3`);
+                    hasChanges = true;
+                } else {
+                    // Fallback injection if the node exists but didn't have an original label parameter string defined
+                    currentCode = currentCode.replace(new RegExp(`\\b(${targetNodeId})\\b`, 'g'), `$1["${newFullLabel}"]`);
+                    hasChanges = true;
+                }
+            }
+            continue;
+        }
+
+        // 4. OPERATION: DELETE NODE
+        // Format: DELETE NODE rollback_stock1
+        const deleteMatch = cmd.match(/^DELETE\s+NODE\s+(?:Step\s+)?([a-zA-Z0-9._-]+)/i);
+        if (deleteMatch) {
+            const [_, targetIdent] = deleteMatch;
+            const targetNodeId = resolveNodeId(targetIdent);
+
+            if (targetNodeId) {
+                const nodeLineRegex = new RegExp(`^[ \\t]*${targetNodeId}\\s*(?:["'{(\\[][\\s\\S]*?["'})\\]])?\\r?\\n?`, 'gm');
+                const connectionRegex = new RegExp(`^[ \\t]*(?:${targetNodeId}\\s*--.*?-->.*?|.*?--.*?-->\\s*${targetNodeId}|${targetNodeId}\\s*-->.*?|.*?-->\\s*${targetNodeId})\\r?\\n?`, 'gm');
+                
+                currentCode = currentCode.replace(nodeLineRegex, '').replace(connectionRegex, '');
+                hasChanges = true;
+            }
+            continue;
+        }
+
+        // 5. OPERATION: ADD NODE TO SUBGRAPH
+        // Format: ADD NODE rollback_custom1["Step 2.6: Recovery Core Loop"] TO phase_02
+        const addMatch = cmd.match(/^ADD\s+NODE\s+([a-zA-Z0-9_-]+)\s*(?:["'{(\\[])\s*([\s\S]*?)\s*["'})\\]]\s+TO\s+([a-zA-Z0-9_-]+)/i);
+        if (addMatch) {
+            const [_, newId, labelText, phaseId] = addMatch;
+            const nodeDeclaration = `        ${newId}["${labelText}"]\n`;
+            
+            const phaseRegex = new RegExp(`(subgraph\\s+${phaseId}\\s*\\[[\\s\\S]*?\\])`, 'i');
+            if (phaseRegex.test(currentCode)) {
+                currentCode = currentCode.replace(phaseRegex, `$1\n${nodeDeclaration}`);
+                hasChanges = true;
+            }
+            continue;
+        }
+    }
+
+    // --- PHASE 3: PARSE AND RE-RENDER ENGINE RECONCILIATION ---
+    if (hasChanges) {
+        await initializeFreshCanvas(currentCode.trim());
+        statusDot.className = "h-2 w-2 rounded-full bg-green-500";
+        statusText.textContent = "Deterministic layout modification tracking completed successfully.";
+    } else {
+        statusDot.className = "h-2 w-2 rounded-full bg-orange-500";
+        statusText.textContent = "Command processed, but no structural nodes or labels matched.";
+    }
+}
+
+// Hook this listener up at the bottom of your script module
+document.getElementById('runDeterministicBtn').addEventListener('click', async () => {
+    const rawInputText = document.getElementById('aiPrompt').value;
+    // Forwards the instructions straight to your new serial parser
+    await executeSerialMermaidCommand(rawInputText);
+});
 
     </script>
 </body>
