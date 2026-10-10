@@ -1947,198 +1947,259 @@ document.addEventListener('DOMContentLoaded', () => {
 // =========================================================================
 // MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (SCIENTIFIC NOTATION COMPATIBLE)
 // =========================================================================
-document.addEventListener('DOMContentLoaded', () => {
-    let lastTrackedLocalPos = { x: 0, y: 0 };
-    let loggingThrottleTimestamp = 0;
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (PRE-CACHED DISPLACEMENT HUB)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (PRE-CACHED DISPLACEMENT HUB)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (NATIVE MATRIX TRANSLATION)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (TOPOLOGICAL LINKAGE HUB)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (LIVE GEOMETRIC INTERSECT ENGINE)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (NATIVE MATRIX TRANSLATION)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (NATIVE MATRIX TRANSLATION)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (TOPOLOGICAL CORRELATOR HUB)
+// =========================================================================
+// =========================================================================
+// MODULE 5: FORENSIC DATA INSTRUMENTATION LAYER (INTENSE LOGGING HUBS)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (NATIVE CORE RESOLUTION)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER WITH HIGH-INTENSITY LOGGING
+// =========================================================================
+// =========================================================================
+// MODULE 5 - PART A: FORENSIC INITIALIZATION & MOUSE-DOWN FIELD SNAPSHOT
+// =========================================================================
+// =========================================================================
+// MODULE 5 - PART A: INITIAL POSITION MATRIX TELEMETRY CAPTURE
+// =========================================================================
+let lastKnownLocalPos = { x: 0, y: 0 };
+let telemetryThrottleTimestamp = 0;
+
+renderTarget.addEventListener('mousedown', function(e) {
+    const draggingNode = e.target.closest('g.node');
+    if (!draggingNode || window.interactiveCanvasEngine.interactionType !== 'drag') return;
+
+    console.clear();
+    console.log("%c===================================================================", "color: #ff007f; font-weight: bold;");
+    console.log("%c🚨 FORENSIC TELEMETRY CRITICAL EVENT: MOUSE-DOWN CAPTURE SECURED 🚨", "color: #ff007f; font-weight: bold; font-size: 13px;");
+    console.log("%c===================================================================", "color: #ff007f; font-weight: bold;");
+
+    const nativeNodeId = draggingNode.getAttribute('id') || draggingNode.id || 'NULL_DOM_ID';
+    const inlineTextLabel = draggingNode.querySelector('.label')?.textContent?.trim() || "NULL_TEXT_LABEL";
     
-    // Core animation memory registers tracking full arrow group containers
-    let preCachedOutboundPaths = [];
-    let preCachedInboundPaths = [];
+    console.log(`%c[NODE ASSET DATA]`, "color: #3b82f6; font-weight: bold;");
+    console.log(`   👉 Target ID:          "${nativeNodeId}"`);
+    console.log(`   👉 Visible Text Label: "${inlineTextLabel}"`);
 
-    // --- SUB-ROUTINE A: CROSS-VALIDATED INSTANT CACHE ON MOUSE DOWN ---
-    renderTarget.addEventListener('mousedown', function(e) {
-        const draggingNode = e.target.closest('g.node');
-        if (!draggingNode || window.interactiveCanvasEngine.interactionType !== 'drag') return;
+    // Transform raw screen pixel coordinates into a localized SVG canvas vector space matrix
+    const parentSvg = draggingNode.closest('svg');
+    if (!parentSvg) return;
 
-        // Clear tracking registers cleanly
-        preCachedOutboundPaths = [];
-        preCachedInboundPaths = [];
+    let mousePoint = parentSvg.createSVGPoint();
+    mousePoint.x = e.clientX;
+    mousePoint.y = e.clientY;
+    
+    let localMatrix = parentSvg.getScreenCTM().inverse();
+    let localizedSvgClick = mousePoint.matrixTransform(localMatrix);
 
-        // 1. Establish the current spatial matrix parameters safely
-        let matrixTransform = draggingNode.getAttribute('transform') || 'translate(0,0)';
-        let extractMatch = matrixTransform.match(/translate\(([^,)\s]+)[,\s]*([^)]+)?\)/) || 
-                           matrixTransform.match(/matrix\(1,\s*0,\s*0,\s*1,\s*([^,]+),\s*([^)]+)\)/);
+    // Read current coordinate translation values safely out from the DOM attributes
+    let transform = draggingNode.getAttribute('transform') || 'translate(0,0)';
+    let match = transform.match(/translate\(([^,)\s]+)[,\s]*([^)]+)?\)/) || 
+                transform.match(/matrix\(1,\s*0,\s*0,\s*1,\s*([^,]+),\s*([^)]+)\)/);
+    
+    // STRICT BASELINE RESET: Eliminates the huge initial frame delta position offset jump
+    if (match) {
+        let pX = parseFloat(match[1]);
+        let pY = match[2] ? parseFloat(match[2]) : 0;
+        lastKnownLocalPos.x = isNaN(pX) ? 0 : pX;
+        lastKnownLocalPos.y = isNaN(pY) ? 0 : pY;
+    } else {
+        lastKnownLocalPos.x = 0;
+        lastKnownLocalPos.y = 0;
+    }
 
-        if (extractMatch) {
-            let parsedX = parseFloat(extractMatch[1]);
-            let parsedY = extractMatch[2] ? parseFloat(extractMatch[2]) : 0;
-            lastTrackedLocalPos.x = isNaN(parsedX) ? 0 : parsedX;
-            lastTrackedLocalPos.y = isNaN(parsedY) ? 0 : parsedY;
+    console.log(`   👉 Stabilized Anchor Base: X=${lastKnownLocalPos.x.toFixed(2)}, Y=${lastKnownLocalPos.y.toFixed(2)}`);
+    console.log("%c===================================================================", "color: #ff007f; font-weight: bold;");
+});
+
+// =========================================================================
+// MODULE 5 - PART B: REAL-TIME TRACKING COORDINATES DISPLACEMENT MATRICES
+// =========================================================================
+// =========================================================================
+// MODULE 5 - PART B: MOVEMENT THREAD MATRIX COORDINATE SLIDER
+// =========================================================================
+document.addEventListener('mousemove', function(e) {
+    const draggingNode = window.interactiveCanvasEngine.dragTargetNode;
+    if (!draggingNode || window.interactiveCanvasEngine.interactionType !== 'drag') return;
+    
+    const parentSvg = draggingNode.closest('svg');
+    if (!parentSvg) return;
+
+    // 1. Map raw mouse pointer coordinates straight inside the scaled local SVG grid
+    let mouseSvgPoint = parentSvg.createSVGPoint();
+    mouseSvgPoint.x = e.clientX;
+    mouseSvgPoint.y = e.clientY;
+    
+    let localTransformMatrix = parentSvg.getScreenCTM().inverse();
+    let localizedMouse = mouseSvgPoint.matrixTransform(localTransformMatrix);
+    
+    let finalTargetX = localizedMouse.x - window.interactiveCanvasEngine.pointerOffset.x;
+    let finalTargetY = localizedMouse.y - window.interactiveCanvasEngine.pointerOffset.y;
+    
+    // Calculate precise layout delta vector variables (Δ)
+    let deltaX = finalTargetX - lastKnownLocalPos.x;
+    let deltaY = finalTargetY - lastKnownLocalPos.y;
+
+    // Slide position transform smoothly across screen canvas spaces view layer
+    draggingNode.setAttribute('transform', `translate(${finalTargetX}, ${finalTargetY})`);
+
+    // Extract live real-time element box dimensions for geometric verification mapping
+    const nodeBBox = draggingNode.getBBox();
+    const centerPoint = {
+        x: finalTargetX + (nodeBBox.width / 2),
+        y: finalTargetY + (nodeBBox.height / 2)
+    };
+
+    const nativeNodeId = draggingNode.getAttribute('id') || draggingNode.id || '';
+    const baseKeyMatch = nativeNodeId.match(/flowchart-[A-Za-z0-9_-]+/);
+    const cleanNodeKey = baseKeyMatch ? baseKeyMatch[0] : nativeNodeId;
+
+    // =========================================================================
+    // MODULE 5 - PART C: DYNAMIC RELATIVE SCOPE CONNECTOR SNAP ENGINE
+    // =========================================================================
+       // =========================================================================
+    // MODULE 5 - PART C: ULTRA-STRICT PROXIMITY SNAP FILTER
+    // =========================================================================
+       // =========================================================================
+    // MODULE 5 - PART C: MUTUALLY EXCLUSIVE VECTOR POINT WRITER
+    // =========================================================================
+    const liveLines = parentSvg.querySelectorAll('g.edgePath path, g.edgePaths path, path.path, path.edge, .edgePath path');
+    let outCount = 0, inCount = 0, droppedCount = 0;
+
+    liveLines.forEach(pathLine => {
+        // DEF-TEMPLATE LOCK FILTER: Bypasses background def markers safely
+        if (pathLine.closest('marker') || pathLine.closest('defs')) {
+            droppedCount++;
+            return;
         }
 
-        const parentSvg = draggingNode.closest('svg');
-        if (!parentSvg) return;
+        let currentPathData = pathLine.getAttribute('d') || '';
+        if (!currentPathData) return;
 
-        const nativeNodeId = draggingNode.getAttribute('id') || draggingNode.id;
-        const boundingDims = draggingNode.getBBox();
-        
-        // Pinpoint the absolute layout center point before dragging operations occur
-        const initialNodeCenter = {
-            x: lastTrackedLocalPos.x + (boundingDims.width / 2),
-            y: lastTrackedLocalPos.y + (boundingDims.height / 2)
-        };
+        let ancestorGroup = pathLine.closest('g.edgePath') || pathLine.parentElement;
+        let classString = ancestorGroup ? Array.from(ancestorGroup.classList).join(' ') : '';
+        let lineId = pathLine.getAttribute('id') || '';
 
-        const liveLines = parentSvg.querySelectorAll('g.edgePath path, g.edgePaths path, path.edge, path.path');
-        const MAX_INTERSECT_RADIUS = Math.max(boundingDims.width, boundingDims.height) * 1.8;
+        let isOutbound = false;
+        let isInbound = false;
 
-        liveLines.forEach(pathLine => {
-            let edgeGroup = pathLine.closest('g.edgePath') || pathLine.parentElement;
-            let elementClasses = edgeGroup ? Array.from(edgeGroup.classList).join(' ') : '';
-            let lineId = pathLine.getAttribute('id') || '';
+        // Parse individual digit values directly out from the active SVG path command string
+        let coords = currentPathData.replace(/[A-Za-f,]/g, ' ').trim().split(/\s+/).map(Number).filter(n => !isNaN(n));
+        if (coords.length >= 4) {
+            let dStartX = coords[0], dStartY = coords[1];
+            let dEndX = coords[coords.length - 2], dEndY = coords[coords.length - 1];
             
-            let isOutbound = elementClasses.includes(`ls-${nativeNodeId}`) || 
-                             lineId.startsWith(`edge_${nativeNodeId}_`);
-                             
-            let isInbound = elementClasses.includes(`le-${nativeNodeId}`) || 
-                            lineId.endsWith(`_to_${nativeNodeId}`);
-
-            // MULTI-POINT GEOMETRIC INTERSECT CROSS-CHECK (CRITICAL DIAMOND OPTIMIZATION)
-            if (!isOutbound || !isInbound) {
-                let currentD = pathLine.getAttribute('d') || '';
-                // Robust coordinate extraction handling both unspaced lists and exponential notation variables
-                let cleanCoords = currentD.replace(/[a-df-zA-DF-Z,]/g, ' ').trim().split(/\s+/).map(Number);
-                
-                if (cleanCoords.length >= 4 && !cleanCoords.some(isNaN)) {
-                    let startX = cleanCoords[0];
-                    let startY = cleanCoords[1];
-                    let endX = cleanCoords[cleanCoords.length - 2];
-                    let endY = cleanCoords[cleanCoords.length - 1];
-
-                    let distToStart = Math.hypot(startX - initialNodeCenter.x, startY - initialNodeCenter.y);
-                    let distToEnd = Math.hypot(endX - initialNodeCenter.x, endY - initialNodeCenter.y);
-
-                    if (distToStart < MAX_INTERSECT_RADIUS) isOutbound = true;
-                    if (distToEnd < MAX_INTERSECT_RADIUS) isInbound = true;
+            let distToStart = Math.hypot(dStartX - (centerPoint.x - deltaX), dStartY - (centerPoint.y - deltaY));
+            let distToEnd = Math.hypot(dEndX - (centerPoint.x - deltaX), dEndY - (centerPoint.y - deltaY));
+            
+            // STRICT INTERPOLATION BUFFER: Locks outbound vs inbound tracking mutually exclusively
+            const STABLE_PADDING_RADIUS_PX = 80;
+            if (distToStart < STABLE_PADDING_RADIUS_PX || distToEnd < STABLE_PADDING_RADIUS_PX) {
+                if (distToStart <= distToEnd) {
+                    isOutbound = true;
+                } else {
+                    isInbound = true;
                 }
             }
+        }
 
-            // Lock structural DOM element paths uniquely into verification arrays
-            if (isOutbound && !preCachedOutboundPaths.includes(pathLine)) preCachedOutboundPaths.push(pathLine);
-            if (isInbound && !preCachedInboundPaths.includes(pathLine)) preCachedInboundPaths.push(pathLine);
+        // Secondary fallback checking rules mapping class tags safely
+        if (!isOutbound && !isInbound) {
+            if (classString.includes(`ls-${cleanNodeKey}`) || lineId.startsWith(`edge_${cleanNodeKey}_`)) isOutbound = true;
+            if (classString.includes(`le-${cleanNodeKey}`) || lineId.endsWith(`_to_${cleanNodeKey}`)) isInbound = true;
+        }
+
+        if (!isOutbound && !isInbound) {
+            droppedCount++;
+            return;
+        }
+
+        // Separate instruction commands safely while completely protecting exponential terms
+        let commandTokens = currentPathData.match(/[A-Za-z][^A-Za-z]*/g);
+        if (!commandTokens) return;
+
+        let reconstructedPath = "";
+
+        commandTokens.forEach((token, idx) => {
+            let commandType = token.charAt(0);
+            let coordsArray = token.substring(1).replace(/,/g, ' ').trim().split(/\s+/).map(Number).filter(n => !isNaN(n));
+            
+            if (coordsArray.length >= 2) {
+                // Outbound lines: Shift ONLY the opening command token block ('M')
+                if (isOutbound && idx === 0 && commandType === 'M') {
+                    coordsArray[0] += deltaX;
+                    coordsArray[1] += deltaY;
+                    outCount++;
+                } 
+                // Inbound lines: Shift ONLY the final terminal coordinate block at the tail
+                if (isInbound && idx === commandTokens.length - 1) {
+                    let len = coordsArray.length;
+                    coordsArray[len - 2] += deltaX;
+                    coordsArray[len - 1] += deltaY;
+                    inCount++;
+                }
+                reconstructedPath += `${commandType}${coordsArray.join(' ')} `;
+            } else {
+                reconstructedPath += token + " ";
+            }
         });
 
-        console.log(`🔍 [SNAPSHOT CACHE] Node Clicked: Outbound Lines Locked = ${preCachedOutboundPaths.length} | Inbound Lines Locked = ${preCachedInboundPaths.length}`);
+        if (reconstructedPath) {
+            let cleanedPath = reconstructedPath.trim();
+            pathLine.setAttribute('d', cleanedPath);
+            
+            // Shift background shadow/glow path elements simultaneously inside identical execution loop
+            let siblingGroup = pathLine.parentElement;
+            if (siblingGroup && siblingGroup.tagName === 'g') {
+                siblingGroup.querySelectorAll('path').forEach(p => p.setAttribute('d', cleanedPath));
+            }
+        }
     });
 
-    // --- SUB-ROUTINE B: POWERPOINT SELECTIVE VECTOR WARPING ---
-    document.addEventListener('mousemove', function(e) {
-        const draggingNode = window.interactiveCanvasEngine.dragTargetNode;
-        if (!draggingNode || window.interactiveCanvasEngine.interactionType !== 'drag') return;
-        
-        const parentSvg = draggingNode.closest('svg');
-        if (!parentSvg) return;
+    // =========================================================================
+    // MODULE 5 - PART D: PERFORMANCE TELEMETRY RECAP MONITOR
+    // =========================================================================
+        // =========================================================================
+    // MODULE 5 - PART D: PERFORMANCE TELEMETRY RECAP MONITOR
+    // =========================================================================
+    let currentClock = Date.now();
+    if (currentClock - telemetryThrottleTimestamp > 400) { 
+        telemetryThrottleTimestamp = currentClock;
+        console.log("%c--- DYNAMIC INTERACTION FRAME RUNTIME TRACE ---", "color: #10b981; font-weight: bold;");
+        console.log(`⚙️ Cursor Real-Time Shift Vectors -> DeltaX: ${deltaX.toFixed(2)} | DeltaY: ${deltaY.toFixed(2)}`);
+        console.log(`📊 INTERACTION DELTA SUMMARY -> Total Checked: ${liveLines.length} | Shifted Outbound: ${outCount} | Shifted Inbound: ${inCount} | Ignored Def Markers: ${droppedCount}`);
+        console.log("%c-------------------------------------------------", "color: #10b981; font-weight: bold;");
+    }
 
-        // 1. Map real-time drag positions directly inside the scaled local SVG coordinate grid
-        let mouseSvgPoint = parentSvg.createSVGPoint();
-        mouseSvgPoint.x = e.clientX;
-        mouseSvgPoint.y = e.clientY;
-        
-        let localTransformMatrix = parentSvg.getScreenCTM().inverse();
-        let localizedMouse = mouseSvgPoint.matrixTransform(localTransformMatrix);
-        
-        let finalTargetX = localizedMouse.x - window.interactiveCanvasEngine.pointerOffset.x;
-        let finalTargetY = localizedMouse.y - window.interactiveCanvasEngine.pointerOffset.y;
-        
-        // 2. Compute strict positional displacement vector metrics (Δ)
-        let deltaX = finalTargetX - lastTrackedLocalPos.x;
-        let deltaY = finalTargetY - lastTrackedLocalPos.y;
-
-        // Update baseline registers instantly for subsequent layout frames
-        lastTrackedLocalPos.x = finalTargetX;
-        lastTrackedLocalPos.y = finalTargetY;
-
-        // Apply translation transformation on the shape group layer cleanly
-        draggingNode.setAttribute('transform', `translate(${finalTargetX}, ${finalTargetY})`);
-        
-        // 3. --- ZERO-LAG INDEPENDENT ENDPOINT MANIPULATION ---
-        
-        // Warp Outbound Paths (Adjusts ONLY the starting 'M' anchor point)
-        preCachedOutboundPaths.forEach(pathLine => {
-            let currentPathData = pathLine.getAttribute('d') || '';
-            // Safe scientific-notation token splitter excluding the letter 'e' when part of an exponential number
-            let commandTokens = currentPathData.match(/[A-DF-Za-df-z](?:[^A-DF-Za-df-z]*)/g);
-            if (!commandTokens) return;
-            
-            let reconstructedPath = "";
-            commandTokens.forEach(token => {
-                let commandType = token.charAt(0);
-                let coords = token.substring(1).replace(/,/g, ' ').trim().split(/\s+/).map(Number);
-                
-                if (commandType === 'M' && coords.length >= 2 && !coords.some(isNaN)) {
-                    coords[0] += deltaX;
-                    coords[1] += deltaY;
-                    reconstructedPath += `M${coords[0]},${coords[1]} `;
-                } else {
-                    reconstructedPath += token + " ";
-                }
-            });
-            
-            if (reconstructedPath) {
-                let cleanedPath = reconstructedPath.trim();
-                let edgeGroup = pathLine.closest('g.edgePath') || pathLine.parentElement;
-                if (edgeGroup) {
-                    edgeGroup.querySelectorAll('path').forEach(p => p.setAttribute('d', cleanedPath));
-                }
-            }
-        });
-
-        // Warp Inbound Paths (Adjusts ONLY the final destination endpoint point)
-        preCachedInboundPaths.forEach(pathLine => {
-            let currentPathData = pathLine.getAttribute('d') || '';
-            let commandTokens = currentPathData.match(/[A-DF-Za-df-z](?:[^A-DF-Za-df-z]*)/g);
-            if (!commandTokens) return;
-            
-            let reconstructedPath = "";
-            commandTokens.forEach((token, idx) => {
-                let commandType = token.charAt(0);
-                let coords = token.substring(1).replace(/,/g, ' ').trim().split(/\s+/).map(Number);
-                
-                // Shift strictly the final target vector block to prevent parent rods from floating
-                if (idx === commandTokens.length - 1 && coords.length >= 2 && !coords.some(isNaN)) {
-                    let len = coords.length;
-                    coords[len - 2] += deltaX;
-                    coords[len - 1] += deltaY;
-                    reconstructedPath += `${commandType}${coords.join(' ')} `;
-                } else {
-                    reconstructedPath += token + " ";
-                }
-            });
-            
-            if (reconstructedPath) {
-                let cleanedPath = reconstructedPath.trim();
-                let edgeGroup = pathLine.closest('g.edgePath') || pathLine.parentElement;
-                if (edgeGroup) {
-                    edgeGroup.querySelectorAll('path').forEach(p => p.setAttribute('d', cleanedPath));
-                    
-                    // Update arrowhead marker position to point to the new location boundary
-                    let markerGroup = edgeGroup.querySelector('marker, [marker-end]');
-                    if (markerGroup) {
-                        edgeGroup.style.overflow = "visible";
-                    }
-                }
-            }
-        });
-
-        // Throttled feedback loop monitoring the line-shifting array pipeline
-        let currentClockTime = Date.now();
-        if (currentClockTime - loggingThrottleTimestamp > 330) { 
-            loggingThrottleTimestamp = currentClockTime;
-            console.log("%c--- REAL-TIME TRANSLATION SNAP MATRIX ACTIVE ---", "color: #3b82f6; font-weight: bold;");
-            console.log(`▶️ Bound Outbound Paths: ${preCachedOutboundPaths.length} | Bound Inbound Paths: ${preCachedInboundPaths.length}`);
-console.log("%c-------------------------------------------------", "color: #3b82f6; font-weight: bold;");
-}
+    lastKnownLocalPos.x = finalTargetX;
+    lastKnownLocalPos.y = finalTargetY;
 });
-});
+
+
 
 // =========================================================================
 // MODULE 6: COMPONENT DISCONNECT & MOUSE-RELEASE CLEANER
