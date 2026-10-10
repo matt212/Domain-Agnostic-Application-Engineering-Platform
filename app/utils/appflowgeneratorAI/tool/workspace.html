@@ -7,6 +7,39 @@
     <!-- Tailwind CSS CDN for modern UI layout styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
+      /* =========================================================================
+   POWERPOINT INTERACTIVITY CANVAS RULES (APPEND TO BOTTOM OF STYLE BLOCK)
+   ========================================================================= */
+g.node {
+    pointer-events: all !important;
+}
+g.node:hover {
+    cursor: move !important;
+}
+/* Trigger connection cursor when hovering near the edges */
+g.node.edge-hover-intent {
+    cursor: cell !important; 
+}
+.active-node-drag rect, .active-node-drag polygon, .active-node-drag circle, .active-node-drag path {
+    stroke: #3b82f6 !important;
+    stroke-width: 2.5px !important;
+    filter: drop-shadow(0px 0px 4px rgba(59, 130, 246, 0.5));
+}
+.selected-link-origin rect, .selected-link-origin polygon, .selected-link-origin circle, .selected-link-origin path {
+    stroke: #10b981 !important;
+    stroke-width: 2.5px !important;
+    stroke-dasharray: 4,4 !important;
+}
+g.edgePath path.path {
+    cursor: pointer !important;
+    pointer-events: all !important;
+}
+g.edgePath path.path:hover {
+    stroke: #ef4444 !important;
+    stroke-width: 3px !important;
+}
+
+
         ::-webkit-scrollbar { width: 6px; height: 6px; }
         ::-webkit-scrollbar-track { background: #f1f1f1; }
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
@@ -104,9 +137,12 @@ so do not change anything keep everything as is . only change phase 1 section in
     </div>
                 </div>
             </div>
-             <button id="downloadPlantUMLBtn" class="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white font-semibold text-sm py-2.5 px-4 rounded-lg transition-all active:scale-[0.98] shadow-lg shadow-green-900/20 flex items-center justify-center gap-2">
+             <button style="display: none;" id="downloadPlantUMLBtn" class="w-full bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-500 hover:to-emerald-500 text-white font-semibold text-sm py-2.5 px-4 rounded-lg transition-all active:scale-[0.98] shadow-lg shadow-green-900/20 flex items-center justify-center gap-2">
                         🔄 Download downloadPlantUML
                     </button>
+                    <!-- Inject this next to your zoom controls to toggle your existing modes -->
+
+
 
             <!-- Editable Source Text Code Panel -->
             <div class="flex-1 flex flex-col min-h-0">
@@ -293,11 +329,13 @@ so do not change anything keep everything as is . only change phase 1 section in
         //         statusText.textContent = "Mermaid Syntax Error. Checking input format rules.";
         //     }
         // }
+// =========================================================================
+// RENDER HOOK FIX: INJECT INLINE CLOSURE TO KILL MERMAID CLIP-PATHS
+// =========================================================================
 async function renderDiagram() {
     let rawSyntax = extractRawMermaid(codeEditor.value);
     if (!rawSyntax) return;
     try {
-        // MINIMUM FIX: Strips text anomalies introduced by the local AI that cause font-overlapping layout crashes
         rawSyntax = rawSyntax.replace(/[\u201C\u201D]/g, '"').replace(/&quot;/g, '"').replace(/\\"/g, '"');
 
         const uniqueId = `mermaid-render-${Date.now()}`;
@@ -305,14 +343,47 @@ async function renderDiagram() {
         await mermaid.run({ nodes: [document.getElementById(uniqueId)] });
         
         const realSvg = renderTarget.querySelector('svg');
-        if(realSvg) { realSvg.style.maxWidth = 'none'; realSvg.style.height = 'auto'; }
+        if (realSvg) { 
+            realSvg.style.maxWidth = 'none'; 
+            realSvg.style.height = 'auto'; 
+
+            // --- CRITICAL OVERRIDE SNIPPET: FORCES ABSOLUTE CLIPPING UNBOUNDING ---
+            const antiClipStyle = document.createElementNS("http://w3.org", "style");
+            antiClipStyle.textContent = `
+                g.node, g.node *, rect, polygon, circle, path, text {
+                    clip-path: none !important;
+                    overflow: visible !important;
+                }
+            `;
+            realSvg.appendChild(antiClipStyle);
+            
+            // Explicitly stamp unique ID tracking markers onto visual edge pathways
+            realSvg.querySelectorAll('g.edgePath').forEach(edgeGroup => {
+                let elementClasses = Array.from(edgeGroup.classList).join(' ');
+                let sourceMatch = elementClasses.match(/ls-([a-zA-Z0-9_]+)/);
+                let targetMatch = elementClasses.match(/le-([a-zA-Z0-9_]+)/);
+                
+                if (sourceMatch && targetMatch) {
+                    let internalLine = edgeGroup.querySelector('path.path');
+                    if (internalLine) {
+                        internalLine.setAttribute('id', `edge_${sourceMatch}_to_${targetMatch}`);
+                    }
+                }
+            });
+        }
+        
         statusDot.className = "h-2 w-2 rounded-full bg-green-500";
         statusText.textContent = "Syntax compilation successful. Diagram rendered.";
+
     } catch (err) {
         statusDot.className = "h-2 w-2 rounded-full bg-red-500";
         statusText.textContent = "Mermaid Syntax Error.";
+        console.error("Rendering Lifecycle Failure: ", err);
     }
 }
+
+
+
 
         codeEditor.addEventListener('input', () => {
             const cleaned = extractRawMermaid(codeEditor.value);
@@ -847,28 +918,28 @@ document.getElementById('runDeterministicBtn').addEventListener('click', async (
     await executeSerialMermaidCommand(rawInputText);
 });
 
-
-document.getElementById('downloadPlantUMLBtn').addEventListener('click', async () => {
+//no plantuml functionality this is just non use functionality
+// document.getElementById('downloadPlantUMLBtn').addEventListener('click', async () => {
     
-const rawSyntax = extractRawMermaid(codeEditor.value);
-            if (!rawSyntax) {
-                alert("No diagram syntax found to download.");
-                return;
-            }
-    const markdownContent = `\`\`\`mermaid\n${rawSyntax}\n\`\`\``;
-    const plantUmlResult = convertMermaidToStructuredPlantUML(markdownContent);
-    const blob = new Blob([plantUmlResult], { type: 'text/markdown;charset=utf-8' });
-    const url1 = URL.createObjectURL(blob);
+// const rawSyntax = extractRawMermaid(codeEditor.value);
+//             if (!rawSyntax) {
+//                 alert("No diagram syntax found to download.");
+//                 return;
+//             }
+//     const markdownContent = `\`\`\`mermaid\n${rawSyntax}\n\`\`\``;
+//     const plantUmlResult = convertMermaidToStructuredPlantUML(markdownContent);
+//     const blob = new Blob([plantUmlResult], { type: 'text/markdown;charset=utf-8' });
+//     const url1 = URL.createObjectURL(blob);
             
-            const anchor = document.createElement('a');
-            anchor.href = url1;
-            anchor.download = `mermaid-diagram-${Date.now()}.puml`;
-            document.body.appendChild(anchor);
-            anchor.click();
-            document.body.removeChild(anchor);
-            URL.revokeObjectURL(url1);
+//             const anchor = document.createElement('a');
+//             anchor.href = url1;
+//             anchor.download = `mermaid-diagram-${Date.now()}.puml`;
+//             document.body.appendChild(anchor);
+//             anchor.click();
+//             document.body.removeChild(anchor);
+//             URL.revokeObjectURL(url1);
 
-});
+// });
 
 /**
  * Surgically converts an automated Mermaid flowchart script string into a PlantUML document.
@@ -1174,6 +1245,969 @@ function convertMermaidToStructuredPlantUML(mermaidCode) {
     return dotResult;
 }
 
+
+
+/**
+ * SECTION 1: COORDINATE SPACE UTILITIES
+ * Resolves accurate mouse/touch positions within the local SVG matrix transformation.
+ */
+const SVGWorkspaceCoords = {
+    /**
+     * Converts a client MouseEvent to localized SVG coordinates.
+     * @param {SVGSVGElement} svg - Target Mermaid rendered SVG element.
+     * @param {MouseEvent} event - Standard browser event.
+     * @returns {SVGPoint} Localized X and Y system matrix coordinates.
+     */
+    getRelativePoint(svg, event) {
+        const point = svg.createSVGPoint();
+        point.x = event.clientX;
+        point.y = event.clientY;
+        
+        // Invert the current viewport/pan transformation matrix to extract true space
+        const currentTransformMatrix = svg.getScreenCTM();
+        if (currentTransformMatrix) {
+            return point.matrixTransform(currentTransformMatrix.inverse());
+        }
+        return point;
+    }
+};
+/**
+ * SECTION 2: INTERACTIVE NODE DRAGGING INTERFACE
+ * Intercepts, isolates, and offsets specific Mermaid structural node groups.
+ */
+function initializeMermaidNodeDragging(svgContainerId) {
+    const workspaceSvg = document.getElementById(svgContainerId)?.querySelector('svg');
+    if (!workspaceSvg) return;
+
+    let selectedNodeGroup = null;
+    let initialOffset = { x: 0, y: 0 };
+    let activeTransforms = {}; // Tracks current translation matrices of shifted items
+
+    // Identify all rendered Mermaid nodes
+    const renderedNodes = workspaceSvg.querySelectorAll('.node, .nodes .node');
+
+    renderedNodes.forEach(node => {
+        node.style.cursor = 'grab';
+
+        node.addEventListener('mousedown', (e) => {
+            e.stopPropagation(); // Shield from background workspace canvas panning systems
+            selectedNodeGroup = node;
+            node.style.cursor = 'grabbing';
+
+            const localMouse = SVGWorkspaceCoords.getRelativePoint(workspaceSvg, e);
+            
+            // Extract existing translation matrices assigned by Mermaid layout engines
+            let currentX = 0;
+            let currentY = 0;
+            const existingTransform = node.getAttribute('transform');
+            
+            if (existingTransform && existingTransform.includes('translate')) {
+                const match = existingTransform.match(/translate\(([-\d.]+),\s*([-\d.]+)\)/);
+                if (match) {
+                    currentX = parseFloat(match[1]);
+                    currentY = parseFloat(match[2]);
+                }
+            }
+
+            // Lock structural baseline offset vector
+            initialOffset.x = localMouse.x - currentX;
+            initialOffset.y = localMouse.y - currentY;
+        });
+    });
+
+    window.addEventListener('mousemove', (e) => {
+        if (!selectedNodeGroup) return;
+        e.preventDefault();
+
+        const currentMouse = SVGWorkspaceCoords.getRelativePoint(workspaceSvg, e);
+        const targetX = currentMouse.x - initialOffset.x;
+        const targetY = currentMouse.y - initialOffset.y;
+
+        // Apply real-time translation override directly to the SVG structural node
+        selectedNodeGroup.setAttribute('transform', `translate(${targetX}, ${targetY})`);
+        
+        // Track displacement to enable real-time dynamic edge line rerouting
+        const nodeId = selectedNodeGroup.id || selectedNodeGroup.getAttribute('data-id');
+        if (nodeId) {
+            activeTransforms[nodeId] = { x: targetX, y: targetY };
+            // Optional Hook: Dispatch live updates to tracking matrices or edge calculation maps
+        }
+    });
+
+    window.addEventListener('mouseup', () => {
+        if (selectedNodeGroup) {
+            selectedNodeGroup.style.cursor = 'grab';
+            selectedNodeGroup = null;
+        }
+    });
+}
+/**
+ * SECTION 3: LINE LINK INTERACTION FRAMEWORK
+ * Generates visual user-controlled tracking vectors to bind disjoint blocks.
+ */
+function initializeMermaidLinkGenerator(svgContainerId, onConnectionEstablished) {
+    const workspaceSvg = document.getElementById(svgContainerId)?.querySelector('svg');
+    if (!workspaceSvg) return;
+
+    let traceLine = null;
+    let linkingOriginNode = null;
+    const nodes = workspaceSvg.querySelectorAll('.node, .nodes .node');
+
+    nodes.forEach(node => {
+        // Append a minor graphical UI handle for drag linking over element wrappers
+        node.addEventListener('contextmenu', (e) => {
+            e.preventDefault(); // Retain right click vector creation isolation
+            e.stopPropagation();
+
+            linkingOriginNode = node;
+            const startPoint = SVGWorkspaceCoords.getRelativePoint(workspaceSvg, e);
+
+            // Construct an ephemeral rendering vector on top of current view groups
+            traceLine = document.createElementNS('http://w3.org', 'line');
+            traceLine.setAttribute('stroke', '#3b82f6'); // UI Visual Tracker (Vivid Blue)
+            traceLine.setAttribute('stroke-width', '3');
+            traceLine.setAttribute('stroke-dasharray', '5,5');
+            traceLine.setAttribute('x1', startPoint.x);
+            traceLine.setAttribute('y1', startPoint.y);
+            traceLine.setAttribute('x2', startPoint.x);
+            traceLine.setAttribute('y2', startPoint.y);
+
+            workspaceSvg.appendChild(traceLine);
+        });
+    });
+
+    window.addEventListener('mousemove', (e) => {
+        if (!traceLine) return;
+        const currentPosition = SVGWorkspaceCoords.getRelativePoint(workspaceSvg, e);
+        
+        // Stretch line tracking the current coordinates of pointer device
+        traceLine.setAttribute('x2', currentPosition.x);
+        traceLine.setAttribute('y2', currentPosition.y);
+    });
+
+    window.addEventListener('mouseup', (e) => {
+        if (!traceLine) return;
+
+        // Determine if vector projection terminates accurately over a valid node element target
+        const elementUnderCursor = document.elementFromPoint(e.clientX, e.clientY);
+        const targetNodeGroup = elementUnderCursor?.closest('.node');
+
+        if (targetNodeGroup && linkingOriginNode && targetNodeGroup !== linkingOriginNode) {
+            // Unpack IDs or embedded Mermaid labels to feed the AI Parser
+            const sourceId = linkingOriginNode.id || linkingOriginNode.querySelector('.nodeLabel')?.textContent?.trim();
+            const destinationId = targetNodeGroup.id || targetNodeGroup.querySelector('.nodeLabel')?.textContent?.trim();
+
+            if (sourceId && destinationId) {
+                // Execute Callback to bridge with workspace command parsing state engine 
+                onConnectionEstablished(sourceId, destinationId);
+            }
+        }
+
+        // Wipe visual trace path cleanly from the application layout
+        if (traceLine && traceLine.parentNode) {
+            traceLine.parentNode.removeChild(traceLine);
+        }
+        traceLine = null;
+        linkingOriginNode = null;
+    });
+}
+/**
+ * SECTION 4: STATE BRIDGE PIPELINE
+ * Bridges real-time interactive canvas adjustments with the WebLLM parsing stack.
+ */
+function integrateInteractiveCanvasWithWorkspace() {
+    // 1. Re-initialize interactive vector canvas anytime Mermaid updates rendering cycles
+    const containerObserver = new MutationObserver((mutations) => {
+        mutations.forEach(() => {
+            // Trigger initialization cleanly over fresh SVG assets 
+            initializeMermaidNodeDragging('mermaid-workspace-container');
+            
+            initializeMermaidLinkGenerator('mermaid-workspace-container', (source, destination) => {
+                // Formatting standard connection token to map back directly into Live Script Editor
+                const connectionToken = `CONNECT "${source}" TO "${destination}"`;
+                console.log("Workspace Interactive Vector Signal Generated: ", connectionToken);
+                
+                // Hook execution straight into your live token system layout
+                // Example programmatic insertion point:
+                // appendNewCommandPatternToSource(connectionToken);
+                // triggerDeterministicParserRefresh();
+            });
+        });
+    });
+
+    const targetContainer = document.getElementById('mermaid-workspace-container');
+    if (targetContainer) {
+        containerObserver.observe(targetContainer, { childList: true });
+    }
+}
+
+
+// powerpoint style drag and drop functionality for nodes and edges
+window.interactiveWorkspaceEngine = {
+    // Current application status tracker
+    activeMode: 'drag', // 'drag' or 'link'
+    
+    // Selection state variables
+    focusedNodeId: null,
+    focusedEdgeId: null,
+    
+    // Link assembly coordinates tracking points
+    connectionOriginNode: null,
+    activeDragNode: null,
+    
+    // Offset storage for drag positioning recalculations
+    dragStartOffset: { x: 0, y: 0 }
+};
+
+
+function initializeDragAndDropEngine(diagramCanvas) {
+    diagramCanvas.addEventListener('mousedown', function(e) {
+        // Block processing if the interaction mode is not set to standard Drag state
+        if (window.workspaceInteractionIntent !== 'drag') return;
+        
+        const nodeGroup = e.target.closest('g.node');
+        if (!nodeGroup) return;
+        
+        e.preventDefault();
+        window.interactiveWorkspaceEngine.activeDragNode = nodeGroup;
+        
+        // Fetch current translation positions or set default zeros
+        let currentTransform = nodeGroup.getAttribute('transform') || 'translate(0,0)';
+        let translateMatch = currentTransform.match(/translate\(([^,)]+),?([^)]+)?\)/);
+        
+        let startX = translateMatch ? parseFloat(translateMatch[1]) : 0;
+        let startY = translateMatch && translateMatch[2] ? parseFloat(translateMatch[2]) : 0;
+        
+        // Calculate point offsets relative to viewport coordinates
+        window.interactiveWorkspaceEngine.dragStartOffset.x = e.clientX - startX;
+        window.interactiveWorkspaceEngine.dragStartOffset.y = e.clientY - startY;
+        
+        nodeGroup.classList.add('node-active-dragging');
+    });
+
+    document.addEventListener('mousemove', function(e) {
+        const activeNode = window.interactiveWorkspaceEngine.activeDragNode;
+        if (!activeNode) return;
+        
+        // Calculate coordinates delta changes dynamically
+        let newX = e.clientX - window.interactiveWorkspaceEngine.dragStartOffset.x;
+        let newY = e.clientY - window.interactiveWorkspaceEngine.dragStartOffset.y;
+        
+        // Apply spatial matrix positioning transform updates onto node block DOM node
+        activeNode.setAttribute('transform', `translate(${newX},${newY})`);
+        
+        // CRITICAL: Force dynamic recalculation on lines to anchor paths perfectly
+        recalculateBoundConnectionSplines(activeNode.id);
+    });
+
+    document.addEventListener('mouseup', function() {
+        if (window.interactiveWorkspaceEngine.activeDragNode) {
+            window.interactiveWorkspaceEngine.activeDragNode.classList.remove('node-active-dragging');
+            window.interactiveWorkspaceEngine.activeDragNode = null;
+        }
+    });
+}
+function initializeInteractiveLinkingEngine(diagramCanvas) {
+    diagramCanvas.addEventListener('click', function(e) {
+        if (window.workspaceInteractionIntent !== 'link') return;
+        
+        const nodeGroup = e.target.closest('g.node');
+        if (!nodeGroup) return;
+        
+        const selectedNodeId = nodeGroup.id;
+        
+        if (!window.interactiveWorkspaceEngine.connectionOriginNode) {
+            // STEP A: Lock connection source anchor coordinate map
+            window.interactiveWorkspaceEngine.connectionOriginNode = selectedNodeId;
+            nodeGroup.style.outline = "2px dashed #3b82f6";
+            console.log(`Connection routing initialized from node point: ${selectedNodeId}`);
+        } else {
+            // STEP B: Process targeted execution line closure parameters
+            const destinationNodeId = selectedNodeId;
+            const originNodeId = window.interactiveWorkspaceEngine.connectionOriginNode;
+            
+            if (originNodeId !== destinationNodeId) {
+                console.log(`Locking dynamic link path rule: CONNECT ${originNodeId} TO ${destinationNodeId}`);
+                
+                // Fire update commands straight into your operational AI automation layer console field
+                let commandPayload = `CONNECT ${originNodeId} TO ${destinationNodeId} WITH "Forward Connection"`;
+                executeAIUpdateAgentCommand(commandPayload);
+            }
+            
+            // Clean interface configurations out instantly to finish the connection routine
+            document.querySelectorAll('g.node').forEach(el => el.style.outline = "");
+            window.interactiveWorkspaceEngine.connectionOriginNode = null;
+        }
+    });
+}
+function recalculateBoundConnectionSplines(targetNodeId) {
+    // Query target element boundaries directly from live canvas layout
+    const nodeElement = document.getElementById(targetNodeId);
+    if (!nodeElement) return;
+    
+    const bbox = nodeElement.getBBox();
+    const currentTransform = nodeElement.getAttribute('transform') || 'translate(0,0)';
+    let translateMatch = currentTransform.match(/translate\(([^,)]+),?([^)]+)?\)/);
+    let nodeX = translateMatch ? parseFloat(translateMatch[1]) : 0;
+    let nodeY = translateMatch && translateMatch[2] ? parseFloat(translateMatch[2]) : 0;
+
+    // Calculate middle intersection positions for accurate center-point linking
+    const nodeCenter = {
+        x: nodeX + (bbox.width / 2),
+        y: nodeY + (bbox.height / 2)
+    };
+
+    // Scan the live DOM canvas layer map for paths connected to this node
+    document.querySelectorAll('path').forEach(pathLine => {
+        let edgeIdAttr = pathLine.getAttribute('id') || '';
+        
+        // Update outbound paths leaving this specific element block point location
+        if (edgeIdAttr.startsWith(`edge_${targetNodeId}_`)) {
+            let originalD = pathLine.getAttribute('d');
+            // Dynamically adjust drawing anchors on SVG path command strings
+            let points = originalD.split(' ');
+            if (points.length >= 2) {
+                points[0] = `M${nodeCenter.x},${nodeCenter.y}`;
+                pathLine.setAttribute('d', points.join(' '));
+            }
+        }
+        
+        // Update inbound paths arriving at this element block point location
+        if (edgeIdAttr.endsWith(`_to_${targetNodeId}`)) {
+            let originalD = pathLine.getAttribute('d');
+            let points = originalD.split(' ');
+            if (points.length >= 1) {
+                points[points.length - 1] = `L${nodeCenter.x},${nodeCenter.y}`;
+                pathLine.setAttribute('d', points.join(' '));
+            }
+        }
+    });
+}
+function initializeDisconnectionEngine(diagramCanvas) {
+    // Intercept clicks on connection lines to focus them for deletion hooks
+    diagramCanvas.addEventListener('click', function(e) {
+        const pathLine = e.target.closest('path');
+        if (!pathLine) return;
+        
+        let edgeId = pathLine.getAttribute('id');
+        if (!edgeId || !edgeId.startsWith('edge_')) return;
+        
+        // Highlight targeted edge layer visual borders cleanly
+        document.querySelectorAll('path').forEach(el => el.style.stroke = "");
+        pathLine.style.stroke = "#ef4444"; 
+        
+        window.interactiveWorkspaceEngine.focusedEdgeId = edgeId;
+        console.log(`Edge path highlighted for drop selection processing: ${edgeId}`);
+    });
+
+    // Tap keyboard intercept arrays to execute live component modifications
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Delete' || e.key === 'Backspace') {
+            const targetEdge = window.interactiveWorkspaceEngine.focusedEdgeId;
+            if (!targetEdge) return;
+            
+            // Extract the core node aliases from the active target ID string mapping sequence
+            let matches = targetEdge.match(/^edge_(.+)_to_(.+)\$/);
+            if (matches) {
+                let sourceNodeAlias = matches[1];
+                let destinationNodeAlias = matches[2];
+                
+                console.log(`Triggering disconnection engine routines: DISCONNECT ${sourceNodeAlias} FROM ${destinationNodeAlias}`);
+                
+                let disconnectCommand = `DISCONNECT ${sourceNodeAlias} FROM ${destinationNodeAlias}`;
+                executeAIUpdateAgentCommand(disconnectCommand);
+                
+                window.interactiveWorkspaceEngine.focusedEdgeId = null;
+            }
+        }
+    });
+}
+document.addEventListener('DOMContentLoaded', () => {
+    // Locate the core workspace diagram canvas element viewport element
+    const canvasViewport = document.getElementById('diagram') || document.querySelector('svg');
+    
+    if (canvasViewport) {
+        initializeDragAndDropEngine(canvasViewport);
+        initializeInteractiveLinkingEngine(canvasViewport);
+        initializeInteractiveLinkingEngine(canvasViewport);
+        initializeDisconnectionEngine(canvasViewport);
+        console.log("⚡ Interactive PowerPoint-Level Workbench Layers Initialized Cleanly.");
+    }
+});
+
+
+// =========================================================================
+// MODULE 1: INTERACTION STORAGE REGISTRY
+// =========================================================================
+window.interactiveCanvasEngine = {
+    dragTargetNode: null,
+    linkOriginNodeId: null,
+    focusedEdgeId: null,
+    pointerOffset: { x: 0, y: 0 },
+    interactionType: null // Dynamically computed: 'drag' or 'link'
+};
+// =========================================================================
+// MODULE 3: POWERPOINT PROXIMITY EVALUATION ENGINE
+// =========================================================================
+const BORDER_THRESHOLD_PX = 12; // Proximity to the border box to trigger link drawing mode
+
+function evaluateInteractionIntent(event, nodeGroup) {
+    const shapeElement = nodeGroup.querySelector('rect, polygon, circle, path');
+    if (!shapeElement) return 'drag';
+
+    const bounds = shapeElement.getBoundingClientRect();
+    const mouseX = event.clientX;
+    const mouseY = event.clientY;
+
+    // Proximity metrics tracking closeness to shapes border frames
+    const nearLeft = Math.abs(mouseX - bounds.left) < BORDER_THRESHOLD_PX;
+    const nearRight = Math.abs(mouseX - bounds.right) < BORDER_THRESHOLD_PX;
+    const nearTop = Math.abs(mouseY - bounds.top) < BORDER_THRESHOLD_PX;
+    const nearBottom = Math.abs(mouseY - bounds.bottom) < BORDER_THRESHOLD_PX;
+
+    if (nearLeft || nearRight || nearTop || nearBottom) return 'link';
+    return 'drag';
+}
+
+// Global Hover Listener providing instant PowerPoint cursor swaps
+document.addEventListener('DOMContentLoaded', () => {
+    renderTarget.addEventListener('mousemove', function(e) {
+        const nodeGroup = e.target.closest('g.node');
+        if (!nodeGroup || window.interactiveCanvasEngine.dragTargetNode) return;
+
+        const dynamicIntent = evaluateInteractionIntent(e, nodeGroup);
+        if (dynamicIntent === 'link') {
+            nodeGroup.classList.add('edge-hover-intent');
+        } else {
+            nodeGroup.classList.remove('edge-hover-intent');
+        }
+    });
+});
+// =========================================================================
+// MODULE 4: MOUSE-DOWN INTERCEPT ROUTER (FIXED)
+// =========================================================================
+// =========================================================================
+// MODULE 4: MOUSE-DOWN INTERCEPT ROUTER (HARDENED CONTINGENCY ROUTINE)
+// =========================================================================
+// =========================================================================
+// MODULE 4: MOUSE-DOWN INTERCEPT ROUTER (COORDINATE COMPATIBLE)
+// =========================================================================
+// =========================================================================
+// MODULE 4: MOUSE-DOWN INTERCEPT ROUTER (CLIP-PATH SAFE BYPASS)
+// =========================================================================
+// =========================================================================
+// MODULE 4: MOUSE-DOWN INTERCEPT ROUTER (SHAPE-PATH SAFE BYPASS)
+// =========================================================================
+// =========================================================================
+// MODULE 4: MOUSE-DOWN INTERCEPT ROUTER (HARDENED OVERFLOW BYPASS)
+// =========================================================================
+// =========================================================================
+// MODULE 4: MOUSE-DOWN INTERCEPT ROUTER (BOUNDARY EXPANSION ENGINE)
+// =========================================================================
+document.addEventListener('DOMContentLoaded', () => {
+    renderTarget.addEventListener('mousedown', function(e) {
+        const nodeGroup = e.target.closest('g.node');
+        
+        // Context 1: Handle Arrow Spline Selection for deletion highlights
+        const pathLine = e.target.closest('g.edgePath path.path');
+        if (pathLine) {
+            let edgeIdAttr = pathLine.getAttribute('id') || '';
+            if (edgeIdAttr.startsWith('edge_')) {
+                document.querySelectorAll('g.edgePath path.path').forEach(el => el.style.stroke = "");
+                pathLine.style.stroke = "#ef4444";
+                window.interactiveCanvasEngine.focusedEdgeId = edgeIdAttr;
+                console.log(`Target locked for disconnect execution: ${edgeIdAttr}`);
+            }
+            return;
+        }
+
+        if (!nodeGroup) return;
+        
+        // STOP BUBBLING UP: Blocks layout pan engines from intercepting click actions
+        e.stopPropagation();
+        e.preventDefault();
+
+        const absoluteIntent = evaluateInteractionIntent(e, nodeGroup);
+        window.interactiveCanvasEngine.interactionType = absoluteIntent;
+
+        if (absoluteIntent === 'drag') {
+            window.interactiveCanvasEngine.dragTargetNode = nodeGroup;
+            nodeGroup.classList.add('active-node-drag');
+            
+            // CRITICAL INVISIBLE BOUNDARY EXPANSION:
+            // Walk up the DOM tree and explicitly blow open the clipping bounds of Mermaid's inner viewport frames
+            let parentWalk = nodeGroup.parentElement;
+            while (parentWalk && parentWalk.tagName !== 'svg') {
+                parentWalk.removeAttribute('clip-path');
+                parentWalk.style.clipPath = 'none';
+                parentWalk.style.overflow = "visible";
+                
+                // If it's a structural container element, override its bounding boxes
+                if (parentWalk.tagName === 'g' || parentWalk.tagName === 'svg') {
+                    parentWalk.setAttribute('style', 'overflow: visible !important; clip-path: none !important;');
+                }
+                parentWalk = parentWalk.parentElement;
+            }
+            
+            // Explicitly unlock the main outer SVG canvas wrapper bounds
+            const parentSvg = nodeGroup.closest('svg');
+            if (parentSvg) {
+                parentSvg.style.overflow = "visible";
+                parentSvg.setAttribute('style', 'overflow: visible !important; clip-path: none !important; max-width: none !important;');
+            }
+            
+            // 1. Transform raw screen coordinates to localized SVG plane vectors
+            let clickSvgPoint = parentSvg.createSVGPoint();
+            clickSvgPoint.x = e.clientX;
+            clickSvgPoint.y = e.clientY;
+            
+            let localTransformMatrix = parentSvg.getScreenCTM().inverse();
+            let localizedSvgClick = clickSvgPoint.matrixTransform(localTransformMatrix);
+            
+            // 2. Safely read existing transformation coordinates parameters
+            let currentTransform = nodeGroup.getAttribute('transform') || 'translate(0,0)';
+            let translateMatch = currentTransform.match(/translate\(([^,)\s]+)[,\s]*([^)]+)?\)/) || 
+                                 currentTransform.match(/matrix\(1,\s*0,\s*0,\s*1,\s*([^,]+),\s*([^)]+)\)/);
+            
+            let initialNodeX = 0;
+            let initialNodeY = 0;
+            
+            if (translateMatch) {
+                let parsedX = parseFloat(translateMatch[1]);
+                let parsedY = translateMatch[2] ? parseFloat(translateMatch[2]) : 0;
+                initialNodeX = isNaN(parsedX) ? 0 : parsedX;
+                initialNodeY = isNaN(parsedY) ? 0 : parsedY;
+            }
+            
+            // 3. Store the coordinate delta updates safely
+            window.interactiveCanvasEngine.pointerOffset.x = localizedSvgClick.x - initialNodeX;
+            window.interactiveCanvasEngine.pointerOffset.y = localizedSvgClick.y - initialNodeY;
+            
+        } else if (absoluteIntent === 'link') {
+            const targetId = nodeGroup.id;
+            
+            if (!window.interactiveCanvasEngine.linkOriginNodeId) {
+                window.interactiveCanvasEngine.linkOriginNodeId = targetId;
+                nodeGroup.classList.add('selected-link-origin');
+            } else {
+                let sourceNode = window.interactiveCanvasEngine.linkOriginNodeId;
+                let destinationNode = targetId;
+                
+                if (sourceNode !== destinationNode) {
+                    const connectionMacro = `\nCONNECT Step ${sourceNode.replace(/[^0-9.]/g, '') || sourceNode} TO Step ${destinationNode.replace(/[^0-9.]/g, '') || destinationNode}`;
+                    
+                    if (codeEditor) {
+                        codeEditor.value += connectionMacro;
+                        codeEditor.dispatchEvent(new Event('input', { bubbles: true }));
+                        
+                        const parserBtn = document.getElementById('deterministic-parser-btn') || 
+                                               document.querySelector('button[onclick*="Deterministic"]');
+                        if (parserBtn) parserBtn.click();
+                    }
+                }
+                
+                document.querySelectorAll('g.node').forEach(el => el.classList.remove('selected-link-origin'));
+                window.interactiveCanvasEngine.linkOriginNodeId = null;
+            }
+        }
+    });
+});
+
+
+
+
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (FIXED)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (SCALED RE-ALIGNMENT)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (CLIP-PATH SAFE BYPASS)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (CLIP-PATH SAFE BYPASS)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (SHAPE-PATH SAFE BYPASS)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (POWERPOINT ACCURATE TRACKING)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (NATIVE MERMAID ID MAPPING)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (CONTENT MAPPING PIPELINE)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (NATIVE LAYOUT MATRIX RUNTIME)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (GEOMETRIC PROXIMITY ENGINE)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (DIRECT DOM INTERSECT HUBS)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (SPATIAL POSITION SCANNERS)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (TOPOLOGICAL LINKAGE ENGINES)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (NATIVE BOUNDING BOX LOCATORS)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (ZERO-LAG DELTA HUB)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (TOPOLOGICAL INDEX SYSTEMS)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (PURE GEOMETRIC PROXIMITY)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (NATIVE TRANSFORM ENGINE)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME FLUID NODE DRAGGING (ZERO-LAG MOUSE-MOVE HUD)
+// =========================================================================
+// =========================================================================
+// MODULE 5: FLUID POSITIONING LAYER ENGINE (LIGHTWEIGHT & RE-STABILIZED)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME POSITIONING LAYER WITH SAFE THROTTLED LOGGERS
+// =========================================================================
+// document.addEventListener('DOMContentLoaded', () => {
+//     let loggingThrottleTimestamp = 0; // Tracks clock delays to protect cursor frame cycle
+
+//     document.addEventListener('mousemove', function(e) {
+//         const draggingNode = window.interactiveCanvasEngine.dragTargetNode;
+//         if (!draggingNode || window.interactiveCanvasEngine.interactionType !== 'drag') return;
+        
+//         const parentSvg = draggingNode.closest('svg');
+//         if (!parentSvg) return;
+
+//         // 1. Transform raw screen pointer inputs into the scaled SVG coordinate layout plane
+//         let mouseSvgPoint = parentSvg.createSVGPoint();
+//         mouseSvgPoint.x = e.clientX;
+//         mouseSvgPoint.y = e.clientY;
+        
+//         let localTransformMatrix = parentSvg.getScreenCTM().inverse();
+//         let localizedMouse = mouseSvgPoint.matrixTransform(localTransformMatrix);
+        
+//         // Calculate new target coordinate positions with offsets applied safely
+//         let finalTargetX = localizedMouse.x - window.interactiveCanvasEngine.pointerOffset.x;
+//         let finalTargetY = localizedMouse.y - window.interactiveCanvasEngine.pointerOffset.y;
+        
+//         // 2. Set node translation smooth on screen plane view layer (Fluid PowerPoint Drag)
+//         draggingNode.setAttribute('transform', `translate(${finalTargetX}, ${finalTargetY})`);
+
+//         // =========================================================================
+//         // 📊 SAFE THROTTLED ENGINE PERFORMANCE MONITOR (FIRES MAX 3 TIMES PER SECOND)
+//         // =========================================================================
+//         let currentClockTime = Date.now();
+//         if (currentClockTime - loggingThrottleTimestamp > 330) { 
+//             loggingThrottleTimestamp = currentClockTime;
+            
+//             console.log("%c--- SECTION 5 REAL-TIME PERFORMANCE LOG ---", "color: #10b981; font-weight: bold;");
+            
+//             const movingNodeId = draggingNode.getAttribute('id') || draggingNode.id;
+//             console.log(`▶️ Tracking Element ID: "${movingNodeId}" | Dynamic Matrix Location -> X: ${finalTargetX.toFixed(1)}, Y: ${finalTargetY.toFixed(1)}`);
+            
+//             // Gather instant counts on path layers to verify visibility
+//             const edgePathLinesCount = document.querySelectorAll('g.edgePath path.path').length;
+//             console.log(`▶️ Connected Edge Map Status: Active vector paths verified on screen canvas = ${edgePathLinesCount}`);
+            
+//             console.log("%c------------------------------------------", "color: #10b981; font-weight: bold;");
+//         }
+//         // =========================================================================
+//     });
+// });
+
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (CORRECTED CANVAS SELECTORS)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (PARENT SVG DELEGATION ENGINES)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (ROBUST COORDINATE SPLITTER)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (PRE-CACHED SNAP PIPELINE)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (UNIFIED SIBLING PATH CODES)
+// =========================================================================
+// =========================================================================
+// MODULE 5: REAL-TIME VECTOR LINE SNAP WARPER (SCIENTIFIC NOTATION COMPATIBLE)
+// =========================================================================
+document.addEventListener('DOMContentLoaded', () => {
+    let lastTrackedLocalPos = { x: 0, y: 0 };
+    let loggingThrottleTimestamp = 0;
+    
+    // Core animation memory registers tracking full arrow group containers
+    let preCachedOutboundPaths = [];
+    let preCachedInboundPaths = [];
+
+    // --- SUB-ROUTINE A: CROSS-VALIDATED INSTANT CACHE ON MOUSE DOWN ---
+    renderTarget.addEventListener('mousedown', function(e) {
+        const draggingNode = e.target.closest('g.node');
+        if (!draggingNode || window.interactiveCanvasEngine.interactionType !== 'drag') return;
+
+        // Clear tracking registers cleanly
+        preCachedOutboundPaths = [];
+        preCachedInboundPaths = [];
+
+        // 1. Establish the current spatial matrix parameters safely
+        let matrixTransform = draggingNode.getAttribute('transform') || 'translate(0,0)';
+        let extractMatch = matrixTransform.match(/translate\(([^,)\s]+)[,\s]*([^)]+)?\)/) || 
+                           matrixTransform.match(/matrix\(1,\s*0,\s*0,\s*1,\s*([^,]+),\s*([^)]+)\)/);
+
+        if (extractMatch) {
+            let parsedX = parseFloat(extractMatch[1]);
+            let parsedY = extractMatch[2] ? parseFloat(extractMatch[2]) : 0;
+            lastTrackedLocalPos.x = isNaN(parsedX) ? 0 : parsedX;
+            lastTrackedLocalPos.y = isNaN(parsedY) ? 0 : parsedY;
+        }
+
+        const parentSvg = draggingNode.closest('svg');
+        if (!parentSvg) return;
+
+        const nativeNodeId = draggingNode.getAttribute('id') || draggingNode.id;
+        const boundingDims = draggingNode.getBBox();
+        
+        // Pinpoint the absolute layout center point before dragging operations occur
+        const initialNodeCenter = {
+            x: lastTrackedLocalPos.x + (boundingDims.width / 2),
+            y: lastTrackedLocalPos.y + (boundingDims.height / 2)
+        };
+
+        const liveLines = parentSvg.querySelectorAll('g.edgePath path, g.edgePaths path, path.edge, path.path');
+        const MAX_INTERSECT_RADIUS = Math.max(boundingDims.width, boundingDims.height) * 1.8;
+
+        liveLines.forEach(pathLine => {
+            let edgeGroup = pathLine.closest('g.edgePath') || pathLine.parentElement;
+            let elementClasses = edgeGroup ? Array.from(edgeGroup.classList).join(' ') : '';
+            let lineId = pathLine.getAttribute('id') || '';
+            
+            let isOutbound = elementClasses.includes(`ls-${nativeNodeId}`) || 
+                             lineId.startsWith(`edge_${nativeNodeId}_`);
+                             
+            let isInbound = elementClasses.includes(`le-${nativeNodeId}`) || 
+                            lineId.endsWith(`_to_${nativeNodeId}`);
+
+            // MULTI-POINT GEOMETRIC INTERSECT CROSS-CHECK (CRITICAL DIAMOND OPTIMIZATION)
+            if (!isOutbound || !isInbound) {
+                let currentD = pathLine.getAttribute('d') || '';
+                // Robust coordinate extraction handling both unspaced lists and exponential notation variables
+                let cleanCoords = currentD.replace(/[a-df-zA-DF-Z,]/g, ' ').trim().split(/\s+/).map(Number);
+                
+                if (cleanCoords.length >= 4 && !cleanCoords.some(isNaN)) {
+                    let startX = cleanCoords[0];
+                    let startY = cleanCoords[1];
+                    let endX = cleanCoords[cleanCoords.length - 2];
+                    let endY = cleanCoords[cleanCoords.length - 1];
+
+                    let distToStart = Math.hypot(startX - initialNodeCenter.x, startY - initialNodeCenter.y);
+                    let distToEnd = Math.hypot(endX - initialNodeCenter.x, endY - initialNodeCenter.y);
+
+                    if (distToStart < MAX_INTERSECT_RADIUS) isOutbound = true;
+                    if (distToEnd < MAX_INTERSECT_RADIUS) isInbound = true;
+                }
+            }
+
+            // Lock structural DOM element paths uniquely into verification arrays
+            if (isOutbound && !preCachedOutboundPaths.includes(pathLine)) preCachedOutboundPaths.push(pathLine);
+            if (isInbound && !preCachedInboundPaths.includes(pathLine)) preCachedInboundPaths.push(pathLine);
+        });
+
+        console.log(`🔍 [SNAPSHOT CACHE] Node Clicked: Outbound Lines Locked = ${preCachedOutboundPaths.length} | Inbound Lines Locked = ${preCachedInboundPaths.length}`);
+    });
+
+    // --- SUB-ROUTINE B: POWERPOINT SELECTIVE VECTOR WARPING ---
+    document.addEventListener('mousemove', function(e) {
+        const draggingNode = window.interactiveCanvasEngine.dragTargetNode;
+        if (!draggingNode || window.interactiveCanvasEngine.interactionType !== 'drag') return;
+        
+        const parentSvg = draggingNode.closest('svg');
+        if (!parentSvg) return;
+
+        // 1. Map real-time drag positions directly inside the scaled local SVG coordinate grid
+        let mouseSvgPoint = parentSvg.createSVGPoint();
+        mouseSvgPoint.x = e.clientX;
+        mouseSvgPoint.y = e.clientY;
+        
+        let localTransformMatrix = parentSvg.getScreenCTM().inverse();
+        let localizedMouse = mouseSvgPoint.matrixTransform(localTransformMatrix);
+        
+        let finalTargetX = localizedMouse.x - window.interactiveCanvasEngine.pointerOffset.x;
+        let finalTargetY = localizedMouse.y - window.interactiveCanvasEngine.pointerOffset.y;
+        
+        // 2. Compute strict positional displacement vector metrics (Δ)
+        let deltaX = finalTargetX - lastTrackedLocalPos.x;
+        let deltaY = finalTargetY - lastTrackedLocalPos.y;
+
+        // Update baseline registers instantly for subsequent layout frames
+        lastTrackedLocalPos.x = finalTargetX;
+        lastTrackedLocalPos.y = finalTargetY;
+
+        // Apply translation transformation on the shape group layer cleanly
+        draggingNode.setAttribute('transform', `translate(${finalTargetX}, ${finalTargetY})`);
+        
+        // 3. --- ZERO-LAG INDEPENDENT ENDPOINT MANIPULATION ---
+        
+        // Warp Outbound Paths (Adjusts ONLY the starting 'M' anchor point)
+        preCachedOutboundPaths.forEach(pathLine => {
+            let currentPathData = pathLine.getAttribute('d') || '';
+            // Safe scientific-notation token splitter excluding the letter 'e' when part of an exponential number
+            let commandTokens = currentPathData.match(/[A-DF-Za-df-z](?:[^A-DF-Za-df-z]*)/g);
+            if (!commandTokens) return;
+            
+            let reconstructedPath = "";
+            commandTokens.forEach(token => {
+                let commandType = token.charAt(0);
+                let coords = token.substring(1).replace(/,/g, ' ').trim().split(/\s+/).map(Number);
+                
+                if (commandType === 'M' && coords.length >= 2 && !coords.some(isNaN)) {
+                    coords[0] += deltaX;
+                    coords[1] += deltaY;
+                    reconstructedPath += `M${coords[0]},${coords[1]} `;
+                } else {
+                    reconstructedPath += token + " ";
+                }
+            });
+            
+            if (reconstructedPath) {
+                let cleanedPath = reconstructedPath.trim();
+                let edgeGroup = pathLine.closest('g.edgePath') || pathLine.parentElement;
+                if (edgeGroup) {
+                    edgeGroup.querySelectorAll('path').forEach(p => p.setAttribute('d', cleanedPath));
+                }
+            }
+        });
+
+        // Warp Inbound Paths (Adjusts ONLY the final destination endpoint point)
+        preCachedInboundPaths.forEach(pathLine => {
+            let currentPathData = pathLine.getAttribute('d') || '';
+            let commandTokens = currentPathData.match(/[A-DF-Za-df-z](?:[^A-DF-Za-df-z]*)/g);
+            if (!commandTokens) return;
+            
+            let reconstructedPath = "";
+            commandTokens.forEach((token, idx) => {
+                let commandType = token.charAt(0);
+                let coords = token.substring(1).replace(/,/g, ' ').trim().split(/\s+/).map(Number);
+                
+                // Shift strictly the final target vector block to prevent parent rods from floating
+                if (idx === commandTokens.length - 1 && coords.length >= 2 && !coords.some(isNaN)) {
+                    let len = coords.length;
+                    coords[len - 2] += deltaX;
+                    coords[len - 1] += deltaY;
+                    reconstructedPath += `${commandType}${coords.join(' ')} `;
+                } else {
+                    reconstructedPath += token + " ";
+                }
+            });
+            
+            if (reconstructedPath) {
+                let cleanedPath = reconstructedPath.trim();
+                let edgeGroup = pathLine.closest('g.edgePath') || pathLine.parentElement;
+                if (edgeGroup) {
+                    edgeGroup.querySelectorAll('path').forEach(p => p.setAttribute('d', cleanedPath));
+                    
+                    // Update arrowhead marker position to point to the new location boundary
+                    let markerGroup = edgeGroup.querySelector('marker, [marker-end]');
+                    if (markerGroup) {
+                        edgeGroup.style.overflow = "visible";
+                    }
+                }
+            }
+        });
+
+        // Throttled feedback loop monitoring the line-shifting array pipeline
+        let currentClockTime = Date.now();
+        if (currentClockTime - loggingThrottleTimestamp > 330) { 
+            loggingThrottleTimestamp = currentClockTime;
+            console.log("%c--- REAL-TIME TRANSLATION SNAP MATRIX ACTIVE ---", "color: #3b82f6; font-weight: bold;");
+            console.log(`▶️ Bound Outbound Paths: ${preCachedOutboundPaths.length} | Bound Inbound Paths: ${preCachedInboundPaths.length}`);
+console.log("%c-------------------------------------------------", "color: #3b82f6; font-weight: bold;");
+}
+});
+});
+
+// =========================================================================
+// MODULE 6: COMPONENT DISCONNECT & MOUSE-RELEASE CLEANER
+// =========================================================================
+document.addEventListener('DOMContentLoaded', () => {
+    // Standard Global Mouse Up release event handling routine
+    document.addEventListener('mouseup', () => {
+        if (window.interactiveCanvasEngine.dragTargetNode) {
+            window.interactiveCanvasEngine.dragTargetNode.classList.remove('active-node-drag');
+            window.interactiveCanvasEngine.dragTargetNode = null;
+        }
+        window.interactiveCanvasEngine.interactionType = null;
+    });
+
+    // Keyboard Key Tracker executing connection removals on hotkey calls
+    document.addEventListener('keydown', function(e) {
+        if ((e.key === 'Delete' || e.key === 'Backspace') && window.interactiveCanvasEngine.focusedEdgeId) {
+            let tokens = window.interactiveCanvasEngine.focusedEdgeId.match(/^edge_(.+)_to_(.+)\$/);
+            if (tokens) {
+                let sourceNode = tokens[1];
+                let destinationNode = tokens[2];
+                
+                const disconnectMacro = `\nDISCONNECT Step ${sourceNode.replace(/[^0-9.]/g, '') || sourceNode} FROM Step ${destinationNode.replace(/[^0-9.]/g, '') || destinationNode}`;
+                
+                if (codeEditor) {
+                    codeEditor.value += disconnectMacro;
+                    codeEditor.dispatchEvent(new Event('input', { bubbles: true }));
+                    
+                    const parserBtn = document.getElementById('deterministic-parser-btn') || document.querySelector('button[onclick*="Deterministic"]');
+                    if (parserBtn) parserBtn.click();
+                }
+            }
+            window.interactiveCanvasEngine.focusedEdgeId = null;
+        }
+    });
+});
+//module 7 : 
+// =========================================================================
+// INTERACTIVE LIFECYCLE HOOK INTEGRATION (INJECT AT THE BOTTOM OF RENDERDIAGRAM)
+// =========================================================================
+setTimeout(() => {
+    const liveSvgCanvas = renderTarget.querySelector('svg');
+    if (!liveSvgCanvas) return;
+
+    // Initialize clean tracking attributes on all path elements
+    liveSvgCanvas.querySelectorAll('g.edgePath').forEach(edgeGroup => {
+        let pathLine = edgeGroup.querySelector('path.path');
+        let edgeClasses = Array.from(edgeGroup.classList).join(' ');
+        
+        // Extract native structural node connection keys generated by Mermaid
+        let sourceMatch = edgeClasses.match(/ls-([a-zA-Z0-9_]+)/);
+        let targetMatch = edgeClasses.match(/le-([a-zA-Z0-9_]+)/);
+        
+        if (sourceMatch && targetMatch) {
+            let cleanSource = sourceMatch[1];
+            let cleanTarget = targetMatch[1];
+            
+            // Apply tracking markers directly onto the path nodes
+            if (pathLine) {
+                pathLine.setAttribute('data-from-node', cleanSource);
+                pathLine.setAttribute('data-to-node', cleanTarget);
+            }
+        }
+    });
+
+    // Invoke the PowerPoint interaction layer initializers
+    initializeMermaidNodeDragging(renderTarget);
+    initializeMermaidLinkGenerator(renderTarget);
+}, 50);
 
 
 
