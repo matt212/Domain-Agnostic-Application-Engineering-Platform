@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enterprise High-Performance Vector Workbench Canvas</title>
+    <style>
+        :root {
+            --bg-workspace: #0f172a;
+            --bg-panels: #1e293b;
+            --border-ui: #334155;
+            --text-main: #f8fafc;
+            --accent-blue: #3b82f6;
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-workspace);
+            color: var(--text-main);
+            overflow: hidden;
+            user-select: none;
+        }
+
+        .workbench-layout {
+            display: flex;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        /* 📋 LEFT SPLIT: SCRIPT WORKSPACE CONTROLLER AREA */
+        .editor-container {
+            width: 25%;
+            height: 100%;
+            background-color: var(--bg-panels);
+            border-right: 1px solid var(--border-ui);
+            display: flex;
+            flex-direction: column;
+            box-sizing: border-box;
+            padding: 15px;
+            z-index: 10;
+        }
+
+        .panel-header {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 10px;
+            color: #94a3b8;
+        }
+
+        textarea {
+            flex-grow: 1;
+            background-color: var(--bg-workspace);
+            border: 1px solid var(--border-ui);
+            border-radius: 6px;
+            color: #64e5ff;
+            font-family: "Fira Code", "Courier New", monospace;
+            font-size: 11px;
+            padding: 12px;
+            resize: none;
+            outline: none;
+            line-height: 1.5;
+        }
+
+        /* 🎨 RIGHT SPLIT: ZERO-LAG GEOMETRIC DRAWING CANVAS */
+        .canvas-container {
+            flex-grow: 1;
+            height: 100%;
+            position: relative;
+            background-color: var(--bg-workspace);
+            background-image: radial-gradient(#334155 1px, transparent 1px);
+            background-size: 20px 20px;
+            overflow: auto;
+        }
+
+        #vector-svg-plane {
+            width: 3000px;  /* Expanded spatial bounds to fully map multi-phase subgraphs */
+            height: 3000px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+        }
+
+        .interactive-node-box {
+            position: absolute;
+            background-color: var(--bg-panels);
+            border: 2px solid var(--accent-blue);
+            color: var(--text-main);
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 500;
+            cursor: grab;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 170px;
+            height: 50px;
+            box-sizing: border-box;
+            z-index: 5;
+        }
+
+        .interactive-node-box:active {
+            cursor: grabbing;
+            border-color: #60a5fa;
+        }
+
+        .interactive-node-box.diamond-shape {
+            width: 110px;
+            height: 110px;
+            padding: 0;
+            border-color: #eab308;
+            background-color: transparent;
+            box-shadow: none;
+        }
+
+        .interactive-node-box.diamond-shape .diamond-background {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-panels);
+            border: 2px solid #eab308;
+            transform: rotate(45deg);
+            box-sizing: border-box;
+            border-radius: 4px;
+            z-index: 1;
+        }
+
+        .interactive-node-box.diamond-shape .diamond-text {
+            position: relative;
+            z-index: 2;
+            padding: 10px;
+            font-size: 10px;
+            line-height: 1.3;
+        }
+
+        .canvas-overlay-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background-color: rgba(30, 41, 59, 0.9);
+            border: 1px solid var(--border-ui);
+            padding: 8px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+            pointer-events: none;
+            backdrop-filter: blur(4px);
+            z-index: 999;
+            color: #10b981;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="workbench-layout">
+        <!-- FILE IMPORT & EDITOR CONTROL PANEL -->
+        <div class="editor-container">
+            <div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; width: 100%;">
+                <span class="panel-header">📂 Import Enterprise Diagram File</span>
+                <input type="file" id="mermaid-file-loader" accept=".mermaid,.txt,.md" style="font-size: 11px; color: #94a3b8; background: #0f172a; padding: 5px; border: 1px dashed #334155; border-radius: 4px; cursor: pointer; width: 100%; box-sizing: border-box;" />
+            </div>
+            <div class="panel-header">📋 Auto-Generated Code Sync</div>
+            <textarea id="mermaid-code-view" readonly></textarea>
+        </div>
+
+        <!-- ACTIVE PLOT MATRIX DRAWING VIEWPORT -->
+        <div class="canvas-container" id="canvas-view-bounds">
+            <svg id="vector-svg-plane">
+                <defs>
+                    <marker id="arrow-pointer-marker" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                        <path d="M 0 1 L 10 5 L 0 9 z" fill="#94a3b8" />
+                    </marker>
+                </defs>
+            </svg>
+            <div class="canvas-overlay-badge">⚡ Enterprise Layout Matrix Engine Active</div>
+        </div>
+    </div>
+
+    <!-- Hierarchical Graph Mathematics Engine Dependency Layer Bundle -->
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/dagre/0.8.5/dagre.min.js" integrity="sha512-psLUZfcgPmi012lcpVHkWoOqyztollwCGu4w/mXijFMK/YcdUdP06voJNVOJ7f/dUIlO2tGlDLuypRyXX2lcvQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/graphlib/4.0.2/graphlib.min.js" integrity="sha512-d1k+MyZ80klUQTmltJIR2bycVd+G+JmC4d82G9TITMYncF4O+GeJG3VJmcNGdO2iyxrC7duBAIsY7Nu9/yaqyA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    // System-wide global chart tracking storage registers
+   // =========================================================================
+// MODULE 5 - PART B: CANVAS INITIALIZATION & STABILIZED WINDOW RUNTIME
+// =========================================================================
+let nodesDataRegistry = [];
+let connectionLinksRegistry = [];
+let stateInteractionRegisters = { draggingNodeElement: null, offsetX: 0, offsetY: 0 };
+
+// DEFENSIVE GATEWAY LOCK: Wait until the network bundle is completely ready
+window.addEventListener('load', () => {
+    console.log("🚀 External layout assets confirmed. Initializing canvas layout engine...");
+
+    // Listen for internal file input stream uploads
+    const fileLoader = document.getElementById('mermaid-file-loader');
+    if (fileLoader) {
+        fileLoader.addEventListener('change', executeAsyncFileLoaderStream);
+    }
+    
+    // Core baseline template initialization sequence
+    executeDynamicScriptImporter(`graph TD\n    A["Step 1.1: Initiate User Account"] --> B{"Step 1.2: IAM Validate Credentials"}\n    B --> C["Step 1.3: Authenticated Session Token"]`);
+});
+
+
+function initializeDraggableNodesHub() {
+    nodesDataRegistry.forEach(nodeData => {
+        // Safe string wrapper defends against underlying match mutations
+        const safeNodeId = String(nodeData.id);
+        const cleanSelectorId = safeNodeId.replace(/[.:\s"']/g, '\\$&');
+        const element = document.getElementById(`node-${cleanSelectorId}`);
+        if (!element) return;
+
+        const freshElement = element.cloneNode(true);
+        element.parentNode.replaceChild(freshElement, element);
+
+        freshElement.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            stateInteractionRegisters.draggingNodeElement = freshElement;
+            stateInteractionRegisters.offsetX = e.clientX - freshElement.offsetLeft;
+            stateInteractionRegisters.offsetY = e.clientY - freshElement.offsetTop;
+        });
+    });
+}
+
+    // Global listener tracking cursor movement grids coordinates transitions
+    document.addEventListener('mousemove', (e) => {
+        if (!stateInteractionRegisters.draggingNodeElement) return;
+
+        const element = stateInteractionRegisters.draggingNodeElement;
+        let targetX = e.clientX - stateInteractionRegisters.offsetX;
+        let targetY = e.clientY - stateInteractionRegisters.offsetY;
+
+        // Clean 20px block grid alignment snap rule
+        targetX = Math.round(targetX / 20) * 20;
+        targetY = Math.round(targetY / 20) * 20;
+
+        element.style.left = `${targetX}px`;
+        element.style.top = `${targetY}px`;
+
+        const cleanIdStr = element.id.replace('node-', '');
+        const targetRecord = nodesDataRegistry.find(n => n.id === cleanIdStr);
+        if (targetRecord) {
+            targetRecord.left = targetX;
+            targetRecord.top = targetY;
+        }
+
+        recalculateVectorPathSplines();
+    });
+
+    document.addEventListener('mouseup', () => {
+        if (stateInteractionRegisters.draggingNodeElement) {
+            stateInteractionRegisters.draggingNodeElement = null;
+        }
+    });
+    // =========================================================================
+// MODULE 5 - PART D: METADATA FILE READER INPUT API STREAM HANDLER
+// =========================================================================
+// =========================================================================
+// MODULE 5 - PART C: ENTERPRISE FILE STREAM INPUT APIS & PARSER TOKENIZERS
+// =========================================================================
+function executeAsyncFileLoaderStream(e) {
+    const fileTargetList = e.target.files;
+    if (!fileTargetList || fileTargetList.length === 0) return;
+
+    const explicitFileBlob = fileTargetList[0];
+    console.log(`🤖 Stream initialized for: "${explicitFileBlob.name}"`);
+
+    const fileStreamReader = new FileReader();
+    fileStreamReader.onload = function(event) {
+        executeDynamicScriptImporter(event.target.result);
+    };
+    fileStreamReader.readAsText(explicitFileBlob);
+}
+
+function executeDynamicScriptImporter(rawTextData) {
+    if (!rawTextData || !rawTextData.trim()) return;
+
+    nodesDataRegistry = [];
+    connectionLinksRegistry = [];
+
+    const canvasBounds = document.getElementById('canvas-view-bounds');
+    canvasBounds.querySelectorAll('.interactive-node-box').forEach(box => box.remove());
+    canvasBounds.querySelectorAll('path').forEach(path => path.remove());
+
+    const lines = rawTextData.split('\n');
+
+    // Initialize the Dagre hierarchical graph auto-spacing calculator engine
+    const dagreGraphEngine = new dagre.graphlib.Graph();
+    dagreGraphEngine.setGraph({ rankdir: 'TB', nodesep: 100, ranksep: 120 }); 
+    dagreGraphEngine.setDefaultEdgeLabel(() => ({}));
+
+    // 1. FORENSIC TOKENIZER REGEX SYSTEM (STRIP CODES QUOTES SECURELY)
+    lines.forEach(line => {
+        let trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith('graph') || trimmed.startsWith('subgraph')) return;
+
+        // Strict capture extracts identifiers and values wrapped inside complex string quotes or text strings labels
+        let nodePattern = /([a-zA-Z0-9_.-]+)\s*(?:\[\s*"(.*?)"\s*\]|\[(.*?)\]|\{\s*"(.*?)"\s*\}|\{(.*?)\})/g;
+        let match;
+        while ((match = nodePattern.exec(trimmed)) !== null) {
+            let nodeId = String(match[1]); 
+            let nodeLabel = match[2] || match[3] || match[4] || match[5] || nodeId;
+            let shape = (match[0].includes('{')) ? 'diamond' : 'rect';
+
+            if (!nodesDataRegistry.some(n => n.id === nodeId)) {
+                nodesDataRegistry.push({ id: nodeId, label: nodeLabel, shape: shape, left: 0, top: 0 });
+                
+                let width = shape === 'diamond' ? 130 : 170;
+                let height = shape === 'diamond' ? 130 : 50;
+                dagreGraphEngine.setNode(nodeId, { width: width, height: height });
+            }
+        }
+
+        // Extract link pairs clean, protecting punctuation characters
+        let cleanLineForEdges = trimmed.replace(/\[.*?\]/g, '').replace(/\{.*?\}/g, '');
+        let linkPattern = /([a-zA-Z0-9_.-]+)\s*-->\s*([a-zA-Z0-9_.-]+)/g;
+        let edgeMatch;
+        while ((edgeMatch = linkPattern.exec(cleanLineForEdges)) !== null) {
+            let sourceId = String(edgeMatch[1]); 
+            let targetId = String(edgeMatch[2]); 
+
+            if (!nodesDataRegistry.some(n => n.id === sourceId)) {
+                nodesDataRegistry.push({ id: sourceId, label: sourceId, shape: 'rect', left: 0, top: 0 });
+                dagreGraphEngine.setNode(sourceId, { width: 170, height: 50 });
+            }
+            if (!nodesDataRegistry.some(n => n.id === targetId)) {
+                nodesDataRegistry.push({ id: targetId, label: targetId, shape: 'rect', left: 0, top: 0 });
+                dagreGraphEngine.setNode(targetId, { width: 170, height: 50 });
+            }
+
+            if (!connectionLinksRegistry.some(l => l.source === sourceId && l.target === targetId)) {
+                connectionLinksRegistry.push({ source: sourceId, target: targetId });
+                dagreGraphEngine.setEdge(sourceId, targetId);
+            }
+        }
+    });
+
+    // 2. RUN MATHEMATICAL GRAPH AUTO-SPACING CALCULATIONS
+    dagre.layout(dagreGraphEngine);
+
+    // 3. INJECT THE GENERATED COORDINATES INTO LOGIC VIEW LAYERS NATIVELY
+    nodesDataRegistry.forEach(node => {
+        let outputs = dagreGraphEngine.node(node.id);
+        
+        // RE-ALIGN ENGINE METRICS: Map both dimensions out into their true vertical channels offsets
+        node.left = Math.round((outputs.x + 100) / 20) * 20;
+        node.top = Math.round((outputs.y + 60) / 20) * 20;
+
+        injectSingleNodeLayerToDOM(node.id, node.label, node.shape, node.left, node.top);
+    });
+
+    // Generate matching background line path layers cleanly
+    connectionLinksRegistry.forEach(link => {
+        const svgPlane = document.getElementById('vector-svg-plane');
+        const path = document.createElementNS("http://w3.org", "path");
+        path.setAttribute('id', `edge-${link.source}-${link.target}`);
+        path.setAttribute('fill', 'none');
+        path.setAttribute('stroke', '#94a3b8');
+        path.setAttribute('stroke-width', '2');
+        path.setAttribute('marker-end', 'url(#arrow-pointer-marker)');
+        svgPlane.appendChild(path);
+    });
+
+    initializeDraggableNodesHub();
+    recalculateVectorPathSplines();
+}
+
+    // =========================================================================
+// MODULE 5 - PART D: DOM INJECTION LAYERS & VECTOR SPLINE ANCHOR CORRELATOR
+// =========================================================================
+function injectSingleNodeLayerToDOM(id, label, shape, left, top) {
+    const canvasBounds = document.getElementById('canvas-view-bounds');
+    const div = document.createElement('div');
+    div.id = `node-${id}`;
+    
+    // STRICT ALIGNMENT INJECTION: Map elements by exact Dagre coordinates geometry output metrics
+    if (shape === 'diamond') {
+        div.className = 'interactive-node-box diamond-shape';
+        div.innerHTML = `<div class="diamond-background"></div><div class="diamond-text">${label}</div>`;
+        div.style.left = `${left}px`;
+        div.style.top = `${top}px`;
+    } else {
+        div.className = 'interactive-node-box';
+        div.textContent = label;
+        div.style.left = `${left}px`;
+        div.style.top = `${top}px`;
+    }
+    canvasBounds.appendChild(div);
+}
+
+function recalculateVectorPathSplines() {
+    connectionLinksRegistry.forEach(link => {
+        const cleanSourceId = String(link.source).replace(/[.:\s"']/g, '\\$&');
+        const cleanTargetId = String(link.target).replace(/[.:\s"']/g, '\\$&');
+        
+        const sourceEl = document.getElementById(`node-${cleanSourceId}`);
+        const targetEl = document.getElementById(`node-${cleanTargetId}`);
+        const pathLine = document.getElementById(`edge-${link.source}-${link.target}`);
+
+        if (!sourceEl || !targetEl || !pathLine) return;
+
+        const sourceBounds = { x: sourceEl.offsetLeft, y: sourceEl.offsetTop, w: sourceEl.offsetWidth, h: sourceEl.offsetHeight };
+        const targetBounds = { x: targetEl.offsetLeft, y: targetEl.offsetTop, w: targetEl.offsetWidth, h: targetEl.offsetHeight };
+
+        const sourceCenter = { x: sourceBounds.x + sourceBounds.w / 2, y: sourceBounds.y + sourceBounds.h / 2 };
+        const targetCenter = { x: targetBounds.x + targetBounds.w / 2, y: targetBounds.y + targetBounds.h / 2 };
+
+        let sX = sourceCenter.x, sY = sourceCenter.y;
+        let tX = targetCenter.x, tY = targetCenter.y;
+
+        // Auto-detect edge docking positions to draw vertical top-to-bottom lines smoothly
+        if (sourceCenter.y < targetCenter.y) {
+            sY = sourceBounds.y + sourceBounds.h; // Bottom center boundary output dock pin
+            tY = targetBounds.y;                  // Top center boundary input dock pin
+        } else {
+            sY = sourceBounds.y;
+            tY = targetBounds.y + targetBounds.h;
+        }
+
+        // Generate high-fidelity curved lines tracking positions dynamically
+        const curvatureControlOffset = Math.abs(tY - sY) * 0.5;
+        const pathDataString = `M ${sX} ${sY} C ${sX} ${sY + curvatureControlOffset}, ${tX} ${tY - curvatureControlOffset}, ${tX} ${tY}`;
+        
+        pathLine.setAttribute('d', pathDataString);
+    });
+
+    updateMermaidScriptPanel();
+}
+
+function updateMermaidScriptPanel() {
+    let text = "graph TD\n";
+    nodesDataRegistry.forEach(n => {
+        let labelWithQuotes = n.label.startsWith('"') ? n.label : `"${n.label}"`;
+        text += n.shape === 'diamond' ? `    ${n.id}{${labelWithQuotes}}\n` : `    ${n.id}[${labelWithQuotes}]\n`;
+    });
+    connectionLinksRegistry.forEach(l => {
+        text += `    ${l.source} --> ${l.target}\n`;
+    });
+    document.getElementById('mermaid-code-view').value = text.trim();
+}
+</script>
+</body>
+</html>
+
