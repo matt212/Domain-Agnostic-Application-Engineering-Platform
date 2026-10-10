@@ -856,13 +856,13 @@ const rawSyntax = extractRawMermaid(codeEditor.value);
                 return;
             }
     const markdownContent = `\`\`\`mermaid\n${rawSyntax}\n\`\`\``;
-    const plantUmlResult = convertMermaidToPlantUML(markdownContent);
+    const plantUmlResult = convertMermaidToStructuredPlantUML(markdownContent);
     const blob = new Blob([plantUmlResult], { type: 'text/markdown;charset=utf-8' });
     const url1 = URL.createObjectURL(blob);
             
             const anchor = document.createElement('a');
             anchor.href = url1;
-            anchor.download = `mermaid-diagram-${Date.now()}.md`;
+            anchor.download = `mermaid-diagram-${Date.now()}.puml`;
             document.body.appendChild(anchor);
             anchor.click();
             document.body.removeChild(anchor);
@@ -947,6 +947,235 @@ function convertMermaidToPlantUML(mermaidCode) {
     pumlLines.push("@enduml");
     return pumlLines.join('\n');
 }
+function convertMermaidToStructuredPlantUML(mermaidCode) {
+    // 1. Core structural boilerplate headers matching the target file exactly
+    let dotResult = [
+        "@startdot",
+        "digraph G {",
+        "    // Exact dark theme workbench styling configuration",
+        "    bgcolor=\"#2d3135\"",
+        "    pad=\"0.5\"",
+        "    nodesep=\"0.6\"",
+        "    ranksep=\"0.6\"",
+        "    splines=spline",
+        "    compound=true",
+        "",
+        "    // Global node template setups matching the UI shapes",
+        "    node [",
+        "        fontname=\"Helvetica,Arial,sans-serif\"",
+        "        fontsize=\"11\"",
+        "        style=\"filled\"",
+        "        fillcolor=\"#1a1a1a\"",
+        "        color=\"#8a8a8a\"",
+        "        fontcolor=\"#ffffff\"",
+        "    ]",
+        "",
+        "    // Edge/Arrow layout matching the dark grey editor connections",
+        "    edge [",
+        "        fontname=\"Helvetica,Arial,sans-serif\"",
+        "        fontsize=\"10\"",
+        "        color=\"#8a8a8a\"",
+        "        fontcolor=\"#ffffff\"",
+        "        arrowsize=\"0.8\"",
+        "    ]",
+        ""
+    ].join("\n");
+
+    const lines = mermaidCode.split('\n');
+    
+    // Dynamic registries for nodes, connections, and structures
+    const nodeRegistry = {};
+    const clusterLinks = {};
+    const subgraphs = {};
+    
+    let currentClusterId = null;
+    let clusterCounter = 1;
+
+    // Intelligent Text Formatter: Programmatically splits labels nicely to fit shape boundaries
+    function formatLabel(rawText) {
+        let cleanText = rawText.replace(/&quot;/g, '"').replace(/<br\s*\/?>/gi, '\\n').trim();
+        const stepPrefixMatch = cleanText.match(/^(Step\s+\d+\.\d+:)\s*(.*)\$/i);
+        if (stepPrefixMatch) {
+            const prefix = stepPrefixMatch[1];
+            const remainingText = stepPrefixMatch[2];
+            if (remainingText.length > 15 && !remainingText.includes('\\n')) {
+                const midSpaceIndex = remainingText.indexOf(' ', Math.floor(remainingText.length / 2));
+                if (midSpaceIndex !== -1) {
+                    return `${prefix} ${remainingText.substring(0, midSpaceIndex)}\\n${remainingText.substring(midSpaceIndex + 1)}`;
+                }
+            }
+        }
+        return cleanText;
+    }
+
+    // --- PHASE A: COMPILER PARSING ENGINE ---
+    lines.forEach(line => {
+        let trimmed = line.trim();
+        if (!trimmed || trimmed.startsWith('graph')) return;
+
+        // 1. Dynamic Cluster Tracking
+        if (trimmed.startsWith('subgraph')) {
+            let match = trimmed.match(/subgraph\s+([a-zA-Z0-9_]+)\s*\["?(.*?)"?\]/i) || trimmed.match(/subgraph\s+(.*)/i);
+            if (match) {
+                let id = match[1] ? match[1].trim() : `cluster_phase_${String(clusterCounter).padStart(2, '0')}`;
+                let label = match[2] ? match[2].trim() : match[1].trim();
+                
+                if (!id.startsWith('cluster_')) {
+                    id = `cluster_${id}`;
+                }
+                
+                currentClusterId = id;
+                subgraphs[currentClusterId] = { 
+                    label: label, 
+                    nodeIds: [],
+                    index: clusterCounter 
+                };
+                clusterLinks[currentClusterId] = [];
+                clusterCounter++;
+            }
+            return;
+        }
+        
+        if (trimmed === 'end') {
+            currentClusterId = null;
+            return;
+        }
+
+        // 2. Dynamic Node Token Extraction
+        const nodeRegex = /([a-zA-Z0-9_]+)(?:\["([^"]+)"\]|\{"([^"]+)"\})/g;
+        let nodeMatch;
+        while ((nodeMatch = nodeRegex.exec(trimmed)) !== null) {
+            const alias = nodeMatch[1];
+            const text = nodeMatch[2] || nodeMatch[3];
+            const shape = trimmed.includes(`${alias}{`) ? 'diamond' : 'box';
+
+            if (!nodeRegistry[alias] || text) {
+                nodeRegistry[alias] = {
+                    id: alias,
+                    label: text ? formatLabel(text) : alias,
+                    shape: shape,
+                    parentCluster: currentClusterId
+                };
+            }
+            
+            if (currentClusterId && subgraphs[currentClusterId]) {
+                if (!subgraphs[currentClusterId].nodeIds.includes(alias)) {
+                    subgraphs[currentClusterId].nodeIds.push(alias);
+                }
+            }
+        }
+
+        // 3. Phase-Isolated Connection Parsing
+        if (trimmed.includes('-->') || trimmed.includes('--')) {
+            let fromNode = "", toNode = "", edgeLabel = "";
+            
+            let linkMatch = trimmed.match(/([a-zA-Z0-9_]+)\s*--\s*"([^"]+)"\s*-->\s*([a-zA-Z0-9_]+)/) ||
+                            trimmed.match(/([a-zA-Z0-9_]+)\s*-->\s*\|([^|]+)\|\s*([a-zA-Z0-9_]+)/) ||
+                            trimmed.match(/([a-zA-Z0-9_]+)\s*-->\s*([a-zA-Z0-9_]+)/);
+
+            if (linkMatch) {
+                fromNode = linkMatch[1];
+                if (linkMatch.length === 4) {
+                    edgeLabel = linkMatch[2];
+                    toNode = linkMatch[3];
+                } else {
+                    toNode = linkMatch[2];
+                }
+
+                // Provision fallbacks for dynamically discovered nodes inside arrows
+                if (!nodeRegistry[fromNode]) nodeRegistry[fromNode] = { id: fromNode, label: fromNode, shape: 'box', parentCluster: currentClusterId };
+                if (!nodeRegistry[toNode]) nodeRegistry[toNode] = { id: toNode, label: toNode, shape: 'box', parentCluster: currentClusterId };
+
+                const linkObj = { from: fromNode, to: toNode, label: edgeLabel.trim() };
+
+                // Intelligently route connection data directly to the corresponding active cluster map
+                let activeRoutingId = currentClusterId;
+                
+                // If the connection is declared outside a block scope, deduce parent cluster context automatically
+                if (!activeRoutingId && nodeRegistry[fromNode].parentCluster) {
+                    activeRoutingId = nodeRegistry[fromNode].parentCluster;
+                }
+
+                if (activeRoutingId && clusterLinks[activeRoutingId]) {
+                    clusterLinks[activeRoutingId].push(linkObj);
+                    if (!subgraphs[activeRoutingId].nodeIds.includes(fromNode) && !nodeRegistry[fromNode].parentCluster) {
+                        subgraphs[activeRoutingId].nodeIds.push(fromNode);
+                        nodeRegistry[fromNode].parentCluster = activeRoutingId;
+                    }
+                }
+            }
+        }
+    });
+
+    // --- PHASE B: EMIT CLUSTER DEFINITIONS BLOCKS ---
+    Object.keys(subgraphs).forEach((clusterId) => {
+        const sub = subgraphs[clusterId];
+        dotResult += `    // --- PHASE ${sub.index} ---\n`;
+        dotResult += `    subgraph ${clusterId} {\n`;
+        dotResult += `        label="${sub.label}"\n`;
+        dotResult += `        fontname="Helvetica,Arial,sans-serif"\n`;
+        dotResult += `        fontcolor="#ffffff"\n`;
+        dotResult += `        fontsize="12"\n`;
+        dotResult += `        color="#8a8a8a"\n`;
+        dotResult += `        style="dashed"\n`;
+        dotResult += `        bgcolor="#383c40"\n        \n`;
+
+        sub.nodeIds.forEach((nodeId, idx) => {
+            const n = nodeRegistry[nodeId];
+            if (n) {
+                let spacing = (idx === 0) ? "" : "        ";
+                if (n.shape === 'diamond') {
+                    dotResult += `${spacing}${n.id} [shape=diamond, label="${n.label}", width="2.2", height="1.6"]\n`;
+                } else {
+                    dotResult += `${spacing}${n.id} [shape=box, label="${n.label}", margin="0.2,0.1"]\n`;
+                }
+                // Evict node from global scope registry to prevent duplication cascades
+                delete nodeRegistry[nodeId];
+            }
+        });
+        dotResult += `    }\n\n`;
+    });
+
+    // Render unexpected root loose steps
+    Object.keys(nodeRegistry).forEach(nodeId => {
+        const n = nodeRegistry[nodeId];
+        if (n.shape === 'diamond') {
+            dotResult += `    ${n.id} [shape=diamond, label="${n.label}", width="2.2", height="1.6"]\n`;
+        } else {
+            dotResult += `    ${n.id} [shape=box, label="${n.label}", margin="0.2,0.1"]\n`;
+        }
+    });
+    if (Object.keys(nodeRegistry).length > 0) dotResult += `\n`;
+
+    // --- PHASE C: EMIT PHASE-WISE FLOW CONNECTIONS MAP ---
+    dotResult += `    // --- FLOW CONNECTIONS ---\n    \n`;
+
+    Object.keys(subgraphs).forEach((clusterId) => {
+        const sub = subgraphs[clusterId];
+        const links = clusterLinks[clusterId] || [];
+        
+        if (links.length > 0) {
+            dotResult += `    // Phase ${sub.index} Links\n`;
+            links.forEach(link => {
+                if (link.from === link.to) {
+                    dotResult += `    ${link.from} -> ${link.to} [label="${link.label}", tailport=se, headport=e]\n`;
+                } else if (link.label) {
+                    dotResult += `    ${link.from} -> ${link.to} [label="${link.label}"]\n`;
+                } else {
+                    dotResult += `    ${link.from} -> ${link.to}\n`;
+                }
+            });
+            dotResult += `\n`;
+        }
+    });
+
+    // Polish trailing space lines cleanly down to final template end markers
+    dotResult = dotResult.trim() + "\n}\n@enddot";
+    return dotResult;
+}
+
+
+
 
     </script>
     
