@@ -774,41 +774,68 @@ async function executeSerialMermaidCommand(commandText) {
 
         // 3. OPERATION: UPDATE NODE TEXT
         // Format: UPDATE NODE rollback_zone1 TO "Custom Rejection Sequence"
-        const updateMatch = cmd.match(/^UPDATE\s+NODE\s+(?:Step\s+)?([a-zA-Z0-9._-]+)\s+TO\s+["']([\s\(\S\)]*?)["']/i);
+            const updateMatch = cmd.match(/^UPDATE\s+NODE\s+(?:Step\s+)?([a-zA-Z0-9._-]+)\s+TO\s+["']([\s\(\S\)]*?)["']/i);
         if (updateMatch) {
-            const [_, targetIdent, newFullLabel] = updateMatch;
+            console.group(`🚀 [MERMAID AGENT] Processing UPDATE NODE Command`);
+            const [fullMatch, targetIdent, newFullLabel] = updateMatch;
             const targetNodeId = resolveNodeId(targetIdent);
 
             if (targetNodeId) {
-                const nodeLabelRegex = new RegExp(`(${targetNodeId}\\s*["'{(\\[])([\\s\\S]*?)(["'})\\]])`, 'g');
-                if (nodeLabelRegex.test(currentCode)) {
-                    currentCode = currentCode.replace(nodeLabelRegex, `$1${newFullLabel}$3`);
+                // Captures structural shapes ([...], (...), {...}) even with inner text quotes safely
+                const nodeLabelRegex = new RegExp(`\\b(${targetNodeId})\\s*([\\[\\(\\{]+)["']?([\\s\\S]*?)["']?([\\]\\)\\}]+)`, 'g');
+                
+                const containsExistingLabel = nodeLabelRegex.test(currentCode);
+                nodeLabelRegex.lastIndex = 0; 
+
+                if (containsExistingLabel) {
+                    currentCode = currentCode.replace(nodeLabelRegex, (match, id, openBrack, oldText, closeBrack) => {
+                        // Standardizes the text inside quotes while preserving the outer structural shape
+                        return `${id}${openBrack}"${newFullLabel}"${closeBrack}`;
+                    });
                     hasChanges = true;
+                    console.log(`🎉 [SUCCESS] Inline text updated while keeping structure shapes intact.`);
                 } else {
-                    // Fallback injection if the node exists but didn't have an original label parameter string defined
-                    currentCode = currentCode.replace(new RegExp(`\\b(${targetNodeId})\\b`, 'g'), `$1["${newFullLabel}"]`);
+                    // Fallback to update standalone text declarations or append missing declarations
+                    const rawNodeRegex = new RegExp(`^[ \\t]*\\b(${targetNodeId})\\b\\s*$`, 'gm');
+                    if (rawNodeRegex.test(currentCode)) {
+                        currentCode = currentCode.replace(rawNodeRegex, `    $1["${newFullLabel}"]`);
+                    } else {
+                        currentCode = currentCode.trim() + `\n    ${targetNodeId}["${newFullLabel}"]\n`;
+                    }
                     hasChanges = true;
                 }
+            } else {
+                console.error(`❌ [FAILURE] Engine could not map target "${targetIdent}" to a valid ID.`);
             }
+            console.groupEnd();
             continue;
         }
 
-        // 4. OPERATION: DELETE NODE
-        // Format: DELETE NODE rollback_stock1
+
+
+
         const deleteMatch = cmd.match(/^DELETE\s+NODE\s+(?:Step\s+)?([a-zA-Z0-9._-]+)/i);
         if (deleteMatch) {
+            console.group(`🗑️ [MERMAID AGENT] Processing DELETE NODE Command`);
             const [_, targetIdent] = deleteMatch;
             const targetNodeId = resolveNodeId(targetIdent);
 
             if (targetNodeId) {
-                const nodeLineRegex = new RegExp(`^[ \\t]*${targetNodeId}\\s*(?:["'{(\\[][\\s\\S]*?["'})\\]])?\\r?\\n?`, 'gm');
-                const connectionRegex = new RegExp(`^[ \\t]*(?:${targetNodeId}\\s*--.*?-->.*?|.*?--.*?-->\\s*${targetNodeId}|${targetNodeId}\\s*-->.*?|.*?-->\\s*${targetNodeId})\\r?\\n?`, 'gm');
+                // Strips explicit label declarations along with any matching outer shape wrappers completely
+                const nodeLineRegex = new RegExp(`^[ \\t]*\\b${targetNodeId}\\b(?:\\s*[\\[\\(\\{"'].*?[\\]\\)\\}"])?\\r?\\n?`, 'gm');
+                currentCode = currentCode.replace(nodeLineRegex, '');
+
+                // Removes line-based arrows routing in or out of the targeted element ID token
+                const connectionRegex = new RegExp(`^[ \\t]*(?:\\b${targetNodeId}\\b\\s*(--.*?-->|-->).*?|.*?(--.*?-->|-->)\\s*\\b${targetNodeId}\\b).*?\\r?\\n?`, 'gm');
+                currentCode = currentCode.replace(connectionRegex, '');
                 
-                currentCode = currentCode.replace(nodeLineRegex, '').replace(connectionRegex, '');
                 hasChanges = true;
+                console.log(`🎉 [SUCCESS] Node "${targetNodeId}" and its connection routines wiped out cleanly.`);
             }
+            console.groupEnd();
             continue;
         }
+
 
         // 5. OPERATION: ADD NODE TO SUBGRAPH
         // Format: ADD NODE rollback_custom1["Step 2.6: Recovery Core Loop"] TO phase_02
