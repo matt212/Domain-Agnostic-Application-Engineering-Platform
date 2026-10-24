@@ -74,199 +74,253 @@ function formatPromptInput(value) {
   }
 }
 
-
+//domain :${base.domain}, niche ${base.niche}, and complete business discovery output:${JSON.stringify(base.business_obj)}
 const pass1Prompt = `
 # OBJECTIVE
 
-Generate a domain-agnostic, business-specific Actor Responsibility and Authorization Model using the supplied domain :${base.domain}, niche ${base.niche}, and complete business discovery output:${JSON.stringify(base.business_obj)}.
+Generate a business-specific Actor Responsibility and Authorization Model using the supplied domain:${base.domain}, niche:${base.niche}, and complete business discovery output:${JSON.stringify(base.business_obj)}
 
-The output must identify the actors needed to operate the discovered business, explain their responsibilities, and derive their access permissions, business operations, and authorization boundaries from the supplied evidence.
+Discover the participants relevant to the business, their operational roles and responsibilities, their relationships with business objects, their permitted actions, and the conditions governing their authority.
+
+The reasoning method must remain domain-agnostic. Derive the business content from the supplied evidence rather than imposing a predefined industry structure.
 
 # INPUTS
 
-1. Domain: the supplied domain configuration.
-2. Niche: the supplied niche configuration.
-3. Business discovery output: the complete first-stage JSON, including the business operating model, participants, derived lifecycle, business objects, dependencies, alternative operating models, assumptions, unresolved dependencies, and evidence gaps.
+1. Domain: the supplied business domain.
+2. Niche: the specific business context within that domain.
+3. First-stage business discovery output: the complete discovered business operating model, participants, lifecycle, business objects, dependencies, alternative operating models, assumptions, unresolved dependencies, and evidence gaps, supplied as a JSON-formatted string.
 
-Treat the supplied discovery output as the primary source of business context. Do not silently replace it with a generic industry template.
+The supplied first-stage business discovery output is JSON. Parse and interpret its actual structure, including nested objects, arrays, properties, values, and relationships. Use its contents as the primary evidence throughout all 11 reasoning steps. Preserve the distinction between source-supported facts, inferences, conditional conclusions, and unknowns. Do not assume a predefined input structure beyond the supplied JSON or treat missing information as established fact.
 
-# REASONING INSTRUCTIONS
+Treat these inputs as the primary evidence for understanding the business. Do not silently replace, reinterpret, or supplement them with unsupported assumptions.
 
-## 1. Understand the operating model
+# 1. DISCOVER BUSINESS PARTICIPANTS
 
-Determine how the business creates value, who participates, what outcomes it produces, and how its lifecycle operates.
+Analyze how the supplied business operates and identify the participants relevant to establishing, enabling, executing, supporting, governing, or benefiting from its activities.
 
-Use the supplied business objects, dependencies, lifecycle stages, and alternative models to establish the context in which actors perform their responsibilities.
+Determine:
 
-Identify missing or uncertain business context that materially affects actor discovery or authorization.
+- Which people, organizations, groups, external parties, or other participating entities are involved.
+- What business purpose each participant serves.
+- Which outcomes or activities depend on their participation.
+- Which participants are explicitly identified, reasonably inferred, conditional on a particular operating model, or not yet established.
+- Whether apparently different participants represent distinct responsibilities or equivalent roles that can be consolidated.
 
-## 2. Discover actors from business necessity
+Discover participants from the supplied business context. Do not require predefined actor categories or assume that every business contains the same types of participants.
 
-Identify the people, organizations, teams, external parties, governing authorities, or automated participants required by the discovered operating model.
+# 2. DERIVE OPERATIONAL ROLES AND RESPONSIBILITIES
 
-For each candidate actor, determine:
+For each discovered participant, determine its operational role and the responsibilities justified by the business context.
 
-- Why the actor is needed.
-- What business outcome the actor supports.
-- Whether the actor initiates, performs, approves, governs, monitors, funds, receives, or audits business activities.
-- Which lifecycle stages and activities involve the actor.
-- Whether the actor is source-supported, reasonably inferred, conditional on an alternative model, or uncertain.
+Establish:
 
-Do not assume every domain requires a customer, merchant, finance team, administrator, or any other predefined role.
+- What the participant contributes to the business.
+- Which outcomes it is responsible for achieving or supporting.
+- Which activities, decisions, or interactions it performs.
+- What inputs, outputs, dependencies, and handoffs are associated with its responsibilities.
+- Whether responsibilities overlap, conflict, remain unassigned, or depend on an unresolved business decision.
 
-Merge duplicate roles where their responsibilities and authority are materially equivalent. Preserve distinct roles where accountability or authorization boundaries differ.
+Distinguish responsibility for an outcome from participation in an activity and authority to perform a particular action.
 
-## 3. Derive responsibilities and accountability
+Do not generate generic job descriptions. Explain each actor's role in terms of the actual business being discovered.
 
-For every actor, establish its operational role and meaningful core responsibilities.
+# 3. DISCOVER ACTOR–BUSINESS-OBJECT RELATIONSHIPS
 
-Identify the actor's expected inputs, outputs, decisions, handoffs, dependencies, and accountability.
+Use the supplied business-object catalogue and its relationships to determine how each participant interacts with the discovered business objects.
 
-Distinguish responsibility for an outcome from permission to perform an action. Identify responsibilities without a suitable owner, duplicated accountability, and potential conflicts between execution, approval, and audit.
+For each relevant relationship, determine:
 
-## 4. Map actors to business objects
+- Why the participant needs to interact with the object.
+- Whether the participant establishes, owns, maintains, uses, influences, approves, transfers, monitors, or concludes the object or its lifecycle.
+- Which business activities require that interaction.
+- Whether the relationship is essential, conditional, inferred, or uncertain.
+- Whether a required actor–object relationship is missing or unsupported.
 
-Use the discovered business-object catalogue as the primary basis for object-level permissions.
+Do not equate interaction with ownership or assume that responsibility automatically grants unrestricted access.
 
-For each actor-object relationship, determine whether the actor:
+Use the supplied object names consistently. If another object appears necessary, identify it as a proposed discovery gap rather than silently treating it as an established object.
 
-- Owns or establishes the object.
-- Uses or reads the object.
-- Creates or modifies the object.
-- Approves, executes, or concludes an operation involving the object.
-- Transfers responsibility for the object.
-- Monitors or audits the object.
+# 4. DERIVE INFORMATION ACCESS AND SCOPE
 
-Explain the business reason for each material permission.
+Determine what information each participant needs to access to fulfil its established or inferred responsibilities.
 
-Do not invent new business objects merely to fill permission categories. If an additional object appears necessary, identify it as a proposed discovery gap rather than silently treating it as established.
+For every proposed access permission, consider:
 
-## 5. Derive access scope
+- The business purpose for accessing the information.
+- The relevant object, information, or attributes.
+- The scope justified by the participant's relationship to the business.
+- Any supported restrictions arising from ownership, assignment, organizational relationships, confidentiality, or other relevant business conditions.
+- Whether access to the entire object is necessary or a narrower scope would fulfil the same responsibility.
+- Whether a proposed restriction is supported by evidence or requires confirmation.
 
-Determine which business objects and information each actor must see to perform its responsibilities.
+Populate \`What_They_Can_See\` with meaningful, business-specific access descriptions.
 
-Consider relevant business boundaries such as ownership, assignment, organization, geography, case, transaction, relationship, or delegated responsibility.
+Do not assume that every business requires the same access boundaries, information categories, or privacy controls. Identify applicable restrictions from the supplied context and distinguish unconfirmed policies from established requirements.
 
-Determine whether access should cover the complete object or only selected attributes.
+# 5. DERIVE CREATION, MODIFICATION, AND REMOVAL AUTHORITY
 
-Identify restrictions relating to confidentiality, sensitive information, information minimization, and authorized disclosure where relevant.
+Determine which business objects or attributes each participant may create, change, remove, cancel, revoke, deactivate, or otherwise conclude.
 
-Do not assert specific legal, regulatory, technical, or security requirements as confirmed facts unless the supplied evidence establishes them. Mark recommendations and unresolved policy decisions accordingly.
+For each relevant action, establish:
 
-## 6. Derive create, change, and removal permissions
-
-Determine what each actor may create, change, remove, cancel, revoke, deactivate, or otherwise conclude.
-
-For each material permission, establish:
-
-- The business purpose.
+- The business purpose of the action.
+- The participant's justification for performing it.
 - The object or information affected.
-- The permitted attributes or state transitions.
-- Relevant prerequisites and restrictions.
-- Whether approval, delegation, or another actor's participation is required.
+- Any prerequisites or applicable conditions.
+- The permitted scope of change.
+- Any dependency on another participant, decision, or business state.
+- Whether the action is supported, inferred, conditional, or unresolved.
 
-Distinguish deletion from cancellation, revocation, deactivation, and removal of a relationship.
+Populate \`What_They_Can_Create\`, \`What_They_Can_Change\`, and \`What_They_Can_Remove\` with the actions justified by this analysis.
 
-Do not assume every actor needs every CRUD operation or that every business object is directly deletable.
+Interpret removal according to the business meaning of the object and action. Do not automatically equate removal with permanent deletion.
 
-## 7. Derive executable business operations
+Do not assume every object supports every action or that every participant requires create, change, and removal permissions.
 
-Identify the meaningful business operations each actor is authorized to initiate or execute.
+# 6. DERIVE EXECUTABLE BUSINESS OPERATIONS
 
-For each operation, consider its trigger, prerequisites, required objects, expected outcome, resulting state changes, and applicable approval requirements.
+Identify the meaningful business operations each participant may initiate or execute, using the discovered operating model, lifecycle, responsibilities, and object relationships.
 
-Operations must reflect actual business activities and responsibilities. Do not merely rename CRUD operations as business commands.
+For each operation, determine:
 
-## 8. Establish authorization boundaries and guardrails
+- What the operation accomplishes.
+- Why the participant is authorized or reasonably inferred to perform it.
+- What conditions or dependencies govern execution.
+- What inputs and business objects are involved.
+- What outcomes or changes may result.
+- Whether another participant's involvement or a decision is required.
+- Whether the operation is established, inferred, conditional, or unresolved.
 
-Determine the limits of each actor's authority using the supplied responsibilities, business objects, lifecycle states, and established policies.
+Populate \`Operations_They_Can_Run\` with business operations rather than merely renaming object-level create, change, or removal actions.
 
-Consider:
+Do not assume that every business uses the same operations or that a participant's responsibility automatically authorizes every action associated with that responsibility.
 
-- Ownership and assignment boundaries.
-- State-dependent restrictions.
-- Approval and delegation requirements.
-- Separation of duties for consequential actions.
-- Conflicts between initiating, approving, executing, and auditing an action.
-- Exceptional or elevated access where justified.
-- Restrictions on changing finalized, committed, or closed business records.
+# 7. DERIVE AUTHORIZATION BOUNDARIES AND GUARDRAILS
 
-Distinguish established business rules, established security policies, recommended controls, and unresolved policy decisions.
+Determine which conditions limit or govern each participant's authority, based on the supplied business context and the evidence available.
 
-Do not invent blanket restrictions merely because they are common in other industries.
+Investigate whichever constraints are relevant to the particular business, including potential limits associated with responsibilities, relationships, object states, delegated authority, decision rights, or conflicting actions.
 
-## 9. Reason across the complete lifecycle
+For each proposed guardrail, determine:
 
-Evaluate the actor model across normal execution and relevant alternative paths.
+- What action or circumstance it governs.
+- Why the restriction or condition is relevant.
+- Which participant, object, activity, or business outcome it affects.
+- Whether it is explicitly established, reasonably inferred, conditional, or unknown.
+- What evidence or policy decision would be needed to confirm it.
 
-Consider initiation, validation, approval, execution, handoffs, failure, rejection, cancellation, recovery, dispute resolution, reversal, completion, and post-completion obligations where applicable to the discovered business.
+Where relevant, distinguish restrictions governing business behaviour from restrictions governing access to information or execution authority.
 
-Determine who detects, handles, approves, and resolves exceptions; which objects are affected; and whether responsibilities or permissions change as the lifecycle progresses.
+Populate \`Business_Rules_And_Guardrails\` with meaningful, business-specific rules and restrictions. Use the agreed categories where applicable, without assuming that every category must contain a rule.
 
-Do not force irrelevant exception types into the business model. Record materially important but undiscovered paths as gaps.
+Do not invent universal approval requirements, separation-of-duty rules, legal obligations, regulatory controls, or technical security policies merely because they are common elsewhere.
 
-## 10. Adapt to alternative operating models
+# 8. ANALYZE LIFECYCLE CHANGES AND EXCEPTIONS
 
-Use the alternative operating models identified in the discovery output to determine which actors, responsibilities, permissions, and guardrails change.
+Evaluate participant responsibilities and permissions in the context of the lifecycle and transitions discovered in the first-stage output.
 
-Identify roles that are essential, conditional, replaced, or unnecessary under each supported alternative.
+Determine how the relevant responsibilities, object relationships, and authorized actions may differ as the business progresses through its lifecycle.
 
-Preserve permissions that remain valid across alternatives and identify those dependent on an unresolved operating-model decision.
+Investigate exceptions and alternative paths that are meaningful to the discovered business, including any supported interruption, rejection, failure, recovery, cancellation, reversal, dispute, or post-completion activity.
 
-Do not select an alternative model without supporting evidence.
+For each relevant path, determine:
 
-## 11. Validate evidence and completeness
+- Which participant detects, initiates, handles, or resolves it.
+- Which objects, activities, or relationships are affected.
+- What actions or authority changes are required.
+- Whether responsibility transfers between participants.
+- Whether a missing path creates a material uncertainty in the actor model.
 
-Before producing the output, check that:
+Do not force predefined exception types or lifecycle stages into the model. Derive relevant scenarios from the supplied business evidence and identify important undiscovered paths as gaps.
 
-- Each actor has a meaningful business justification.
-- Each responsibility relates to the discovered operating model or is explicitly identified as an inference.
-- Each material permission is justified by an actor responsibility, business operation, or established policy.
-- Referenced business objects match the supplied object names or are explicitly marked as proposed.
-- Operations and permissions are consistent with lifecycle states and dependencies.
-- Approval and execution boundaries are coherent.
+# 9. EVALUATE ALTERNATIVE OPERATING MODELS
+
+Use the alternative operating models and unresolved business decisions in the first-stage output to determine how actor discovery and authorization may change.
+
+Identify:
+
+- Which participants or responsibilities differ between alternatives.
+- Which actor–object relationships or permissions are affected.
+- Which responsibilities may transfer, disappear, or become necessary.
+- Which constraints remain applicable across the alternatives.
+- Which permissions depend on a business-model choice that has not yet been confirmed.
+
+Where an alternative has not been established as the selected model, represent its implications as conditional rather than applying them unconditionally to the primary actor model.
+
+Do not invent alternative operating models simply to increase output coverage. Introduce additional alternatives only when supported by the supplied context or clearly identified as proposals requiring validation.
+
+# 10. VALIDATE BUSINESS COHERENCE AND COVERAGE
+
+Validate the proposed actor model against the supplied domain, niche, operating model, lifecycle, business objects, dependencies, and identified uncertainties.
+
+Check whether:
+
+- Every actor has a meaningful business justification.
+- Every responsibility relates to the discovered business or is explicitly identified as an inference.
+- Every material permission has a justified relationship to a responsibility, object interaction, operation, or established policy.
+- Referenced business objects match the supplied object names or are explicitly identified as proposed additions.
+- Permissions and operations are consistent with relevant lifecycle conditions and dependencies.
+- Responsibilities are adequately assigned, with meaningful gaps and overlaps identified.
 - Relevant exceptions and post-completion responsibilities have been considered.
-- No unsupported assumption is presented as a confirmed business fact.
-- Missing actors, unowned responsibilities, unjustified permissions, and unresolved authorization decisions are identified.
+- Conditional operating models have not been confused with the selected or established model.
+- Unsupported assumptions have not been presented as confirmed facts.
+- Unresolved questions affecting authorization remain visible.
 
-Do not claim complete coverage where evidence is insufficient.
+Distinguish a missing item that materially undermines the actor model from an optional refinement that can be addressed later.
 
-# EVIDENCE CLASSIFICATION
+Do not claim exhaustive coverage or correctness when the supplied evidence is insufficient.
 
-Distinguish:
+# 11. CLASSIFY EVIDENCE, INFERENCES, CONDITIONS, AND UNKNOWNS
 
-- Source-supported: directly supported by supplied business discovery evidence.
-- Inferred: a reasoned conclusion derived from the supplied business context but not directly established.
-- Conditional: applicable only under a specified operating model or business condition.
-- Unknown: insufficient evidence to determine the correct actor, permission, or policy.
+For each material actor, responsibility, permission, operation, or guardrail, distinguish the strength and nature of its supporting evidence.
 
-Do not assign false precision to confidence scores or treat model confidence as proof.
+Use the following evidence classifications consistently:
 
-# OUTPUT REQUIREMENTS
+**Source-supported**
 
-Return the requested actor JSON array using the agreed schema:
+The supplied domain context or discovery output explicitly establishes the relevant fact, participant, responsibility, relationship, action, or policy.
 
-- actor_name
-- operational_role
-- core_responsibilities
-- access_authorization_and_scope
-  - What_They_Can_See
-  - What_They_Can_Create
-  - What_They_Can_Change
-  - What_They_Can_Remove
-  - Operations_They_Can_Run
-  - Business_Rules_And_Guardrails
-- evidence_and_assumptions
+**Inferred**
 
-Retain the agreed key names and value types. Do not add unrelated top-level sections or change the schema without authorization.
+The conclusion is a reasoned deduction from the supplied business context, but is not explicitly established by the source. Record the reasoning or basis for the inference where useful.
 
-Within Business_Rules_And_Guardrails, distinguish data privacy, state and transition constraints, and authorization boundaries where applicable. Clearly label proposed controls and unresolved policies rather than presenting them as established rules.
+**Conditional**
 
-Within evidence_and_assumptions, distinguish source-supported information, inferences, conditional findings, and unknowns.
+The conclusion applies only if a particular business condition, operating model, relationship, or unresolved decision is true. Identify the condition.
 
-All actors, responsibilities, permissions, operations, and rules must be specific to the supplied domain, niche, and discovered operating model. The reasoning method must remain domain-agnostic.
+**Unknown**
 
-Return valid JSON only. Do not include Markdown fences, explanatory prose, or comments outside the JSON. Use empty arrays when a category has no supported entries rather than inventing permissions.
+The supplied evidence is insufficient to determine the correct conclusion. State what information or business decision is needed, where material.
+
+Apply these classifications to the substance of the finding, not merely to the actor as a whole. One actor may have source-supported responsibilities, inferred permissions, conditional capabilities, and unresolved guardrails.
+
+Do not interpret model confidence as proof. Do not invent supporting evidence, and do not upgrade an inference to a confirmed fact merely because it appears reasonable.
+
+Keep evidence annotations concise and traceable to the supplied inputs. Distinguish facts stated in the input from conclusions derived by the model.
+
+# OUTPUT CONTRACT
+
+Return the agreed actor JSON array using the existing schema:
+
+- \`actor_name\`
+- \`operational_role\`
+- \`core_responsibilities\`
+- \`access_authorization_and_scope\`
+  - \`What_They_Can_See\`
+  - \`What_They_Can_Create\`
+  - \`What_They_Can_Change\`
+  - \`What_They_Can_Remove\`
+  - \`Operations_They_Can_Run\`
+  - \`Business_Rules_And_Guardrails\`
+- \`evidence_and_assumptions\`
+
+Within \`evidence_and_assumptions\`, preserve the evidence classifications \`source_supported\`, \`inferred\`, \`conditional\`, and \`unknown\`.
+
+Keep the agreed field names and value types stable. Do not create industry-specific schema fields or add new top-level sections without authorization.
+
+Use the established JSON structure to represent the discovered business, not to dictate what the business must contain. Empty arrays are acceptable where no entries are justified. Do not fabricate permissions or guardrails to populate empty categories.
+
+Return valid JSON only, without Markdown fences, comments, or explanatory prose outside the JSON.
 
 `;
 
