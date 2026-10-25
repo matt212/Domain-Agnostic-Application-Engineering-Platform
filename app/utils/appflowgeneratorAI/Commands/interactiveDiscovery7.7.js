@@ -1831,198 +1831,1061 @@ function formatPromptInput(value) {
 // `;
 //-------
 
+// const pass1Prompt = `
+// Identify business actors, their responsibilities, information access,
+// and business-object creation requirements using:
+
+// Domain: ${base.domain}
+// Niche: ${base.niche}
+// Business discovery data: ${JSON.stringify(base.business_obj)}
+
+// # OBJECTIVE
+
+// Discover actors and derive their responsibilities, information visibility,
+// and business-object creation authority from the supplied discovery data.
+
+// Remain domain-agnostic. Do not impose predefined industry structures,
+// actors, workflows, object ownership, or authorization models.
+
+// # 1. DISCOVER ACTORS AND RESPONSIBILITIES
+
+// Identify relevant people, organizations, groups, external parties, and
+// automated participants only when justified by the supplied context.
+
+// For each actor, derive:
+// - actor_name: A distinct, business-specific actor name.
+// - operational_role: The actor's business role.
+// - core_responsibilities: Concise responsibilities and expected outcomes.
+
+// Derive responsibilities from discovered activities, objects, relationships,
+// dependencies, decisions, and handoffs.
+
+// Distinguish participation, business responsibility, object ownership,
+// decision authority, activity execution, and automated execution.
+// Do not assume these are interchangeable.
+
+// Keep materially different actors separate. Do not invent or duplicate actors,
+// generic job descriptions, responsibilities, or industry practices.
+
+// # 2. DERIVE WHAT EACH ACTOR CAN SEE
+
+// For every actor, derive:
+// access_authorization_and_scope:
+//   What_They_Can_See: []
+
+// Determine which business information and objects the actor reasonably needs
+// for their supported responsibilities.
+
+// For each proposed visibility entry, internally evaluate:
+
+// - BUSINESS PURPOSE: Which responsibility, decision, activity, validation,
+//   handoff, or outcome requires the information?
+// - OBJECT NEED: Which discovered object, record, attribute, status, or detail
+//   is needed? Does the actor need the complete object or only selected data?
+// - ACTOR RELATIONSHIP: Does the actor create, own, maintain, use, fulfil,
+//   approve, transfer, monitor, or conclude the object or its lifecycle?
+// - ACCESS SCOPE: Is visibility limited to the actor's own records, assigned
+//   work, relevant location, organization, transaction, or another relationship
+//   established by the input?
+// - INFORMATION BOUNDARIES: Is sensitive or commercially restricted information
+//   necessary for the responsibility? Do not invent restrictions unsupported
+//   by the context.
+// - DEPENDENCIES: Does access depend on an assignment, agreement, decision,
+//   lifecycle state, configuration, or operating-model choice established by
+//   the supplied data?
+
+// Do not assume that responsibility for an activity grants access to every
+// object involved in it. Do not assume that creating or changing information
+// grants visibility to every attribute.
+
+// Do not assume unrestricted access for system administrators, platform
+// operators, external participants, or automated systems.
+
+// Do not invent access rules, commercial arrangements, or operational practices.
+// Include only visibility requirements reasonably supported by the context.
+
+// # 3. DERIVE WHAT EACH ACTOR CAN CREATE
+
+// For every actor, derive:
+// access_authorization_and_scope:
+//   What_They_Can_Create: []
+
+// Identify business objects or records that the actor is reasonably responsible
+// for originating, based on the supplied discovery data.
+
+// For each proposed creation entry, internally evaluate:
+
+// - CREATION PURPOSE: What business outcome or activity requires the new object
+//   or record?
+// - OBJECT: Which discovered business object is being created?
+// - RESPONSIBILITY: Does the actor originate the object, or merely participate
+//   in a process involving it?
+// - CREATION MECHANISM: Does the actor create the record directly, submit
+//   information for another participant to record, or trigger a process that
+//   automatically creates it?
+// - OWNERSHIP: Is the actor responsible for originating the business record,
+//   or does another actor or system own that responsibility?
+// - SOURCE SUPPORT: What activity, relationship, decision, dependency, handoff,
+//   or lifecycle requirement supports this creation responsibility?
+
+// Distinguish these cases:
+
+// 1. CREATE: Originating a new business object or record.
+// 2. SUBMIT: Providing information that another actor or system records.
+// 3. TRIGGER: Initiating a process that may cause automated record creation.
+// 4. UPDATE: Changing an existing object's attributes, quantities, status,
+//    or lifecycle state.
+
+// Do not treat submission, triggering, or updating as direct creation unless
+// the supplied context supports that interpretation.
+
+// If an actor triggers automation, do not automatically assign ownership of
+// the resulting record to that actor. Attribute creation to an automated
+// participant only when the context supports that responsibility.
+
+// Do not infer creation authority from visibility, participation, role title,
+// or the ability to initiate a process.
+
+// Do not invent missing business objects as established facts. Use discovered
+// business-object names when supported by the input. Do not invent a new object
+// solely to explain an unspecified process outcome.
+
+// Do not infer creation responsibility from participation, visibility, role
+// title, submission, confirmation, or process initiation alone.
+
+// Distinguish the participant who initiates an activity from the participant
+// or system responsible for originating the resulting business object or record.
+
+// Do not invent a system actor solely to explain an unspecified process outcome.
+// When creation responsibility is not sufficiently supported, leave
+// What_They_Can_Create empty rather than guessing.
+
+// This section identifies business-object creation responsibilities only.
+// Do not derive update, delete, approval, or other executable-operation
+// permissions in this pass.
+
+// # 4. PREVENT UNSUPPORTED ASSUMPTIONS
+
+// Apply these rules to actors, responsibilities, visibility, and creation:
+
+// - Do not assume a role title establishes ownership of an object.
+// - Do not assume an actor responsible for an activity needs every related
+//   object or can create every object involved.
+// - Do not assume an external organization has direct access to internal
+//   application records.
+// - Do not assume a platform operator controls every business function.
+// - Do not assume a system capability is a human responsibility.
+// - Do not invent regulatory, audit, payment, approval, or administrative
+//   participants solely because they are common in an industry.
+// - Do not invent access rules, commercial arrangements, or operational practices.
+// - Do not list every discovered object for every actor.
+// - Do not add entries merely to make the output appear comprehensive.
+// - Do not combine distinct actors merely to reduce the actor count.
+// - When multiple operating models are plausible, do not arbitrarily select one
+//   without support from the supplied context.
+
+// Derive the appropriate actors, responsibilities, object relationships,
+// visibility, and creation authority from the actual discovery data.
+
+// Use concrete business-specific terminology. For visibility, identify the
+// object or information, relevant scope, and purpose when supported.
+// For creation, identify the object or record and its business purpose.
+
+// Avoid vague descriptions such as:
+// - "Access relevant business data"
+// - "View all operational records"
+// - "Create required records"
+// - "Manage system information"
+
+// Omit unsupported entries rather than presenting plausible industry
+// conventions as established business requirements.
+
+// # 5. FINAL INTERNAL VALIDATION
+
+// Before returning the output, verify:
+
+// - Each actor is justified by the supplied business context.
+// - Responsibilities are concrete and consistent with discovered activities.
+// - Every visibility entry supports a specific responsibility and has a
+//   reasonable scope.
+// - Every creation entry describes a supported business-object creation
+//   responsibility.
+// - Creation is distinguished from submission, triggering, and updating.
+// - Human, organizational, external, and automated responsibilities are
+//   distinguished when the input supports that distinction.
+// - No automated participant or system actor has been invented merely to
+//   explain an unspecified process outcome.
+// - Duplicate, redundant, or unsupported entries are removed.
+// - Both required arrays exist for every actor, including when empty.
+
+// Correct unsupported conclusions without repeating the discovery process.
+
+// # OUTPUT CONTRACT
+
+// Return valid JSON only, using this structure:
+
+// [
+//   {
+//     "actor_name": "Business-specific actor name",
+//     "operational_role": "Concise role description",
+//     "core_responsibilities": [
+//       "Specific responsibility or expected business outcome"
+//     ],
+//     "access_authorization_and_scope": {
+//       "What_They_Can_See": [
+//         "Business object or information, relevant scope, and purpose"
+//       ],
+//       "What_They_Can_Create": [
+//         "Business object or record the actor is responsible for originating"
+//       ]
+//     }
+//   }
+// ]
+
+// Return one object per justified actor.
+
+// Use actual business-object names from the supplied discovery data.
+
+// Include only visibility and creation responsibilities reasonably supported
+// by the supplied context. Do not treat missing information as evidence that
+// a responsibility exists or that it does not exist.
+
+// Use an empty array for either field when no entry can reasonably be supported
+// by the available data.
+
+// Do not add evidence_classification fields or equivalent fields.
+// Do not include update, delete, approval, or other executable-operation
+// permissions in this pass.
+
+// Return valid JSON only, without Markdown fences, comments, or explanatory
+// prose outside the JSON.
+// `;
+//<==========>
+
+
+// const pass1Prompt = `
+// Identify business actors, their responsibilities, information visibility,
+// business-object creation, modification authority, and permitted business
+// operations using:
+
+// Domain: ${base.domain}
+// Niche: ${base.niche}
+// Business discovery data: ${JSON.stringify(base.business_obj)}
+
+// # OBJECTIVE
+
+// Discover justified actors and derive their responsibilities and
+// business-level authorization requirements from the supplied discovery data.
+
+// For every actor, determine:
+// 1. What_They_Can_See: What information or business objects they need to access.
+// 2. What_They_Can_Create: Which business objects they can originate.
+// 3. What_They_Can_Change: Which existing business objects they can modify,
+//    which information they can change, and under what supported conditions.
+// 4. Operations_They_Can_Run: Which business activities or operations they
+//    are authorized to execute, and under what supported conditions.
+
+// Remain domain-agnostic. Do not impose predefined industry structures,
+// actors, workflows, object ownership, lifecycle states, or authorization models.
+
+// Derive requirements from the supplied data. Do not confuse plausible business
+// practices, inferred technical capabilities, and established requirements.
+
+// # 1. DISCOVER ACTORS AND RESPONSIBILITIES
+
+// Identify relevant people, organizations, groups, external parties, and
+// automated participants only when justified by the supplied context.
+
+// For each actor, derive:
+// - actor_name: A distinct, business-specific actor name.
+// - operational_role: The actor's business role.
+// - core_responsibilities: Concrete responsibilities and expected outcomes.
+
+// Derive responsibilities from supplied business objects, activities,
+// relationships, dependencies, decisions, and handoffs.
+
+// Distinguish:
+// - Participation from accountability.
+// - Business responsibility from object ownership.
+// - Decision authority from activity execution.
+// - Human actions from automated execution.
+// - Initiating an activity from creating or modifying its resulting records.
+// - Being able to perform an operation from being authorized to perform it.
+
+// Do not invent actors, duplicate materially equivalent actors, or combine
+// distinct actors merely to reduce the actor count.
+
+// # 2. DERIVE WHAT EACH ACTOR CAN SEE
+
+// For every actor, derive:
+// What_They_Can_See: []
+
+// For each proposed visibility entry, internally answer:
+
+// - PURPOSE: What responsibility, decision, activity, validation, or outcome
+//   requires this information?
+// - OBJECT: Which explicitly supplied business object or information is needed?
+// - NECESSARY DETAIL: Is the complete object required, or only selected
+//   attributes, status, quantities, instructions, or other information?
+// - RELATIONSHIP: What supported relationship connects this actor to the data?
+// - SCOPE: Which records, assignments, transactions, locations, organizations,
+//   or other boundaries apply according to the input?
+// - DEPENDENCIES: Does access depend on a supported assignment, agreement,
+//   decision, lifecycle state, or operating-model condition?
+// - JUSTIFICATION: Would this actor's supported responsibility be impaired
+//   without this information?
+
+// Include only information reasonably required for supported responsibilities.
+
+// Do not assume that responsibility for an activity grants access to every
+// related object. Do not infer unrestricted access from administrative titles,
+// platform operation, external participation, or automated execution.
+
+// Do not invent confidentiality rules, access scopes, commercial arrangements,
+// or operating practices. Describe the narrowest scope supported by the input.
+
+// # 3. DERIVE WHAT EACH ACTOR CAN CREATE
+
+// For every actor, derive:
+// What_They_Can_Create: []
+
+// For each proposed creation entry, internally answer:
+
+// - OBJECT: Which explicitly supplied business object is being created?
+// - PURPOSE: What supported business outcome requires the new object?
+// - ORIGINATOR: Which actor or system is responsible for originating it?
+// - MECHANISM: Does the actor create it directly, submit information for another
+//   participant to record, or trigger a process that may create it automatically?
+// - EVIDENCE: Which supplied activity, relationship, dependency, decision,
+//   handoff, or lifecycle requirement supports the assignment?
+// - CONDITIONS: What supported prerequisites or boundaries govern creation?
+
+// Distinguish:
+// - CREATE: Originating a new business object or record.
+// - SUBMIT: Providing information that another participant or system records.
+// - TRIGGER: Initiating a process that may cause another participant or system
+//   to create a record.
+// - UPDATE: Modifying an existing object.
+
+// Do not infer creation authority from visibility, participation, role title,
+// submission, confirmation, or process initiation alone.
+
+// Do not assign creation responsibility to the initiator of a process when
+// another participant or system originates the resulting record.
+
+// Do not invent automated participants merely to explain unspecified behavior.
+
+// Every creation entry must reference an exact business-object name explicitly
+// present in the supplied discovery data. Do not invent inferred, implicit,
+// derived, proposed, or hypothetical objects as established business objects.
+
+// Do not treat an update, status transition, calculation, or process outcome
+// as the creation of a new object unless the supplied data explicitly supports
+// a distinct business object.
+
+// # 4. DERIVE WHAT EACH ACTOR CAN CHANGE
+
+// For every actor, derive:
+// What_They_Can_Change: []
+
+// Determine which existing business objects an actor is authorized to modify,
+// which information they can change, and under which supported conditions.
+
+// For each proposed change entry, internally answer:
+
+// - TARGET: Which explicitly supplied business object can be changed?
+// - AUTHORIZED ACTOR: Why is this actor responsible or authorized to change it?
+// - CHANGEABLE INFORMATION: Which attributes, quantities, assignments,
+//   relationships, or other parts of the object can be modified?
+// - INTENDED OUTCOME: What business outcome does the change support?
+// - CURRENT STATE: Is the change supported only at a particular lifecycle
+//   stage or status?
+// - PRECONDITIONS: Does the change depend on an assignment, decision,
+//   validation, handoff, or other condition established by the input?
+// - BOUNDARIES: Which fields, records, or circumstances are outside the
+//   actor's supported change responsibility?
+// - RECORD OWNERSHIP: Does the actor maintain the object, or merely request
+//   a change that another actor or system applies?
+// - SOURCE SUPPORT: Which supplied activity, relationship, dependency,
+//   decision, or lifecycle requirement justifies the change?
+
+// Distinguish direct modification from requesting, proposing, submitting,
+// approving, or triggering a modification performed by another participant.
+
+// Do not infer change authority merely because an actor can view or create
+// the object, participates in its lifecycle, or holds a relevant-sounding title.
+
+// Do not assume that an actor who can change one attribute can change every
+// attribute of the object.
+
+// Do not assume that creating an object grants permission to modify it later.
+// Do not assume that updating an object means the actor owns or controls it.
+
+// Treat status transitions as changes to an existing object unless the
+// supplied context explicitly establishes that a separate object is created.
+
+// Do not invent fields, lifecycle states, change rules, or permissions.
+// Use exact supplied business-object names. Describe only the specific
+// changes and conditions supported by the input.
+
+// # 5. DERIVE OPERATIONS EACH ACTOR CAN RUN
+
+// For every actor, derive:
+// Operations_They_Can_Run: []
+
+// Identify business operations the actor is authorized to execute, rather than
+// merely being involved in or informed about.
+
+// An operation represents a meaningful business action, decision, or process
+// step supported by the discovery data. It is not automatically a technical
+// API, HTTP method, database command, or application implementation detail.
+
+// For each proposed operation, internally answer:
+
+// - OPERATION: What specific business action can the actor execute?
+// - PURPOSE: What business outcome does it achieve?
+// - AUTHORITY: What supplied responsibility, authorization, relationship,
+//   decision, or handoff justifies the actor performing it?
+// - TARGET: Which supplied business object or objects does it involve?
+// - EFFECT: Does it create an object, change an existing object, initiate
+//   another process, make a decision, or perform an action without changing
+//   a business object?
+// - PRECONDITIONS: What supported assignment, lifecycle stage, validation,
+//   decision, or other condition must hold before execution?
+// - SCOPE: Which records, transactions, assignments, locations, or other
+//   boundaries apply when supported by the input?
+// - EXECUTOR: Is the operation performed directly by the actor, or requested
+//   by the actor and executed by another participant or system?
+// - SOURCE SUPPORT: Which supplied activity, relationship, dependency,
+//   decision, or handoff supports this operation?
+
+// Distinguish the following concepts:
+
+// - VIEWING information does not establish permission to act on it.
+// - CREATING an object does not establish permission to change or process it.
+// - CHANGING an object does not establish permission to execute every operation
+//   associated with it.
+// - SUBMITTING a request does not establish authority to approve it.
+// - TRIGGERING a process does not establish authority over all its subsequent
+//   steps or resulting objects.
+// - PARTICIPATING in a workflow does not establish authority to execute
+//   every operation within that workflow.
+// - A system's technical capability does not establish an actor's business
+//   authorization to use that capability.
+
+// Do not infer approval, cancellation, release, reassignment, override,
+// settlement, dispute resolution, or other operation authority merely because
+// such operations are common in an industry. Include an operation only when
+// the supplied context supports it.
+
+// Do not invent technical endpoints, UI actions, API methods, executable
+// commands, or implementation details not present in the supplied data.
+
+// When an actor initiates an operation that another participant or system
+// executes, describe the supported initiating operation and distinguish it
+// from the downstream execution.
+
+// # 6. CROSS-CHECK THE FOUR AUTHORIZATION DIMENSIONS
+
+// For each actor, independently evaluate visibility, creation, change, and
+// operation authority. Do not automatically copy permissions between fields.
+
+// Internally answer these questions:
+
+// 1. What information must this actor see to perform supported responsibilities?
+// 2. Which new business objects is this actor responsible for originating?
+// 3. Which existing business objects and specific information can this actor
+//    change, and under what supported conditions?
+// 4. Which business operations can this actor execute, and which can the actor
+//    only request, initiate, or observe?
+// 5. Which other participant or system creates or changes the resulting record?
+// 6. Which permissions depend on an assignment, decision, lifecycle stage,
+//    or relationship established by the supplied data?
+// 7. Are two actors being given the same authority merely because they
+//    participate in the same workflow?
+// 8. Has any permission been inferred solely from a role title, object visibility,
+//    object creation, workflow participation, or common industry practice?
+// 9. Does any entry reference an object, attribute, lifecycle state, or operation
+//    that is not established by the supplied data?
+// 10. Can the proposed authorization be explained using the supplied business
+//     context without inventing a missing rule or operating model?
+
+// Correct unsupported conclusions before returning the output.
+
+// # 7. PREVENT UNSUPPORTED ASSUMPTIONS
+
+// Apply these rules to all actors, responsibilities, and authorization fields:
+
+// - Do not assume a role title establishes object ownership or authority.
+// - Do not assume an actor responsible for an activity needs every related
+//   object or can create, change, or operate on every object involved.
+// - Do not assume an external organization has direct access to internal records.
+// - Do not assume a platform operator controls every business function.
+// - Do not assume a system capability establishes a human responsibility.
+// - Do not invent regulatory, audit, payment, approval, or administrative
+//   participants solely because they are common in an industry.
+// - Do not invent access rules, commercial arrangements, fields, lifecycle
+//   states, dependencies, or operating practices.
+// - Do not list every discovered object or operation for every actor.
+// - Do not add entries merely to make the output appear comprehensive.
+// - Do not create additional business objects to fill perceived gaps.
+// - Do not arbitrarily choose between plausible operating models.
+// - Do not confuse business requirements with proposed technical implementation.
+// - Do not interpret missing information as proof that a permission exists
+//   or as proof that it is prohibited.
+
+// Use concrete business-specific terminology.
+
+// For visibility, identify the exact object or information, supported scope,
+// and business purpose.
+
+// For creation, identify the exact object and supported creation responsibility.
+
+// For changes, identify the exact object, changeable information, purpose,
+// and supported conditions.
+
+// For operations, identify the business action, its purpose, target, and
+// supported execution conditions.
+
+// Omit unsupported entries rather than presenting plausible conventions
+// as established business requirements.
+
+// # 8. FINAL INTERNAL VALIDATION
+
+// Before returning the output, verify:
+
+// - Every actor is justified by the supplied business context.
+// - Responsibilities are concrete and consistent with supplied activities.
+// - Every visibility entry has a supported purpose and reasonable scope.
+// - Every creation entry references an exact supplied business-object name.
+// - Every change entry references an exact supplied business-object name
+//   and identifies the supported modification responsibility.
+// - Every operation is a supported business action, not an invented
+//   technical permission or implementation detail.
+// - Creation is distinguished from submission, triggering, and updating.
+// - Modification is distinguished from requesting, approving, or triggering
+//   another participant's modification.
+// - Operation authority is not inferred automatically from visibility,
+//   creation, change authority, participation, or role title.
+// - Human, organizational, external, and automated responsibilities are
+//   distinguished when supported by the input.
+// - No unsupported actors, objects, attributes, lifecycle states, conditions,
+//   or permissions have been introduced.
+// - Duplicate, redundant, overly broad, and unsupported entries are removed.
+// - All four authorization arrays exist for every actor, including when empty.
+// - The final output follows the exact schema below.
+
+// # OUTPUT CONTRACT
+
+// Return valid JSON only, using exactly this structure:
+
+// [
+//   {
+//     "actor_name": "Business-specific actor name",
+//     "operational_role": "Concise role description",
+//     "core_responsibilities": [
+//       "Specific responsibility or expected business outcome"
+//     ],
+//     "access_authorization_and_scope": {
+//       "What_They_Can_See": [
+//         "Exact supplied business object or information, supported scope, and purpose"
+//       ],
+//       "What_They_Can_Create": [
+//         "Exact supplied business-object name and supported creation purpose"
+//       ],
+//       "What_They_Can_Change": [
+//         "Exact supplied business-object name, specific changeable information, purpose, and supported conditions"
+//       ],
+//       "Operations_They_Can_Run": [
+//         "Supported business operation, purpose, target, and execution conditions"
+//       ]
+//     }
+//   }
+// ]
+
+// Return one object per justified actor.
+
+// Use exact business-object names from the supplied discovery data.
+// Do not invent object names, fields, operations, lifecycle states, or rules.
+
+// Include only responsibilities and authorization requirements reasonably
+// supported by the supplied context.
+
+// Use an empty array for any authorization dimension when no entry can
+// reasonably be supported by the available data.
+
+// Do not add evidence_classification fields or equivalent fields.
+// Do not add fields beyond the specified JSON structure.
+// Do not return update, delete, approval, or other operation permissions
+// outside the four specified authorization arrays.
+
+// Return valid JSON only, without Markdown fences, comments, or explanatory
+// prose outside the JSON.
+// `;
+//<<<<<<============
+
+
 const pass1Prompt = `
-Identify business actors, their responsibilities, information access,
-and business-object creation requirements using:
+Analyze the supplied business context as a senior business analyst,
+domain specialist, process architect, and business authorization designer.
+
+Discover business actors, their responsibilities, information visibility,
+business-object creation and modification authority, and executable
+business operations.
 
 Domain: ${base.domain}
 Niche: ${base.niche}
 Business discovery data: ${JSON.stringify(base.business_obj)}
 
-# OBJECTIVE
+# 1. MISSION
 
-Discover actors and derive their responsibilities, information visibility,
-and business-object creation authority from the supplied discovery data.
+Transform the supplied business discovery data into a realistic,
+domain-appropriate, evidence-grounded actor authorization model.
 
-Remain domain-agnostic. Do not impose predefined industry structures,
-actors, workflows, object ownership, or authorization models.
+- What realistic business responsibilities and capabilities can be inferred
+  from the Domain, Niche, and supplied business discovery data, even when
+  they are not explicitly stated as permissions?
 
-# 1. DISCOVER ACTORS AND RESPONSIBILITIES
+- What gaps exist in the business context that can be reasonably completed
+  using domain knowledge and the relationships between the supplied
+  business objects, actors, responsibilities, and operational activities?
 
-Identify relevant people, organizations, groups, external parties, and
-automated participants only when justified by the supplied context.
+- Which inferred capabilities are necessary or reasonably expected for
+  actors to fulfil their identified business responsibilities?
+
+- Does each inferred capability remain consistent with the supplied
+  business objects, responsibilities, and operational context?
+
+- Am I inferring a reasonable business capability, or inventing a specific
+  business rule, permission, or operational detail that the context does
+  not justify?
+
+Remain fully domain-agnostic:
+- Derive business meaning from Domain, Niche, and the supplied data.
+- Do not hardcode industry-specific actors, objects, workflows, or rules.
+- Do not assume all industries use the same operating model.
+- Do not invent permissions to make the output appear comprehensive.
+- Do not omit reasonably supported permissions merely because the input
+  does not explicitly use authorization terminology.
+
+The objective is to discover realistic business responsibilities and
+permissions, not to generate a generic role-permission template.
+
+# 2. THINK LIKE A REAL-WORLD BUSINESS EXPERT
+
+Before generating the output, investigate the supplied context by asking
+the following questions. Adapt each question to the actual domain, niche,
+actors, objects, and activities. Do not assume every question applies.
+
+## A. Business purpose and outcome
+
+- What real-world business outcome is this actor responsible for achieving?
+- What must the actor know, decide, provide, maintain, or do to achieve it?
+- Which supplied objects represent the information, commitments, resources,
+  decisions, or outcomes involved?
+- What would prevent the actor from fulfilling the responsibility if the
+  necessary information or authority were unavailable?
+- Is the actor accountable for the outcome, merely participating, or
+  performing one step on behalf of another participant?
+
+## B. Business-object meaning and lifecycle
+
+- What does each supplied business object represent in this domain?
+- Which actors interact with it, and for what business purpose?
+- Does the supplied context indicate that the object is created, maintained,
+  validated, assigned, processed, corrected, completed, or otherwise changed?
+- Which existing object must change when a supported activity produces a
+  new business result?
+- Is the result a change to an existing object or a genuinely separate
+  business object already represented in the supplied data?
+- Which object relationships or dependencies explain why an actor needs
+  access to, or authority over, a particular object?
+- Does the input establish an actual lifecycle transition, or would that
+  transition be only a plausible assumption?
+
+Do not invent lifecycle states or object relationships to answer these
+questions. Use them to interrogate the available evidence.
+
+## C. Real-world information responsibility
+
+- Which information does the actor provide, maintain, verify, correct,
+  reconcile, or use to make a business decision?
+- Which information must be accurate for the actor to complete the work?
+- Is the actor responsible for maintaining the information itself, or only
+  consuming it or requesting another participant to maintain it?
+- Which information is relevant only to a particular transaction, assignment,
+  organization, location, or business relationship?
+- Does the context justify access to the whole object or only selected
+  information?
+
+Do not assume that access to information grants permission to modify it.
+
+## D. Authority and accountability
+
+- Who is responsible for originating the information or business record?
+- Who is responsible for maintaining it after creation?
+- Who makes the relevant decision?
+- Who executes the decision?
+- Who can request or propose a change?
+- Who can approve it, when such approval is established by the input?
+- Who records the outcome?
+- Does another actor or automated participant execute the resulting action?
+- Is the authority direct, delegated, conditional, or merely observational?
+
+Do not invent approval hierarchies, segregation-of-duty rules, or delegated
+authority unless supported by the supplied context.
+
+## E. Real-world exceptions and changes
+
+For each relevant actor-object relationship, investigate:
+
+- What existing information might this actor need to correct or maintain?
+- Can the actor update information they are responsible for supplying?
+- Can the actor record the outcome of an activity they perform?
+- Can the actor update a relevant assignment, quantity, instruction,
+  relationship, decision, or status?
+- Does the actor handle discrepancies, failed activities, corrections,
+  rework, or changing circumstances according to the supplied context?
+- Would a proposed change be performed directly by the actor or applied
+  by another participant or system?
+- What prevents an otherwise plausible change from being authorized?
+
+These are discovery questions, not permissions to assume. Include a change
+only when the combined context supports the actor's authority and the
+target information.
+
+## F. End-to-end business consequences
+
+- What happens to the relevant business objects when this actor performs
+  a supported activity?
+- Which participant is responsible for the resulting record or change?
+- Does the actor's action merely initiate another activity?
+- Is an outcome recorded by the actor or automatically recorded by a system?
+- What downstream responsibility or dependency explains the action?
+- Are there alternative actors, handoffs, or operating models explicitly
+  represented in the supplied data?
+
+Do not infer every downstream consequence merely because it is technically
+possible.
+
+# 3. REASONING DISCIPLINE
+
+Use the following distinctions throughout the analysis:
+
+1. SUPPLIED FACT:
+   Explicitly represented in the discovery data.
+
+2. REASONABLE BUSINESS INFERENCE:
+   Not stated as a literal permission, but strongly supported by the combined
+   meaning of supplied responsibilities, activities, relationships,
+   dependencies, and outcomes.
+
+3. UNRESOLVED POSSIBILITY:
+   Plausible in the real world, but not sufficiently established by the input.
+
+Use supplied facts and reasonable business inferences when deriving
+permissions. Do not convert unresolved possibilities into established
+permissions.
+
+- How can Domain and Niche be used as substantive sources of business
+  knowledge to infer missing business capabilities alongside the supplied
+  discovery data?
+
+- Which reasonable business capabilities can be inferred even when they
+  are not explicitly stated in the supplied data?
+
+- Is each inferred capability a reasonable business inference, or does it
+  depend on an unsupported specific assumption?
+
+- Am I introducing business objects, exact fields, lifecycle states,
+  thresholds, or policies that are not sufficiently established by the
+  supplied context or reasonable domain-based inference?
+
+- Does the inferred authority reflect the actor's actual business
+  responsibilities, or am I assuming unrestricted authority without
+  sufficient justification?
+  
+Do not output these internal reasoning classifications.
+
+When multiple operating models remain plausible, do not arbitrarily choose
+one. Include only the authority common to the supported context, if any.
+Otherwise omit the unsupported permission.
+
+# 4. DISCOVER ACTORS AND RESPONSIBILITIES
+
+Identify justified people, organizational participants, groups, external
+parties, and automated participants represented or reasonably established
+by the supplied context.
 
 For each actor, derive:
-- actor_name: A distinct, business-specific actor name.
-- operational_role: The actor's business role.
-- core_responsibilities: Concise responsibilities and expected outcomes.
+- actor_name: Distinct business-specific actor name.
+- operational_role: Concise business role.
+- core_responsibilities: Concrete responsibilities and expected outcomes.
 
-Derive responsibilities from discovered activities, objects, relationships,
-dependencies, decisions, and handoffs.
+Ask:
+- What work does this actor perform or own?
+- What business outcome is the actor accountable for?
+- Which objects, decisions, activities, or handoffs are relevant?
+- Is this an individual role, an organization, an external participant,
+  or an automated participant?
+- Are apparently different actors actually distinct in responsibility
+  or authority?
 
-Distinguish participation, business responsibility, object ownership,
-decision authority, activity execution, and automated execution.
-Do not assume these are interchangeable.
+Do not invent actors to fill perceived gaps. Do not merge distinct actors
+merely because they have similar responsibilities.
 
-Keep materially different actors separate. Do not invent or duplicate actors,
-generic job descriptions, responsibilities, or industry practices.
+Do not confuse an organization's participation with a particular person's
+permission to perform every activity associated with that organization.
 
-# 2. DERIVE WHAT EACH ACTOR CAN SEE
+# 5. DERIVE WHAT EACH ACTOR CAN SEE
 
-For every actor, derive:
-access_authorization_and_scope:
-  What_They_Can_See: []
+For every actor, investigate:
+What_They_Can_See: []
 
-Determine which business information and objects the actor reasonably needs
-for their supported responsibilities.
+For each candidate, ask:
 
-For each proposed visibility entry, internally evaluate:
+- Which responsibility or decision requires the information?
+- Which exact supplied business object or information is involved?
+- What specific information is necessary?
+- What supported relationship connects the actor to that information?
+- Which record, assignment, transaction, location, or other scope is justified?
+- Does the actor need the information directly, or does another participant
+  provide the necessary result?
+- Is access justified by the business context, rather than merely by title?
 
-- BUSINESS PURPOSE: Which responsibility, decision, activity, validation,
-  handoff, or outcome requires the information?
-- OBJECT NEED: Which discovered object, record, attribute, status, or detail
-  is needed? Does the actor need the complete object or only selected data?
-- ACTOR RELATIONSHIP: Does the actor create, own, maintain, use, fulfil,
-  approve, transfer, monitor, or conclude the object or its lifecycle?
-- ACCESS SCOPE: Is visibility limited to the actor's own records, assigned
-  work, relevant location, organization, transaction, or another relationship
-  established by the input?
-- INFORMATION BOUNDARIES: Is sensitive or commercially restricted information
-  necessary for the responsibility? Do not invent restrictions unsupported
-  by the context.
-- DEPENDENCIES: Does access depend on an assignment, agreement, decision,
-  lifecycle state, configuration, or operating-model choice established by
-  the supplied data?
+Describe the object or information, its purpose, and the narrowest reasonable
+scope supported by the input.
 
-Do not assume that responsibility for an activity grants access to every
-object involved in it. Do not assume that creating or changing information
-grants visibility to every attribute.
+Do not grant broad access to all objects because an actor coordinates,
+administers, operates, or participates in the business.
 
-Do not assume unrestricted access for system administrators, platform
-operators, external participants, or automated systems.
+Do not invent privacy rules, access restrictions, or technical implementation
+details.
 
-Do not invent access rules, commercial arrangements, or operational practices.
-Include only visibility requirements reasonably supported by the context.
+# 6. DERIVE WHAT EACH ACTOR CAN CREATE
 
-# 3. DERIVE WHAT EACH ACTOR CAN CREATE
+For every actor, investigate:
+What_They_Can_Create: []
 
-For every actor, derive:
-access_authorization_and_scope:
-  What_They_Can_Create: []
+For every candidate, ask:
 
-Identify business objects or records that the actor is reasonably responsible
-for originating, based on the supplied discovery data.
+- Which exact supplied business object is originated?
+- What business need requires its creation?
+- Who provides the originating information?
+- Who is responsible for creating or recording the object?
+- Does the actor create it, submit information, or trigger a process that
+  another participant or system executes?
+- What supported prerequisites or conditions apply?
+- Does the supplied context establish a distinct object, or only a change
+  to an existing object's information or status?
 
-For each proposed creation entry, internally evaluate:
+Distinguish:
+- CREATE: Originating a new business object.
+- SUBMIT: Supplying information to another participant or system.
+- TRIGGER: Initiating a process that may result in creation.
+- UPDATE: Changing an existing object.
 
-- CREATION PURPOSE: What business outcome or activity requires the new object
-  or record?
-- OBJECT: Which discovered business object is being created?
-- RESPONSIBILITY: Does the actor originate the object, or merely participate
-  in a process involving it?
-- CREATION MECHANISM: Does the actor create the record directly, submit
-  information for another participant to record, or trigger a process that
-  automatically creates it?
-- OWNERSHIP: Is the actor responsible for originating the business record,
-  or does another actor or system own that responsibility?
-- SOURCE SUPPORT: What activity, relationship, decision, dependency, handoff,
-  or lifecycle requirement supports this creation responsibility?
+Do not infer creation authority from visibility, responsibility, participation,
+submission, confirmation, or process initiation alone.
 
-Distinguish these cases:
+Every creation entry must use an exact business-object name present in the
+supplied discovery data. Never invent a new object to represent an implied
+record, calculation, event, or process result.
 
-1. CREATE: Originating a new business object or record.
-2. SUBMIT: Providing information that another actor or system records.
-3. TRIGGER: Initiating a process that may cause automated record creation.
-4. UPDATE: Changing an existing object's attributes, quantities, status,
-   or lifecycle state.
+Do not invent automated participants to explain unspecified behavior.
 
-Do not treat submission, triggering, or updating as direct creation unless
-the supplied context supports that interpretation.
+# 7. DERIVE WHAT EACH ACTOR CAN CHANGE
 
-If an actor triggers automation, do not automatically assign ownership of
-the resulting record to that actor. Attribute creation to an automated
-participant only when the context supports that responsibility.
+For every actor, independently investigate:
+What_They_Can_Change: []
 
-Do not infer creation authority from visibility, participation, role title,
-or the ability to initiate a process.
+Do not default this array to empty merely because explicit update permissions
+are missing. Equally, do not force it to be populated for every actor.
 
-Do not invent missing business objects as established facts. Use discovered
-business-object names when supported by the input. Do not invent a new object
-solely to explain an unspecified process outcome.
+The goal is to discover supported modification authority through contextual
+reasoning.
 
-Do not infer creation responsibility from participation, visibility, role
-title, submission, confirmation, or process initiation alone.
+## 7.1 Actor-object change investigation
 
-Distinguish the participant who initiates an activity from the participant
-or system responsible for originating the resulting business object or record.
+For each actor, examine every materially relevant supplied business object
+and ask:
 
-Do not invent a system actor solely to explain an unspecified process outcome.
-When creation responsibility is not sufficiently supported, leave
-What_They_Can_Create empty rather than guessing.
+1. Does the actor have a responsibility that requires maintaining or
+   correcting information on this existing object?
 
-This section identifies business-object creation responsibilities only.
-Do not derive update, delete, approval, or other executable-operation
-permissions in this pass.
+2. Does the actor provide information that becomes part of this object?
+   If so, does the actor directly modify it, or does another participant
+   record the submitted information?
 
-# 4. PREVENT UNSUPPORTED ASSUMPTIONS
+3. Does an activity performed by the actor require recording an outcome
+   against an existing object?
 
-Apply these rules to actors, responsibilities, visibility, and creation:
+4. Does the supplied context support changing an object's information,
+   quantity, assignment, relationship, instructions, decision, or status?
 
-- Do not assume a role title establishes ownership of an object.
-- Do not assume an actor responsible for an activity needs every related
-  object or can create every object involved.
-- Do not assume an external organization has direct access to internal
-  application records.
-- Do not assume a platform operator controls every business function.
-- Do not assume a system capability is a human responsibility.
-- Do not invent regulatory, audit, payment, approval, or administrative
-  participants solely because they are common in an industry.
-- Do not invent access rules, commercial arrangements, or operational practices.
-- Do not list every discovered object for every actor.
-- Do not add entries merely to make the output appear comprehensive.
-- Do not combine distinct actors merely to reduce the actor count.
-- When multiple operating models are plausible, do not arbitrarily select one
-  without support from the supplied context.
+5. Does the actor handle changes to existing information when a supported
+   business condition or exception occurs?
 
-Derive the appropriate actors, responsibilities, object relationships,
-visibility, and creation authority from the actual discovery data.
+6. Which exact supplied object is changed, and what specific information
+   can be changed?
 
-Use concrete business-specific terminology. For visibility, identify the
-object or information, relevant scope, and purpose when supported.
-For creation, identify the object or record and its business purpose.
+7. Is the actor responsible for performing the change, or only for requesting,
+   proposing, approving, or triggering it?
 
-Avoid vague descriptions such as:
-- "Access relevant business data"
-- "View all operational records"
-- "Create required records"
-- "Manage system information"
+8. Does another participant or automated process perform the actual change?
 
-Omit unsupported entries rather than presenting plausible industry
-conventions as established business requirements.
+9. What business purpose does the change serve, and what supported conditions
+   constrain it?
 
-# 5. FINAL INTERNAL VALIDATION
+10. What evidence from the supplied responsibilities, activities, object
+    relationships, dependencies, decisions, handoffs, or lifecycle context
+    justifies the change?
 
-Before returning the output, verify:
+## 7.2 Contextual inference
 
-- Each actor is justified by the supplied business context.
-- Responsibilities are concrete and consistent with discovered activities.
-- Every visibility entry supports a specific responsibility and has a
-  reasonable scope.
-- Every creation entry describes a supported business-object creation
-  responsibility.
-- Creation is distinguished from submission, triggering, and updating.
-- Human, organizational, external, and automated responsibilities are
-  distinguished when the input supports that distinction.
-- No automated participant or system actor has been invented merely to
-  explain an unspecified process outcome.
-- Duplicate, redundant, or unsupported entries are removed.
-- Both required arrays exist for every actor, including when empty.
+A modification permission may be derived without the literal word "update"
+when the supplied business context reasonably establishes that an actor
+must maintain or alter existing information to perform a responsibility.
 
-Correct unsupported conclusions without repeating the discovery process.
+Use the relationship between:
+- The actor's responsibility.
+- The business activity.
+- The target object's purpose.
+- The information involved.
+- The expected business outcome.
+- The participant responsible for applying the change.
+
+Do not infer a permission merely because an actor uses, views, creates,
+owns a relationship with, or participates in the lifecycle of an object.
+
+Do not infer specific fields or attributes that are not supplied or reasonably
+described by the business context.
+
+When attributes are not explicitly listed, describe the relevant business
+information in plain language. Do not fabricate database columns or schemas.
+
+## 7.3 Distinguish change mechanisms
+
+Keep these concepts separate:
+
+- Directly modifying an existing object.
+- Submitting information for another participant to record.
+- Requesting or proposing a modification.
+- Approving a proposed modification.
+- Triggering a process that changes an object.
+- Performing an activity whose outcome is automatically recorded by a system.
+
+Do not assign system-executed modifications to a human actor without support
+for that actor's direct modification authority.
+
+If the actor initiates an action and the system applies the resulting change,
+describe the supported initiating action under Operations_They_Can_Run.
+Include direct modification authority only when independently supported.
+
+Treat status transitions as changes to existing objects unless the supplied
+data establishes a separate business object.
+
+## 7.4 Empty-array quality gate
+
+Before returning an empty What_They_Can_Change array, verify internally:
+
+- The actor's responsibilities and activities have been examined.
+- Relevant objects and their supplied relationships have been examined.
+- Information maintenance and correction have been considered.
+- Existing-object outcomes, assignments, and status changes have been
+  considered wherever relevant.
+- Domain and Niche have been used to interpret the supplied context,
+  without substituting industry conventions for evidence.
+- Human and automated changes have been distinguished.
+- No reasonably supported, narrowly scoped change remains.
+
+If a specific modification is supported, include it.
+
+If the evidence does not establish direct modification authority, do not
+invent it. An empty array is correct when no change can reasonably be
+established after this investigation.
+
+# 8. DERIVE OPERATIONS EACH ACTOR CAN RUN
+
+For every actor, investigate:
+Operations_They_Can_Run: []
+
+Identify meaningful business actions, decisions, and process steps that
+the actor is supported in performing.
+
+For each candidate operation, ask:
+
+- What action does the actor perform?
+- What business outcome does it achieve?
+- Which supplied responsibility or activity establishes the authority?
+- Which supplied business objects does it involve?
+- Does it create an object, modify an object, initiate a process, make a
+  decision, or perform an action without modifying an object?
+- What supported prerequisites, dependencies, or conditions apply?
+- Does the actor execute the operation directly, or request another
+  participant or system to execute it?
+- Which supplied context supports the assignment of this operation?
+
+Distinguish:
+- Viewing from acting.
+- Creating from modifying.
+- Modifying from executing an associated operation.
+- Requesting from approving.
+- Initiating from executing.
+- Human authorization from automated execution.
+- Business operations from technical APIs, HTTP methods, database commands,
+  UI implementation details, or executable system commands.
+
+Do not infer cancellation, approval, reassignment, override, settlement,
+dispute resolution, or any other operation simply because it is common
+in a particular industry.
+
+# 9. CROSS-DIMENSION CONSISTENCY
+
+Evaluate all four authorization dimensions independently, then cross-check
+their consistency.
+
+Ask:
+
+- Does the actor have the information needed for the supported operation?
+- Is the creator of an object actually responsible for originating it?
+- Is the actor who changes an object actually authorized to make that change?
+- Is the executor of an operation distinct from its initiator where appropriate?
+- Are automated consequences distinguished from human actions?
+- Are object names consistent with the supplied data?
+- Are the same permissions being copied to multiple actors without justification?
+- Is the scope narrower than or equal to what the business responsibility supports?
+- Does each permission have a defensible business purpose?
+- Have plausible but unsupported assumptions been excluded?
+
+Do not automatically infer one permission from another.
+
+# 10. FINAL QUALITY GATE
+
+Before returning the result, perform an internal review as if the output
+will be used to design a real business application.
+
+Check for:
+
+- Missing actor responsibilities.
+- Missing but reasonably supported object changes.
+- Empty change arrays that resulted from insufficient investigation.
+- Invented changes added merely to avoid empty arrays.
+- Overly broad information visibility.
+- Confusion between creation, submission, and triggering.
+- Confusion between direct modification and automated updates.
+- Unsupported operation or decision authority.
+- Unsupported actors, objects, attributes, lifecycle states, and conditions.
+- Duplicate or vague permissions that do not specify a clear business purpose.
+- Permissions that contradict the supplied relationships or responsibilities.
+- Domain-specific conventions incorrectly treated as universal rules.
+
+Do not output the reasoning, questions, review notes, or quality-gate results.
+Return only the final JSON.
 
 # OUTPUT CONTRACT
 
-Return valid JSON only, using this structure:
+Return valid JSON only, using exactly this structure:
 
 [
   {
@@ -2033,10 +2896,16 @@ Return valid JSON only, using this structure:
     ],
     "access_authorization_and_scope": {
       "What_They_Can_See": [
-        "Business object or information, relevant scope, and purpose"
+        "Exact supplied business object or information, supported scope, and purpose"
       ],
       "What_They_Can_Create": [
-        "Business object or record the actor is responsible for originating"
+        "Exact supplied business-object name and supported creation purpose"
+      ],
+      "What_They_Can_Change": [
+        "Exact supplied business-object name, changeable information, purpose, and supported conditions"
+      ],
+      "Operations_They_Can_Run": [
+        "Supported business operation, purpose, target, and execution conditions"
       ]
     }
   }
@@ -2044,22 +2913,24 @@ Return valid JSON only, using this structure:
 
 Return one object per justified actor.
 
-Use actual business-object names from the supplied discovery data.
+Use exact business-object names from the supplied discovery data.
+Do not invent business-object names, fields, operations, lifecycle states,
+or business rules.
 
-Include only visibility and creation responsibilities reasonably supported
-by the supplied context. Do not treat missing information as evidence that
-a responsibility exists or that it does not exist.
+Reasonable business inferences are permitted only when supported by the
+combined supplied context. Domain and Niche guide interpretation but do
+not independently prove a permission.
 
-Use an empty array for either field when no entry can reasonably be supported
-by the available data.
+Every actor must have all four authorization arrays.
+An array may be empty only after its corresponding dimension has been
+systematically evaluated and no permission can reasonably be established.
 
-Do not add evidence_classification fields or equivalent fields.
-Do not include update, delete, approval, or other executable-operation
-permissions in this pass.
-
-Return valid JSON only, without Markdown fences, comments, or explanatory
-prose outside the JSON.
+Do not add evidence_classification fields or any other fields.
+Do not add explanatory prose or Markdown fences.
+Return valid JSON only.
 `;
+
+
 
     fs.mkdirSync(path.dirname(promptTmpPath1), { recursive: true });
     fs.writeFileSync(promptTmpPath1, pass1Prompt, 'utf8');
