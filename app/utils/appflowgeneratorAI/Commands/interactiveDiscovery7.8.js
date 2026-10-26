@@ -195,26 +195,26 @@ console.log('\nDomain:', base.domain);
 console.log('Niche:', base.niche);
 
 function buildPrimaryPrompt(base) {
-  const pass1Prompt = `
-Analyze the supplied business context as a senior business analyst,
-domain specialist, process architect, and business authorization designer.
+  return `
+DOMAIN — REFERENCE ONLY:
+${base.domain}
 
-save this  
-Domain: ${base.domain}
-Niche: ${base.niche}
+NICHE — REFERENCE ONLY:
+${base.niche}
 
-Business discovery data:
+BUSINESS OBJECTS — REFERENCE ONLY:
 ${JSON.stringify(base.business_obj, null, 2)}
 
-and 
-just show Supplied actor discovery data:
-${base.actors}.
+CURRENT ACTOR RESPONSIBILITIES TO REVISE:
+${base.actors}
 
+TASK:
+Revise ONLY the Actor Responsibilities section according to the user's
+subsequent revision instructions.
 
-Return valid JSON only.
+Do not modify Domain, Niche, or Business Objects.
+Do not generate a new initial response.
 `;
-
-  return pass1Prompt;
 }
 function normalizeModelOutput(raw) {
   let output = String(raw ?? '').trim();
@@ -314,32 +314,96 @@ function callLlamaCli(promptText, taskName) {
     );
   });
 }
-function buildRevisionPrompt(originalPrompt, latestDraft, feedback) {
-  return `${originalPrompt}
+//BUSINESS OBJECTS:
+//${JSON.stringify(base.business_obj, null, 2)}
 
-# INTERACTIVE REVISION REQUEST
+function buildReviewContent(base) {
+  return `
+DOMAIN:
+${base.domain}
 
-Revise the latest draft according to the user's instructions below.
+NICHE:
+${base.niche}
 
-Rules:
-- Treat the original primary prompt as the governing specification.
-- Treat the latest draft as the starting point.
-- Apply the user's requested changes.
-- Preserve valid existing content unless a change is necessary.
-- Return the COMPLETE revised artifact, not a diff.
-- Follow the original output contract exactly.
-- Do not add commentary outside the required output format.
 
-# LATEST DRAFT
+ACTOR RESPONSIBILITIES:
+${base.actors}
+`;
+}
+//
+// Business Objects:
+// ${JSON.stringify(base.business_obj, null, 2)}
 
+function buildRevisionPrompt(base, latestDraft, feedback) {
+  return `
+You are a domain-agnostic document revision engine.
+
+REFERENCE DATA — READ ONLY
+
+Domain:
+${base.domain}
+
+Niche:
+${base.niche}
+
+CURRENT DOCUMENT:
 ${latestDraft}
 
-# USER REVISION INSTRUCTIONS
-
+USER REQUEST:
 ${feedback}
 
-Return only the complete revised artifact in the format required by
-the original primary prompt.
+TASK:
+Identify the smallest existing text segment that must change to
+fulfil the user's request.
+
+Return one minimal text-edit operation.
+
+RULES:
+1. Do not regenerate the document.
+2. Do not assume any particular domain, schema, actor name, field name,
+   document format, or business terminology.
+3. Use the actual current document to identify the target.
+4. target_text must be copied exactly from the current document.
+5. replacement_text must contain the complete replacement for that
+   target segment, preserving the surrounding format.
+6. Keep unrelated content unchanged.
+7. If the change requires multiple separate edits, return an edits array.
+8. If the target is ambiguous or cannot be located, return clarification.
+9. Do not invent surrounding content.
+
+Return valid JSON only.
+
+For one edit:
+{
+  "status": "patch",
+  "edits": [
+    {
+      "target_text": "Exact existing text to replace",
+      "replacement_text": "Updated text"
+    }
+  ]
+}
+
+For multiple edits:
+{
+  "status": "patch",
+  "edits": [
+    {
+      "target_text": "Exact existing text for edit one",
+      "replacement_text": "Updated text for edit one"
+    },
+    {
+      "target_text": "Exact existing text for edit two",
+      "replacement_text": "Updated text for edit two"
+    }
+  ]
+}
+
+If clarification is required:
+{
+  "status": "clarification",
+  "question": "Specific clarification required"
+}
 `;
 }
 
@@ -368,15 +432,112 @@ function saveApprovedOutput(draft) {
 
   return filePath;
 }
+function parsePatchResponse(raw) {
+  const text = String(raw ?? '')
+    .trim()
+    .replace(/^```(?:json)?\s*/i, '')
+    .replace(/\s*```$/, '')
+    .trim();
+
+  const start = text.indexOf('{');
+  const end = text.lastIndexOf('}');
+
+  if (start < 0 || end < start) {
+    throw new Error('Model did not return a valid JSON edit instruction.');
+  }
+
+  const result = JSON.parse(text.slice(start, end + 1));
+
+  if (result.status === 'clarification') {
+    return result;
+  }
+
+  if (
+    result.status !== 'patch' ||
+    !Array.isArray(result.edits) ||
+    result.edits.length === 0
+  ) {
+    throw new Error('Model returned an invalid patch structure.');
+  }
+
+  for (const edit of result.edits) {
+    if (
+      typeof edit.target_text !== 'string' ||
+      !edit.target_text.length ||
+      typeof edit.replacement_text !== 'string'
+    ) {
+      throw new Error('Each edit requires target_text and replacement_text.');
+    }
+  }
+
+  return result;
+}
+
+
+function applyTextEdits(documentText, edits) {
+  // Validate every target against the same original draft first.
+  // This prevents partial updates if a later edit is invalid.
+  let result = documentText;
+  const validated = [];
+
+  for (const edit of edits) {
+    const firstIndex = documentText.indexOf(edit.target_text);
+
+    if (firstIndex === -1) {
+      throw new Error(
+        'The requested target text was not found in the current document.'
+      );
+    }
+
+    const secondIndex = documentText.indexOf(
+      edit.target_text,
+      firstIndex + edit.target_text.length
+    );
+
+    if (secondIndex !== -1) {
+      throw new Error(
+        'The target text occurs more than once. A unique target is required.'
+      );
+    }
+
+    for (const previous of validated) {
+      const previousStart = previous.index;
+      const previousEnd =
+        previousStart + previous.target_text.length;
+      const currentEnd = firstIndex + edit.target_text.length;
+
+      if (
+        firstIndex < previousEnd &&
+        previousStart < currentEnd
+      ) {
+        throw new Error('The proposed edit targets overlap.');
+      }
+    }
+
+    validated.push({
+      ...edit,
+      index: firstIndex
+    });
+  }
+
+  // Apply from right to left so earlier positions remain valid.
+  validated.sort((a, b) => b.index - a.index);
+
+  for (const edit of validated) {
+    result =
+      result.slice(0, edit.index) +
+      edit.replacement_text +
+      result.slice(edit.index + edit.target_text.length);
+  }
+
+  return result;
+}
 async function runPromptReviewLoop({
-  originalPrompt,
+  base,
   taskName = 'actors_authorization'
 }) {
-  let draft = await callLlamaCli(
-    originalPrompt,
-    `${taskName}_initial`
-  );
-
+  // Preserve the supplied actor document exactly at startup.
+  let draft = String(base.actors ?? '');
   let round = 1;
   let revisions = 0;
 
@@ -384,41 +545,19 @@ async function runPromptReviewLoop({
     const reviewPath = saveReviewDraft(draft, round);
 
     console.log('\n' + '='.repeat(80));
-    console.log(`DRAFT FOR REVIEW — ROUND ${round}`);
+    console.log(`ACTOR RESPONSIBILITIES — ROUND ${round}`);
     console.log('='.repeat(80));
-
     console.log(draft);
+    console.log(`\nReview copy saved to:\n${reviewPath}`);
 
-    console.log('\n' + '-'.repeat(80));
-    console.log(`Review copy saved to:\n${reviewPath}`);
-    console.log('-'.repeat(80));
+    const instruction = (
+      await askQuestion(
+        "\nWhat specific content should change? " +
+        "Type 'approved' to save, or 'cancel' to exit:\n> "
+      )
+    ).trim();
 
-    const response = await askQuestion(
-      "\nType 'approved' to save the final file, " +
-      "enter revision instructions, or type 'cancel' to exit:\n> "
-    );
-
-    const instruction = response.trim();
-
-    if (instruction.toLowerCase() === 'approved') {
-      const finalPath = saveApprovedOutput(draft);
-
-      console.log('\n✅ Output approved and saved.');
-      console.log(`Final file: ${finalPath}`);
-      console.log(`Revision rounds: ${revisions}`);
-
-      return {
-        status: 'approved',
-        filePath: finalPath,
-        draft,
-        revisions
-      };
-    }
-
-    if (
-      instruction.toLowerCase() === 'cancel' ||
-      instruction.toLowerCase() === 'exit'
-    ) {
+    if (/^(cancel|exit)$/i.test(instruction)) {
       console.log('\nReview cancelled. No approved output was saved.');
 
       return {
@@ -429,29 +568,111 @@ async function runPromptReviewLoop({
       };
     }
 
-    if (!instruction) {
-      console.log(
-        '\nNo instruction entered. Please approve, cancel, or enter feedback.'
+    if (/^approved$/i.test(instruction)) {
+      const finalPath = saveApprovedOutput(
+        `# Domain\n${base.domain}\n\n` +
+        `# Niche\n${base.niche}\n\n` +
+        `# Business Objects\n${JSON.stringify(base.business_obj, null, 2)}\n\n` +
+        `# Actor Responsibilities\n\n${draft}`
       );
+
+      console.log(`\nApproved output saved: ${finalPath}`);
+
+      return {
+        status: 'approved',
+        filePath: finalPath,
+        draft,
+        revisions
+      };
+    }
+
+    if (!instruction) {
+      console.log('Please enter a requested change, approved, or cancel.');
       continue;
     }
 
-    revisions += 1;
-
-    console.log(`\n🔄 Applying revision ${revisions}...`);
-
     const revisionPrompt = buildRevisionPrompt(
-      originalPrompt,
+      base,
       draft,
       instruction
     );
 
-    draft = await callLlamaCli(
-      revisionPrompt,
-      `${taskName}_revision_${revisions}`
-    );
+    let patch;
 
-    round += 1;
+    try {
+      const rawPatch = await callLlamaCli(
+        revisionPrompt,
+        `${taskName}_patch_${revisions + 1}`
+      );
+
+      patch = parsePatchResponse(rawPatch);
+    } catch (error) {
+      console.error(`\nCould not create a valid edit: ${error.message}`);
+      console.log('The current document remains unchanged.');
+      continue;
+    }
+
+    if (patch.status === 'clarification') {
+      console.log('\nClarification required:');
+      console.log(patch.question);
+      continue;
+    }
+
+    console.log('\n' + '-'.repeat(80));
+    console.log('PROPOSED EDITS');
+    console.log('-'.repeat(80));
+
+    for (let i = 0; i < patch.edits.length; i++) {
+      console.log(`\nEdit ${i + 1} — Existing content:\n`);
+      console.log(patch.edits[i].target_text);
+      console.log(`\nEdit ${i + 1} — Replacement content:\n`);
+      console.log(patch.edits[i].replacement_text);
+    }
+
+    const decision = (
+      await askQuestion(
+        "\nType 'apply' to apply these edits, 'skip' to discard them, " +
+        "or 'cancel' to exit:\n> "
+      )
+    ).trim().toLowerCase();
+
+    if (/^(cancel|exit)$/i.test(decision)) {
+      console.log('\nReview cancelled. No approved output was saved.');
+
+      return {
+        status: 'cancelled',
+        filePath: null,
+        draft,
+        revisions
+      };
+    }
+
+    if (decision === 'skip') {
+      console.log('Proposed edits discarded. The document is unchanged.');
+      continue;
+    }
+
+    if (decision !== 'apply') {
+      console.log("Please enter 'apply', 'skip', or 'cancel'.");
+      continue;
+    }
+
+    try {
+      // Apply the patch to the current draft only.
+      // Domain, niche, and business objects remain reference data.
+      draft = applyTextEdits(draft, patch.edits);
+      revisions++;
+      round++;
+
+      console.log('\nEdits applied to the working draft.');
+      console.log('The complete updated document will appear for review.');
+    } catch (error) {
+      console.error(`\nCould not apply edits: ${error.message}`);
+      console.log(
+        'The current document remains unchanged. ' +
+        'Try a more specific revision request.'
+      );
+    }
   }
 }
 async function main() {
@@ -463,16 +684,15 @@ async function main() {
 
     // The actual primary prompt is built here.
     // No need to type the primary prompt every time.
-    const originalPrompt = buildPrimaryPrompt(base);
 
     console.log('\n📌 Primary prompt prepared.');
     console.log('📂 Source files loaded.');
     console.log('🤖 Model:', CONFIG.MODEL.IDENTIFIER);
 
     const result = await runPromptReviewLoop({
-      originalPrompt,
-      taskName: '7_7_actors_authorization'
-    });
+  base,
+  taskName: '7_7_actors_authorization'
+});
 
     if (result.status === 'approved') {
       console.log('\nWorkflow completed successfully.');
