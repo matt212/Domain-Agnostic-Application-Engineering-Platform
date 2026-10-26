@@ -2597,9 +2597,14 @@ permissions.
 - Is each inferred capability a reasonable business inference, or does it
   depend on an unsupported specific assumption?
 
-- Am I introducing business objects, exact fields, lifecycle states,
-  thresholds, or policies that are not sufficiently established by the
-  supplied context or reasonable domain-based inference?
+- Am I identifying a reasonable business concept or permission that can be
+inferred from the Domain, Niche, actor responsibilities, and supplied
+business objects, even when that concept or permission is not explicitly
+represented in the input?
+
+Distinguish reasonable domain-based discovery of missing business concepts
+from unsupported invention of specific business rules, fields, thresholds,
+or authority.
 
 - Does the inferred authority reflect the actor's actual business
   responsibilities, or am I assuming unrestricted authority without
@@ -2771,20 +2776,40 @@ For each actor, reason independently:
 - Which changes depend on specific business policies, approval rules, or
   operating-model decisions that cannot reasonably be inferred?
 
-Use domain knowledge and contextual reasoning to discover plausible direct modification permissions for each actor.
+Use domain expertise to generate plausible modification candidates, then
+use the supplied context to assess their relevance and consistency.
 
-For each actor, examine every relevant supplied business object independently. Determine which existing objects and their business information the actor could reasonably modify, based on the specified Domain, Niche, the object's business meaning, the actor's responsibilities, and the relationships between objects.
+For each actor, examine every relevant supplied business object
+independently. Determine what modifications the actor could reasonably
+make to each object based on its business meaning, the actor's
+responsibilities, and the specified Domain and Niche.
 
-Do not limit the investigation to explicitly stated activities, permissions, or field-level descriptions. Infer reasonable modifications from business knowledge, then assess each candidate against the supplied context.
+Do not stop after identifying one or two plausible modifications.
+Reassess whether other relevant business objects support additional
+modification permissions, including permissions not explicitly described
+in the supplied activities or authorization data. Include all justified
+modifications without duplication or unsupported expansion of authority.
 
-Investigate the actor's responsibilities across all relevant business objects. Do not stop after identifying the primary transaction, workflow, or first few plausible modifications. Reassess the results to identify additional justified permissions that may have been overlooked.
+Do not require an explicit update activity, permission statement, or
+field-level description before considering a modification.
 
-Include all reasonably supported, narrowly scoped direct modification permissions without duplication or unsupported expansion of authority. Distinguish modifications the actor performs directly from actions that request, propose, submit, approve, or trigger changes performed by another participant or an automated system.
+Include reasonable, narrowly scoped permissions when the actor's role and
+the supplied business context make the modification plausible. Do not
+invent permissions that depend on material, unresolved business decisions.
 
-Do not invent permissions that depend on material, unresolved business policies, approval rules, ownership boundaries, or operating-model decisions.
+Use supplied business-object names when they represent the relevant
+concept. When domain-informed reasoning identifies a necessary or
+reasonably expected business concept that is absent from the supplied
+objects, infer an appropriate business-object name and describe the
+justified modification in business language.
 
-Use exact supplied business-object names. Describe permitted modifications in business language without inventing database fields or unsupported business objects.
-Before finalizing, verify that every relevant supplied business object and the actor's associated responsibilities have been considered. An empty 'What_They_Can_Change' array is appropriate only when no plausible, justifiable direct modification authority remains after this investigation.
+Do not treat the supplied business-object list as exhaustive. Distinguish
+a reasonable inferred business entity from an unsupported invention of
+database fields, business rules, or actor authority.
+
+An empty What_They_Can_Change array is appropriate only when no plausible,
+justifiable direct modification authority can be established after applying
+both domain knowledge and contextual reasoning.
 
 ## 7.3 Distinguish change mechanisms
 
@@ -2935,9 +2960,14 @@ Return valid JSON only, using exactly this structure:
 
 Return one object per justified actor.
 
-Use exact business-object names from the supplied discovery data.
-Do not invent business-object names, fields, operations, lifecycle states,
-or business rules.
+Use supplied business-object names when applicable. You may infer
+additional business-object names when justified by the Domain, Niche,
+actor responsibilities, and business context.
+
+Do not invent unsupported business rules, database fields, lifecycle
+states, or actor authority. Clearly distinguish reasonable business
+inference from unsupported assumptions through internal reasoning, without
+adding fields to the output schema.
 
 Reasonable business inferences are permitted only when supported by the
 combined supplied context. Domain and Niche guide interpretation but do
