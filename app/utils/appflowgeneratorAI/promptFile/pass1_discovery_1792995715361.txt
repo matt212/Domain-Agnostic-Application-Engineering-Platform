@@ -1,4 +1,3 @@
-User:
 
 Analyze the supplied business context as a senior business analyst,
 domain specialist, process architect, and business authorization designer.
@@ -16,9 +15,23 @@ Business discovery data: {"business_operating_model":{"value_proposition":"To en
 Transform the supplied business discovery data into a realistic,
 domain-appropriate, evidence-grounded actor authorization model.
 
-Do not merely extract explicit permissions. Investigate what each actor
-must reasonably be able to do to fulfil the responsibilities, activities,
-decisions, and outcomes established by the supplied context.
+- What realistic business responsibilities and capabilities can be inferred
+  from the Domain, Niche, and supplied business discovery data, even when
+  they are not explicitly stated as permissions?
+
+- What gaps exist in the business context that can be reasonably completed
+  using domain knowledge and the relationships between the supplied
+  business objects, actors, responsibilities, and operational activities?
+
+- Which inferred capabilities are necessary or reasonably expected for
+  actors to fulfil their identified business responsibilities?
+
+- Does each inferred capability remain consistent with the supplied
+  business objects, responsibilities, and operational context?
+
+- Am I inferring a reasonable business capability, or inventing a specific
+  business rule, permission, or operational detail that the context does
+  not justify?
 
 Remain fully domain-agnostic:
 - Derive business meaning from Domain, Niche, and the supplied data.
@@ -147,9 +160,24 @@ Use supplied facts and reasonable business inferences when deriving
 permissions. Do not convert unresolved possibilities into established
 permissions.
 
-Domain and Niche help interpret the supplied context; they are not standalone
-evidence that a particular permission, object, field, actor, or workflow exists.
+- How can Domain and Niche be used as substantive sources of business
+  knowledge to infer missing business capabilities alongside the supplied
+  discovery data?
 
+- Which reasonable business capabilities can be inferred even when they
+  are not explicitly stated in the supplied data?
+
+- Is each inferred capability a reasonable business inference, or does it
+  depend on an unsupported specific assumption?
+
+- Am I introducing business objects, exact fields, lifecycle states,
+  thresholds, or policies that are not sufficiently established by the
+  supplied context or reasonable domain-based inference?
+
+- Does the inferred authority reflect the actor's actual business
+  responsibilities, or am I assuming unrestricted authority without
+  sufficient justification?
+  
 Do not output these internal reasoning classifications.
 
 When multiple operating models remain plausible, do not arbitrarily choose
@@ -473,176 +501,3 @@ systematically evaluated and no permission can reasonably be established.
 Do not add evidence_classification fields or any other fields.
 Do not add explanatory prose or Markdown fences.
 Return valid JSON only.
-
-Assistant:
-[
-  {
-    "actor_name": "Customer",
-    "operational_role": "End-user ordering and receiving goods",
-    "core_responsibilities": [
-      "Express need and select items for immediate fulfillment",
-      "Provide accurate delivery location details",
-      "Verify contents upon receipt and confirm handover",
-      "Provide feedback on order experience and rate delivery performance"
-    ],
-    "access_authorization_and_scope": {
-      "What_They_Can_See": [
-        "Product Catalog (filtered by service area and real-time availability)",
-        "Real-Time Inventory Snapshot (for selected SKUs at active stores)",
-        "Assigned Delivery Slot (for their active order)",
-        "Financial Transaction Record (for their completed orders)",
-        "Delivery Proof (visual confirmation of handover)"
-      ],
-      "What_They_Can_Create": [
-        "Order Request (originates customer intent and item selection)"
-      ],
-      "What_They_Can_Change": [
-        "Order Request (can modify quantities or remove items prior to allocation/fulfillment start)",
-        "Feedback Record (can submit ratings and comments upon completion)"
-      ],
-      "Operations_They_Can_Run": [
-        "Submit Order Request (initiates fulfillment workflow based on catalog selection)",
-        "Verify and Confirm Receipt (validates handover against Delivery Proof)",
-        "Submit Feedback Record (records satisfaction metrics)"
-      ]
-    }
-  },
-  {
-    "actor_name": "Store/Fulfillment Center",
-    "operational_role": "Physical retail store acting as micro-fulfillment node",
-    "core_responsibilities": [
-      "Maintain accurate physical stock levels aligned with digital catalog",
-      "Execute order preparation (picking, packing, quality verification)",
-      "Hand over completed orders to assigned delivery partners",
-      "Ensure operational compliance within defined service zones"
-    ],
-    "access_authorization_and_scope": {
-      "What_They_Can_See": [
-        "Product Catalog (for order preparation instructions)",
-        "Real-Time Inventory Snapshot (to reconcile physical stock)",
-        "Order Request (incoming pick lists and delivery instructions)",
-        "Fulfillment Task (internal operations to be executed)",
-        "Assigned Delivery Slot (time windows for dispatch)",
-        "Delivery Assignment (specific agent linked to their order)"
-      ],
-      "What_They_Can_Create": [
-        "Fulfillment Task (internal work order generated upon allocation confirmation)",
-        "Delivery Assignment (internal record linking order to agent upon pickup)"
-      ],
-      "What_They_Can_Change": [
-        "Real-Time Inventory Snapshot (updates physical stock counts to reflect picked items)",
-        "Order Request (can update status to 'Prepared' or 'Picked' upon completion of tasks)"
-      ],
-      "Operations_They_Can_Run": [
-        "Execute Fulfillment Task (picks, packs, and verifies order contents)",
-        "Confirm Order Pickup (transfers custody to delivery partner)",
-        "Update Inventory Levels (reduces available stock upon physical removal)"
-      ]
-    }
-  },
-  {
-    "actor_name": "Merchandiser",
-    "operational_role": "Inventory and product data manager for platform partners",
-    "core_responsibilities": [
-      "Define and maintain the sellable product catalog for stores",
-      "Establish pricing and category hierarchies",
-      "Synchronize inventory data between physical stores and digital platform",
-      "Resolve discrepancies between POS systems and platform records"
-    ],
-    "access_authorization_and_scope": {
-      "What_They_Can_See": [
-        "Store Partner Agreement (to understand scope and terms)",
-        "Product Catalog (full view for maintenance)",
-        "Real-Time Inventory Snapshot (to verify accuracy and gaps)",
-        "Service Area Definition (to determine applicable product ranges)"
-      ],
-      "What_They_Can_Create": [
-        "Product Catalog (originates new items, descriptions, and pricing)",
-        "Real-Time Inventory Snapshot (ingests and validates incoming stock data)"
-      ],
-      "What_They_Can_Change": [
-        "Product Catalog (updates descriptions, prices, images, and availability)",
-        "Real-Time Inventory Snapshot (corrects discrepancies and updates stock levels)",
-        "Store Partner Agreement (can propose amendments to terms or scope)"
-      ],
-      "Operations_They_Can_Run": [
-        "Synchronize Inventory (pushes stock updates to platform)",
-        "Reconcile Catalog Data (resolves mismatches between store and platform)"
-      ]
-    }
-  },
-  {
-    "actor_name": "Delivery Partner",
-    "operational_role": "Last-mile logistics execution agent",
-    "core_responsibilities": [
-      "Navigate routes to customer locations efficiently",
-      "Secure and transport orders from store to customer",
-      "Complete physical transfer of goods and verify handover",
-      "Report delivery status and anomalies in real-time"
-    ],
-    "access_authorization_and_scope": {
-      "What_They_Can_See": [
-        "Delivery Zone Map (for routing and travel time estimates)",
-        "Assigned Delivery Slot (scheduled time windows)",
-        "Delivery Assignment (list of active orders and customer addresses)",
-        "Customer Profile (restricted address and contact details for their route)",
-        "Order Request (contents and specific delivery instructions)"
-      ],
-      "What_They_Can_Create": [
-        "Delivery Proof (records physical transfer of goods)"
-      ],
-      "What_They_Can_Change": [
-        "Delivery Assignment (can update status to 'In-Transit' or 'Delivered')",
-        "Delivery Proof (can record exceptions or failure reasons if handover fails)"
-      ],
-      "Operations_They_Can_Run": [
-        "Execute Last-Mile Delivery (transports goods from store to customer)",
-        "Confirm Pickup (initiates movement from store)",
-        "Verify and Confirm Handover (validates receipt by customer)"
-      ]
-    }
-  },
-  {
-    "actor_name": "Platform Operator",
-    "operational_role": "System orchestrator and business logic engine",
-    "core_responsibilities": [
-      "Validate inventory availability and calculate fees",
-      "Allocate orders to specific stores and delivery agents",
-      "Manage financial settlements between all parties",
-      "Monitor operational readiness and service levels",
-      "Enforce service level agreements and regulatory constraints"
-    ],
-    "access_authorization_and_scope": {
-      "What_They_Can_See": [
-        "Service Area Definition (to validate order eligibility)",
-        "Store Partner Agreement (to verify partner status and limits)",
-        "Product Catalog (for validation and fee calculation)",
-        "Real-Time Inventory Snapshot (for allocation logic)",
-        "Delivery Zone Map (for fee calculation and slot assignment)",
-        "Customer Profile (for routing and verification)",
-        "Order Request (to process and allocate)",
-        "Financial Transaction Record (for settlement tracking)",
-        "Feedback Record (for performance monitoring)"
-      ],
-      "What_They_Can_Create": [
-        "Financial Transaction Record (generates settlement documents)",
-        "Assigned Delivery Slot (secures time windows based on demand)",
-        "Dispute Ticket (initiates exception handling workflows)"
-      ],
-      "What_They_Can_Change": [
-        "Order Request (updates status from 'Initiated' to 'Allocated' or 'Validated')",
-        "Assigned Delivery Slot (can modify slot if necessary, or reassign orders)",
-        "Delivery Assignment (can reassign orders to different agents/stores based on optimization)",
-        "Financial Transaction Record (can adjust final amounts based on disputes or corrections)"
-      ],
-      "Operations_They_Can_Run": [
-        "Validate Order (checks inventory and eligibility)",
-        "Allocate Order (assigns store and delivery agent)",
-        "Settle Transaction (processes payment and revenue share)",
-        "Resolve Dispute (manages unresolved issues and refunds)",
-        "Update Service Parameters (adjusts fees or zones based on performance)"
-      ]
-    }
-  }
-]
-

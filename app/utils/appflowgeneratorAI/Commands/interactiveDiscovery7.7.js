@@ -2423,7 +2423,7 @@ function formatPromptInput(value) {
 // prose outside the JSON.
 // `;
 //<<<<<<============
-
+//<<<<<<<<<working below  prompt for one hours=========================================================
 
 const pass1Prompt = `
 Analyze the supplied business context as a senior business analyst,
@@ -2687,6 +2687,14 @@ Distinguish:
 
 Do not infer creation authority from visibility, responsibility, participation,
 submission, confirmation, or process initiation alone.
+Before finalizing creation permissions, examine every relevant supplied
+business object and determine which objects the actor could reasonably
+originate based on the actor's responsibilities, the object's business
+meaning, and the specified Domain and Niche. Do not stop after identifying
+the primary transaction or workflow. Consider the actor's broader business
+participation and include all justified creation permissions without
+inventing authority or introducing predefined, domain-specific object
+categories.
 
 Every creation entry must use an exact business-object name present in the
 supplied discovery data. Never invent a new object to represent an implied
@@ -2741,28 +2749,42 @@ and ask:
     relationships, dependencies, decisions, handoffs, or lifecycle context
     justifies the change?
 
-## 7.2 Contextual inference
+## 7.2 Contextual inference using AI business knowledge
 
-A modification permission may be derived without the literal word "update"
-when the supplied business context reasonably establishes that an actor
-must maintain or alter existing information to perform a responsibility.
+Use your own business knowledge and reasoning about the specified Domain,
+Niche, actor identity, and operational role to discover plausible
+modification permissions.
 
-Use the relationship between:
-- The actor's responsibility.
-- The business activity.
-- The target object's purpose.
-- The information involved.
-- The expected business outcome.
-- The participant responsible for applying the change.
+Treat the supplied business discovery data as the context for understanding
+the business, not as the exclusive source of explicitly stated permissions.
 
-Do not infer a permission merely because an actor uses, views, creates,
-owns a relationship with, or participates in the lifecycle of an object.
+For each actor, reason independently:
 
-Do not infer specific fields or attributes that are not supplied or reasonably
-described by the business context.
+- Given this actor's role in this Domain and Niche, what existing business
+  information would they plausibly be responsible for maintaining or changing?
+- Considering the supplied business objects and their business meaning,
+  which existing objects would they reasonably modify?
+- What changes would this actor normally perform directly to fulfil their
+  business responsibilities?
+- Which changes are reasonable domain-based inferences even though the
+  supplied data does not explicitly describe them?
+- Which changes depend on specific business policies, approval rules, or
+  operating-model decisions that cannot reasonably be inferred?
 
-When attributes are not explicitly listed, describe the relevant business
-information in plain language. Do not fabricate database columns or schemas.
+Use domain knowledge and contextual reasoning to discover plausible direct modification permissions for each actor.
+
+For each actor, examine every relevant supplied business object independently. Determine which existing objects and their business information the actor could reasonably modify, based on the specified Domain, Niche, the object's business meaning, the actor's responsibilities, and the relationships between objects.
+
+Do not limit the investigation to explicitly stated activities, permissions, or field-level descriptions. Infer reasonable modifications from business knowledge, then assess each candidate against the supplied context.
+
+Investigate the actor's responsibilities across all relevant business objects. Do not stop after identifying the primary transaction, workflow, or first few plausible modifications. Reassess the results to identify additional justified permissions that may have been overlooked.
+
+Include all reasonably supported, narrowly scoped direct modification permissions without duplication or unsupported expansion of authority. Distinguish modifications the actor performs directly from actions that request, propose, submit, approve, or trigger changes performed by another participant or an automated system.
+
+Do not invent permissions that depend on material, unresolved business policies, approval rules, ownership boundaries, or operating-model decisions.
+
+Use exact supplied business-object names. Describe permitted modifications in business language without inventing database fields or unsupported business objects.
+Before finalizing, verify that every relevant supplied business object and the actor's associated responsibilities have been considered. An empty 'What_They_Can_Change' array is appropriate only when no plausible, justifiable direct modification authority remains after this investigation.
 
 ## 7.3 Distinguish change mechanisms
 
@@ -2929,6 +2951,12 @@ Do not add evidence_classification fields or any other fields.
 Do not add explanatory prose or Markdown fences.
 Return valid JSON only.
 `;
+//<<<<<<<<<working above prompt for one hours
+
+
+
+
+
 
 
 
