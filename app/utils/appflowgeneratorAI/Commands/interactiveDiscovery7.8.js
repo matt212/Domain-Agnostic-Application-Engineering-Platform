@@ -748,3 +748,8 @@ function extractDomain_Niche_Main_Content(objectsData)
         
         return base1
 }
+
+/*
+update customer's what_they_can_Change to include update profile information including payment information, and its preference , address and option to upgrade to any subscription if not subscriped and more.
+update Store/Fulfillment Center What_They_Can_Change to include update health code of the store,update climate control as per goods stocked and more
+*/
