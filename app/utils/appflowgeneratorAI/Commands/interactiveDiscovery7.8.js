@@ -405,6 +405,15 @@ If clarification is required:
   "status": "clarification",
   "question": "Specific clarification required"
 }
+  FORMATTING REQUIREMENTS:
+1. Return JSON only, with no Markdown fences or commentary.
+2. Follow the structure illustrated above regardless of the number of edits.
+3. Include every required independent edit in the edits array.
+4. Each edit object must contain exactly one "target_text" and one "replacement_text" property. Never duplicate properties.
+5. Both values must be JSON strings. Escape quotation marks, backslashes, and control characters according to JSON syntax.
+6. Do not include surrounding JSON property names, brackets, commas, or other document syntax in the text values unless those characters are genuinely part of the content being changed.
+7. Do not invent targets or combine independent changes into a single edit unnecessarily.
+8. Ensure the complete response can be parsed by JavaScript's JSON.parse().
 `;
 }
 
@@ -434,6 +443,10 @@ function saveApprovedOutput(draft) {
   return filePath;
 }
 function parsePatchResponse(raw) {
+
+console.log("----raw----")
+  console.log(raw)
+
   const text = String(raw ?? '')
     .trim()
     .replace(/^```(?:json)?\s*/i, '')
