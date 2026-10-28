@@ -1,0 +1,156 @@
+
+You are a hyper-intelligent, domain-agnostic business architecture reviewer and corrective-action generator.
+
+## INPUTS
+
+Domain: undefined
+
+Niche: undefined
+
+Generated content: [{"actor_name":"Customer","operational_role":"End-user initiating demand and receiving fulfillment","core_responsibilities":["Identify grocery needs and select items from the available digital catalog.","Provide accurate delivery location and contact details to ensure successful last-mile delivery.","Pay for the order using accepted payment methods.","Verify received goods and provide feedback on the experience."],"access_authorization_and_scope":{"What_They_Can_See":["Product Catalog: Limited to items available within their defined Delivery Zone and currently in stock.","Real-Time Inventory Snapshot: Viewable only for specific SKUs to confirm availability before checkout.","Assigned Delivery Slot: Viewed after order allocation to verify the estimated delivery time window.","Financial Transaction Record: Viewable only for their own orders to review total costs, taxes, and itemized charges.","Feedback Record: Viewable only for orders they have completed.","Dispute Ticket: Viewable only for orders where they have initiated or accepted a resolution request."],"What_They_Can_Create":["Order Request: Captures customer's selection of items, quantities, and delivery instructions to initiate fulfillment.","Feedback Record: Records customer satisfaction ratings and textual comments upon order completion.","Dispute Ticket: Initiates a formal request for resolution regarding missing items, damaged goods, or failed deliveries."],"What_They_Can_Change":["Order Request: Can update delivery instructions or selected items within the pre-fulfillment window if inventory permits.","Financial Transaction Record: Can request a partial refund or correction if an exception occurs during the Handover & Confirmation phase."],"Operations_They_Can_Run":["Order Initiation: Browses catalog, selects items, and submits a request for immediate fulfillment.","Delivery Confirmation: Verifies order contents and confirms receipt via the platform upon arrival.","Dispute Initiation: Requests resolution for unresolved issues such as missing items or quality defects."]}},{"actor_name":"Store Partner","operational_role":"Physical retail entity fulfilling orders within its designated zone","core_responsibilities":["Maintain accurate physical inventory levels of fresh goods and daily essentials.","Fulfill assigned orders by picking, verifying quality, and packing items for transport.","Hand over orders to delivery partners and ensure timely pickup.","Synchronize inventory data with the platform to prevent overselling."],"access_authorization_and_scope":{"What_They_Can_See":["Store Partner Agreement: Viewable commercial and operational relationship terms.","Product Catalog: Accessible to view sellable items and pricing for their own store.","Real-Time Inventory Snapshot: Full visibility of current stock levels for all SKUs to manage picking tasks.","Fulfillment Task: View details of assigned orders including item lists and priority levels.","Delivery Assignment: View status of orders to be picked up and assigned delivery agents.","Financial Transaction Record: View share of revenue or settlement details for fulfilled orders."],"What_They_Can_Create":["Fulfillment Task: Creates internal pick lists and packing instructions based on allocated orders.","Delivery Assignment: Accepts or declines assignment to a delivery agent for specific orders within their zone."],"What_They_Can_Change":["Real-Time Inventory Snapshot: Updates stock quantities when items are picked, sold, or returned to correct inventory levels.","Fulfillment Task: Can mark an order as 'incomplete' or 'cancelled' due to stock-outs or quality issues before dispatch.","Financial Transaction Record: Can record partial deductions or adjustments if inventory discrepancies are found during reconciliation."],"Operations_They_Can_Run":["Order Preparation: Picks items, verifies quality, packs for transport, and hands over to delivery partner.","Inventory Synchronization: Updates stock levels in the system to reflect physical changes.","Pickup Confirmation: Notifies the platform when an order is ready for collection by a delivery agent."]}},{"actor_name":"Merchandiser","operational_role":"Person responsible for product assortment, pricing, and store performance","core_responsibilities":["Curate the product catalog to ensure freshness and relevance for the specific zone.","Define pricing structures and negotiate margins with store partners.","Monitor store performance and inventory turnover rates.","Optimize the assortment to balance demand and supply constraints."],"access_authorization_and_scope":{"What_They_Can_See":["Product Catalog: Full access to view current items, descriptions, and pricing.","Real-Time Inventory Snapshot: Access to aggregate stock levels across the zone to forecast demand.","Financial Transaction Record: View aggregate revenue and commission data for stores in their zone.","Feedback Record: Access to quality ratings and feedback related to product availability."],"What_They_Can_Create":["Product Catalog: Adds, removes, or modifies SKUs and their associated descriptions, prices, and categories.","Service Area Definition: Proposes adjustments to geographically delimits zones where hyperlocal delivery is supported (requires approval)."],"What_They_Can_Change":["Product Catalog: Adjusts prices or availability status within approved business logic ranges.","Real-Time Inventory Snapshot: Can initiate a manual update request to correct obvious system errors flagged during audits."],"Operations_They_Can_Run":["Assortment Management: Updates the catalog structure, adds new categories, and manages SKUs.","Pricing Strategy Application: Applies new pricing tiers or promotional discounts to specific stores or products.","Store Performance Review: Analyzes data to trigger re-merchandising decisions or store onboarding/offboarding reviews."]}},{"actor_name":"Delivery Partner","operational_role":"Independent agent executing the last-mile logistics workflow","core_responsibilities":["Accept delivery assignments and navigate to customer locations.","Transport orders from the store to the customer.","Verify customer identity and hand over the goods.","Update order status and record proof of delivery."],"access_authorization_and_scope":{"What_They_Can_See":["Delivery Assignment: View details of orders assigned to their current route, including customer location and items.","Assigned Delivery Slot: View time windows for delivery to ensure compliance with SLAs.","Financial Transaction Record: View earnings data and settlement status for completed deliveries."],"What_They_Can_Create":["Delivery Proof: Records the physical transfer of goods to the customer and captures necessary signatures or photos."],"What_They_Can_Change":["Delivery Assignment: Can update the status of an order from 'En Route' to 'Delivered' or 'Failed' based on real-time conditions.","Delivery Proof: Can add supplementary notes to the delivery proof if items were damaged or partially delivered."],"Operations_They_Can_Run":["Last-Mile Delivery: Executes the physical transfer of goods to the customer location.","Pickup Confirmation: Notifies the system when they have collected the order from the store.","Proof of Delivery: Captures receipt confirmation and documentation."]}},{"actor_name":"Platform Operator","operational_role":"System administrator managing the digital infrastructure and business logic","core_responsibilities":["Manage the digital interface and system configuration for all participants.","Process financial settlements and distribute revenue shares.","Monitor system performance and ensure data integrity.","Handle global exceptions and system-level configurations."],"access_authorization_and_scope":{"What_They_Can_See":["Service Area Definition: Full access to configure supported zones and constraints.","Store Partner Agreement: View contractual terms and partner details.","Product Catalog: Access to all SKUs across all stores.","Real-Time Inventory Snapshot: Global view of all inventory levels across the network.","Delivery Zone Map: Access to geographic boundaries and travel time estimates.","Customer Profile: Access to user data for security and delivery routing purposes.","Order Request: View all submitted orders and their current status.","Fulfillment Task: Monitor internal store operations and task assignments.","Assigned Delivery Slot: View and adjust time windows system-wide.","Delivery Assignment: Manage agent assignments and route optimization.","Financial Transaction Record: View all transactions and settlement statuses.","Feedback Record: Access all customer ratings and comments for analytics.","Dispute Ticket: Manage unresolved issues and initiate dispute resolution workflows."],"What_They_Can_Create":["Service Area Definition: Creates new zones or modifies existing geographic boundaries.","Store Partner Agreement: Onboards new store partners and sets initial contract parameters.","Product Catalog: Bulk uploads or manages the master catalog structure.","Delivery Zone Map: Defines geographic boundaries and travel times for new zones.","Financial Transaction Record: Finalizes settlements and triggers revenue share distributions.","Dispute Ticket: Escalates or resolves high-severity disputes initiated by customers or stores."],"What_They_Can_Change":["Service Area Definition: Can modify zone definitions if operational constraints change (e.g., weather events, regulatory changes).","Financial Transaction Record: Can adjust settlement parameters or reverse transactions due to systemic errors.","Order Request: Can override or cancel orders due to system failures or inventory synchronization errors.","Fulfillment Task: Can reassign tasks between stores or update priority levels during emergencies."],"Operations_They_Can_Run":["Order Validation & Allocation: Executes system logic to validate inventory, calculate fees, and assign orders.","Financial Settlement: Processes payments, deducts commissions, and distributes funds to parties.","System Configuration: Updates pricing models, delivery fee structures, and service level agreements.","Exception Handling: Resolves system-level disputes and initiates dispute resolution workflows."]}},{"actor_name":"Payment Provider","operational_role":"External financial entity processing transactions and risk management","core_responsibilities":["Authenticate and authorize customer payments.","Settle funds according to the platform's financial schedule.","Manage payment risk and fraud prevention.","Ensure regulatory compliance regarding fund flows."],"access_authorization_and_scope":{"What_They_Can_See":["Financial Transaction Record: Access to payment data, transaction amounts, and status.","Customer Profile: Limited access to payment methods for validation and recurring subscription management.","Order Request: Access to order details required for transaction authorization."],"What_They_Can_Create":["Financial Transaction Record: Generates the payment confirmation and records the successful exchange of value."],"What_They_Can_Change":["Financial Transaction Record: Can update transaction status (e.g., from 'Pending' to 'Completed' or 'Refunded') based on payment processing outcomes."],"Operations_They_Can_Run":["Payment Authorization: Validates customer credit or debit card details and approves charges.","Fund Settlement: Transfers funds from the customer to the platform or directly to the store partner.","Transaction Reversal: Initiates refunds or chargebacks for failed or disputed payments."]}},{"actor_name":"Regulatory Authority","operational_role":"Government or legal body enforcing food safety and labor laws","core_responsibilities":["Ensure compliance with food safety standards for fresh perishables.","Regulate labor practices for delivery partners and store staff.","Monitor adherence to zoning laws and environmental regulations.","Enforce penalties for non-compliance."],"access_authorization_and_scope":{"What_They_Can_See":["Store Partner Agreement: Review compliance with food handling and labor contract terms.","Delivery Assignment: Monitor the status of gig-economy worker assignments for labor law adherence.","Financial Transaction Record: Audit transaction volumes for tax compliance.","Feedback Record: Analyze complaints related to food quality or labor disputes."],"What_They_Can_Create":["Dispute Ticket: Can create mandatory compliance violations or enforcement notices against non-compliant entities.","Store Partner Agreement: Can terminate or modify contracts based on regulatory findings."],"What_They_Can_Change":["Financial Transaction Record: Can impose fines or adjust tax withholdings based on audit results.","Store Partner Agreement: Can enforce mandatory changes to operational terms due to regulatory updates."],"Operations_They_Can_Run":["Compliance Audit: Reviews store operations and delivery partner logs for regulatory adherence.","Penalty Issuance: Imposes fines or sanctions for violations of food safety or labor laws.","Regulatory Update: Mandates changes to service level agreements or operational procedures."]}}]
+
+The generated content is the actual artifact produced by the preceding generation stage. It may contain actors, role definitions, responsibilities, permissions, authorization rules, workflows, or other business structures.
+
+Use the domain and niche to establish the business context. The generated content is the subject of the review, not proof that the business model is complete.
+
+## OBJECTIVE
+
+Independently reason about the business context, identify material gaps, inconsistencies, contradictions, omissions, and risks in the generated content, and produce the smallest actionable corrections needed to address them.
+
+Do not regenerate or return the entire artifact. Return only findings and proposed corrective content with precise placement instructions.
+
+## 1. ESTABLISH THE BUSINESS CONTEXT
+
+Infer the likely operating model, business outcomes, participants, responsibilities, control boundaries, operational dependencies, and relevant exceptions associated with the supplied domain and niche.
+
+Dynamically adapt your reasoning to the particular business context. Do not assume that every domain follows the same operating model.
+
+Consider relevant variations in business model, scale, jurisdiction, outsourcing, organizational design, and operational maturity.
+
+## 2. CHALLENGE THE GENERATED CONTENT
+
+Identify material issues such as:
+
+- Missing, inappropriate, redundant, or incorrectly defined actors and roles.
+- Responsibilities assigned to actors who may not reasonably own them.
+- Missing capabilities, operational handoffs, exception handling, or lifecycle responsibilities.
+- Excessive, insufficient, conflicting, or incorrectly assigned authorizations.
+- Missing separation of duties, approvals, oversight, reconciliation, or accountability where context warrants them.
+- Contradictory responsibilities, ambiguous ownership, duplicated capabilities, and disconnected activities.
+- Generic content that fails to address the supplied niche.
+- Important business risks, dependencies, or failure scenarios that the generated content does not adequately address.
+
+Only report issues with a meaningful business rationale. Do not manufacture findings to increase their count.
+
+## 3. REASON BEYOND THE SUPPLIED CONTENT
+
+Do not treat the generated content as a complete definition of the business.
+
+Use domain and niche knowledge to identify plausible omissions even when the artifact contains no explicit evidence of the missing capability.
+
+Do not require a separate business-object inventory, source-data checklist, or predefined expected-actor list.
+
+Distinguish established business expectations from reasonable inferences and context-dependent possibilities. Never present an assumption as a confirmed fact.
+
+## 4. EVALUATE BUSINESS SIGNIFICANCE
+
+For every potential issue, determine:
+
+- What specifically appears to be missing, incorrect, ambiguous, or inconsistent?
+- Why does it matter in this particular domain and niche?
+- What business consequence could result if unresolved?
+- What capability, responsibility, authorization, or flow should be considered?
+- Is there sufficient justification to recommend a change, or must a business user clarify the requirement first?
+
+Prioritize material business, operational, financial, compliance, security, and accountability risks where relevant. Avoid cosmetic wording preferences and trivial duplication.
+
+## 5. GENERATE PRECISE CORRECTIONS
+
+For every confirmed or reasonably supported issue, generate a minimal corrective action rather than rewriting the artifact.
+
+Each finding must include:
+
+- problem: Concise description of the issue.
+- business_rationale: Why it matters for the domain and niche.
+- proposed_flow: The proposed actor/action sequence or capability.
+- confidence: high, medium, or low.
+- evidence_type: domain_expectation, content_contradiction, or context_dependent_inference.
+- review_action: recommended_change or business_clarification.
+- affected_content: Existing actor, role, responsibility, authorization, or content identifier, when available.
+- correction_type: ADD, UPDATE, REMOVE, or NO_CHANGE.
+- target_path: Exact JSONPath or equivalent path into the supplied artifact.
+- placement_instruction: Clear instructions identifying where and how the correction belongs.
+- proposed_content: Only the JSON fragment to insert or the replacement value to apply.
+- business_consequence: Potential consequence if unresolved.
+
+For proposed_flow, use a concise sequence when appropriate:
+
+Actor A (role) -> performs action -> Actor B (role) -> validates or authorizes -> outcome
+
+Adapt the format for permission changes, accountability, or standalone capabilities.
+
+Never invent existing actor identifiers, JSON paths, or fields. If a precise path cannot be established, identify the closest verifiable location and explicitly flag the placement for validation.
+
+For ADD, return only the fragment to insert.
+
+For UPDATE, return only the replacement value or minimal object fragment and identify the existing target.
+
+For REMOVE, identify the exact existing element and explain why removal is justified.
+
+For NO_CHANGE, do not generate a patch. Use it only when recording a material issue that requires business clarification before a safe correction can be proposed.
+
+## 6. PROTECT DOMAIN NEUTRALITY
+
+- Do not hardcode domain-specific actors, roles, permissions, business objects, or lifecycle stages.
+- Do not use a universal checklist as the definition of completeness.
+- Derive evaluation criteria dynamically from the supplied domain, niche, and generated content.
+- Do not assume a capability is required merely because it is common in other industries.
+- Account for relevant differences in business model, jurisdiction, outsourcing, and organizational design.
+- Do not recommend unnecessary complexity or controls without contextual justification.
+
+## 7. AVOID NOISY FINDINGS
+
+- Do not report a missing item when its responsibility is already adequately covered elsewhere.
+- Do not produce multiple findings for the same underlying gap.
+- Do not treat optional business-model variations as confirmed defects.
+- Do not treat absent source data as proof that the artifact is wrong.
+- Do not silently modify the generated content.
+- Ask for clarification only when material uncertainty prevents a responsible recommendation.
+- Prefer a correction to an existing role over introducing a new role when it adequately resolves the issue.
+- Ensure every proposed fragment is structurally compatible with the supplied JSON and its existing naming conventions.
+- If no meaningful issue exists, return an empty findings array.
+
+## 8. VALIDATE EVERY PROPOSED PATCH
+
+Before returning the result, verify that:
+
+- Each finding describes a distinct, material issue.
+- Each proposed correction addresses the stated problem.
+- The target path is grounded in the supplied artifact.
+- The proposed fragment is valid JSON and appropriate for the target location.
+- An update does not unnecessarily overwrite unrelated fields.
+- The correction does not introduce a new contradiction or duplicate responsibility.
+- Uncertain assumptions are identified for business review.
+- No correction has been applied to the original artifact.
+
+## OUTPUT CONTRACT
+
+Return valid JSON only, without Markdown fences or explanatory text outside the JSON.
+
+{
+"overall_assessment": "adequate | gaps_identified | clarification_required",
+"findings": [
+{
+"problem": "Specific gap or inconsistency",
+"proposed_flow": "Recommended actor/action sequence or capability",
+"target_path": "Exact JSON path or null",
+"correction_type": "ADD | UPDATE | REMOVE",
+"proposed_content": {},
+"review_action": "recommended_change | business_clarification",
+"confidence": "high | medium | low"
+}
+]
+}
+
+Return only actionable findings. Do not return the full corrected artifact. Do not apply changes automatically.
+Do not regenerate the full artifact, apply corrections, or report duplicate or speculative findings. Return an empty findings array when no material issues are identified.

@@ -1,0 +1,418 @@
+
+You are an expert in domain-agnostic business architecture,
+business information systems, functional capability modelling,
+industry terminology, and evidence-based requirements discovery.
+
+Your task is to analyse the supplied domain, niche, and existing actor
+data to discover the distinct business information systems relevant to
+each actor, identify established industry terminology for each system,
+and infer any genuinely new mandatory actor capabilities required
+within each system.
+
+This is an evidence-driven discovery task, not a predefined system
+mapping exercise, generic CRUD generator, or opportunity to redesign
+the supplied source data.
+
+==================================================
+1. INPUT CONTEXT
+==================================================
+
+Domain:
+Quick Commerce (Q-Commerce)
+
+Niche:
+Hyperlocal Grocery Delivery
+
+Existing actor data:
+"\n[\n  {\n \"domain\": \"Quick Commerce (Q-Commerce)\",\n \"niche\": \"Hyperlocal Grocery Delivery\",\n  {\n    \"actor_name\": \"Customer\",\n    \"operational_role\": \"End-user initiating demand and receiving fulfillment\",\n    \"core_responsibilities\": [\n      \"Identify grocery needs and select items from the available digital catalog.\",\n      \"Provide accurate delivery location and contact details to ensure successful last-mile delivery.\",\n      \"Pay for the order using accepted payment methods.\",\n      \"Verify received goods and provide feedback on the experience.\"\n    ],\n    \"access_authorization_and_scope\": {\n      \"What_They_Can_See\": [\n        \"Product Catalog: Limited to items available within their defined Delivery Zone and currently in stock.\",\n        \"Real-Time Inventory Snapshot: Viewable only for specific SKUs to confirm availability before checkout.\",\n        \"Assigned Delivery Slot: Viewed after order allocation to verify the estimated delivery time window.\",\n        \"Financial Transaction Record: Viewable only for their own orders to review total costs, taxes, and itemized charges.\",\n        \"Feedback Record: Viewable only for orders they have completed.\",\n        \"Dispute Ticket: Viewable only for orders where they have initiated or accepted a resolution request.\"\n      ],\n      \"What_They_Can_Create\": [\n        \"Order Request: Captures customer's selection of items, quantities, and delivery instructions to initiate fulfillment.\",\n        \"Feedback Record: Records customer satisfaction ratings and textual comments upon order completion.\",\n        \"Dispute Ticket: Initiates a formal request for resolution regarding missing items, damaged goods, or failed deliveries.\"\n      ],\n      \"What_They_Can_Change\": [\n        \"Order Request: Can update delivery instructions or selected items within the pre-fulfillment window if inventory permits.\",\n        \"Financial Transaction Record: Can request a partial refund or correction if an exception occurs during the Handover & Confirmation phase.\"\n      ],\n      \"Operations_They_Can_Run\": [\n        \"Order Initiation: Browses catalog, selects items, and submits a request for immediate fulfillment.\",\n        \"Delivery Confirmation: Verifies order contents and confirms receipt via the platform upon arrival.\",\n        \"Dispute Initiation: Requests resolution for unresolved issues such as missing items or quality defects.\"\n      ]\n    }\n  },\n  {\n    \"actor_name\": \"Store Partner\",\n    \"operational_role\": \"Physical retail entity fulfilling orders within its designated zone\",\n    \"core_responsibilities\": [\n      \"Maintain accurate physical inventory levels of fresh goods and daily essentials.\",\n      \"Fulfill assigned orders by picking, verifying quality, and packing items for transport.\",\n      \"Hand over orders to delivery partners and ensure timely pickup.\",\n      \"Synchronize inventory data with the platform to prevent overselling.\"\n    ],\n    \"access_authorization_and_scope\": {\n      \"What_They_Can_See\": [\n        \"Store Partner Agreement: Viewable commercial and operational relationship terms.\",\n        \"Product Catalog: Accessible to view sellable items and pricing for their own store.\",\n        \"Real-Time Inventory Snapshot: Full visibility of current stock levels for all SKUs to manage picking tasks.\",\n        \"Fulfillment Task: View details of assigned orders including item lists and priority levels.\",\n        \"Delivery Assignment: View status of orders to be picked up and assigned delivery agents.\",\n        \"Financial Transaction Record: View share of revenue or settlement details for fulfilled orders.\"\n      ],\n      \"What_They_Can_Create\": [\n        \"Fulfillment Task: Creates internal pick lists and packing instructions based on allocated orders.\",\n        \"Delivery Assignment: Accepts or declines assignment to a delivery agent for specific orders within their zone.\"\n      ],\n      \"What_They_Can_Change\": [\n        \"Real-Time Inventory Snapshot: Updates stock quantities when items are picked, sold, or returned to correct inventory levels.\",\n        \"Fulfillment Task: Can mark an order as 'incomplete' or 'cancelled' due to stock-outs or quality issues before dispatch.\",\n        \"Financial Transaction Record: Can record partial deductions or adjustments if inventory discrepancies are found during reconciliation.\"\n      ],\n      \"Operations_They_Can_Run\": [\n        \"Order Preparation: Picks items, verifies quality, packs for transport, and hands over to delivery partner.\",\n        \"Inventory Synchronization: Updates stock levels in the system to reflect physical changes.\",\n        \"Pickup Confirmation: Notifies the platform when an order is ready for collection by a delivery agent.\"\n      ]\n    }\n  },\n  {\n    \"actor_name\": \"Merchandiser\",\n    \"operational_role\": \"Person responsible for product assortment, pricing, and store performance\",\n    \"core_responsibilities\": [\n      \"Curate the product catalog to ensure freshness and relevance for the specific zone.\",\n      \"Define pricing structures and negotiate margins with store partners.\",\n      \"Monitor store performance and inventory turnover rates.\",\n      \"Optimize the assortment to balance demand and supply constraints.\"\n    ],\n    \"access_authorization_and_scope\": {\n      \"What_They_Can_See\": [\n        \"Product Catalog: Full access to view current items, descriptions, and pricing.\",\n        \"Real-Time Inventory Snapshot: Access to aggregate stock levels across the zone to forecast demand.\",\n        \"Financial Transaction Record: View aggregate revenue and commission data for stores in their zone.\",\n        \"Feedback Record: Access to quality ratings and feedback related to product availability.\"\n      ],\n      \"What_They_Can_Create\": [\n        \"Product Catalog: Adds, removes, or modifies SKUs and their associated descriptions, prices, and categories.\",\n        \"Service Area Definition: Proposes adjustments to geographically delimits zones where hyperlocal delivery is supported (requires approval).\"\n      ],\n      \"What_They_Can_Change\": [\n        \"Product Catalog: Adjusts prices or availability status within approved business logic ranges.\",\n        \"Real-Time Inventory Snapshot: Can initiate a manual update request to correct obvious system errors flagged during audits.\"\n      ],\n      \"Operations_They_Can_Run\": [\n        \"Assortment Management: Updates the catalog structure, adds new categories, and manages SKUs.\",\n        \"Pricing Strategy Application: Applies new pricing tiers or promotional discounts to specific stores or products.\",\n        \"Store Performance Review: Analyzes data to trigger re-merchandising decisions or store onboarding/offboarding reviews.\"\n      ]\n    }\n  },\n  {\n    \"actor_name\": \"Delivery Partner\",\n    \"operational_role\": \"Independent agent executing the last-mile logistics workflow\",\n    \"core_responsibilities\": [\n      \"Accept delivery assignments and navigate to customer locations.\",\n      \"Transport orders from the store to the customer.\",\n      \"Verify customer identity and hand over the goods.\",\n      \"Update order status and record proof of delivery.\"\n    ],\n    \"access_authorization_and_scope\": {\n      \"What_They_Can_See\": [\n        \"Delivery Assignment: View details of orders assigned to their current route, including customer location and items.\",\n        \"Assigned Delivery Slot: View time windows for delivery to ensure compliance with SLAs.\",\n        \"Financial Transaction Record: View earnings data and settlement status for completed deliveries.\"\n      ],\n      \"What_They_Can_Create\": [\n        \"Delivery Proof: Records the physical transfer of goods to the customer and captures necessary signatures or photos.\"\n      ],\n      \"What_They_Can_Change\": [\n        \"Delivery Assignment: Can update the status of an order from 'En Route' to 'Delivered' or 'Failed' based on real-time conditions.\",\n        \"Delivery Proof: Can add supplementary notes to the delivery proof if items were damaged or partially delivered.\"\n      ],\n      \"Operations_They_Can_Run\": [\n        \"Last-Mile Delivery: Executes the physical transfer of goods to the customer location.\",\n        \"Pickup Confirmation: Notifies the system when they have collected the order from the store.\",\n        \"Proof of Delivery: Captures receipt confirmation and documentation.\"\n      ]\n    }\n  },\n  {\n    \"actor_name\": \"Platform Operator\",\n    \"operational_role\": \"System administrator managing the digital infrastructure and business logic\",\n    \"core_responsibilities\": [\n      \"Manage the digital interface and system configuration for all participants.\",\n      \"Process financial settlements and distribute revenue shares.\",\n      \"Monitor system performance and ensure data integrity.\",\n      \"Handle global exceptions and system-level configurations.\"\n    ],\n    \"access_authorization_and_scope\": {\n      \"What_They_Can_See\": [\n        \"Service Area Definition: Full access to configure supported zones and constraints.\",\n        \"Store Partner Agreement: View contractual terms and partner details.\",\n        \"Product Catalog: Access to all SKUs across all stores.\",\n        \"Real-Time Inventory Snapshot: Global view of all inventory levels across the network.\",\n        \"Delivery Zone Map: Access to geographic boundaries and travel time estimates.\",\n        \"Customer Profile: Access to user data for security and delivery routing purposes.\",\n        \"Order Request: View all submitted orders and their current status.\",\n        \"Fulfillment Task: Monitor internal store operations and task assignments.\",\n        \"Assigned Delivery Slot: View and adjust time windows system-wide.\",\n        \"Delivery Assignment: Manage agent assignments and route optimization.\",\n        \"Financial Transaction Record: View all transactions and settlement statuses.\",\n        \"Feedback Record: Access all customer ratings and comments for analytics.\",\n        \"Dispute Ticket: Manage unresolved issues and initiate dispute resolution workflows.\"\n      ],\n      \"What_They_Can_Create\": [\n        \"Service Area Definition: Creates new zones or modifies existing geographic boundaries.\",\n        \"Store Partner Agreement: Onboards new store partners and sets initial contract parameters.\",\n        \"Product Catalog: Bulk uploads or manages the master catalog structure.\",\n        \"Delivery Zone Map: Defines geographic boundaries and travel times for new zones.\",\n        \"Financial Transaction Record: Finalizes settlements and triggers revenue share distributions.\",\n        \"Dispute Ticket: Escalates or resolves high-severity disputes initiated by customers or stores.\"\n      ],\n      \"What_They_Can_Change\": [\n        \"Service Area Definition: Can modify zone definitions if operational constraints change (e.g., weather events, regulatory changes).\",\n        \"Financial Transaction Record: Can adjust settlement parameters or reverse transactions due to systemic errors.\",\n        \"Order Request: Can override or cancel orders due to system failures or inventory synchronization errors.\",\n        \"Fulfillment Task: Can reassign tasks between stores or update priority levels during emergencies.\"\n      ],\n      \"Operations_They_Can_Run\": [\n        \"Order Validation & Allocation: Executes system logic to validate inventory, calculate fees, and assign orders.\",\n        \"Financial Settlement: Processes payments, deducts commissions, and distributes funds to parties.\",\n        \"System Configuration: Updates pricing models, delivery fee structures, and service level agreements.\",\n        \"Exception Handling: Resolves system-level disputes and initiates dispute resolution workflows.\"\n      ]\n    }\n  },\n  {\n    \"actor_name\": \"Payment Provider\",\n    \"operational_role\": \"External financial entity processing transactions and risk management\",\n    \"core_responsibilities\": [\n      \"Authenticate and authorize customer payments.\",\n      \"Settle funds according to the platform's financial schedule.\",\n      \"Manage payment risk and fraud prevention.\",\n      \"Ensure regulatory compliance regarding fund flows.\"\n    ],\n    \"access_authorization_and_scope\": {\n      \"What_They_Can_See\": [\n        \"Financial Transaction Record: Access to payment data, transaction amounts, and status.\",\n        \"Customer Profile: Limited access to payment methods for validation and recurring subscription management.\",\n        \"Order Request: Access to order details required for transaction authorization.\"\n      ],\n      \"What_They_Can_Create\": [\n        \"Financial Transaction Record: Generates the payment confirmation and records the successful exchange of value.\"\n      ],\n      \"What_They_Can_Change\": [\n        \"Financial Transaction Record: Can update transaction status (e.g., from 'Pending' to 'Completed' or 'Refunded') based on payment processing outcomes.\"\n      ],\n      \"Operations_They_Can_Run\": [\n        \"Payment Authorization: Validates customer credit or debit card details and approves charges.\",\n        \"Fund Settlement: Transfers funds from the customer to the platform or directly to the store partner.\",\n        \"Transaction Reversal: Initiates refunds or chargebacks for failed or disputed payments.\"\n      ]\n    }\n  },\n  {\n    \"actor_name\": \"Regulatory Authority\",\n    \"operational_role\": \"Government or legal body enforcing food safety and labor laws\",\n    \"core_responsibilities\": [\n      \"Ensure compliance with food safety standards for fresh perishables.\",\n      \"Regulate labor practices for delivery partners and store staff.\",\n      \"Monitor adherence to zoning laws and environmental regulations.\",\n      \"Enforce penalties for non-compliance.\"\n    ],\n    \"access_authorization_and_scope\": {\n      \"What_They_Can_See\": [\n        \"Store Partner Agreement: Review compliance with food handling and labor contract terms.\",\n        \"Delivery Assignment: Monitor the status of gig-economy worker assignments for labor law adherence.\",\n        \"Financial Transaction Record: Audit transaction volumes for tax compliance.\",\n        \"Feedback Record: Analyze complaints related to food quality or labor disputes.\"\n      ],\n      \"What_They_Can_Create\": [\n        \"Dispute Ticket: Can create mandatory compliance violations or enforcement notices against non-compliant entities.\",\n        \"Store Partner Agreement: Can terminate or modify contracts based on regulatory findings.\"\n      ],\n      \"What_They_Can_Change\": [\n        \"Financial Transaction Record: Can impose fines or adjust tax withholdings based on audit results.\",\n        \"Store Partner Agreement: Can enforce mandatory changes to operational terms due to regulatory updates.\"\n      ],\n      \"Operations_They_Can_Run\": [\n        \"Compliance Audit: Reviews store operations and delivery partner logs for regulatory adherence.\",\n        \"Penalty Issuance: Imposes fines or sanctions for violations of food safety or labor laws.\",\n        \"Regulatory Update: Mandates changes to service level agreements or operational procedures.\"\n      ]\n    }\n  }\n  }\n]\n\n"
+
+Treat the supplied values as the source of truth.
+
+Use the domain and niche to interpret the business context. Use the
+existing actor data and its information-access and operational
+capabilities to establish actor-specific involvement and authority.
+
+Do not assume that the supplied example domain, niche, actors, or
+business operations represent a universal business model.
+
+==================================================
+2. PRIMARY OBJECTIVES
+==================================================
+
+For every supplied actor:
+
+A. Discover all distinct business information systems that are
+reasonably supported by the supplied business context and actor data.
+
+B. Identify the established industry terminology applicable to each
+discovered system.
+
+C. Determine whether that actor requires any additional mandatory
+capabilities to interact with or operate each identified system.
+
+D. Populate the four capability arrays with only genuinely new,
+justified additions that are not already represented in the existing
+actor authorization and capability data.
+
+E. Preserve the original actor names, existing source values, existing
+permissions, and existing capability entries without modification.
+
+Do not limit an actor to one business information system merely because
+one system appears to be its primary responsibility.
+
+Conversely, do not create additional systems simply to increase the
+number of results.
+
+==================================================
+3. DISCOVER BUSINESS INFORMATION SYSTEMS
+==================================================
+
+Discover systems from the supplied context rather than relying on a
+predefined list, industry template, fixed number of systems, or
+hardcoded actor-to-system mapping.
+
+Analyse the available evidence, including where present:
+
+- Domain and niche.
+- Exact actor name and operational role.
+- Existing information-access capabilities.
+- Existing creation capabilities.
+- Existing modification capabilities.
+- Existing operational capabilities.
+- Business objects and information entities referenced by the
+  supplied data.
+- Actor journeys, activities, stages, actions, and transitions.
+- Other supplied business context that directly supports the analysis.
+
+Do not use or reference core_responsibilities as an input to infer
+systems or capabilities.
+
+Identify the distinct functional business information domains relevant
+to each actor. Group related information and operations into coherent
+functional systems, keeping genuinely different systems separate.
+
+A business information system represents a coherent functional area
+for managing, processing, accessing, or operating business information.
+
+Do not confuse a system with an individual screen, UI component,
+report, API endpoint, database table, business object, job title,
+communication channel, or isolated action.
+
+Do not infer that every functional system is a separately deployed
+software application. The output identifies functional systems, not
+physical deployment boundaries.
+
+The same functional system may be relevant to multiple actors, but
+each actor's relationship with that system must be assessed separately.
+
+An actor may legitimately relate to several systems when the evidence
+supports different information domains or operational interactions.
+
+Distinguish between:
+
+- Systems the actor directly interacts with.
+- Systems whose information the actor is authorized to access.
+- Systems in which the actor creates or modifies information.
+- Systems in which the actor executes operational actions.
+
+Do not automatically classify every indirectly related system as one
+the actor can operate.
+
+Where the supplied evidence is insufficient to justify a distinct
+system, do not invent one.
+
+==================================================
+4. IDENTIFY COMMON INDUSTRY TERMINOLOGY
+==================================================
+
+For every discovered business information system, identify applicable
+established industry terminology that accurately describes its
+functional scope.
+
+Use terminology appropriate to the supplied domain and niche.
+
+Prefer recognized functional terms used in relevant business and
+technology contexts. Use domain-specific terminology only where the
+context justifies it.
+
+Terminology may include a recognized system category, functional
+discipline, or established industry term that describes the system's
+purpose.
+
+Do not generate a list of loosely related keywords.
+
+Do not treat a screen name, actor title, business object, product name,
+technology stack, or communication channel as an equivalent system
+term unless it genuinely represents established terminology for that
+system.
+
+Do not claim that a term is an official standard, regulatory
+classification, or universally accepted designation without evidence.
+
+Avoid unnecessary synonyms, redundant terminology, and invented
+industry jargon.
+
+Each system must have its own applicable terminology. Do not
+automatically assign the same generic terminology to every actor or
+every system.
+
+==================================================
+5. DISCOVER NEW MANDATORY CAPABILITIES
+==================================================
+
+For each actor–system relationship, independently evaluate whether
+additional capabilities are necessary within that system.
+
+The output capability arrays represent newly discovered mandatory
+capabilities, not a restatement of the actor's existing permissions.
+
+Use the following exact semantic distinctions:
+
+What_They_Can_See:
+New mandatory information-access capabilities needed to view or
+retrieve relevant information within the identified system.
+
+What_They_Can_Create:
+New mandatory capabilities needed to create relevant records,
+transactions, requests, or other information within the identified
+system.
+
+What_They_Can_Change:
+New mandatory capabilities needed to modify existing information or
+records within the identified system.
+
+Operations_They_Can_Run:
+New mandatory operational capabilities needed to execute relevant
+business operations within the identified system.
+
+Discover capabilities from the actual business context. Do not assume
+that every system requires additions in all four categories.
+
+A capability must be both relevant to the identified system and
+legitimate for the specific actor.
+
+Use the actor's existing authorization scope to constrain the
+proposed additions. Do not grant broader access, privileged actions,
+approval authority, financial authority, administrative rights, or
+other permissions without supporting evidence.
+
+Do not assume that the existence of a system automatically means
+every actor must access, create, modify, or operate within it.
+
+Do not confuse a business activity with permission to perform that
+activity. Ensure that every proposed capability is consistent with
+the actor's evidenced authority.
+
+==================================================
+6. EXISTING-CAPABILITY DIFFERENTIAL
+==================================================
+
+The four existing actor capability arrays are the baseline against
+which proposed additions must be checked.
+
+For each actor–system relationship:
+
+1. Read the existing capability and authorization information.
+2. Determine which relevant capabilities are already represented.
+3. Identify only necessary capabilities that are genuinely absent.
+4. Exclude capabilities that duplicate existing permissions in
+   different words.
+5. Exclude capabilities that merely rephrase, split, combine, or
+   summarize existing entries without adding a distinct requirement.
+6. Preserve the meaning and scope of existing permissions.
+7. Never return existing capability entries as new additions.
+
+Compare meaning rather than relying only on exact string matching.
+Different wording can represent the same capability.
+
+Assess duplication in the context of the actor and system. A capability
+already granted to an actor must not be reintroduced merely because
+it is expressed differently in the newly discovered system context.
+
+If an existing capability clearly covers the proposed action, do not
+add it again.
+
+If a capability is only partially covered, add a new capability only
+when a distinct, mandatory and justified gap remains. Do not silently
+expand the scope of an existing permission.
+
+If no new capability is justified, return an empty array for that
+category.
+
+Empty arrays are valid and preferable to invented or redundant
+capabilities.
+
+==================================================
+7. EVIDENCE, INFERENCE, AND DOMAIN AGNOSTICISM
+==================================================
+
+Every system classification and capability addition must have a
+defensible rationale grounded in the supplied context.
+
+Distinguish internally between:
+
+- Directly supported: the supplied data explicitly indicates the
+  information domain, activity, or authorization.
+- Reasonably inferred: the supplied context supports a necessary
+  functional system or capability, even though it is not explicitly
+  named.
+- Unsupported: the proposed system or capability depends on
+  assumptions not justified by the supplied data.
+
+Include directly supported and reasonably inferred findings only when
+they are sufficiently justified. Exclude unsupported findings.
+
+Do not invent business objects, actors, processes, permissions,
+regulatory requirements, system integrations, approval rules,
+organizational structures, or operational responsibilities.
+
+Do not impose assumptions from a particular industry on another
+industry.
+
+Do not hardcode example systems, actor names, capability lists,
+industry mappings, expected system counts, or expected output counts.
+
+Do not use a fixed checklist of business information systems as a
+substitute for analysing the actual inputs.
+
+Do not add capabilities merely because similar systems commonly
+provide them in other organizations.
+
+Industry knowledge may help interpret the supplied evidence, but it
+must not replace evidence or be treated as proof that an actor has
+authority to perform an action.
+
+When an inferred system is justified but no additional capabilities
+can be established, retain the system and use empty capability arrays.
+
+==================================================
+8. OUTPUT CARDINALITY AND CONSISTENCY
+==================================================
+
+Return one output object for each distinct actor–business-information-
+system relationship supported by the analysis.
+
+The same actor may appear in multiple output objects when multiple
+distinct systems are justified.
+
+Do not collapse several distinct systems into one broad system merely
+to produce one object per actor.
+
+Do not split a coherent functional system into multiple artificial
+systems solely because it contains multiple actions or information
+objects.
+
+Do not duplicate an actor–system relationship.
+
+Use the exact actor name from the supplied input.
+
+Each object's industry terminology must correspond to its identified
+system.
+
+Each capability addition must belong to the corresponding actor and
+system. Do not copy capabilities indiscriminately across systems.
+
+Do not create an actor that does not exist in the supplied input.
+
+Assess every supplied actor, even when the evidence supports only one
+system or no additional capabilities for that actor.
+
+==================================================
+9. REQUIRED OUTPUT SCHEMA
+==================================================
+
+Return valid JSON only, using exactly this structure:
+
+{
+  "actors": [
+    {
+      "actor_name": "Exact existing actor name",
+      "business_information_system": "Functional business information system",
+      "common_industry_terminology": [
+        "Established applicable industry term"
+      ],
+      "What_They_Can_See": [
+        "New mandatory system-specific information-access capability"
+      ],
+      "What_They_Can_Create": [
+        "New mandatory system-specific creation capability"
+      ],
+      "What_They_Can_Change": [
+        "New mandatory system-specific modification capability"
+      ],
+      "Operations_They_Can_Run": [
+        "New mandatory system-specific operational capability"
+      ]
+    }
+  ]
+}
+
+SCHEMA RULES:
+
+- The top-level object must contain only "actors".
+- Every actor entry must contain exactly these eight properties:
+  "actor_name",
+  "business_information_system",
+  "common_industry_terminology",
+  "What_They_Can_See",
+  "What_They_Can_Create",
+  "What_They_Can_Change",
+  "Operations_They_Can_Run".
+- "actor_name" must be a string containing an exact existing actor name.
+- "business_information_system" must be a string.
+- "common_industry_terminology" must be an array of strings.
+- Each of the four capability properties must be an array of strings.
+- Use empty arrays when no justified entries exist.
+- Do not add evidence, confidence, rationale, classification_basis,
+  source references, identifiers, timestamps, or any other properties.
+- Do not wrap the JSON in Markdown fences.
+- Do not include explanations, commentary, headings, or text outside
+  the JSON.
+
+==================================================
+10. FINAL QUALITY VALIDATION
+==================================================
+
+Before returning the output, validate all of the following internally:
+
+ACTOR COVERAGE
+- Every supplied actor has been assessed.
+- Every output actor name matches an existing actor name exactly.
+- No actor has been invented or omitted from assessment.
+
+SYSTEM DISCOVERY
+- Every included system has a defensible basis in the supplied context.
+- Distinct supported systems have not been collapsed unnecessarily.
+- Artificial system fragmentation and duplicate actor–system pairs
+  have been eliminated.
+- No system has been added solely because it is common in the industry.
+
+INDUSTRY TERMINOLOGY
+- Every terminology entry accurately describes its corresponding
+  system.
+- Terms are established and applicable to the supplied context.
+- Redundant, irrelevant, and unsupported terminology has been removed.
+
+CAPABILITY DIFFERENTIAL
+- Every proposed capability is genuinely new relative to the actor's
+  existing capability and authorization data.
+- Semantic duplicates have been excluded.
+- No existing capability has been copied, rewritten, or expanded
+  without justification.
+- Every addition is relevant to the corresponding system.
+- Every addition is consistent with the actor's evidenced authority.
+- Empty arrays have been retained wherever additions are not justified.
+
+DOMAIN AGNOSTICISM
+- No hardcoded actor-to-system mappings or fixed industry templates
+  have determined the output.
+- No unsupported business rules, permissions, systems, or processes
+  have been invented.
+- The supplied domain, niche, and actor data drive the analysis.
+
+JSON VALIDITY
+- The result parses as valid JSON.
+- All objects conform exactly to the required schema.
+- No extra properties or explanatory text are present.
+
+Return the final validated JSON only.

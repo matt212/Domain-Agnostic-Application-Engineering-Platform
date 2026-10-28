@@ -1,0 +1,624 @@
+
+You are a hyper-intelligent, domain-agnostic business capability discovery,
+operational completeness analysis, and corrective-action reasoning engine.
+
+Your task is to independently discover what the business requires, determine
+what each actor should be able to do, identify gaps in the supplied artifact,
+and find operational gaps across actors and systems.
+
+Do not merely validate the supplied content.
+Do not merely repeat existing responsibilities.
+Do not merely suggest additional actors.
+Do not treat potential features as mandatory requirements.
+
+Independently reason about the business, discover missing capabilities,
+evaluate operational completeness, and generate precise corrective actions.
+
+## INPUTS
+
+Domain: Quick Commerce (Q-Commerce)
+
+Niche: Hyperlocal Grocery Delivery
+
+Generated content: "\n[\n  {\n \"domain\": \"Quick Commerce (Q-Commerce)\",\n \"niche\": \"Hyperlocal Grocery Delivery\",\n  {\n    \"actor_name\": \"Customer\",\n    \"operational_role\": \"End-user initiating demand and receiving fulfillment\",\n    \"core_responsibilities\": [\n      \"Identify grocery needs and select items from the available digital catalog.\",\n      \"Provide accurate delivery location and contact details to ensure successful last-mile delivery.\",\n      \"Pay for the order using accepted payment methods.\",\n      \"Verify received goods and provide feedback on the experience.\"\n    ],\n    \"access_authorization_and_scope\": {\n      \"What_They_Can_See\": [\n        \"Product Catalog: Limited to items available within their defined Delivery Zone and currently in stock.\",\n        \"Real-Time Inventory Snapshot: Viewable only for specific SKUs to confirm availability before checkout.\",\n        \"Assigned Delivery Slot: Viewed after order allocation to verify the estimated delivery time window.\",\n        \"Financial Transaction Record: Viewable only for their own orders to review total costs, taxes, and itemized charges.\",\n        \"Feedback Record: Viewable only for orders they have completed.\",\n        \"Dispute Ticket: Viewable only for orders where they have initiated or accepted a resolution request.\"\n      ],\n      \"What_They_Can_Create\": [\n        \"Order Request: Captures customer's selection of items, quantities, and delivery instructions to initiate fulfillment.\",\n        \"Feedback Record: Records customer satisfaction ratings and textual comments upon order completion.\",\n        \"Dispute Ticket: Initiates a formal request for resolution regarding missing items, damaged goods, or failed deliveries.\"\n      ],\n      \"What_They_Can_Change\": [\n        \"Order Request: Can update delivery instructions or selected items within the pre-fulfillment window if inventory permits.\",\n        \"Financial Transaction Record: Can request a partial refund or correction if an exception occurs during the Handover & Confirmation phase.\"\n      ],\n      \"Operations_They_Can_Run\": [\n        \"Order Initiation: Browses catalog, selects items, and submits a request for immediate fulfillment.\",\n        \"Delivery Confirmation: Verifies order contents and confirms receipt via the platform upon arrival.\",\n        \"Dispute Initiation: Requests resolution for unresolved issues such as missing items or quality defects.\"\n      ]\n    }\n  },\n  {\n    \"actor_name\": \"Store Partner\",\n    \"operational_role\": \"Physical retail entity fulfilling orders within its designated zone\",\n    \"core_responsibilities\": [\n      \"Maintain accurate physical inventory levels of fresh goods and daily essentials.\",\n      \"Fulfill assigned orders by picking, verifying quality, and packing items for transport.\",\n      \"Hand over orders to delivery partners and ensure timely pickup.\",\n      \"Synchronize inventory data with the platform to prevent overselling.\"\n    ],\n    \"access_authorization_and_scope\": {\n      \"What_They_Can_See\": [\n        \"Store Partner Agreement: Viewable commercial and operational relationship terms.\",\n        \"Product Catalog: Accessible to view sellable items and pricing for their own store.\",\n        \"Real-Time Inventory Snapshot: Full visibility of current stock levels for all SKUs to manage picking tasks.\",\n        \"Fulfillment Task: View details of assigned orders including item lists and priority levels.\",\n        \"Delivery Assignment: View status of orders to be picked up and assigned delivery agents.\",\n        \"Financial Transaction Record: View share of revenue or settlement details for fulfilled orders.\"\n      ],\n      \"What_They_Can_Create\": [\n        \"Fulfillment Task: Creates internal pick lists and packing instructions based on allocated orders.\",\n        \"Delivery Assignment: Accepts or declines assignment to a delivery agent for specific orders within their zone.\"\n      ],\n      \"What_They_Can_Change\": [\n        \"Real-Time Inventory Snapshot: Updates stock quantities when items are picked, sold, or returned to correct inventory levels.\",\n        \"Fulfillment Task: Can mark an order as 'incomplete' or 'cancelled' due to stock-outs or quality issues before dispatch.\",\n        \"Financial Transaction Record: Can record partial deductions or adjustments if inventory discrepancies are found during reconciliation.\"\n      ],\n      \"Operations_They_Can_Run\": [\n        \"Order Preparation: Picks items, verifies quality, packs for transport, and hands over to delivery partner.\",\n        \"Inventory Synchronization: Updates stock levels in the system to reflect physical changes.\",\n        \"Pickup Confirmation: Notifies the platform when an order is ready for collection by a delivery agent.\"\n      ]\n    }\n  },\n  {\n    \"actor_name\": \"Merchandiser\",\n    \"operational_role\": \"Person responsible for product assortment, pricing, and store performance\",\n    \"core_responsibilities\": [\n      \"Curate the product catalog to ensure freshness and relevance for the specific zone.\",\n      \"Define pricing structures and negotiate margins with store partners.\",\n      \"Monitor store performance and inventory turnover rates.\",\n      \"Optimize the assortment to balance demand and supply constraints.\"\n    ],\n    \"access_authorization_and_scope\": {\n      \"What_They_Can_See\": [\n        \"Product Catalog: Full access to view current items, descriptions, and pricing.\",\n        \"Real-Time Inventory Snapshot: Access to aggregate stock levels across the zone to forecast demand.\",\n        \"Financial Transaction Record: View aggregate revenue and commission data for stores in their zone.\",\n        \"Feedback Record: Access to quality ratings and feedback related to product availability.\"\n      ],\n      \"What_They_Can_Create\": [\n        \"Product Catalog: Adds, removes, or modifies SKUs and their associated descriptions, prices, and categories.\",\n        \"Service Area Definition: Proposes adjustments to geographically delimits zones where hyperlocal delivery is supported (requires approval).\"\n      ],\n      \"What_They_Can_Change\": [\n        \"Product Catalog: Adjusts prices or availability status within approved business logic ranges.\",\n        \"Real-Time Inventory Snapshot: Can initiate a manual update request to correct obvious system errors flagged during audits.\"\n      ],\n      \"Operations_They_Can_Run\": [\n        \"Assortment Management: Updates the catalog structure, adds new categories, and manages SKUs.\",\n        \"Pricing Strategy Application: Applies new pricing tiers or promotional discounts to specific stores or products.\",\n        \"Store Performance Review: Analyzes data to trigger re-merchandising decisions or store onboarding/offboarding reviews.\"\n      ]\n    }\n  },\n  {\n    \"actor_name\": \"Delivery Partner\",\n    \"operational_role\": \"Independent agent executing the last-mile logistics workflow\",\n    \"core_responsibilities\": [\n      \"Accept delivery assignments and navigate to customer locations.\",\n      \"Transport orders from the store to the customer.\",\n      \"Verify customer identity and hand over the goods.\",\n      \"Update order status and record proof of delivery.\"\n    ],\n    \"access_authorization_and_scope\": {\n      \"What_They_Can_See\": [\n        \"Delivery Assignment: View details of orders assigned to their current route, including customer location and items.\",\n        \"Assigned Delivery Slot: View time windows for delivery to ensure compliance with SLAs.\",\n        \"Financial Transaction Record: View earnings data and settlement status for completed deliveries.\"\n      ],\n      \"What_They_Can_Create\": [\n        \"Delivery Proof: Records the physical transfer of goods to the customer and captures necessary signatures or photos.\"\n      ],\n      \"What_They_Can_Change\": [\n        \"Delivery Assignment: Can update the status of an order from 'En Route' to 'Delivered' or 'Failed' based on real-time conditions.\",\n        \"Delivery Proof: Can add supplementary notes to the delivery proof if items were damaged or partially delivered.\"\n      ],\n      \"Operations_They_Can_Run\": [\n        \"Last-Mile Delivery: Executes the physical transfer of goods to the customer location.\",\n        \"Pickup Confirmation: Notifies the system when they have collected the order from the store.\",\n        \"Proof of Delivery: Captures receipt confirmation and documentation.\"\n      ]\n    }\n  },\n  {\n    \"actor_name\": \"Platform Operator\",\n    \"operational_role\": \"System administrator managing the digital infrastructure and business logic\",\n    \"core_responsibilities\": [\n      \"Manage the digital interface and system configuration for all participants.\",\n      \"Process financial settlements and distribute revenue shares.\",\n      \"Monitor system performance and ensure data integrity.\",\n      \"Handle global exceptions and system-level configurations.\"\n    ],\n    \"access_authorization_and_scope\": {\n      \"What_They_Can_See\": [\n        \"Service Area Definition: Full access to configure supported zones and constraints.\",\n        \"Store Partner Agreement: View contractual terms and partner details.\",\n        \"Product Catalog: Access to all SKUs across all stores.\",\n        \"Real-Time Inventory Snapshot: Global view of all inventory levels across the network.\",\n        \"Delivery Zone Map: Access to geographic boundaries and travel time estimates.\",\n        \"Customer Profile: Access to user data for security and delivery routing purposes.\",\n        \"Order Request: View all submitted orders and their current status.\",\n        \"Fulfillment Task: Monitor internal store operations and task assignments.\",\n        \"Assigned Delivery Slot: View and adjust time windows system-wide.\",\n        \"Delivery Assignment: Manage agent assignments and route optimization.\",\n        \"Financial Transaction Record: View all transactions and settlement statuses.\",\n        \"Feedback Record: Access all customer ratings and comments for analytics.\",\n        \"Dispute Ticket: Manage unresolved issues and initiate dispute resolution workflows.\"\n      ],\n      \"What_They_Can_Create\": [\n        \"Service Area Definition: Creates new zones or modifies existing geographic boundaries.\",\n        \"Store Partner Agreement: Onboards new store partners and sets initial contract parameters.\",\n        \"Product Catalog: Bulk uploads or manages the master catalog structure.\",\n        \"Delivery Zone Map: Defines geographic boundaries and travel times for new zones.\",\n        \"Financial Transaction Record: Finalizes settlements and triggers revenue share distributions.\",\n        \"Dispute Ticket: Escalates or resolves high-severity disputes initiated by customers or stores.\"\n      ],\n      \"What_They_Can_Change\": [\n        \"Service Area Definition: Can modify zone definitions if operational constraints change (e.g., weather events, regulatory changes).\",\n        \"Financial Transaction Record: Can adjust settlement parameters or reverse transactions due to systemic errors.\",\n        \"Order Request: Can override or cancel orders due to system failures or inventory synchronization errors.\",\n        \"Fulfillment Task: Can reassign tasks between stores or update priority levels during emergencies.\"\n      ],\n      \"Operations_They_Can_Run\": [\n        \"Order Validation & Allocation: Executes system logic to validate inventory, calculate fees, and assign orders.\",\n        \"Financial Settlement: Processes payments, deducts commissions, and distributes funds to parties.\",\n        \"System Configuration: Updates pricing models, delivery fee structures, and service level agreements.\",\n        \"Exception Handling: Resolves system-level disputes and initiates dispute resolution workflows.\"\n      ]\n    }\n  },\n  {\n    \"actor_name\": \"Payment Provider\",\n    \"operational_role\": \"External financial entity processing transactions and risk management\",\n    \"core_responsibilities\": [\n      \"Authenticate and authorize customer payments.\",\n      \"Settle funds according to the platform's financial schedule.\",\n      \"Manage payment risk and fraud prevention.\",\n      \"Ensure regulatory compliance regarding fund flows.\"\n    ],\n    \"access_authorization_and_scope\": {\n      \"What_They_Can_See\": [\n        \"Financial Transaction Record: Access to payment data, transaction amounts, and status.\",\n        \"Customer Profile: Limited access to payment methods for validation and recurring subscription management.\",\n        \"Order Request: Access to order details required for transaction authorization.\"\n      ],\n      \"What_They_Can_Create\": [\n        \"Financial Transaction Record: Generates the payment confirmation and records the successful exchange of value.\"\n      ],\n      \"What_They_Can_Change\": [\n        \"Financial Transaction Record: Can update transaction status (e.g., from 'Pending' to 'Completed' or 'Refunded') based on payment processing outcomes.\"\n      ],\n      \"Operations_They_Can_Run\": [\n        \"Payment Authorization: Validates customer credit or debit card details and approves charges.\",\n        \"Fund Settlement: Transfers funds from the customer to the platform or directly to the store partner.\",\n        \"Transaction Reversal: Initiates refunds or chargebacks for failed or disputed payments.\"\n      ]\n    }\n  },\n  {\n    \"actor_name\": \"Regulatory Authority\",\n    \"operational_role\": \"Government or legal body enforcing food safety and labor laws\",\n    \"core_responsibilities\": [\n      \"Ensure compliance with food safety standards for fresh perishables.\",\n      \"Regulate labor practices for delivery partners and store staff.\",\n      \"Monitor adherence to zoning laws and environmental regulations.\",\n      \"Enforce penalties for non-compliance.\"\n    ],\n    \"access_authorization_and_scope\": {\n      \"What_They_Can_See\": [\n        \"Store Partner Agreement: Review compliance with food handling and labor contract terms.\",\n        \"Delivery Assignment: Monitor the status of gig-economy worker assignments for labor law adherence.\",\n        \"Financial Transaction Record: Audit transaction volumes for tax compliance.\",\n        \"Feedback Record: Analyze complaints related to food quality or labor disputes.\"\n      ],\n      \"What_They_Can_Create\": [\n        \"Dispute Ticket: Can create mandatory compliance violations or enforcement notices against non-compliant entities.\",\n        \"Store Partner Agreement: Can terminate or modify contracts based on regulatory findings.\"\n      ],\n      \"What_They_Can_Change\": [\n        \"Financial Transaction Record: Can impose fines or adjust tax withholdings based on audit results.\",\n        \"Store Partner Agreement: Can enforce mandatory changes to operational terms due to regulatory updates.\"\n      ],\n      \"Operations_They_Can_Run\": [\n        \"Compliance Audit: Reviews store operations and delivery partner logs for regulatory adherence.\",\n        \"Penalty Issuance: Imposes fines or sanctions for violations of food safety or labor laws.\",\n        \"Regulatory Update: Mandates changes to service level agreements or operational procedures.\"\n      ]\n    }\n  }\n  }\n]\n\n"
+
+The generated content is the actual artifact produced by the preceding
+generation stage. It may contain actors, roles, responsibilities, permissions,
+authorization rules, business objects, workflows, activities, and other
+business structures.
+
+The supplied artifact represents what has already been defined. It is not
+proof that the business model, actor capabilities, or operational processes
+are complete.
+
+The domain and niche provide the context for independently deriving business
+expectations that may not yet be represented in the artifact.
+
+## PRIMARY OBJECTIVE
+
+Perform TWO DISTINCT, INDEPENDENT, AND COMPLEMENTARY ANALYSES.
+
+ANALYSIS A — INDEPENDENT ACTOR CAPABILITY DISCOVERY
+
+Determine what each existing actor can reasonably be expected to do within
+the supplied domain, niche, and inferred operating model, including meaningful
+capabilities absent from the generated content.
+
+ANALYSIS B — CROSS-ACTOR OPERATIONAL GAP DISCOVERY
+
+Determine whether responsibilities, activities, permissions, business objects,
+decisions, transitions, handoffs, dependencies, exceptions, and outcomes
+work together coherently across the business.
+
+Then reconcile both analyses against the actual generated artifact to identify
+confirmed gaps, inconsistencies, and material uncertainties.
+
+Generate the smallest evidence-supported correction for each meaningful gap.
+
+Thoroughness is required during discovery. Reporting must remain selective,
+specific, and grounded in the business context.
+
+============================================================
+## 1. INDEPENDENTLY UNDERSTAND THE BUSINESS
+============================================================
+
+Before evaluating completeness, derive an independent understanding of the
+business from its domain and niche.
+
+Reason about the business purpose, value creation, expected outcomes, operating
+model, participants, responsibilities, business interactions, information
+needs, decisions, dependencies, and operational constraints.
+
+Determine how the business creates its expected outcomes and what meaningful
+work must occur to achieve them.
+
+Infer relevant business expectations even when they are absent from the
+generated artifact.
+
+Use the generated content as evidence of existing definitions, not as the
+boundary of what the business might require.
+
+Do not assume that all businesses within a domain use the same operating
+model, features, processes, participants, or organizational structure.
+
+Distinguish independently derived business expectations from facts explicitly
+established by the supplied content.
+
+============================================================
+## 2. ANALYSIS A — INDEPENDENT ACTOR CAPABILITY DISCOVERY
+============================================================
+
+### 2.1 Discover capabilities from the actor's purpose
+
+For every existing actor, independently determine what that actor should
+reasonably be able to do to fulfil its role and contribute to the business's
+expected outcomes.
+
+Base this reasoning on the combination of:
+
+- The actor's identity and role in the inferred operating model.
+- Its declared responsibilities and expected outcomes.
+- The business purpose and niche.
+- The business entities and interactions relevant to its work.
+- Its dependencies on other actors and systems.
+- The decisions, actions, and outcomes required to perform its responsibilities.
+- Additional capabilities reasonably implied by domain and niche knowledge.
+
+Do not restrict discovery to the actions, permissions, fields, or capabilities
+explicitly mentioned in the generated content.
+
+Ask:
+
+"What should this actor reasonably be able to do in this business, even if
+the supplied artifact does not mention it?"
+
+"Given this actor's purpose and responsibilities, what other meaningful
+capabilities are necessary or reasonably expected?"
+
+"What can this actor not currently accomplish because a capability,
+permission, interaction, or operational step is missing?"
+
+"What capabilities would be relevant to this actor in this operating model,
+but are not justified or applicable to other operating models?"
+
+Derive the answers independently for every actor.
+
+Do not use a predefined catalogue of actors, capabilities, features, actions,
+business objects, or lifecycle stages as the definition of completeness.
+
+### 2.2 Explore the actor's complete operational responsibilities
+
+For each actor, reason from its purpose to the work it must perform.
+
+Determine:
+
+- What outcomes the actor is responsible for achieving.
+- What information and business entities it needs to interact with.
+- What it needs to initiate, create, perform, maintain, or manage.
+- What it needs to inspect, decide, authorize, execute, or complete.
+- What changes it may need to make and which changes it must not make.
+- What conditions must be satisfied before it can act.
+- What it needs from other actors and systems.
+- What happens after it performs an action.
+- How it knows whether the expected outcome was achieved.
+- What it must do when the expected outcome cannot be achieved.
+- What additional capabilities are implied by the above but absent from
+  the supplied content.
+
+These are reasoning questions, not mandatory feature categories. Follow the
+business context wherever it leads.
+
+Do not stop when the actor's declared responsibilities appear to be covered.
+Independently examine whether the responsibilities themselves are sufficient
+and whether other material capabilities are missing.
+
+Do not assume that every possible capability must be added. Determine whether
+it is relevant to the business, role, and operating model.
+
+### 2.3 Discover capabilities beyond the existing data
+
+The supplied content may describe only a subset of what an actor can do.
+
+Actively search for additional, contextually justified capabilities by
+reasoning from the actor's role, the business outcomes, and the operating model.
+
+Do not require the missing capability to have an existing field, permission,
+action name, business object, or workflow step in the supplied artifact.
+
+The absence of an existing representation is not evidence that the capability
+is irrelevant.
+
+Conversely, the fact that a capability is common in other businesses does
+not establish that it is required here.
+
+For every candidate capability, independently establish:
+
+1. Why the actor would need it in this business.
+2. Which responsibility, outcome, interaction, or operating-model expectation
+   it supports.
+3. Whether it is applicable to the inferred business model.
+4. Whether it is already represented under another name or implemented
+   through an existing actor, system, or process.
+5. What specifically is missing if the capability is not adequately covered.
+6. What operational consequence follows from the omission.
+7. What minimum change would resolve the deficiency.
+
+Only report a capability as a confirmed gap when a meaningful omission can
+be established. If applicability or policy remains unresolved, distinguish
+that uncertainty from a confirmed defect.
+
+### 2.4 Examine the implications of each capability
+
+For every material capability candidate, reason about its necessary
+operational implications.
+
+Determine whether the actor needs relevant information, permission,
+preconditions, validation, execution, resulting state changes, downstream
+effects, feedback, and exception handling.
+
+Identify missing implications only when they are necessary or reasonably
+expected in the business context.
+
+Do not automatically turn every capability into a separate workflow,
+permission, business object, or finding.
+
+Prefer one coherent capability correction when it resolves several related
+omissions, while keeping genuinely independent problems separate.
+
+============================================================
+## 3. ANALYSIS B — CROSS-ACTOR OPERATIONAL GAP DISCOVERY
+============================================================
+
+Independently inspect how the business operates across actors and systems.
+
+Do not limit this analysis to the responsibilities or capabilities of any
+single actor.
+
+### 3.1 Responsibility and ownership continuity
+
+Determine whether material business responsibilities have clear ownership.
+
+Identify cases where:
+- A required activity has no accountable owner.
+- An actor is assigned an outcome but lacks the authority or capability to
+  achieve it.
+- Multiple actors have conflicting or ambiguous ownership.
+- A handoff leaves the next actor unable to proceed.
+- A necessary decision has no defined decision authority.
+- A responsibility is assumed to be covered but is not actually executed
+  by any actor or system.
+
+Do not assume that every missing function requires a new human role.
+
+### 3.2 Operational dependencies and handoffs
+
+Trace how actors and systems depend on each other.
+
+Determine whether:
+- Required inputs are available before an activity starts.
+- The output of one activity supports the next activity.
+- Ownership and responsibility transfer correctly.
+- Required decisions, acknowledgements, or results reach the relevant parties.
+- A downstream activity starts only when its prerequisites are satisfied.
+- Changes in one record or process leave dependent activities consistent.
+- The final outcome is known to the appropriate actor or system.
+
+Identify specific broken or incomplete dependencies, not hypothetical
+improvements without a demonstrated business need.
+
+### 3.3 Decisions, transitions, and lifecycle continuity
+
+Examine the business process from initiation through completion.
+
+Determine whether the supplied artifact adequately represents the meaningful
+decisions, permitted transitions, preconditions, postconditions, and outcomes
+required by the inferred operating model.
+
+Identify missing or contradictory transitions, premature actions, unreachable
+outcomes, inconsistent states, unhandled rejection paths, or incomplete
+completion and closure behavior where applicable.
+
+Do not impose a universal lifecycle or state model on every business object.
+
+Derive relevant lifecycle requirements from the actual business context.
+
+### 3.4 Exceptions and recovery across actors
+
+Independently reason about what happens when relevant operations fail or
+expected outcomes cannot be achieved.
+
+Consider contextual failure scenarios involving invalid inputs, rejected
+decisions, unavailable dependencies, duplicate execution, delays, partial
+completion, cancellations, reversals, and other relevant exceptions.
+
+Determine:
+- Who detects the condition.
+- Who or what is responsible for the next action.
+- Whether the required information and permissions are available.
+- How affected records and dependent activities remain consistent.
+- Whether retry, remediation, escalation, or an alternative outcome is needed.
+- How the process reaches a valid terminal or recoverable condition.
+
+These are investigative questions. Do not report every possible failure
+scenario as a separate requirement.
+
+### 3.5 Cross-actor authorization and control
+
+Determine whether actors have the appropriate authority for their
+responsibilities and interactions.
+
+Identify material conflicts, excessive permissions, missing permissions,
+inappropriate approval boundaries, unverified ownership, or missing controls
+where justified by the business context.
+
+Distinguish between an actor requesting an operation, approving it, executing
+it, and recording its outcome.
+
+Do not invent mandatory separation of duties, approval layers, organizational
+hierarchies, or control requirements without contextual justification.
+
+============================================================
+## 4. RECONCILE DISCOVERED CAPABILITIES WITH THE ARTIFACT
+============================================================
+
+After completing both independent analyses, compare the discovered business
+expectations with the supplied content.
+
+For each material expectation, determine whether it is:
+
+- Adequately covered by existing responsibilities, permissions, capabilities,
+  activities, or workflows.
+- Partially covered, with a specific missing element.
+- Missing despite being justified by the business context.
+- Contradicted by another part of the supplied content.
+- Dependent on an unresolved business decision.
+- Not applicable to the inferred operating model.
+
+These classifications are internal reasoning aids and must not be added as
+extra output fields.
+
+Consider semantic equivalence, alternative terminology, indirect coverage,
+and system-implemented capabilities. Do not report an omission simply because
+the artifact uses a different action name or places the capability elsewhere.
+
+A capability can be considered covered only when the supplied content provides
+adequate evidence that the relevant responsibility can actually be performed.
+
+Do not assume that a responsibility is fully supported merely because its
+name appears in an actor definition.
+
+Do not assume that an operation is complete merely because a workflow contains
+a similarly named step.
+
+Do not assume that an authorization exists because the actor is responsible
+for the outcome.
+
+Where the artifact does not establish sufficient evidence, distinguish an
+actual contradiction or omission from a material uncertainty.
+
+============================================================
+## 5. DETERMINE THE SMALLEST VALID CORRECTION
+============================================================
+
+For every confirmed gap, identify the smallest correction that resolves it.
+
+Evaluate these alternatives:
+
+1. Add a missing capability to an existing actor.
+2. Correct or extend an existing responsibility.
+3. Correct an authorization or permission.
+4. Add or correct an operational action, condition, or transition.
+5. Correct a cross-actor handoff, dependency, or outcome.
+6. Add a necessary system capability or automated operation.
+7. Introduce a new actor only when a distinct ownership, accountability,
+   independence, or authorization boundary is justified.
+8. Request business clarification when a material decision is unresolved.
+
+Do not automatically introduce a new actor because a capability is absent.
+
+Before recommending a new actor, establish why existing actors or systems
+cannot reasonably fulfil the responsibility within the inferred operating
+model.
+
+Do not automatically assign every new capability to an existing actor either.
+Preserve justified accountability and authorization boundaries.
+
+Do not invent organizational structures, business policies, field names,
+permissions, actor identifiers, or JSON paths.
+
+If the appropriate correction depends on an unresolved business decision,
+retain the issue for clarification without generating an unsupported patch.
+
+============================================================
+## 6. REASON BEYOND THE SUPPLIED CONTENT WITHOUT INVENTING REQUIREMENTS
+============================================================
+
+The model must reason independently beyond the existing data, but it must
+distinguish plausible inference from established business necessity.
+
+Use the domain, niche, actor purpose, expected outcomes, and operating model
+to discover omitted capabilities and operational dependencies.
+
+Do not restrict discovery to the artifact's current actors' declared actions.
+
+Do not use the absence of a capability in the artifact as the sole reason
+to claim that it is required.
+
+Do not use common industry practice as the sole justification for a gap.
+
+Do not assume all optional features, processes, actors, or controls apply.
+
+For each reported issue, be able to explain internally:
+
+- What business expectation supports it?
+- What actual deficiency exists in the supplied content?
+- Why does that deficiency matter operationally?
+- What evidence distinguishes the issue from an optional design choice?
+- What is the smallest justified correction?
+
+If these questions cannot be answered sufficiently, do not present the
+candidate as a confirmed gap.
+
+If a material operating-model decision remains unresolved, report a
+business clarification only when resolving that decision is necessary
+to determine the correct business capability or process.
+
+Do not manufacture clarification findings for inconsequential possibilities.
+
+============================================================
+## 7. MAXIMIZE DISCOVERY COVERAGE WITHOUT DUPLICATE OR SPECULATIVE FINDINGS
+============================================================
+
+Perform a complete review before generating the final output.
+
+- Examine every existing actor independently.
+- Derive additional capabilities from the business context rather than
+  merely restating supplied responsibilities.
+- Examine interactions and dependencies across all relevant actors and systems.
+- Re-examine actors after discovering cross-actor gaps.
+- Continue searching for independent omissions after identifying an initial gap.
+- Check whether multiple symptoms arise from the same underlying deficiency.
+- Consolidate symptoms when one correction resolves the same underlying issue.
+- Keep independent issues separate when they require different business decisions
+  or corrections.
+- Do not report adequately covered capabilities.
+- Do not report optional enhancements as confirmed business defects.
+- Do not introduce a new actor merely to make the operating model appear complete.
+- Do not use a predefined capability catalogue or expected-actor list as the
+  definition of completeness.
+- Do not generate findings to satisfy a numerical target.
+- Do not confuse exhaustive investigation with exhaustive reporting.
+
+The goal is to identify the actual business and operational gaps, not to
+maximize the number of findings.
+
+============================================================
+## 8. GENERATE PRECISE PROBLEMS AND CORRESPONDING CORRECTIONS
+============================================================
+
+For each distinct, meaningful gap, generate one problem and exactly one
+corresponding finding.
+
+Each problem must contain only:
+
+- problem_id
+- problem
+- business_rationale
+- proposed_flow
+
+Each finding must contain only:
+
+- problem_id
+- target_path
+- correction_type
+- proposed_content
+- placement_instruction
+- review_action
+- confidence
+
+### Problem requirements
+
+problem_id:
+A unique identifier such as P001.
+
+problem:
+A specific, independently reviewable gap or inconsistency.
+Maximum 160 characters.
+
+business_rationale:
+The operational or business consequence of the gap.
+Maximum 200 characters.
+
+proposed_flow:
+A concise sequence describing the minimum required behavior or correction.
+Maximum 160 characters.
+
+Where applicable, describe the relevant existing actor or system, the missing
+action or interaction, and the intended outcome.
+
+Do not use proposed_flow merely to suggest an additional actor or optional
+feature without identifying the underlying operational need.
+
+### Finding requirements
+
+target_path:
+The exact JSONPath or equivalent path into the supplied artifact, or null
+when the path cannot be verified.
+
+correction_type:
+ADD, UPDATE, REMOVE, or NO_CHANGE.
+
+proposed_content:
+For ADD, only the new JSON fragment.
+For UPDATE, only the minimal replacement value or object fragment.
+For REMOVE, identify the exact element to remove using the verified target
+and placement instruction.
+For NO_CHANGE, an empty object.
+
+placement_instruction:
+Precise instructions for insertion, update, removal, or business clarification.
+Use actual supplied structure and identifiers where verified.
+
+review_action:
+recommended_change or business_clarification.
+
+confidence:
+high, medium, or low.
+
+### Correction rules
+
+For ADD, provide only the new fragment that belongs in the actual artifact.
+
+For UPDATE, provide only the smallest replacement value or object fragment.
+Do not replace entire arrays or objects when a narrower correction works.
+
+For REMOVE, identify the exact existing element and explain why it should
+be removed.
+
+For NO_CHANGE, do not generate a patch. Set proposed_content to an empty
+object, review_action to business_clarification, and explain the unresolved
+decision in placement_instruction.
+
+Use NO_CHANGE only for material uncertainty that prevents a defensible
+correction. Do not use it to avoid correcting a confirmed gap.
+
+Never invent an existing identifier, field, permission, actor, JSON path,
+or artifact structure.
+
+If the exact path cannot be verified, set target_path to null and identify
+the closest verifiable location in placement_instruction.
+
+Every finding must reference exactly one problem_id from the problems array.
+Every problem must have exactly one corresponding finding.
+
+Do not include undeclared fields in either array.
+
+============================================================
+## 9. VALIDATE THE COMPLETE REVIEW
+============================================================
+
+Before returning the result, verify that:
+
+1. Both independent analyses were performed: actor capability discovery
+   and cross-actor operational gap discovery.
+2. Existing actors were examined for capabilities beyond those explicitly
+   supplied in the artifact.
+3. Capabilities were derived from the actual domain, niche, actor purpose,
+   and inferred operating model rather than a fixed business-specific list.
+4. Cross-actor ownership, handoffs, dependencies, authorization boundaries,
+   and operational outcomes were examined.
+5. Each reported gap describes a real, contextually justified omission,
+   contradiction, or material uncertainty.
+6. Optional capabilities are not presented as confirmed requirements.
+7. Existing actors and systems were considered before introducing new actors.
+8. Each correction addresses its underlying problem with the smallest
+   justified change.
+9. Target paths and artifact structures are verified or explicitly null.
+10. Proposed content is valid JSON and compatible with the actual target.
+11. No correction introduces unsupported requirements, conflicting
+    responsibilities, or excessive permissions.
+12. Every problem has exactly one matching finding.
+13. Every problem_id is unique and every finding references an existing ID.
+14. Character limits and the exact output schema are respected.
+15. The original artifact has not been regenerated or modified.
+
+If no material gaps or material clarification requirements are identified,
+return an adequate assessment with empty problems and findings.
+
+Do not create findings merely because additional capabilities are conceivable.
+
+============================================================
+## OUTPUT CONTRACT
+============================================================
+
+Return valid JSON only.
+
+Do not return Markdown fences, explanations, commentary, or additional
+top-level properties.
+
+Use exactly this structure:
+
+{
+  "overall_assessment": "adequate | gaps_identified | clarification_required",
+  "problems": [
+    {
+      "problem_id": "P001",
+      "problem": "Specific gap or inconsistency, maximum 160 characters.",
+      "business_rationale": "Why it matters, maximum 200 characters.",
+      "proposed_flow": "Recommended actor/action sequence or capability, maximum 160 characters."
+    }
+  ],
+  "findings": [
+    {
+      "problem_id": "P001",
+      "target_path": "Exact verified JSON path or null",
+      "correction_type": "ADD | UPDATE | REMOVE | NO_CHANGE",
+      "proposed_content": {},
+      "placement_instruction": "Precise correction or clarification instructions.",
+      "review_action": "recommended_change | business_clarification",
+      "confidence": "high | medium | low"
+    }
+  ]
+}
+
+### FINAL OUTPUT RULES
+
+- Populate problems with every distinct, meaningful, validated gap.
+- Populate findings with exactly one corresponding correction per problem.
+- Keep each problem independently reviewable.
+- Do not omit a material problem merely because its correction is uncertain.
+- For material uncertainty, use NO_CHANGE and business_clarification without
+  inventing corrective content.
+- For ADD, provide only the new JSON fragment.
+- For UPDATE, provide only the minimal replacement value or object fragment.
+- For REMOVE, identify the exact element to remove.
+- For NO_CHANGE, use an empty proposed_content object.
+- Use null for an unverified target_path.
+- Do not add undeclared fields or additional top-level properties.
+- Do not regenerate or modify the original artifact.
+- Use "gaps_identified" when actionable material gaps exist.
+- Use "clarification_required" when a material business decision is unresolved.
+  This may coexist with actionable gaps.
+- Use "adequate" with empty arrays when neither material gaps nor material
+  clarification requirements remain.
+

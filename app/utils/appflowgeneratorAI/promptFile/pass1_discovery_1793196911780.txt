@@ -1,0 +1,136 @@
+
+You are a domain-agnostic, actor-specific operational mandate
+gap reviewer.
+
+Domain: Quick Commerce (Q-Commerce)
+Niche: Hyperlocal Grocery Delivery
+Existing actor content: "\n[\n  {\n \"domain\": \"Quick Commerce (Q-Commerce)\",\n \"niche\": \"Hyperlocal Grocery Delivery\",\n  {\n    \"actor_name\": \"Customer\",\n    \"operational_role\": \"End-user initiating demand and receiving fulfillment\",\n    \"core_responsibilities\": [\n      \"Identify grocery needs and select items from the available digital catalog.\",\n      \"Provide accurate delivery location and contact details to ensure successful last-mile delivery.\",\n      \"Pay for the order using accepted payment methods.\",\n      \"Verify received goods and provide feedback on the experience.\"\n    ],\n    \"access_authorization_and_scope\": {\n      \"What_They_Can_See\": [\n        \"Product Catalog: Limited to items available within their defined Delivery Zone and currently in stock.\",\n        \"Real-Time Inventory Snapshot: Viewable only for specific SKUs to confirm availability before checkout.\",\n        \"Assigned Delivery Slot: Viewed after order allocation to verify the estimated delivery time window.\",\n        \"Financial Transaction Record: Viewable only for their own orders to review total costs, taxes, and itemized charges.\",\n        \"Feedback Record: Viewable only for orders they have completed.\",\n        \"Dispute Ticket: Viewable only for orders where they have initiated or accepted a resolution request.\"\n      ],\n      \"What_They_Can_Create\": [\n        \"Order Request: Captures customer's selection of items, quantities, and delivery instructions to initiate fulfillment.\",\n        \"Feedback Record: Records customer satisfaction ratings and textual comments upon order completion.\",\n        \"Dispute Ticket: Initiates a formal request for resolution regarding missing items, damaged goods, or failed deliveries.\"\n      ],\n      \"What_They_Can_Change\": [\n        \"Order Request: Can update delivery instructions or selected items within the pre-fulfillment window if inventory permits.\",\n        \"Financial Transaction Record: Can request a partial refund or correction if an exception occurs during the Handover & Confirmation phase.\"\n      ],\n      \"Operations_They_Can_Run\": [\n        \"Order Initiation: Browses catalog, selects items, and submits a request for immediate fulfillment.\",\n        \"Delivery Confirmation: Verifies order contents and confirms receipt via the platform upon arrival.\",\n        \"Dispute Initiation: Requests resolution for unresolved issues such as missing items or quality defects.\"\n      ]\n    }\n  },\n  {\n    \"actor_name\": \"Store Partner\",\n    \"operational_role\": \"Physical retail entity fulfilling orders within its designated zone\",\n    \"core_responsibilities\": [\n      \"Maintain accurate physical inventory levels of fresh goods and daily essentials.\",\n      \"Fulfill assigned orders by picking, verifying quality, and packing items for transport.\",\n      \"Hand over orders to delivery partners and ensure timely pickup.\",\n      \"Synchronize inventory data with the platform to prevent overselling.\"\n    ],\n    \"access_authorization_and_scope\": {\n      \"What_They_Can_See\": [\n        \"Store Partner Agreement: Viewable commercial and operational relationship terms.\",\n        \"Product Catalog: Accessible to view sellable items and pricing for their own store.\",\n        \"Real-Time Inventory Snapshot: Full visibility of current stock levels for all SKUs to manage picking tasks.\",\n        \"Fulfillment Task: View details of assigned orders including item lists and priority levels.\",\n        \"Delivery Assignment: View status of orders to be picked up and assigned delivery agents.\",\n        \"Financial Transaction Record: View share of revenue or settlement details for fulfilled orders.\"\n      ],\n      \"What_They_Can_Create\": [\n        \"Fulfillment Task: Creates internal pick lists and packing instructions based on allocated orders.\",\n        \"Delivery Assignment: Accepts or declines assignment to a delivery agent for specific orders within their zone.\"\n      ],\n      \"What_They_Can_Change\": [\n        \"Real-Time Inventory Snapshot: Updates stock quantities when items are picked, sold, or returned to correct inventory levels.\",\n        \"Fulfillment Task: Can mark an order as 'incomplete' or 'cancelled' due to stock-outs or quality issues before dispatch.\",\n        \"Financial Transaction Record: Can record partial deductions or adjustments if inventory discrepancies are found during reconciliation.\"\n      ],\n      \"Operations_They_Can_Run\": [\n        \"Order Preparation: Picks items, verifies quality, packs for transport, and hands over to delivery partner.\",\n        \"Inventory Synchronization: Updates stock levels in the system to reflect physical changes.\",\n        \"Pickup Confirmation: Notifies the platform when an order is ready for collection by a delivery agent.\"\n      ]\n    }\n  },\n  {\n    \"actor_name\": \"Merchandiser\",\n    \"operational_role\": \"Person responsible for product assortment, pricing, and store performance\",\n    \"core_responsibilities\": [\n      \"Curate the product catalog to ensure freshness and relevance for the specific zone.\",\n      \"Define pricing structures and negotiate margins with store partners.\",\n      \"Monitor store performance and inventory turnover rates.\",\n      \"Optimize the assortment to balance demand and supply constraints.\"\n    ],\n    \"access_authorization_and_scope\": {\n      \"What_They_Can_See\": [\n        \"Product Catalog: Full access to view current items, descriptions, and pricing.\",\n        \"Real-Time Inventory Snapshot: Access to aggregate stock levels across the zone to forecast demand.\",\n        \"Financial Transaction Record: View aggregate revenue and commission data for stores in their zone.\",\n        \"Feedback Record: Access to quality ratings and feedback related to product availability.\"\n      ],\n      \"What_They_Can_Create\": [\n        \"Product Catalog: Adds, removes, or modifies SKUs and their associated descriptions, prices, and categories.\",\n        \"Service Area Definition: Proposes adjustments to geographically delimits zones where hyperlocal delivery is supported (requires approval).\"\n      ],\n      \"What_They_Can_Change\": [\n        \"Product Catalog: Adjusts prices or availability status within approved business logic ranges.\",\n        \"Real-Time Inventory Snapshot: Can initiate a manual update request to correct obvious system errors flagged during audits.\"\n      ],\n      \"Operations_They_Can_Run\": [\n        \"Assortment Management: Updates the catalog structure, adds new categories, and manages SKUs.\",\n        \"Pricing Strategy Application: Applies new pricing tiers or promotional discounts to specific stores or products.\",\n        \"Store Performance Review: Analyzes data to trigger re-merchandising decisions or store onboarding/offboarding reviews.\"\n      ]\n    }\n  },\n  {\n    \"actor_name\": \"Delivery Partner\",\n    \"operational_role\": \"Independent agent executing the last-mile logistics workflow\",\n    \"core_responsibilities\": [\n      \"Accept delivery assignments and navigate to customer locations.\",\n      \"Transport orders from the store to the customer.\",\n      \"Verify customer identity and hand over the goods.\",\n      \"Update order status and record proof of delivery.\"\n    ],\n    \"access_authorization_and_scope\": {\n      \"What_They_Can_See\": [\n        \"Delivery Assignment: View details of orders assigned to their current route, including customer location and items.\",\n        \"Assigned Delivery Slot: View time windows for delivery to ensure compliance with SLAs.\",\n        \"Financial Transaction Record: View earnings data and settlement status for completed deliveries.\"\n      ],\n      \"What_They_Can_Create\": [\n        \"Delivery Proof: Records the physical transfer of goods to the customer and captures necessary signatures or photos.\"\n      ],\n      \"What_They_Can_Change\": [\n        \"Delivery Assignment: Can update the status of an order from 'En Route' to 'Delivered' or 'Failed' based on real-time conditions.\",\n        \"Delivery Proof: Can add supplementary notes to the delivery proof if items were damaged or partially delivered.\"\n      ],\n      \"Operations_They_Can_Run\": [\n        \"Last-Mile Delivery: Executes the physical transfer of goods to the customer location.\",\n        \"Pickup Confirmation: Notifies the system when they have collected the order from the store.\",\n        \"Proof of Delivery: Captures receipt confirmation and documentation.\"\n      ]\n    }\n  },\n  {\n    \"actor_name\": \"Platform Operator\",\n    \"operational_role\": \"System administrator managing the digital infrastructure and business logic\",\n    \"core_responsibilities\": [\n      \"Manage the digital interface and system configuration for all participants.\",\n      \"Process financial settlements and distribute revenue shares.\",\n      \"Monitor system performance and ensure data integrity.\",\n      \"Handle global exceptions and system-level configurations.\"\n    ],\n    \"access_authorization_and_scope\": {\n      \"What_They_Can_See\": [\n        \"Service Area Definition: Full access to configure supported zones and constraints.\",\n        \"Store Partner Agreement: View contractual terms and partner details.\",\n        \"Product Catalog: Access to all SKUs across all stores.\",\n        \"Real-Time Inventory Snapshot: Global view of all inventory levels across the network.\",\n        \"Delivery Zone Map: Access to geographic boundaries and travel time estimates.\",\n        \"Customer Profile: Access to user data for security and delivery routing purposes.\",\n        \"Order Request: View all submitted orders and their current status.\",\n        \"Fulfillment Task: Monitor internal store operations and task assignments.\",\n        \"Assigned Delivery Slot: View and adjust time windows system-wide.\",\n        \"Delivery Assignment: Manage agent assignments and route optimization.\",\n        \"Financial Transaction Record: View all transactions and settlement statuses.\",\n        \"Feedback Record: Access all customer ratings and comments for analytics.\",\n        \"Dispute Ticket: Manage unresolved issues and initiate dispute resolution workflows.\"\n      ],\n      \"What_They_Can_Create\": [\n        \"Service Area Definition: Creates new zones or modifies existing geographic boundaries.\",\n        \"Store Partner Agreement: Onboards new store partners and sets initial contract parameters.\",\n        \"Product Catalog: Bulk uploads or manages the master catalog structure.\",\n        \"Delivery Zone Map: Defines geographic boundaries and travel times for new zones.\",\n        \"Financial Transaction Record: Finalizes settlements and triggers revenue share distributions.\",\n        \"Dispute Ticket: Escalates or resolves high-severity disputes initiated by customers or stores.\"\n      ],\n      \"What_They_Can_Change\": [\n        \"Service Area Definition: Can modify zone definitions if operational constraints change (e.g., weather events, regulatory changes).\",\n        \"Financial Transaction Record: Can adjust settlement parameters or reverse transactions due to systemic errors.\",\n        \"Order Request: Can override or cancel orders due to system failures or inventory synchronization errors.\",\n        \"Fulfillment Task: Can reassign tasks between stores or update priority levels during emergencies.\"\n      ],\n      \"Operations_They_Can_Run\": [\n        \"Order Validation & Allocation: Executes system logic to validate inventory, calculate fees, and assign orders.\",\n        \"Financial Settlement: Processes payments, deducts commissions, and distributes funds to parties.\",\n        \"System Configuration: Updates pricing models, delivery fee structures, and service level agreements.\",\n        \"Exception Handling: Resolves system-level disputes and initiates dispute resolution workflows.\"\n      ]\n    }\n  },\n  {\n    \"actor_name\": \"Payment Provider\",\n    \"operational_role\": \"External financial entity processing transactions and risk management\",\n    \"core_responsibilities\": [\n      \"Authenticate and authorize customer payments.\",\n      \"Settle funds according to the platform's financial schedule.\",\n      \"Manage payment risk and fraud prevention.\",\n      \"Ensure regulatory compliance regarding fund flows.\"\n    ],\n    \"access_authorization_and_scope\": {\n      \"What_They_Can_See\": [\n        \"Financial Transaction Record: Access to payment data, transaction amounts, and status.\",\n        \"Customer Profile: Limited access to payment methods for validation and recurring subscription management.\",\n        \"Order Request: Access to order details required for transaction authorization.\"\n      ],\n      \"What_They_Can_Create\": [\n        \"Financial Transaction Record: Generates the payment confirmation and records the successful exchange of value.\"\n      ],\n      \"What_They_Can_Change\": [\n        \"Financial Transaction Record: Can update transaction status (e.g., from 'Pending' to 'Completed' or 'Refunded') based on payment processing outcomes.\"\n      ],\n      \"Operations_They_Can_Run\": [\n        \"Payment Authorization: Validates customer credit or debit card details and approves charges.\",\n        \"Fund Settlement: Transfers funds from the customer to the platform or directly to the store partner.\",\n        \"Transaction Reversal: Initiates refunds or chargebacks for failed or disputed payments.\"\n      ]\n    }\n  },\n  {\n    \"actor_name\": \"Regulatory Authority\",\n    \"operational_role\": \"Government or legal body enforcing food safety and labor laws\",\n    \"core_responsibilities\": [\n      \"Ensure compliance with food safety standards for fresh perishables.\",\n      \"Regulate labor practices for delivery partners and store staff.\",\n      \"Monitor adherence to zoning laws and environmental regulations.\",\n      \"Enforce penalties for non-compliance.\"\n    ],\n    \"access_authorization_and_scope\": {\n      \"What_They_Can_See\": [\n        \"Store Partner Agreement: Review compliance with food handling and labor contract terms.\",\n        \"Delivery Assignment: Monitor the status of gig-economy worker assignments for labor law adherence.\",\n        \"Financial Transaction Record: Audit transaction volumes for tax compliance.\",\n        \"Feedback Record: Analyze complaints related to food quality or labor disputes.\"\n      ],\n      \"What_They_Can_Create\": [\n        \"Dispute Ticket: Can create mandatory compliance violations or enforcement notices against non-compliant entities.\",\n        \"Store Partner Agreement: Can terminate or modify contracts based on regulatory findings.\"\n      ],\n      \"What_They_Can_Change\": [\n        \"Financial Transaction Record: Can impose fines or adjust tax withholdings based on audit results.\",\n        \"Store Partner Agreement: Can enforce mandatory changes to operational terms due to regulatory updates.\"\n      ],\n      \"Operations_They_Can_Run\": [\n        \"Compliance Audit: Reviews store operations and delivery partner logs for regulatory adherence.\",\n        \"Penalty Issuance: Imposes fines or sanctions for violations of food safety or labor laws.\",\n        \"Regulatory Update: Mandates changes to service level agreements or operational procedures.\"\n      ]\n    }\n  }\n  }\n]\n\n"
+
+## OBJECTIVE
+
+For EVERY existing actor, identify additional mandatory business operations
+that the actor can legitimately perform in the specified domain and niche,
+beyond those already represented in its existing definition.
+
+Focus exclusively on these two existing fields:
+- What_They_Can_Create
+- What_They_Can_Change
+
+These fields are READ-ONLY REFERENCE DATA. Analyse them to understand the
+actor's existing capabilities and identify what is missing.
+
+Return only genuinely NEW capabilities as separate proposed additions.
+Never modify or regenerate the existing content.
+
+## REVIEW METHOD
+
+For each existing actor:
+
+1. Understand the domain, niche, actor name, operational role,
+   core responsibilities, and legitimate scope of authority.
+
+2. Analyse the actor's complete existing What_They_Can_Create and
+   What_They_Can_Change content.
+
+3. Apply relevant domain and niche knowledge to identify additional
+   mandatory business entities, records, transactions, or attributes the
+   actor legitimately needs to create or change to fulfil its role.
+
+4. Compare every candidate against the actor's existing capabilities.
+   Account for equivalent operations already represented, regardless of
+   terminology or where they appear within the two fields.
+
+5. Return only the incremental capabilities that are genuinely missing.
+   Existing capabilities provide the baseline; they do not limit discovery
+   to additions explicitly mentioned or implied by the current content.
+
+6. Determine whether each proposed operation belongs to this actor.
+   Respect domain-specific responsibility and authority boundaries,
+   including those of external providers and the application platform.
+
+7. Review every actor before finalizing the result. An actor may have
+   no justified additions.
+
+## STRICT ADD-ONLY RULES
+
+- EXISTING CONTENT IS IMMUTABLE. Do not update, rewrite, correct, rename,
+  remove, replace, restructure, reorder, or regenerate any existing entry.
+
+- DELTA OUTPUT ONLY. Return only new capabilities that should be added.
+  Never return the complete or modified version of either existing field.
+
+- NO EXISTING-CONTENT ECHO. Do not copy existing entries into the proposed
+  additions, even if reworded, expanded, or split into smaller operations.
+
+- NO REPLACEMENTS. If an existing capability appears incomplete or poorly
+  worded, do not improve or replace it. Report only a separate, genuinely
+  missing capability, if one can be independently justified.
+
+- DOMAIN-DRIVEN DISCOVERY. Determine what else the actor can legitimately
+  create or change based on the domain, niche, and role. Do not merely
+  paraphrase the current definition.
+
+- MANDATORY CAPABILITIES ONLY. Exclude optional enhancements, convenience
+  features, speculative permissions, and generic best practices.
+
+- AUTHORITY BOUNDARIES. Do not automatically assign a capability because
+  it is related to the actor's work. Establish that the operation belongs
+  to that actor. For example, a payment gateway may own payment-risk
+  controls, while an integrating application may only submit requests and
+  consume the gateway's outcomes.
+
+- NO INVENTED CONTROLS. Do not invent unsupported policies, approval
+  thresholds, permissions, lifecycle restrictions, or status values.
+
+- ADDITIONS MUST BE ATOMIC. Each finding must describe one distinct,
+  missing business capability. Do not bundle unrelated operations.
+
+- PRESERVE DATA STRUCTURE. Use the existing actor identifier and the
+  applicable existing target field. Proposed additions must be compatible
+  with that field's existing structure. Never invent a replacement schema.
+
+- NO SCOPE EXPANSION. Do not propose new actors, workflow redesign,
+  cross-actor gap analysis, or additions to other fields.
+
+- NO FORCED FINDINGS. Return no finding when the existing capabilities
+  are already adequate or no additional mandatory capability is justified.
+
+## OUTPUT
+
+Return valid JSON only, using exactly this structure:
+
+{
+  "overall_assessment": "additions_identified | adequate",
+  "findings": [
+    {
+      "actor": "Exact existing actor identifier or name",
+      "target_path": "Exact verified path or null",
+      "content_field": "What_They_Can_Create or What_They_Can_Change",
+      "proposed_addition": {},
+      "reason": "Why this is a genuinely new, mandatory capability for this actor",
+      "placement_instruction": "Append this new entry to the existing field without altering its current content"
+    }
+  ]
+}
+
+## FINAL VALIDATION
+
+Before returning the result, verify that:
+
+1. Every existing actor has been reviewed.
+2. Both target fields have been analysed for every actor.
+3. Every finding is a genuinely new capability absent from the actor's
+   existing definition.
+4. No existing entry is copied, rewritten, replaced, or regenerated.
+5. Each addition follows from the actor's role, domain, niche, and
+   legitimate authority.
+6. Each addition is mandatory rather than optional or speculative.
+7. Each finding targets only one of the two permitted existing fields.
+8. The output contains proposed additions only, never complete field values.
+9. An empty findings array is returned if no justified additions exist.
+10. The output is valid JSON matching the exact schema.
+
+Use "additions_identified" when justified new capabilities exist.
+Use "adequate" when no justified additions are identified.
+
+Return JSON only. Do not modify the original artifact.
