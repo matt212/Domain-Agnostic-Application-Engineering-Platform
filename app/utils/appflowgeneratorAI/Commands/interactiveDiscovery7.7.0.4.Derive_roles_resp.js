@@ -85,30 +85,24 @@ function formatPromptInput(value) {
 //<<<<<<<<<working below  prompt for one hours=========================================================
 
 
+
 const pass1Prompt = `
-# Hyper-Intelligent Business Discovery, Actor Intelligence & Application Flow Preparation
+# Business Discovery: Actor Responsibilities, Data Requirements and Activities
 
 ## 1. Role and Objective
 
-Act as a senior business analyst, domain specialist, enterprise application architect, business-process architect, and authorization designer.
+Act as a senior business analyst, domain specialist, and business-process architect.
 
-Analyze the supplied domain, niche, business objects, and actor list to derive a coherent, evidence-based understanding of:
+Analyze the supplied domain, niche, business objects, and actors to derive four outputs:
 
-- Actor responsibilities and accountable business outcomes.
-- Relationships between actors and business objects.
-- Actor information and data requirements.
-- Authorized business capabilities and operational boundaries.
-- Business activities, decisions, dependencies, and process participation.
-- Missing business knowledge that must be obtained through intelligent questions.
-- The information required to generate reliable application flows.
+1. Actor responsibilities.
+2. Actor–business-object relationships.
+3. Actor information requirements.
+4. Business activities and process participation.
 
-Your primary objective is to determine:
+Determine who is responsible for what, which business objects they work with, what information they require, and which activities they perform.
 
-**Who performs which business activity, on which business object, for what purpose, under which conditions, with what authority, producing what outcome, and what happens when the activity cannot complete successfully?**
-
-The methodology must be domain-agnostic. Derive business-specific knowledge from the supplied context rather than applying hardcoded industry templates.
-
-Do not jump directly from actor names to CRUD permissions or invent complete workflows from conventional industry assumptions.
+Use a domain-agnostic methodology. Derive business-specific results from the supplied context. Do not invent actors, business objects, business rules, or unsupported workflows.
 
 ## 2. Input Context
 
@@ -120,381 +114,199 @@ Business Objects: ${JSON.stringify(base.business_obj)}
 
 Actors: ${JSON.stringify(base.actor_fields)}
 
-Treat the supplied information as the initial discovery context, not necessarily a complete business specification.
+Treat the supplied information as the primary source of truth. Preserve supplied actor identities and business-object definitions. Derive additional details only when reasonably supported by the context.
 
-Preserve the supplied domain, niche, object definitions, and actor identities. Identify malformed, contradictory, incomplete, or ambiguous input where relevant.
+Distinguish explicitly supplied information from derived or inferred information.
 
-## 3. Business Context Analysis
+## 3. Actor Responsibilities
 
-Understand the business context represented by the supplied domain, niche, business objects, and actors.
+For every supplied actor, identify its business purpose, responsibilities, and contribution to business outcomes.
 
-Determine:
-
-- The primary business purpose and expected outcomes.
-- The operating model and major business activities reasonably implied by the inputs.
-- The purpose and significance of each supplied business object.
-- The business interactions suggested by the supplied actors and objects.
-- Dependencies or relationships that appear necessary to explain the supplied business context.
-
-Separate explicit facts from reasoned inferences and unresolved assumptions.
-
-Do not invent additional business objects, actors, regulatory obligations, or business rules merely because they are common in the industry.
-
-If missing information materially affects discovery, identify it as a candidate question.
-
-## 4. Actor Responsibility Discovery
-
-For every supplied actor, derive its business purpose, responsibilities, and relationship to business outcomes.
-
-Determine:
+Determine, where supported:
 
 - Primary responsibilities and supporting activities.
 - Business outcomes the actor owns, influences, or contributes to.
-- Activities the actor initiates, performs, monitors, reviews, approves, or authorizes.
-- Business objects involved in those responsibilities.
-- Other actors or systems with which the actor collaborates.
-- Decisions the actor is expected or authorized to make, where supported by the context.
+- Activities the actor initiates, performs, monitors, reviews, or supports.
+- Relevant business objects.
+- Collaboration with other supplied actors.
+- Decisions the actor makes as part of its responsibilities.
 - Boundaries between the actor's responsibilities and those of other actors.
 
-Distinguish responsibility, accountability, participation, ownership, and authorization.
+Distinguish responsibility, accountability, participation, and ownership.
 
-Do not assume that an actor can approve an action merely because the actor performs it. Do not assign authority solely from the actor's name or title.
+Do not infer decision authority merely from an actor's name or job title. Do not assign responsibilities that have no reasonable basis in the supplied context.
 
-## 5. Actor–Business Object Relationship Discovery
+## 4. Actor–Business Object Relationships
 
-Evaluate the meaningful relationships between every actor and the supplied business objects.
+Identify meaningful relationships between supplied actors and supplied business objects.
 
-Determine whether the actor:
+Determine whether an actor, where supported by the context:
 
-- Owns or is accountable for the object.
-- Creates or initiates the object.
-- Reads, searches, monitors, or reports on the object.
-- Modifies particular information on the object.
-- Reviews, validates, approves, rejects, or executes actions involving the object.
-- Receives an object or becomes responsible for it through an assignment or handover.
-- Produces information or evidence associated with the object.
-- Has no justified relationship with the object.
+- Owns or is accountable for an object.
+- Creates or initiates an object.
+- Views, searches, monitors, or reports on an object.
+- Updates or maintains object information.
+- Reviews, validates, approves, rejects, or processes an object.
+- Receives or manages an object through assignment or handover.
+- Produces information or evidence associated with an object.
 
-For each meaningful relationship, explain the business purpose and distinguish confirmed relationships from inferred relationships.
+For each relationship, explain its business purpose and identify the relationship as SUPPLIED, DERIVED, or INFERRED.
 
-Do not assign every actor a relationship with every object. Do not treat an object's existence as evidence that a particular actor may access or modify it.
+Include only justified relationships. Do not create every possible actor–object combination, and do not assume that a relationship implies unrestricted access or modification authority.
 
-If a relationship is necessary to establish a process but remains unclear, generate a discovery question.
+Use the exact supplied actor and business-object names wherever possible.
 
-## 6. Actor Information and Data Requirements
+## 5. Actor Information Requirements
 
-Derive the information required for actors to perform their responsibilities.
+Identify the information each actor needs to perform their responsibilities.
 
-Consider, when relevant:
+Consider relevant information such as:
 
-- Identity and profile attributes.
+- Actor identity and profile details.
 - Organizational affiliation and role assignments.
-- Responsibilities, authority, and approval limits.
-- Operational assignments, availability, and working context.
-- Relationships with business objects.
-- Information required to perform or validate an activity.
-- Relevant activity history, evidence, and audit records.
+- Operational responsibilities and assignments.
+- Information needed to perform business activities.
+- Relevant relationships with business objects.
+- Information needed to review decisions or monitor outcomes.
+- Activity history and supporting evidence, where justified.
 
-For each proposed attribute, identify its business purpose, source, and classification as supplied, derived, inferred, or requiring confirmation.
+For each information requirement, specify the attribute, its business purpose, and its source or derivation.
 
-Keep actor attributes distinct from business-object attributes.
+Keep actor information requirements separate from business-object attributes. Do not automatically copy business-object fields into an actor record.
 
-Do not automatically copy business-object fields into an actor's database record. Do not infer write permissions from the presence of a field.
+Do not invent unnecessary personal information, credentials, or sensitive attributes. Do not assume that information an actor needs to view must be stored directly in the actor's database record.
 
-Do not invent sensitive personal information, credentials, or unnecessary data collection requirements.
+Use SUPPLIED, DERIVED, INFERRED, or REQUIRES_CONFIRMATION to describe the information requirement's evidence status.
 
-When field structure, ownership, source of truth, or data access cannot be established reliably, record the uncertainty for resolution.
+## 6. Business Activities
 
-## 7. Actor Capability and Authorization Discovery
+Identify business activities reasonably supported by the supplied actors, responsibilities, and business objects.
 
-Derive business capabilities from actor responsibilities and business-object relationships.
+For each activity, determine as much as the evidence supports:
 
-Classify capabilities into:
-
-1. **Can View:** information the actor needs and is authorized to access.
-2. **Can Create:** objects or records the actor may initiate or create.
-3. **Can Change:** specific attributes or business information the actor may modify.
-4. **Can Execute:** business operations or process actions the actor may perform.
-5. **Can Review or Approve:** decisions the actor may make when supported by the business context.
-
-For each meaningful capability, establish:
-
-- Actor.
-- Target business object.
-- Operation or decision.
-- Business purpose.
-- Record, organizational, geographic, or assignment scope.
-- Preconditions and relevant business-state restrictions.
-- Required validations and approvals.
-- Expected business outcome.
-- Prohibited actions or authorization boundaries.
-- Failure and exception handling where discoverable.
-
-Distinguish viewing permission from modification permission, operational responsibility from approval authority, and a proposed action from an executed action.
-
-Treat calculated metrics, audit records, system-controlled fields, and externally managed information as potentially restricted. Do not make them writable without a justified business rule.
-
-Do not invent approval thresholds, segregation-of-duty rules, or policy requirements. Generate questions when these decisions materially affect the application.
-
-## 8. Business Activity and Process Participation Discovery
-
-Identify business activities reasonably supported by the actors, responsibilities, objects, and relationships.
-
-For each activity, derive as much of the following as the available evidence supports:
-
-- Activity name and purpose.
-- Initiating actor or event.
-- Participating and accountable actors.
+- Activity name and business purpose.
+- Trigger or initiating event.
+- Initiating actor.
+- Participating actors.
+- Accountable actor, when established.
 - Relevant business objects.
-- Required input information.
+- Required inputs.
 - Preconditions and validations.
-- Business operation or decision.
-- Resulting output or evidence.
-- Expected business outcome.
-- Resulting state change, if established.
-- Subsequent activities and dependencies.
-- Alternative outcomes, exceptions, and recovery actions.
+- Business actions and decisions.
+- Outputs and expected outcomes.
+- Resulting business-object state changes, where established.
+- Dependencies on other activities.
+- Alternative outcomes and exceptions.
+- Recovery actions, where supported.
+
+Connect activities only when a business dependency or outcome justifies the connection.
+
+Do not create arbitrary sequences from actor names or object lists. Do not invent lifecycle states, transitions, approval rules, cancellation behavior, retries, or recovery procedures.
+
+Use SUPPLIED, DERIVED, INFERRED, or REQUIRES_CONFIRMATION to distinguish the evidence supporting each activity.
+
+## 7. Mandatory JSON Output Structure
+
+Return exactly one valid JSON object using the following four top-level keys and no others:
+
+{
+  "actor_responsibilities": [
+    {
+      "actor": "",
+      "purpose": "",
+      "responsibilities": [
+        {
+          "responsibility": "",
+          "business_outcome": "",
+          "responsibility_type": "PERFORMS",
+          "related_business_objects": [],
+          "collaborating_actors": [],
+          "evidence_status": "INFERRED"
+        }
+      ]
+    }
+  ],
+  "actor_business_object_relationships": [
+    {
+      "actor": "",
+      "object": "",
+      "relationship_type": "OPERATES",
+      "business_purpose": "",
+      "permitted_interactions": [],
+      "evidence_status": "INFERRED"
+    }
+  ],
+  "actor_information_requirements": [
+    {
+      "actor": "",
+      "attributes": [
+        {
+          "attribute": "",
+          "purpose": "",
+          "source": "",
+          "evidence_status": "REQUIRES_CONFIRMATION"
+        }
+      ]
+    }
+  ],
+  "business_activities": [
+    {
+      "activity_id": "ACT001",
+      "activity_name": "",
+      "business_purpose": "",
+      "trigger": "",
+      "initiating_actor": "",
+      "participating_actors": [],
+      "accountable_actor": null,
+      "business_objects": [],
+      "inputs": [],
+      "preconditions": [],
+      "actions": [],
+      "decisions": [],
+      "outputs": [],
+      "expected_outcome": "",
+      "state_changes": [],
+      "dependencies": [],
+      "alternative_outcomes": [],
+      "exceptions": [],
+      "recovery_actions": [],
+      "evidence_status": "INFERRED"
+    }
+  ]
+}
+
+## 8. JSON Contract and Output Rules
+
+- Return exactly one JSON object with the four specified top-level keys.
+- Do not add any other top-level keys or sections.
+- Do not output Markdown fences, explanations, comments, or prose outside the JSON object.
+- Use the exact field names and value types shown in the schema.
+- Use arrays for collections. Use empty arrays when no supported items exist.
+- Use null only for nullable fields, such as accountable_actor when accountability is not established.
+- Use empty strings only when a required string field cannot be established; never fabricate a value to fill it.
+- Use consistent evidence_status values: SUPPLIED, DERIVED, INFERRED, REQUIRES_CONFIRMATION.
+- Use concise, meaningful business descriptions rather than generic filler.
+- Preserve supplied actor and business-object names consistently across all four sections.
+- Reference only supplied actors unless the input explicitly establishes additional actors.
+- Reference supplied business objects accurately. Do not invent objects to complete a workflow.
+- Keep activity IDs unique and ensure dependency references point to existing activity IDs.
+- Do not duplicate records unnecessarily across arrays.
+- Include only meaningful, context-supported records. Do not generate placeholder records simply to populate the schema.
+- An empty array is preferable to invented business knowledge.
+- Do not treat inferred relationships or activities as confirmed business rules.
+- Ensure valid JSON syntax, correct escaping, properly closed arrays and objects, and no trailing commas.
+- Prioritize completing a syntactically valid JSON object within the generation limit. Reduce unnecessary detail rather than truncating the output.
 
-Connect activities into business journeys only where the dependencies and business outcomes support the connection.
+## 9. Final Objective
 
-Do not construct a process by arbitrarily ordering capabilities or actor names. Do not invent lifecycle states, transitions, cancellation rules, retry policies, or compensation behavior.
+Produce a concise, internally consistent business knowledge model containing only:
 
-When the activity is known but its sequence, decision authority, preconditions, or outcome remains unclear, generate a targeted question.
+1. Actor responsibilities.
+2. Actor–business-object relationships.
+3. Actor information requirements.
+4. Business activities.
 
-## 9. Intelligent Business Discovery Question Generation
-
-This is a mandatory stage of the discovery process.
-
-Act as an adaptive business discovery interviewer. Your task is to discover the minimum set of high-value questions required to resolve material uncertainty and enable accurate application-flow generation.
-
-Do not merely provide a generic questionnaire. Generate questions from the actual supplied context and the gaps identified during analysis.
-
-### 9.1 Establish What Is Already Known
-
-Before generating questions:
-
-- Identify facts explicitly established by the inputs.
-- Derive conclusions that follow reliably from those facts.
-- Identify reasonable but unconfirmed inferences.
-- Identify missing, ambiguous, contradictory, or unsupported business knowledge.
-
-Do not ask a question when the answer is already explicitly available or can be derived reliably without making a material assumption.
-
-### 9.2 Identify Consequential Unknowns
-
-Evaluate whether unresolved information affects:
-
-- Actor responsibilities or accountability.
-- Ownership and access to business objects.
-- Creation, modification, validation, or approval authority.
-- Business activity triggers and preconditions.
-- Decisions and decision ownership.
-- Lifecycle states and permitted transitions.
-- Dependencies between business objects.
-- Ordering, sequencing, and synchronization requirements.
-- Business validations and constraints.
-- Alternate journeys and exception handling.
-- Failure recovery, retries, cancellation, or compensating actions.
-- External integrations, events, or handovers.
-- Data ownership, source of truth, and required evidence.
-- Security, privacy, financial controls, or regulatory constraints when relevant.
-
-These are analytical dimensions, not a mandatory list of questions. Ask only about uncertainties that matter to the supplied business context.
-
-### 9.3 Generate Context-Specific Questions
-
-For each consequential unknown, generate a clear, answerable business question.
-
-A good question must:
-
-- Reference the relevant actor, business object, activity, or decision.
-- Identify the specific uncertainty being resolved.
-- Explain why the answer affects the business process or generated application.
-- Avoid assuming an answer or prescribing a particular implementation.
-- Distinguish business policy decisions from technical design choices.
-- Avoid combining unrelated decisions into one question.
-
-For example, if the supplied context establishes an order and a delivery actor but does not establish failed-delivery handling, a useful question might be:
-
-"What business outcome should occur when the assigned delivery partner cannot complete delivery, and which actor is authorized to decide the next action?"
-
-This is illustrative only. Derive actual questions from the supplied context rather than automatically reusing this example.
-
-### 9.4 Prioritize Questions by Value
-
-Prioritize questions using:
-
-- Business impact if unresolved.
-- Number and importance of downstream activities affected.
-- Whether the uncertainty blocks process or authorization derivation.
-- Risk of generating an incorrect application behavior.
-- Whether one answer resolves multiple related uncertainties.
-
-Use these priority levels:
-
-- **Critical:** prevents reliable derivation of a core responsibility, authorization boundary, or essential process.
-- **High:** materially changes business behavior, lifecycle transitions, decisions, or exception handling.
-- **Medium:** improves completeness or precision but does not necessarily block the next stage.
-- **Low:** optional refinement with limited impact on flow correctness.
-
-Do not inflate question counts. Prefer a small number of high-value questions over many generic ones.
-
-### 9.5 Offer Answer Options Where Useful
-
-Where the business decision has a reasonably identifiable set of alternatives, provide concise suggested options and allow an "Other" or free-text response.
-
-Do not present the options as exhaustive unless that is justified by the supplied context.
-
-Do not fabricate policies or imply that one option is the default business rule.
-
-Where the answer requires a business owner's judgment, explicitly identify it as a business decision rather than something the model can safely determine.
-
-### 9.6 Discover Question Dependencies
-
-Identify dependencies between questions.
-
-For example, a decision about who authorizes an operation may need to be resolved before its approval workflow can be derived. A lifecycle decision may affect multiple actor permissions and downstream activities.
-
-Ask upstream questions before dependent questions when their answers materially change the latter.
-
-Where one answer resolves multiple uncertainties, update all affected parts of the model rather than asking redundant questions.
-
-### 9.7 Record Questions and Their Resolution Status
-
-For each question, produce:
-
-- question_id
-- question
-- discovery_area
-- affected_actors
-- affected_business_objects
-- related_activities
-- uncertainty_or_gap
-- reason_for_asking
-- impact_if_unresolved
-- priority
-- answer_type
-- suggested_options
-- dependent_question_ids
-- resolution_status
-
-Use an answer type appropriate to the question, such as single choice, multiple choice, Boolean, structured input, or free text.
-
-Use a consistent resolution status, such as OPEN, ANSWERED, CONFIRMED, INFERRED_PENDING_CONFIRMATION, or BLOCKED.
-
-Do not fabricate answers to open questions.
-
-## 10. Adaptive Question-and-Answer Loop
-
-When answers are supplied in a subsequent discovery interaction:
-
-1. Match each answer to its corresponding question.
-2. Determine which uncertainty the answer resolves.
-3. Update the relevant actor responsibilities, object relationships, data requirements, capabilities, activities, or business rules.
-4. Check the answer against the supplied context and previously confirmed decisions.
-5. Identify contradictions or new dependencies.
-6. Generate follow-up questions only for newly exposed, consequential unknowns.
-7. Re-evaluate downstream conclusions affected by the answer.
-8. Preserve unanswered questions and assumptions requiring confirmation.
-
-Never ask the same question again when its answer has already been provided and remains applicable.
-
-Do not silently override the supplied business context when an answer conflicts with it. Identify the conflict and request clarification where necessary.
-
-If answers are not yet available, return the initial discovery model and prioritized questions. Do not pretend that the discovery is complete.
-
-## 11. Cross-Model Consistency and Gap Validation
-
-Validate consistency across:
-
-- Domain and niche.
-- Business objects.
-- Actors and responsibilities.
-- Actor–object relationships.
-- Actor information requirements.
-- Capabilities and authorization boundaries.
-- Activities and business-process participation.
-- Business decisions and lifecycle behavior.
-- Discovery questions and their resolution status.
-
-Identify:
-
-- Actors with no justified responsibilities.
-- Responsibilities without relevant business-object relationships.
-- Objects with unexplained ownership or interactions.
-- Capabilities without a clear business purpose.
-- Conflicting permissions or decision authorities.
-- Activities with missing inputs, preconditions, or outcomes.
-- Process dependencies that cannot be established.
-- Unsupported lifecycle transitions.
-- Unresolved business decisions that block flow generation.
-- Inferences that materially affect business behavior but remain unconfirmed.
-
-For each finding, provide a concise problem statement, affected entities, business impact, proposed resolution, and whether business confirmation is required.
-
-Do not silently fill gaps with conventional industry assumptions.
-
-## 12. Final Output Structure
-
-Return the discovery results in the following sections.
-
-### A. Business Context
-
-Summarize the supplied domain, niche, business purpose, and key outcomes.
-
-### B. Actor Responsibility Model
-
-For each actor, describe its purpose, responsibilities, accountable outcomes, decisions, and collaboration.
-
-### C. Actor–Business Object Relationship Model
-
-Identify meaningful relationships, relationship types, business purposes, and evidence or inference status.
-
-### D. Actor Information Requirements
-
-Identify required actor attributes, their purposes, sources, and confirmation status.
-
-### E. Capability and Authorization Model
-
-Describe viewing, creation, modification, execution, review, and approval capabilities, including scope, conditions, restrictions, and unresolved authorization questions.
-
-### F. Business Activity and Process Participation Model
-
-Describe supported activities, actors, objects, triggers, preconditions, decisions, outcomes, dependencies, and known exceptions.
-
-### G. Intelligent Discovery Questions
-
-Return prioritized, context-specific questions with answer types, suggested options where appropriate, affected entities, reasons, dependencies, and resolution status.
-
-Present the highest-priority questions first.
-
-### H. Consistency Findings and Unresolved Gaps
-
-Identify contradictions, missing relationships, unsupported assumptions, and issues affecting downstream application-flow generation.
-
-### I. Application-Flow Readiness
-
-Classify the discovery as:
-
-- READY: sufficient validated knowledge exists for the intended flow-generation scope.
-- READY_WITH_ASSUMPTIONS: flows can be generated, but specified non-blocking assumptions remain.
-- BLOCKED: critical business decisions remain unresolved and prevent reliable flow generation.
-
-Provide the specific evidence for the readiness classification. Do not classify discovery as ready solely because all sections have been populated.
-
-## 13. Output and Reasoning Constraints
-
-- Use the supplied domain, niche, business objects, and actors as the primary source of context.
-- Keep the methodology domain-agnostic and the findings business-specific.
-- Do not hardcode actor lists, object lists, process templates, or expected coverage counts.
-- Do not invent business rules, authorization policies, data attributes, lifecycle states, or regulatory obligations.
-- Clearly distinguish supplied facts, reliable derivations, unconfirmed inferences, and unresolved questions.
-- Prefer precise, actionable findings over lengthy generic descriptions.
-- Optimize question quality and downstream impact, not question quantity.
-- Ensure that answers can be incorporated into subsequent discovery stages without losing their relationship to the original question.
-- Return valid JSON conforming to the consuming application's required schema when machine-readable output is required. Use consistent field names and data types, represent unknown values explicitly, and do not add prose outside the JSON structure.
-
-The final objective is not merely to describe actors or generate permissions. It is to construct a validated business knowledge model, ask the right questions to resolve consequential uncertainty, and prepare the resulting knowledge for reliable application-flow generation.
+These four outputs must provide reliable business context for subsequent application-flow generation without inventing unsupported business behavior.
 
 `;
 
