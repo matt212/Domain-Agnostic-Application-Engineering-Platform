@@ -1,0 +1,107 @@
+
+You are an expert in domain-agnostic business analysis, data modelling, access control, and actor authorization discovery.
+
+INPUTS
+
+Domain: Quick Commerce (Q-Commerce)
+
+Niche: Hyperlocal Grocery Delivery
+
+Actor Database Field Structures: "{\n  \"actors\": [\n    {\n      \"actor_name\": \"Customer\",\n      \"fields\": [\n        \"customer_id\",\n        \"first_name\",\n        \"last_name\",\n        \"email_address\",\n        \"phone_number\",\n        \"current_address\",\n        \"billing_address\",\n        \"preferred_delivery_address\",\n        \"delivery_instructions\",\n        \"payment_method_id\",\n        \"payment_method_type\",\n        \"last_four_digits\",\n        \"loyalty_points_balance\",\n        \"membership_tier\",\n        \"subscription_status\",\n        \"preferred_store_id\",\n        \"dietary_restrictions\",\n        \"allergies\",\n        \"average_order_value\",\n        \"order_frequency\",\n        \"rating_history\",\n        \"created_at\",\n        \"last_active_at\"\n      ]\n    },\n    {\n      \"actor_name\": \"Store Partner\",\n      \"fields\": [\n        \"partner_id\",\n        \"partner_name\",\n        \"partner_type\",\n        \"base_address\",\n        \"operating_hours_start\",\n        \"operating_hours_end\",\n        \"license_number\",\n        \"food_safety_certification_id\",\n        \"service_area_coordinates\",\n        \"service_radius_meters\",\n        \"onboarding_status\",\n        \"commission_rate\",\n        \"delivery_fee_markup\",\n        \"inventory_sync_status\",\n        \"average_response_time\",\n        \"peak_capacity\",\n        \"active_sku_count\",\n        \"registration_date\",\n        \"termination_reason\"\n      ]\n    },\n    {\n      \"actor_name\": \"Platform Operator\",\n      \"fields\": [\n        \"platform_id\",\n        \"company_name\",\n        \"api_key\",\n        \"api_secret\",\n        \"merchant_account_id\",\n        \"advertising_account_id\",\n        \"subscription_plan\",\n        \"revenue_share_percentage\",\n        \"delivery_fee_margin\",\n        \"commission_schedule_id\",\n        \"data_retention_policy_id\",\n        \"compliance_officer_id\",\n        \"support_ticket_id\",\n        \"brand_logo_url\",\n        \"app_store_id\",\n        \"play_store_id\",\n        \"domain_name\",\n        \"created_at\",\n        \"active_status\"\n      ]\n    },\n    {\n      \"actor_name\": \"Delivery Partner\",\n      \"fields\": [\n        \"partner_id\",\n        \"partner_name\",\n        \"partner_type\",\n        \"vehicle_type\",\n        \"vehicle_plate_number\",\n        \"vehicle_license_plate\",\n        \"vehicle_insurance_policy_id\",\n        \"base_station_id\",\n        \"current_location_lat\",\n        \"current_location_lng\",\n        \"current_status\",\n        \"current_route_id\",\n        \"available_slots_count\",\n        \"rating_score\",\n        \"total_deliveries\",\n        \"avg_delivery_time\",\n        \"active_shift_start\",\n        \"active_shift_end\",\n        \"hire_date\",\n        \"termination_date\",\n        \"compliance_status\"\n      ]\n    },\n    {\n      \"actor_name\": \"Merchandiser\",\n      \"fields\": [\n        \"employee_id\",\n        \"employee_name\",\n        \"employee_type\",\n        \"store_id\",\n        \"shift_id\",\n        \"current_location_lat\",\n        \"current_location_lng\",\n        \"current_task_id\",\n        \"task_status\",\n        \"task_type\",\n        \"task_priority\",\n        \"start_time\",\n        \"end_time\",\n        \"completion_status\",\n        \"quality_score\",\n        \"break_status\",\n        \"assignment_id\",\n        \"hire_date\",\n        \"termination_date\",\n        \"shift_schedule_id\"\n      ]\n    },\n    {\n      \"actor_name\": \"Payment Provider\",\n      \"fields\": [\n        \"provider_id\",\n        \"provider_name\",\n        \"acquirer_id\",\n        \"routing_number\",\n        \"merchant_acceptance_code\",\n        \"payment_gateway_url\",\n        \"api_endpoint_url\",\n        \"api_version\",\n        \"currency_code\",\n        \"transaction_fee_rate\",\n        \"settlement_frequency\",\n        \"settlement_cutoff_time\",\n        \"account_number_masked\",\n        \"card_network_id\",\n        \"fraud_detection_enabled\",\n        \"compliance_officer_id\",\n        \"registration_date\",\n        \"active_status\"\n      ]\n    },\n    {\n      \"actor_name\": \"Regulatory Authority\",\n      \"fields\": [\n        \"authority_id\",\n        \"authority_name\",\n        \"jurisdiction_type\",\n        \"jurisdiction_region\",\n        \"jurisdiction_state\",\n        \"jurisdiction_country\",\n        \"food_safety_regulation_code\",\n        \"labor_law_code\",\n        \"registration_requirement_id\",\n        \"license_requirement_id\",\n        \"inspection_schedule_id\",\n        \"compliance_deadline\",\n        \"reporting_frequency\",\n        \"enforcement_agency_id\",\n        \"contact_email\",\n        \"contact_phone\",\n        \"established_date\",\n        \"active_status\"\n      ]\n    }\n  ]\n}\n\n"
+
+TASK
+
+For every actor in the supplied actor database field structures, independently derive a comprehensive, domain-specific authorization model covering:
+
+1. What_They_Can_See
+2. What_They_Can_Create
+3. What_They_Can_Change
+4. Operations_They_Can_Run
+
+Use the domain, niche, each actor's identity and function, its supplied database fields, and relevant industry knowledge to determine what information the actor should be able to access, what records or information it can create, what existing information it can change, and what business operations it can execute.
+
+WHAT_THE_ACTOR_CAN_SEE
+
+Discover all information, fields, records, and business data the actor may legitimately view within the application ecosystem. Determine the scope and granularity of access dynamically, including information belonging to the actor, information associated with its responsibilities, and other information required for its legitimate business activities. Identify relevant ownership, relationships, organizational boundaries, and access restrictions where applicable.
+
+WHAT_THE_ACTOR_CAN_CREATE
+
+Discover all relevant records, information, and business entities the actor may legitimately create. Identify the specific information or records created and any applicable business conditions, relationships, or authorization constraints. Do not assume that the ability to view information implies permission to create it.
+
+WHAT_THE_ACTOR_CAN_CHANGE
+
+Discover all relevant existing fields, attributes, records, and business information the actor may legitimately change. Identify individual fields wherever independently changeable, and describe the permitted changes in functional business language. Distinguish direct field updates from changes that require validation, approval, or controlled business operations. Do not assume that every field in the actor's database structure is editable by that actor.
+
+OPERATIONS_THE_ACTOR_CAN_RUN
+
+Discover the business operations the actor may legitimately execute within the domain and niche. Describe each operation in functional business language, including its purpose, affected information or entities, applicable conditions, and authorization boundaries. Derive operations dynamically from the business context rather than treating database field updates as equivalent to operational permissions.
+
+DISCOVERY REQUIREMENTS
+
+Derive all actors' permissions independently from the domain, niche, supplied field structures, and relevant industry knowledge. Do not hardcode permission categories beyond the four required output sections, field names, business entities, operations, or actor-to-permission mappings.
+
+Consider the complete application ecosystem and the actor's legitimate business responsibilities. Do not restrict discovery to the supplied fields when identifying relevant access, creation, change, or operational capabilities; however, do not invent unsupported domain features or assume an authorization is established merely because it appears reasonable.
+
+Distinguish between:
+- Capabilities supported directly by the supplied inputs.
+- Capabilities inferred from domain or industry knowledge that require business validation.
+
+Apply least-privilege reasoning. Do not grant unrestricted access, creation, modification, or operational authority without justification. Account for sensitive information, separation of duties, ownership, organizational scope, and approval requirements where relevant to the domain.
+
+Avoid duplicate, contradictory, overly broad, or redundant permissions. Make each permission specific enough to be implemented and tested. Where field-level access is appropriate, identify the relevant field names from the supplied structures. Preserve the distinction between viewing information, creating records, changing existing information, and executing business operations.
+
+OUTPUT
+
+Return valid JSON only, using this structure:
+
+{
+  "actors": [
+    {
+      "actor_name": "Exact actor name from input",
+      "access_authorization_and_scope": {
+        "What_They_Can_See": [
+          {
+            "capability": "Specific view or read permission",
+            "scope": "Applicable data or ownership scope",
+          }
+        ],
+        "What_They_Can_Create": [
+          {
+            "capability": "Specific creation permission", 
+          }
+        ],
+        "What_They_Can_Change": [
+          {
+            "capability": "Specific change permission",
+            "fields": [
+              "exact_field_name"
+            ],
+            
+          }
+        ],
+        "Operations_They_Can_Run": [
+          {
+            "operation": "Specific business operation",
+            "purpose": "Business purpose",
+            "conditions": [
+              "Applicable condition or constraint"
+            ],
+            
+          }
+        ]
+      }
+    }
+  ]
+}
+
+OUTPUT RULES
+
+- Include every distinct actor in the supplied field structures.
+- Preserve actor names and supplied field names exactly.
+- Populate all four permission sections for each actor.
+- Use "Supported by supplied context" only when the inputs directly support the capability and its relevance to the actor.
+- Do not claim that inferred permissions are already implemented or authorized.
+- Do not impose fixed permission counts or hardcode actor-specific capabilities.
+- Return empty arrays when no relevant capabilities can reasonably be identified.
+- Return valid JSON without Markdown fences or additional commentary.
+

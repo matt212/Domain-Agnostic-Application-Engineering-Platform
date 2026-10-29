@@ -1,0 +1,110 @@
+
+You are an expert in domain-agnostic business analysis, data modelling, access control, and actor authorization discovery.
+
+INPUTS
+
+Domain: Quick Commerce (Q-Commerce)
+
+Niche: Hyperlocal Grocery Delivery
+
+Actor Database Field Structures: "{\n  \"actors\": [\n    {\n      \"actor_name\": \"Customer\",\n      \"fields\": [\n        \"user_id\",\n        \"email_address\",\n        \"mobile_number\",\n        \"first_name\",\n        \"last_name\",\n        \"profile_picture_url\",\n        \"preferred_language\",\n        \"preferred_delivery_time_window\",\n        \"preferred_delivery_address\",\n        \"primary_delivery_address\",\n        \"alternate_delivery_addresses\",\n        \"email_verified_status\",\n        \"phone_verified_status\",\n        \"payment_method_id\",\n        \"default_payment_method\",\n        \"payment_method_expiry_date\",\n        \"subscription_status\",\n        \"loyalty_points_balance\",\n        \"loyalty_program_member\",\n        \"membership_tier\",\n        \"created_at\",\n        \"last_login_at\",\n        \"email_preferences\",\n        \"sms_preferences\",\n        \"notification_settings\"\n      ]\n    },\n    {\n      \"actor_name\": \"Store Partner\",\n      \"fields\": [\n        \"partner_id\",\n        \"store_name\",\n        \"store_code\",\n        \"business_registration_number\",\n        \"legal_entity_name\",\n        \"contact_person_name\",\n        \"contact_person_role\",\n        \"contact_email\",\n        \"contact_phone_number\",\n        \"store_address\",\n        \"primary_address\",\n        \"alternate_addresses\",\n        \"pin_code\",\n        \"geographic_zone\",\n        \"operational_status\",\n        \"contract_start_date\",\n        \"contract_end_date\",\n        \"commission_rate\",\n        \"minimum_order_value\",\n        \"inventory_management_system_id\",\n        \"tax_id\",\n        \"gst_number\",\n        \"bank_account_number\",\n        \"ifsc_code\",\n        \"onboarding_status\",\n        \"verification_status\",\n        \"rating_score\",\n        \"total_orders_fulfilled\",\n        \"total_revenue_generated\",\n        \"created_at\",\n        \"last_active_at\",\n        \"business_license_expiry_date\",\n        \"insurance_policy_number\"\n      ]\n    },\n    {\n      \"actor_name\": \"Merchandiser\",\n      \"fields\": [\n        \"employee_id\",\n        \"full_name\",\n        \"email_address\",\n        \"department\",\n        \"region_id\",\n        \"zone_id\",\n        \"role_title\",\n        \"reporting_manager_id\",\n        \"hiring_date\",\n        \"employment_status\",\n        \"current_zone_assignments\",\n        \"product_catalog_access_level\",\n        \"pricing_authorization_limit\",\n        \"assortment_authorization_limit\",\n        \"performance_review_cycle\",\n        \"last_performance_review_date\",\n        \"current_rating\",\n        \"training_completion_status\",\n        \"certifications\",\n        \"created_at\",\n        \"last_login_at\",\n        \"active_project_ids\",\n        \"assigned_store_ids\"\n      ]\n    },\n    {\n      \"actor_name\": \"Delivery Partner\",\n      \"fields\": [\n        \"partner_id\",\n        \"delivery_agent_id\",\n        \"full_name\",\n        \"email_address\",\n        \"mobile_number\",\n        \"profile_picture_url\",\n        \"vehicle_type\",\n        \"vehicle_license_plate\",\n        \"vehicle_registration_number\",\n        \"vehicle_insurance_policy_number\",\n        \"vehicle_insurance_expiry_date\",\n        \"vehicle_inspection_status\",\n        \"address_on_file\",\n        \"pin_code\",\n        \"current_geographic_zone\",\n        \"delivery_license_number\",\n        \"license_expiry_date\",\n        \"license_status\",\n        \"onboarding_status\",\n        \"verification_status\",\n        \"payment_account_number\",\n        \"bank_account_number\",\n        \"ifsc_code\",\n        \"commission_rate\",\n        \"rating_score\",\n        \"total_deliveries_completed\",\n        \"average_delivery_time\",\n        \"created_at\",\n        \"last_active_at\",\n        \"current_route\",\n        \"shift_schedule\",\n        \"vehicle_inspection_due_date\"\n      ]\n    },\n    {\n      \"actor_name\": \"Platform Operator\",\n      \"fields\": [\n        \"employee_id\",\n        \"full_name\",\n        \"email_address\",\n        \"department\",\n        \"role_title\",\n        \"access_level\",\n        \"zone_access_rights\",\n        \"store_access_rights\",\n        \"catalog_edit_access\",\n        \"financial_settlement_access\",\n        \"system_admin_status\",\n        \"two_factor_authentication_enabled\",\n        \"last_password_change_date\",\n        \"mfa_device_id\",\n        \"created_at\",\n        \"last_login_at\",\n        \"assigned_systems\",\n        \"emergency_contact_email\",\n        \"security_clearance_level\"\n      ]\n    },\n    {\n      \"actor_name\": \"Payment Provider\",\n      \"fields\": [\n        \"provider_id\",\n        \"company_name\",\n        \"legal_entity_name\",\n        \"registration_number\",\n        \"contact_person_name\",\n        \"contact_email\",\n        \"contact_phone_number\",\n        \"registered_address\",\n        \"pin_code\",\n        \"bank_account_number\",\n        \"ifsc_code\",\n        \"swift_code\",\n        \"acsr_code\",\n        \"payment_gateway_id\",\n        \"currency_supported\",\n        \"transaction_fee_percentage\",\n        \"transaction_fee_fixed_amount\",\n        \"settlement_cycle_days\",\n        \"fraud_detection_algorithm_version\",\n        \"risk_score_threshold\",\n        \"compliance_certificate_number\",\n        \"compliance_expiry_date\",\n        \"agreement_start_date\",\n        \"agreement_end_date\",\n        \"onboarding_status\",\n        \"verification_status\",\n        \"created_at\",\n        \"last_sync_at\"\n      ]\n    },\n    {\n      \"actor_name\": \"Regulatory Authority\",\n      \"fields\": [\n        \"authority_id\",\n        \"authority_name\",\n        \"jurisdiction_type\",\n        \"jurisdiction_level\",\n        \"contact_person_name\",\n        \"contact_email\",\n        \"contact_phone_number\",\n        \"registered_address\",\n        \"pin_code\",\n        \"regulatory_division_id\",\n        \"specialization\",\n        \"current_regulatory_framework_version\",\n        \"food_safety_standards_version\",\n        \"labor_laws_version\",\n        \"tax_compliance_law_version\",\n        \"inspection_schedule_next\",\n        \"penalty_amount_threshold_low\",\n        \"penalty_amount_threshold_high\",\n        \"compliance_notification_email\",\n        \"public_contact_email\",\n        \"created_at\",\n        \"last_active_at\",\n        \"active_cases\",\n        \"pending_audits\",\n        \"jurisdiction_effective_date\"\n      ]\n    }\n  ]\n}\n\n"
+
+TASK
+
+For every actor in the supplied actor database field structures, independently derive a comprehensive, domain-specific authorization model covering:
+
+1. What_They_Can_See
+2. What_They_Can_Create
+3. What_They_Can_Change
+4. Operations_They_Can_Run
+
+Use the domain, niche, each actor's identity and function, its supplied database fields, and relevant industry knowledge to determine what information the actor should be able to access, what records or information it can create, what existing information it can change, and what business operations it can execute.
+
+WHAT_THE_ACTOR_CAN_SEE
+
+Discover all information, fields, records, and business data the actor may legitimately view within the application ecosystem. Determine the scope and granularity of access dynamically, including information belonging to the actor, information associated with its responsibilities, and other information required for its legitimate business activities. Identify relevant ownership, relationships, organizational boundaries, and access restrictions where applicable.
+
+WHAT_THE_ACTOR_CAN_CREATE
+
+Discover all relevant records, information, and business entities the actor may legitimately create. Identify the specific information or records created and any applicable business conditions, relationships, or authorization constraints. Do not assume that the ability to view information implies permission to create it.
+
+WHAT_THE_ACTOR_CAN_CHANGE
+
+Discover all relevant existing fields, attributes, records, and business information the actor may legitimately change. Identify individual fields wherever independently changeable, and describe the permitted changes in functional business language. Distinguish direct field updates from changes that require validation, approval, or controlled business operations. Do not assume that every field in the actor's database structure is editable by that actor.
+
+OPERATIONS_THE_ACTOR_CAN_RUN
+
+Discover the business operations the actor may legitimately execute within the domain and niche. Describe each operation in functional business language, including its purpose, affected information or entities, applicable conditions, and authorization boundaries. Derive operations dynamically from the business context rather than treating database field updates as equivalent to operational permissions.
+
+DISCOVERY REQUIREMENTS
+
+Derive all actors' permissions independently from the domain, niche, supplied field structures, and relevant industry knowledge. Do not hardcode permission categories beyond the four required output sections, field names, business entities, operations, or actor-to-permission mappings.
+
+Consider the complete application ecosystem and the actor's legitimate business responsibilities. Do not restrict discovery to the supplied fields when identifying relevant access, creation, change, or operational capabilities; however, do not invent unsupported domain features or assume an authorization is established merely because it appears reasonable.
+
+Distinguish between:
+- Capabilities supported directly by the supplied inputs.
+- Capabilities inferred from domain or industry knowledge that require business validation.
+
+Apply least-privilege reasoning. Do not grant unrestricted access, creation, modification, or operational authority without justification. Account for sensitive information, separation of duties, ownership, organizational scope, and approval requirements where relevant to the domain.
+
+Avoid duplicate, contradictory, overly broad, or redundant permissions. Make each permission specific enough to be implemented and tested. Where field-level access is appropriate, identify the relevant field names from the supplied structures. Preserve the distinction between viewing information, creating records, changing existing information, and executing business operations.
+
+OUTPUT
+
+Return valid JSON only, using this structure:
+
+{
+  "actors": [
+    {
+      "actor_name": "Exact actor name from input",
+      "access_authorization_and_scope": {
+        "What_They_Can_See": [
+          {
+            "capability": "Specific view or read permission",
+            "scope": "Applicable data or ownership scope",
+            "validation_status": "Requires business validation"
+          }
+        ],
+        "What_They_Can_Create": [
+          {
+            "capability": "Specific creation permission",
+            "validation_status": "Requires business validation"
+          }
+        ],
+        "What_They_Can_Change": [
+          {
+            "capability": "Specific change permission",
+            "fields": [
+              "exact_field_name"
+            ],
+            "validation_status": "Requires business validation"
+          }
+        ],
+        "Operations_They_Can_Run": [
+          {
+            "operation": "Specific business operation",
+            "purpose": "Business purpose",
+            "conditions": [
+              "Applicable condition or constraint"
+            ],
+            "validation_status": "Requires business validation"
+          }
+        ]
+      }
+    }
+  ]
+}
+
+OUTPUT RULES
+
+- Include every distinct actor in the supplied field structures.
+- Preserve actor names and supplied field names exactly.
+- Populate all four permission sections for each actor.
+- Use "Supported by supplied context" only when the inputs directly support the capability and its relevance to the actor.
+- Use "Requires business validation" when the capability or authorization is inferred or remains uncertain.
+- Do not claim that inferred permissions are already implemented or authorized.
+- Do not impose fixed permission counts or hardcode actor-specific capabilities.
+- Return empty arrays when no relevant capabilities can reasonably be identified.
+- Return valid JSON without Markdown fences or additional commentary.
+

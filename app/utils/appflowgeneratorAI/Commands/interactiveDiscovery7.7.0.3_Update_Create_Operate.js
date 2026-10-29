@@ -13,12 +13,12 @@ let CONFIG = {
     PROJECT_ROOT: path.resolve(__dirname, '../../../../'),
     OUTPUT_RELATIVE_DIR: 'app/utils/appflowgeneratorAI/aiOutput/baseline/',
     TMP_RELATIVE_DIR: 'app/utils/appflowgeneratorAI/promptFile',
-    EXPORT_PREFIX: '7.7.1 GAPS_Actors_Roles_Resonsibility_Authorization'
+    EXPORT_PREFIX: '7.7.1.1.GAPS_Actors_Roles_Resonsibility_Authorization'
   },
   MODEL: {
     EXEC_BINARY: 'llama-cli',
-    //IDENTIFIER: 'unsloth/Qwen3.5-9B-GGUF',
-    IDENTIFIER: 'unsloth/Qwen3.5-4B-GGUF',
+    IDENTIFIER: 'unsloth/Qwen3.5-9B-GGUF',
+   // IDENTIFIER: 'unsloth/Qwen3.5-4B-GGUF',
    // IDENTIFIER: 'unsloth/Qwen3.5-9B-MTP-GGUF',
     
     NGL: '0',
@@ -30,7 +30,9 @@ let CONFIG = {
   
   SCANNING_PATTERNS: {
     STAGE_1_OBJECTS: "7.6 Business Objects.24-10-26_06:41pm.md",
-    STAGE_2_ACTORS: "7.7 Actors_Roles_Resonsibility_Authorization.28-10-26_01:35pm-REF.md",
+    //STAGE_2_ACTORS: "7.7.1 .database Fields.md",
+    STAGE_2_ACTORS: "7.7.1 Actors_DatabaseFields.29-10-26_05:41pm.md",
+    
     STAGE_3_JOURNEYS: "3.Final-End-to-End-Actor-Journeys-",
    // STAGE_4_TOPOLOGY: "6.swimlane_systems_architecture_map_14-10-26_04_09", 
     STAGE_4_TOPOLOGY:"8.6.3.Final.mermaid-diagram-20-10-26_11_54.md",
@@ -81,7 +83,7 @@ function formatPromptInput(value) {
 
 
 const pass1Prompt = `
-You are an expert in domain-agnostic business analysis and database field discovery.
+You are an expert in domain-agnostic business analysis, data modelling, access control, and actor authorization discovery.
 
 INPUTS
 
@@ -89,15 +91,48 @@ Domain: ${base.domain}
 
 Niche: ${base.niche}
 
-Actor Names and Journey Data: ${JSON.stringify(base.actor_journey_review)}
+Actor Database Field Structures: ${JSON.stringify(base.actor_fields)}
 
 TASK
 
-Extract the distinct actor names from the supplied actor journey data and use only those names to identify which actors require field discovery.
+For every actor in the supplied actor database field structures, independently derive a comprehensive, domain-specific authorization model covering:
 
-For each actor, independently discover and list every applicable database field required to represent that actor within the supplied domain and niche, using relevant industry knowledge and domain understanding.
+1. What_They_Can_See
+2. What_They_Can_Create
+3. What_They_Can_Change
+4. Operations_They_Can_Run
 
-Derive all field names exclusively from the domain, niche, and your own analysis. Do not use the actor journey data to derive, restrict, or infer database fields. Do not assume that all actors share the same fields. Identify a comprehensive set of fields specific to each actor, including less obvious and seemingly minor fields, without hardcoding field names or imposing a fixed field count.
+Use the domain, niche, each actor's identity and function, its supplied database fields, and relevant industry knowledge to determine what information the actor should be able to access, what records or information it can create, what existing information it can change, and what business operations it can execute.
+
+WHAT_THE_ACTOR_CAN_SEE
+
+Discover all information, fields, records, and business data the actor may legitimately view within the application ecosystem. Determine the scope and granularity of access dynamically, including information belonging to the actor, information associated with its responsibilities, and other information required for its legitimate business activities. Identify relevant ownership, relationships, organizational boundaries, and access restrictions where applicable.
+
+WHAT_THE_ACTOR_CAN_CREATE
+
+Discover all relevant records, information, and business entities the actor may legitimately create. Identify the specific information or records created and any applicable business conditions, relationships, or authorization constraints. Do not assume that the ability to view information implies permission to create it.
+
+WHAT_THE_ACTOR_CAN_CHANGE
+
+Discover all relevant existing fields, attributes, records, and business information the actor may legitimately change. Identify individual fields wherever independently changeable, and describe the permitted changes in functional business language. Distinguish direct field updates from changes that require validation, approval, or controlled business operations. Do not assume that every field in the actor's database structure is editable by that actor.
+
+OPERATIONS_THE_ACTOR_CAN_RUN
+
+Discover the business operations the actor may legitimately execute within the domain and niche. Describe each operation in functional business language, including its purpose, affected information or entities, applicable conditions, and authorization boundaries. Derive operations dynamically from the business context rather than treating database field updates as equivalent to operational permissions.
+
+DISCOVERY REQUIREMENTS
+
+Derive all actors' permissions independently from the domain, niche, supplied field structures, and relevant industry knowledge. Do not hardcode permission categories beyond the four required output sections, field names, business entities, operations, or actor-to-permission mappings.
+
+Consider the complete application ecosystem and the actor's legitimate business responsibilities. Do not restrict discovery to the supplied fields when identifying relevant access, creation, change, or operational capabilities; however, do not invent unsupported domain features or assume an authorization is established merely because it appears reasonable.
+
+Distinguish between:
+- Capabilities supported directly by the supplied inputs.
+- Capabilities inferred from domain or industry knowledge that require business validation.
+
+Apply least-privilege reasoning. Do not grant unrestricted access, creation, modification, or operational authority without justification. Account for sensitive information, separation of duties, ownership, organizational scope, and approval requirements where relevant to the domain.
+
+Avoid duplicate, contradictory, overly broad, or redundant permissions. Make each permission specific enough to be implemented and tested. Where field-level access is appropriate, identify the relevant field names from the supplied structures. Preserve the distinction between viewing information, creating records, changing existing information, and executing business operations.
 
 OUTPUT
 
@@ -106,27 +141,53 @@ Return valid JSON only, using this structure:
 {
   "actors": [
     {
-      "actor_name": "Exact actor name extracted from input",
-      "fields": [
-        "field_name"
-      ]
+      "actor_name": "Exact actor name from input",
+      "access_authorization_and_scope": {
+        "What_They_Can_See": [
+          {
+            "capability": "Specific view or read permission",
+            "scope": "Applicable data or ownership scope",
+          }
+        ],
+        "What_They_Can_Create": [
+          {
+            "capability": "Specific creation permission", 
+          }
+        ],
+        "What_They_Can_Change": [
+          {
+            "capability": "Specific change permission",
+            "fields": [
+              "exact_field_name"
+            ],
+            
+          }
+        ],
+        "Operations_They_Can_Run": [
+          {
+            "operation": "Specific business operation",
+            "purpose": "Business purpose",
+            "conditions": [
+              "Applicable condition or constraint"
+            ],
+            
+          }
+        ]
+      }
     }
   ]
 }
 
 OUTPUT RULES
 
-- Include every distinct actor identified in the supplied actor journey data.
-- Preserve actor names exactly as supplied.
-- Derive fields independently for each actor from the domain and niche.
-- List database field names only, using consistent snake_case naming.
-- Include each field only once per actor.
-- Do not include data types, descriptions, capabilities, permissions, examples, or lifecycle information.
-- Do not hardcode field names, field lists, or actor-to-field mappings.
-- Do not impose a fixed number of fields.
-- Do not include commentary or Markdown fences.
-
-Return valid JSON only.
+- Include every distinct actor in the supplied field structures.
+- Preserve actor names and supplied field names exactly.
+- Populate all four permission sections for each actor.
+- Use "Supported by supplied context" only when the inputs directly support the capability and its relevance to the actor.
+- Do not claim that inferred permissions are already implemented or authorized.
+- Do not impose fixed permission counts or hardcode actor-specific capabilities.
+- Return empty arrays when no relevant capabilities can reasonably be identified.
+- Return valid JSON without Markdown fences or additional commentary.
 
 `;
 
@@ -200,7 +261,7 @@ let base ={
   domain:cleanJsonArray1.primarydataset.domain,
   niche:cleanJsonArray1.primarydataset.niche,
   business_obj:cleanJsonArray1.mainContent,
-  actor_journey_review:objectsActorsContent
+  actor_fields:objectsActorsContent
   //topologyExistingPreciseContent:getmermaidcontent()
 }
 
