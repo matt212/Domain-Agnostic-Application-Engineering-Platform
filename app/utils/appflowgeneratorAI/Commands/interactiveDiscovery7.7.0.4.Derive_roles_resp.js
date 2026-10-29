@@ -13,7 +13,7 @@ let CONFIG = {
     PROJECT_ROOT: path.resolve(__dirname, '../../../../'),
     OUTPUT_RELATIVE_DIR: 'app/utils/appflowgeneratorAI/aiOutput/baseline/',
     TMP_RELATIVE_DIR: 'app/utils/appflowgeneratorAI/promptFile',
-    EXPORT_PREFIX: '7.7.1.1.GAPS_Actors_Roles_Resonsibility_Authorization'
+    EXPORT_PREFIX: '7.7.0.4.Derive_Actors_Roles_Resonsibility_Authorization'
   },
   MODEL: {
     EXEC_BINARY: 'llama-cli',
@@ -22,8 +22,11 @@ let CONFIG = {
    // IDENTIFIER: 'unsloth/Qwen3.5-9B-MTP-GGUF',
     
     NGL: '0',
-    MAX_TOKENS: '12288',         
-    BATCH_SIZE: '12288', 
+    
+   CONTEXT_SIZE: '22288',
+  MAX_OUTPUT_TOKENS: '24096',
+  BATCH_SIZE: '12048',
+
     THREADS: '8',       
     REASONING_MODE: 'off'
   },
@@ -498,19 +501,32 @@ The final objective is not merely to describe actors or generate permissions. It
     fs.mkdirSync(path.dirname(promptTmpPath1), { recursive: true });
     fs.writeFileSync(promptTmpPath1, pass1Prompt, 'utf8');
 
+    // const execArgsPass1 = [
+    //   '-hf', CONFIG.MODEL.IDENTIFIER,
+    //   '-ngl', CONFIG.MODEL.NGL,
+    //   '--single-turn',
+    //   '-c', CONFIG.MODEL.MAX_TOKENS, 
+    //   '-b', CONFIG.MODEL.BATCH_SIZE, 
+    //   '-t', CONFIG.MODEL.THREADS,     
+    //   '--reasoning', CONFIG.MODEL.REASONING_MODE,
+    //   '--log-disable', 
+    //   '-n', CONFIG.MODEL.MAX_TOKENS,
+    //   '-f', promptTmpPath1,
+    //    '-o', finalTargetFilePath 
+    // ];
     const execArgsPass1 = [
-      '-hf', CONFIG.MODEL.IDENTIFIER,
-      '-ngl', CONFIG.MODEL.NGL,
-      '--single-turn',
-      '-c', CONFIG.MODEL.MAX_TOKENS, 
-      '-b', CONFIG.MODEL.BATCH_SIZE, 
-      '-t', CONFIG.MODEL.THREADS,     
-      '--reasoning', CONFIG.MODEL.REASONING_MODE,
-      '--log-disable', 
-      '-n', CONFIG.MODEL.MAX_TOKENS,
-      '-f', promptTmpPath1,
-       '-o', finalTargetFilePath 
-    ];
+  '-hf', CONFIG.MODEL.IDENTIFIER,
+  '-ngl', CONFIG.MODEL.NGL,
+  '--single-turn',
+  '-c', CONFIG.MODEL.CONTEXT_SIZE,
+  '-b', CONFIG.MODEL.BATCH_SIZE,
+  '-t', CONFIG.MODEL.THREADS,
+  '--reasoning', CONFIG.MODEL.REASONING_MODE,
+  '--log-disable',
+  '-n', CONFIG.MODEL.MAX_OUTPUT_TOKENS,
+  '-f', promptTmpPath1,
+  '-o', finalTargetFilePath
+];
 
     console.log(`\n⚡ Running Pass 1: Pure data-driven state discovery...`);
     
