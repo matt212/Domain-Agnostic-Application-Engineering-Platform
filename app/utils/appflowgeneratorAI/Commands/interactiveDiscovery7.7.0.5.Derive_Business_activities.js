@@ -13,7 +13,7 @@ let CONFIG = {
     PROJECT_ROOT: path.resolve(__dirname, '../../../../'),
     OUTPUT_RELATIVE_DIR: 'app/utils/appflowgeneratorAI/aiOutput/baseline/',
     TMP_RELATIVE_DIR: 'app/utils/appflowgeneratorAI/promptFile',
-    EXPORT_PREFIX: '7.7.0.5.Derive_Actors_Roles_Resonsibility_Authorization'
+    EXPORT_PREFIX: '7.7.0.5.Derive_ACTOR_BUSINESS_OBJECT_RELATIONSHIP'
   },
   MODEL: {
     EXEC_BINARY: 'llama-cli',
