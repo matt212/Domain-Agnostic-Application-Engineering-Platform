@@ -22,11 +22,9 @@ let CONFIG = {
    // IDENTIFIER: 'unsloth/Qwen3.5-9B-MTP-GGUF',
     
     NGL: '0',
-    
-   CONTEXT_SIZE: '22288',
-  MAX_OUTPUT_TOKENS: '24096',
-  BATCH_SIZE: '12048',
-
+   CONTEXT_SIZE: '12288',
+  MAX_OUTPUT_TOKENS: '4096',
+  BATCH_SIZE: '1024',
     THREADS: '8',       
     REASONING_MODE: 'off'
   },
@@ -87,24 +85,15 @@ function formatPromptInput(value) {
 
 
 const pass1Prompt = `
-# Business Discovery: Actor Responsibilities, Data Requirements and Activities
+# Business Context & Actor Responsibility Discovery
 
-## 1. Role and Objective
+## 1. Role
 
-Act as a senior business analyst, domain specialist, and business-process architect.
+Act as a senior business analyst, domain specialist and business operating model architect with expertise in identifying organisational roles, business responsibilities and operational accountability.
 
-Analyze the supplied domain, niche, business objects, and actors to derive four outputs:
+Analyse the supplied domain, niche, business objects and actors to discover the business operating model, with particular emphasis on identifying the responsibilities of every business actor.
 
-1. Actor responsibilities.
-2. Actor–business-object relationships.
-3. Actor information requirements.
-4. Business activities and process participation.
-
-Determine who is responsible for what, which business objects they work with, what information they require, and which activities they perform.
-
-Use a domain-agnostic methodology. Derive business-specific results from the supplied context. Do not invent actors, business objects, business rules, or unsupported workflows.
-
-## 2. Input Context
+## 2. Input
 
 Domain: ${base.domain}
 
@@ -112,202 +101,174 @@ Niche: ${base.niche}
 
 Business Objects: ${JSON.stringify(base.business_obj)}
 
-Actors: ${JSON.stringify(base.actor_fields)}
+Actors: ${JSON.stringify(base.actors)}
 
-Treat the supplied information as the primary source of truth. Preserve supplied actor identities and business-object definitions. Derive additional details only when reasonably supported by the context.
+## 3. Primary Objective
 
-Distinguish explicitly supplied information from derived or inferred information.
+Discover a coherent business operating model with two interconnected dimensions:
 
-## 3. Actor Responsibilities
+1. **Business Context:** Establish what business is being modelled, what it does, how it operates and what business outcomes it delivers.
+2. **Actor Responsibilities — Primary Focus:** Identify what every supplied actor is responsible for, why those responsibilities exist, what business functions they support, what they actually do and what business outcomes they deliver.
 
-For every supplied actor, identify its business purpose, responsibilities, and contribution to business outcomes.
+Business context provides the foundation for actor discovery. Actor responsibility discovery must receive the greatest analytical attention and detail.
 
-Determine, where supported:
+## 4. Business Context Discovery
 
-- Primary responsibilities and supporting activities.
-- Business outcomes the actor owns, influences, or contributes to.
-- Activities the actor initiates, performs, monitors, reviews, or supports.
-- Relevant business objects.
-- Collaboration with other supplied actors.
-- Decisions the actor makes as part of its responsibilities.
-- Boundaries between the actor's responsibilities and those of other actors.
+Analyse the domain, niche and business objects to establish:
 
-Distinguish responsibility, accountability, participation, and ownership.
+1. What specific business is represented?
+2. What is its primary business purpose?
+3. What products or services does it provide?
+4. Who are its customers and principal business participants?
+5. What business model does it operate?
+6. What are its major business functions?
+7. What business outcomes does it deliver?
 
-Do not infer decision authority merely from an actor's name or job title. Do not assign responsibilities that have no reasonable basis in the supplied context.
+Build a concise business description that establishes the context for identifying actor responsibilities.
 
-## 4. Actor–Business Object Relationships
+## 5. Actor Responsibility Discovery — Highest Priority
 
-Identify meaningful relationships between supplied actors and supplied business objects.
+Analyse **every supplied actor individually and in relation to the complete business context**.
 
-Determine whether an actor, where supported by the context:
+Do not limit the analysis to the actor's name or literal description. Determine its actual business role using the domain, niche, business functions and supplied business objects.
 
-- Owns or is accountable for an object.
-- Creates or initiates an object.
-- Views, searches, monitors, or reports on an object.
-- Updates or maintains object information.
-- Reviews, validates, approves, rejects, or processes an object.
-- Receives or manages an object through assignment or handover.
-- Produces information or evidence associated with an object.
+For each actor, perform the following discovery:
 
-For each relationship, explain its business purpose and identify the relationship as SUPPLIED, DERIVED, or INFERRED.
+### A. Actor Identification
 
-Include only justified relationships. Do not create every possible actor–object combination, and do not assume that a relationship implies unrestricted access or modification authority.
+- What does the actor represent within the business?
+- Is it a human role, organisational entity, external organisation, internal system or automated process?
+- What is its business purpose?
+- Why is its participation necessary for the business to operate?
 
-Use the exact supplied actor and business-object names wherever possible.
+### B. Responsibility Identification
 
-## 5. Actor Information Requirements
+Identify the actor's distinct business responsibilities.
 
-Identify the information each actor needs to perform their responsibilities.
+Ask:
 
-Consider relevant information such as:
+- What business functions is this actor responsible for?
+- What business responsibilities does it own or perform?
+- What business activities does it initiate or execute as part of those responsibilities?
+- What operational, administrative, commercial or service responsibilities does it perform?
+- What information, resources or business objects does it manage as part of its responsibilities?
+- What business decisions or operational judgements does it make?
+- What business results is it expected to produce?
+- What ongoing responsibilities does it have throughout the business operation?
 
-- Actor identity and profile details.
-- Organizational affiliation and role assignments.
-- Operational responsibilities and assignments.
-- Information needed to perform business activities.
-- Relevant relationships with business objects.
-- Information needed to review decisions or monitor outcomes.
-- Activity history and supporting evidence, where justified.
+Discover responsibilities that are genuinely relevant to the actor. Do not restrict the actor to a single responsibility simply because its input description is brief.
 
-For each information requirement, specify the attribute, its business purpose, and its source or derivation.
+### C. Responsibility Boundaries
 
-Keep actor information requirements separate from business-object attributes. Do not automatically copy business-object fields into an actor record.
+For each responsibility, establish:
 
-Do not invent unnecessary personal information, credentials, or sensitive attributes. Do not assume that information an actor needs to view must be stored directly in the actor's database record.
+- What is the actor directly responsible for?
+- Does it own the responsibility, execute it, coordinate it, maintain it, monitor it or support another actor?
+- Which other actors contribute to the same business function?
+- Where does its responsibility begin and end?
+- What responsibilities belong to other actors instead?
+- Are multiple actors performing different parts of the same responsibility?
 
-Use SUPPLIED, DERIVED, INFERRED, or REQUIRES_CONFIRMATION to describe the information requirement's evidence status.
+Clearly distinguish business ownership, execution and supporting participation.
 
-## 6. Business Activities
+### D. Business Purpose and Outcomes
 
-Identify business activities reasonably supported by the supplied actors, responsibilities, and business objects.
+For every identified responsibility:
 
-For each activity, determine as much as the evidence supports:
+- Why does the responsibility exist?
+- Which business function does it support?
+- What business outcome does it produce or contribute to?
+- How does it contribute to the overall business purpose?
+- What would be affected if this responsibility were not performed?
 
-- Activity name and business purpose.
-- Trigger or initiating event.
-- Initiating actor.
-- Participating actors.
-- Accountable actor, when established.
-- Relevant business objects.
-- Required inputs.
-- Preconditions and validations.
-- Business actions and decisions.
-- Outputs and expected outcomes.
-- Resulting business-object state changes, where established.
-- Dependencies on other activities.
-- Alternative outcomes and exceptions.
-- Recovery actions, where supported.
+Each responsibility must have a meaningful business justification and outcome.
 
-Connect activities only when a business dependency or outcome justifies the connection.
+### E. Actor Coverage and Completeness
 
-Do not create arbitrary sequences from actor names or object lists. Do not invent lifecycle states, transitions, approval rules, cancellation behavior, retries, or recovery procedures.
+After analysing all actors:
 
-Use SUPPLIED, DERIVED, INFERRED, or REQUIRES_CONFIRMATION to distinguish the evidence supporting each activity.
+- Ensure every supplied actor has been evaluated.
+- Identify the meaningful responsibilities associated with each actor.
+- Ensure major business functions are represented through the responsibilities of relevant actors.
+- Identify responsibility overlaps and distinguish the contributions of each actor.
+- Avoid leaving an actor with generic or superficial responsibilities when its business role implies more specific duties.
+- Do not invent additional actors to fill responsibility gaps.
+- Do not force responsibilities onto an actor when they do not logically belong to it.
 
-## 7. Mandatory JSON Output Structure
+## 6. Reasoning Requirements
 
-Return exactly one valid JSON object using the following four top-level keys and no others:
+- Use domain and niche knowledge to understand how the business actually operates.
+- Use supplied business objects as evidence of the business's operational scope and as clues for identifying actor responsibilities.
+- Consider the complete input collectively rather than analysing each actor in isolation.
+- Derive responsibilities from business purpose, business functions, actor identity and operational context.
+- Preserve every supplied actor name exactly.
+- Distinguish organisations from the human roles and systems operating within them.
+- Distinguish responsibility ownership from task execution and support.
+- Avoid generic responsibilities that could apply to any organisation.
+- Avoid duplicating responsibilities across actors without explaining their distinct roles.
+- Do not confuse responsibilities with individual process steps, system features, job titles or business outcomes.
+- Make reasonable business deductions rather than simply repeating the input.
+- Do not invent arbitrary operational arrangements or unsupported business rules.
+- Prioritise accurate actor responsibility coverage over unnecessary business-context detail.
+
+## 7. Required JSON Output
+
+Return exactly this structure:
 
 {
+  "business_context": {
+    "domain": "",
+    "niche": "",
+    "business_description": "",
+    "business_purpose": "",
+    "products_and_services": [],
+    "customer_and_business_participants": [],
+    "business_model": "",
+    "business_functions": [],
+    "business_outcomes": []
+  },
   "actor_responsibilities": [
     {
       "actor": "",
-      "purpose": "",
+      "actor_type": "",
+      "business_purpose": "",
       "responsibilities": [
         {
           "responsibility": "",
-          "business_outcome": "",
-          "responsibility_type": "PERFORMS",
-          "related_business_objects": [],
-          "collaborating_actors": [],
-          "evidence_status": "INFERRED"
+          "responsibility_description": "",
+          "business_function": "",
+          "role_in_responsibility": "",
+          "business_purpose": "",
+          "business_outcome": ""
         }
       ]
-    }
-  ],
-  "actor_business_object_relationships": [
-    {
-      "actor": "",
-      "object": "",
-      "relationship_type": "OPERATES",
-      "business_purpose": "",
-      "permitted_interactions": [],
-      "evidence_status": "INFERRED"
-    }
-  ],
-  "actor_information_requirements": [
-    {
-      "actor": "",
-      "attributes": [
-        {
-          "attribute": "",
-          "purpose": "",
-          "source": "",
-          "evidence_status": "REQUIRES_CONFIRMATION"
-        }
-      ]
-    }
-  ],
-  "business_activities": [
-    {
-      "activity_id": "ACT001",
-      "activity_name": "",
-      "business_purpose": "",
-      "trigger": "",
-      "initiating_actor": "",
-      "participating_actors": [],
-      "accountable_actor": null,
-      "business_objects": [],
-      "inputs": [],
-      "preconditions": [],
-      "actions": [],
-      "decisions": [],
-      "outputs": [],
-      "expected_outcome": "",
-      "state_changes": [],
-      "dependencies": [],
-      "alternative_outcomes": [],
-      "exceptions": [],
-      "recovery_actions": [],
-      "evidence_status": "INFERRED"
     }
   ]
 }
 
-## 8. JSON Contract and Output Rules
+## 8. Output Validation
 
-- Return exactly one JSON object with the four specified top-level keys.
-- Do not add any other top-level keys or sections.
-- Do not output Markdown fences, explanations, comments, or prose outside the JSON object.
-- Use the exact field names and value types shown in the schema.
-- Use arrays for collections. Use empty arrays when no supported items exist.
-- Use null only for nullable fields, such as accountable_actor when accountability is not established.
-- Use empty strings only when a required string field cannot be established; never fabricate a value to fill it.
-- Use consistent evidence_status values: SUPPLIED, DERIVED, INFERRED, REQUIRES_CONFIRMATION.
-- Use concise, meaningful business descriptions rather than generic filler.
-- Preserve supplied actor and business-object names consistently across all four sections.
-- Reference only supplied actors unless the input explicitly establishes additional actors.
-- Reference supplied business objects accurately. Do not invent objects to complete a workflow.
-- Keep activity IDs unique and ensure dependency references point to existing activity IDs.
-- Do not duplicate records unnecessarily across arrays.
-- Include only meaningful, context-supported records. Do not generate placeholder records simply to populate the schema.
-- An empty array is preferable to invented business knowledge.
-- Do not treat inferred relationships or activities as confirmed business rules.
-- Ensure valid JSON syntax, correct escaping, properly closed arrays and objects, and no trailing commas.
-- Prioritize completing a syntactically valid JSON object within the generation limit. Reduce unnecessary detail rather than truncating the output.
+- Return one valid JSON object only.
+- Include exactly two top-level sections: business_context and actor_responsibilities.
+- Preserve all supplied actor names.
+- Include all specified fields.
+- Use arrays for collections.
+- Provide distinct, meaningful and sufficiently detailed responsibilities for each actor.
+- Ensure every responsibility has a clear business purpose and outcome.
+- Ensure actor responsibilities collectively make sense within the discovered business context.
+- Avoid generic, duplicate or contradictory responsibilities.
+- Do not create additional actors.
+- Do not include evidence classifications, confidence labels, unresolved questions or assumptions.
+- Do not discover object relationships, information requirements, workflows, process sequences, permissions or authorisation models.
+- Do not include commentary or Markdown fences outside the JSON.
 
 ## 9. Final Objective
 
-Produce a concise, internally consistent business knowledge model containing only:
+Produce a business operating model that clearly establishes the business context and, most importantly, provides a comprehensive and meaningful discovery of who is responsible for what within that business.
 
-1. Actor responsibilities.
-2. Actor–business-object relationships.
-3. Actor information requirements.
-4. Business activities.
+The actor responsibility output must explain each actor's business purpose, distinct responsibilities, contribution to business functions, responsibility boundaries and expected business outcomes.
 
-These four outputs must provide reliable business context for subsequent application-flow generation without inventing unsupported business behavior.
-
+Actor responsibility coverage, accuracy and business relevance take priority over descriptive detail in the business context.
 `;
 
     fs.mkdirSync(path.dirname(promptTmpPath1), { recursive: true });
