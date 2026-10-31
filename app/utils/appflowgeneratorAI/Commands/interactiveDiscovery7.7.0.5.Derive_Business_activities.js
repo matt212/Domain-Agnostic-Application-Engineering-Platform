@@ -22,9 +22,9 @@ let CONFIG = {
    // IDENTIFIER: 'unsloth/Qwen3.5-9B-MTP-GGUF',
     
     NGL: '0',
-   CONTEXT_SIZE: '10384',
-  MAX_OUTPUT_TOKENS: '5192',
-  BATCH_SIZE: '1024',
+   CONTEXT_SIZE: '16384',
+  MAX_OUTPUT_TOKENS: '6192',
+  BATCH_SIZE: '2024',
     THREADS: '8',       
     REASONING_MODE: 'off'
   },
