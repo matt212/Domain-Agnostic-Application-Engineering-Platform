@@ -1,21 +1,20 @@
 /**
  * ============================================================================
  * INFORMATION REQUIREMENTS DISCOVERY
- * Domain-agnostic, bounded Qwen generation with validated JSON continuation.
+ * Domain-agnostic, single-pass Qwen discovery of information requirement names.
  * ============================================================================
  */
 
 const fs = require('fs');
 const path = require('path');
 const { execFile } = require('child_process');
-const crypto = require('crypto');
 
 const CONFIG = {
   PATHS: {
     PROJECT_ROOT: path.resolve(__dirname, '../../../../'),
     OUTPUT_RELATIVE_DIR: 'app/utils/appflowgeneratorAI/aiOutput/baseline/',
     TMP_RELATIVE_DIR: 'app/utils/appflowgeneratorAI/promptFile',
-    EXPORT_PREFIX: '7.7.0.7.Derive_Derive_Information_Requirements'
+    EXPORT_PREFIX: '7.7.0.8.Derive_Information_Requirements'
   },
 
   MODEL: {
@@ -30,12 +29,8 @@ const CONFIG = {
   },
 
   DISCOVERY: {
-    // Maximum number of NEW requirements requested from Qwen per response.
-    REQUIREMENTS_PER_GENERATION: 5,
-
-    // Stop with an error rather than loop forever if Qwen repeatedly
-    // reports more work but produces no new requirements.
-    MAX_CONSECUTIVE_EMPTY_GENERATIONS: 2
+    // One model call only. No continuation loop or model-controlled stopping.
+    SINGLE_GENERATION: true
   },
 
   SCANNING_PATTERNS: {
@@ -55,8 +50,14 @@ const CONFIG = {
 function runLlamaGeneration(prompt, generationNumber, tempDirectory) {
   return new Promise((resolve, reject) => {
     const stamp = `${Date.now()}_${generationNumber}`;
-    const promptPath = path.join(tempDirectory, `information_requirements_prompt_${stamp}.txt`);
-    const responsePath = path.join(tempDirectory, `information_requirements_response_${stamp}.json`);
+    const promptPath = path.join(
+      tempDirectory,
+      `information_requirements_prompt_${stamp}.txt`
+    );
+    const responsePath = path.join(
+      tempDirectory,
+      `information_requirements_response_${stamp}.json`
+    );
 
     fs.mkdirSync(tempDirectory, { recursive: true });
     fs.writeFileSync(promptPath, prompt, 'utf8');
@@ -77,7 +78,7 @@ function runLlamaGeneration(prompt, generationNumber, tempDirectory) {
 
     console.log(`\n⚡ Information Requirements generation ${generationNumber}`);
     console.log(`   Model: ${CONFIG.MODEL.IDENTIFIER}`);
-    console.log(`   Maximum new requirements: ${CONFIG.DISCOVERY.REQUIREMENTS_PER_GENERATION}`);
+    console.log('   Mode: single-pass information requirement discovery');
 
     execFile(
       CONFIG.MODEL.EXEC_BINARY,
@@ -138,13 +139,10 @@ function parseJsonResponse(rawResponse, generationNumber) {
   const text = String(rawResponse || '').trim();
 
   if (!text) {
-    throw new Error(
-      `Generation ${generationNumber}: empty model response.`
-    );
+    throw new Error(`Generation ${generationNumber}: empty model response.`);
   }
 
   const candidates = [];
-
   let start = -1;
   let depth = 0;
   let insideString = false;
@@ -160,46 +158,35 @@ function parseJsonResponse(rawResponse, generationNumber) {
         insideString = false;
         escaped = false;
       }
-
       continue;
     }
 
     if (insideString) {
-      if (escaped) {
-        escaped = false;
-      } else if (char === '\\') {
-        escaped = true;
-      } else if (char === '"') {
-        insideString = false;
-      }
-
+      if (escaped) escaped = false;
+      else if (char === '\\') escaped = true;
+      else if (char === '"') insideString = false;
       continue;
     }
 
-    if (char === '"') {
-      insideString = true;
-    } else if (char === '{') {
-      depth++;
-    } else if (char === '}') {
+    if (char === '"') insideString = true;
+    else if (char === '{') depth++;
+    else if (char === '}') {
       depth--;
 
       if (depth === 0) {
-        const candidateText = text.slice(start, i + 1);
-
         try {
-          const candidate = JSON.parse(candidateText);
+          const candidate = JSON.parse(text.slice(start, i + 1));
 
           if (
             candidate &&
             !Array.isArray(candidate) &&
             typeof candidate === 'object' &&
-            Array.isArray(candidate.information_requirements) &&
-            typeof candidate.more_to_discover === 'boolean'
+            Array.isArray(candidate.information_requirements)
           ) {
             candidates.push(candidate);
           }
         } catch (_) {
-          // Ignore invalid JSON candidates.
+          // Ignore malformed JSON candidates; a complete valid object is required.
         }
 
         start = -1;
@@ -209,7 +196,7 @@ function parseJsonResponse(rawResponse, generationNumber) {
 
   if (candidates.length === 0) {
     throw new Error(
-      `Generation ${generationNumber}: no complete valid information_requirements JSON object found.`
+      `Generation ${generationNumber}: no complete valid information_requirements JSON object found. The response may be truncated.`
     );
   }
 
@@ -219,48 +206,46 @@ function parseJsonResponse(rawResponse, generationNumber) {
 const REQUIREMENT_FIELDS = [
   'information_requirement',
   'description',
-  'business_purpose',
-  'required_by_actors',
-  'related_responsibilities',
-  'related_activities',
-  'related_business_objects',
-  'information_usage',
-  'information_source',
-  'business_decisions_supported',
-  'required_information_details'
+  'business_purpose'
 ];
 
 function validateRequirement(requirement, generationNumber, index) {
-  if (!requirement || typeof requirement !== 'object' || Array.isArray(requirement)) {
+  if (
+    !requirement ||
+    typeof requirement !== 'object' ||
+    Array.isArray(requirement)
+  ) {
     throw new Error(
       `Generation ${generationNumber}, requirement ${index + 1}: invalid object.`
     );
   }
 
   for (const field of REQUIREMENT_FIELDS) {
-    if (!(field in requirement)) {
+    if (
+      typeof requirement[field] !== 'string' ||
+      !requirement[field].trim()
+    ) {
       throw new Error(
-        `Generation ${generationNumber}, requirement ${index + 1}: missing "${field}".`
+        `Generation ${generationNumber}, requirement ${index + 1}: "${field}" must be a non-empty string.`
       );
     }
+  }
 
-    if (Array.isArray(requirement[field])) {
-      if (!requirement[field].every(value => typeof value === 'string')) {
-        throw new Error(
-          `Generation ${generationNumber}, requirement ${index + 1}: "${field}" must contain strings only.`
-        );
-      }
-    } else if (typeof requirement[field] !== 'string') {
-      throw new Error(
-        `Generation ${generationNumber}, requirement ${index + 1}: "${field}" must be a string.`
-      );
-    }
+  // Keep the final catalogue limited to the three agreed properties.
+  const unexpectedFields = Object.keys(requirement).filter(
+    field => !REQUIREMENT_FIELDS.includes(field)
+  );
+
+  if (unexpectedFields.length > 0) {
+    console.warn(
+      `   Requirement ${index + 1}: ignoring unexpected fields: ${unexpectedFields.join(', ')}`
+    );
   }
 }
 
 /**
- * Local exact-name deduplication is a final safeguard.
- * Semantic deduplication is also instructed in every Qwen continuation prompt.
+ * Normalize requirement names for deterministic duplicate removal.
+ * Semantic duplicate avoidance is handled by the discovery prompt.
  */
 function normalizeRequirementName(value) {
   return String(value || '')
@@ -271,376 +256,419 @@ function normalizeRequirementName(value) {
 }
 
 /**
- * Send a compact index of prior model-generated requirements.
- * This data is derived only from previously validated Qwen responses.
- * It is not a hardcoded scope, category, actor list or discovery checklist.
+ * Build the single-pass prompt. Qwen discovers only the requirement name,
+ * description and business purpose; enrichment is deliberately deferred.
  */
-function buildPreviouslyDiscoveredIndex(requirements) {
-  return requirements.map(item => ({
-    information_requirement: item.information_requirement,
-    business_purpose: item.business_purpose,
-    required_information_details: item.required_information_details
-  }));
-}
-
-/**
- * The same complete business model is supplied on every generation.
- * Only the previously discovered requirement index changes.
- */
-function buildInformationRequirementsPrompt(base, completedRequirements) {
-  const previousIndex = buildPreviouslyDiscoveredIndex(completedRequirements);
-
+function buildInformationRequirementsPrompt(base) {
   return `
-# DOMAIN-AGNOSTIC INFORMATION REQUIREMENTS DISCOVERY
+# DOMAIN-AGNOSTIC BUSINESS INFORMATION REQUIREMENTS DISCOVERY
 
-Act as a senior business analyst, business domain specialist, enterprise business architect and information architect.
+## ROLE AND OBJECTIVE
 
-Discover business Information Requirements by independently reasoning about what information the supplied business needs to perform its responsibilities, execute its activities, support decisions, coordinate operations and achieve its business outcomes.
+Act as a highly experienced Business Analyst, Enterprise Business Architect, Domain Specialist and Business Information Architect.
 
-You are discovering Information Requirements as a distinct business-model dimension. Do not reproduce, redefine or regenerate the supplied business dimensions.
+Your task is to discover the complete set of meaningful business Information Requirements for the supplied business domain and niche.
 
-# 1. EXISTING BUSINESS MODEL
+Do not simply extract, summarise or reorganise information already present in the supplied business model.
+
+Think critically about how the business operates, what it needs to know, what information enables its activities and decisions, what information must be exchanged between participants, and what important information may be missing from the documented business model.
+
+The objective is to discover both explicit and implicit business information needs, including those revealed through domain knowledge and business reasoning.
+
+---
+
+## 1. SUPPLIED BUSINESS CONTEXT
 
 **Domain:**
-${base.domain || 'Not supplied'}
+${base.domain}
 
 **Niche:**
-${base.niche || 'Not supplied'}
-
-**Actors:**
-${formatPromptInput(base.actor_fields)}
-
-**Actors and Responsibilities:**
-${formatPromptInput(base.actor_responsibilities)}
+${base.niche}
 
 **Business Objects:**
-${formatPromptInput(base.business_objects)}
+${JSON.stringify(base.business_objects)}
+
+**Actors:**
+${JSON.stringify(base.actor_fields)}
+
+**Actor Responsibilities:**
+${JSON.stringify(base.actor_responsibilities)}
 
 **Actor–Business Object Relationships:**
-${formatPromptInput(base.actor_business_object_relationships)}
+${JSON.stringify(base.actor_business_object_relationships)}
 
 **Business Activities:**
-${formatPromptInput(base.business_activities)}
+${JSON.stringify(base.business_activities)}
 
-Use the complete supplied business model as the foundation for discovery. It is a starting point, not an exhaustive specification.
+Treat these inputs as the available business-model evidence. Analyse them collectively rather than treating each dataset as an independent source.
 
-Do not simply extract business-object names, reproduce object attributes or convert activity inputs and outputs into information requirements.
+---
 
-# 2. PREVIOUSLY DISCOVERED INFORMATION REQUIREMENTS
+## 2. DOMAIN KNOWLEDGE, BUSINESS INFERENCE AND ASSUMPTION-BASED DISCOVERY
 
-${previousIndex.length
-  ? JSON.stringify(previousIndex, null, 2)
-  : 'No information requirements have been generated yet. This is the initial discovery generation.'}
+Use your knowledge of the supplied business domain and niche as an active reasoning resource. Do not restrict discovery to information explicitly documented in the supplied business model.
 
-These are actual requirements generated and validated in previous responses.
+Understand how businesses in this domain typically operate, including their operational realities, commercial considerations, decision-making requirements, dependencies, constraints, exceptions and expected outcomes.
 
-Do not repeat, rename, rephrase or split any previously discovered requirement. A requirement is a duplicate when it represents substantially the same business information need, even if its wording differs.
+Use this domain understanding to challenge and interrogate the supplied business model.
 
-# 3. INTELLIGENT DISCOVERY QUESTIONS
+Identify:
 
-Reason through the following questions against the supplied business model. They guide discovery; they are not mandatory categories or separate output sections.
+1. Information explicitly represented in the supplied business model.
+2. Information implicitly required to execute its documented responsibilities, activities and business-object interactions.
+3. Information that may be missing because the business model does not yet describe an important operational, commercial or decision-making dependency.
+4. Additional information needs revealed by understanding how this particular type of business operates.
 
-## A. Information Needed to Fulfil Business Responsibilities
+### Distinguish necessary business inference from speculative assumptions
 
-- What information must actors know or obtain to fulfil their responsibilities?
-- What information is needed before they can take action?
-- What information must they receive, communicate, create, maintain or update?
-- What information enables them to monitor and evaluate their responsibilities?
-- What information needs are implied by responsibilities but not represented in the current model?
+For every potential requirement, evaluate:
 
-## B. Information Needed to Execute Business Activities
+- Is it essential or materially useful for the business operations described?
+- Does domain knowledge reveal a genuine business dependency?
+- Does it enable an actor to perform a responsibility, an activity to proceed, a decision to be made or an outcome to be verified?
+- Is it a fundamental business information need, or simply a possible feature, technology, optimisation or enhancement?
+- Is the requirement relevant to this particular domain and niche, rather than merely common in other businesses?
 
-- What information is required to initiate, execute and complete activities?
-- What must be verified, evaluated or updated during execution?
-- What information determines the appropriate next action?
-- What information is generated and required by subsequent activities?
-- What information is needed to establish whether an activity achieved its intended outcome?
+Do not reject a requirement simply because it is absent from the supplied inputs. The purpose of discovery is also to uncover missing business information.
 
-## C. Information Exchanged Between Actors
+However, do not automatically treat industry conventions, popular capabilities or assumed operating practices as established facts about this business.
 
-- What information must actors obtain from or communicate to one another?
-- What information is required for coordination, handover, acknowledgement or completion?
-- What information must be available before another actor can proceed?
-- What information exchanges are implied by actor–business-object relationships?
+When a requirement is inferred using domain knowledge, ensure that the business need is logically justified and relevant to the supplied domain and niche.
 
-## D. Information Required for Business Decisions
+Do not impose a predefined list of domain-specific capabilities, business objects, actors, activities or information categories.
 
-- What decisions must actors or automated business operations make?
-- What facts, conditions or circumstances must be evaluated?
-- What information determines whether an operation can proceed?
-- What information supports alternatives, approvals, rejection, prioritisation, allocation or escalation where relevant?
-- What information is needed when facts are missing, outdated or inconsistent?
+Discover the information requirements that emerge from reasoning about the actual business context, including important needs that the supplied model may have overlooked.
 
-Identify actual decisions implied by the supplied business model. Do not invent decisions or impose predefined decision categories.
+## 3. INFORMATION NECESSITY, BUSINESS SCOPE AND CAPABILITY DISTINCTION
 
-## E. Information Beyond Existing Business Objects
+Domain knowledge may reveal many possible business capabilities. However, not every capability creates a necessary Information Requirement.
 
-- What information is represented by existing business objects?
-- What additional information is required beyond those objects?
-- What information is obtained externally, derived, generated or temporarily needed?
-- What information must be communicated or maintained without necessarily representing a separate business object?
-- What information needs cannot be adequately explained by existing business objects?
+For every potential information need, distinguish between:
 
-An information requirement describes information the business needs. A business object represents a business entity that may contain or relate to that information. Do not confuse these concepts.
+**1. Business-critical information**
 
-## F. Information Dependencies Across Activities
+Information required for the business to perform its fundamental operations, fulfil responsibilities, make necessary decisions and achieve expected outcomes.
 
-- What information produced by one activity is required by another?
-- What information is shared across actors or activities?
-- What must be updated when circumstances change?
-- What information must be available to maintain continuity?
-- What information must be reconciled when different activities consume or update it?
+**2. Business-supporting information**
 
-## G. Exceptions and Alternative Situations
+Information that supports operational efficiency, coordination, quality, financial control, compliance or business management where relevant to the supplied business context.
 
-- What information is needed to identify, understand and resolve exceptions?
-- What information supports alternative actions or intervention by another actor?
-- What information is required to correct, reverse, resume or complete interrupted operations?
-- What information is needed to evaluate the outcome of an exception?
+**3. Potential business capabilities**
 
-Discover these requirements only where relevant to the supplied business.
+Information that could support additional services, advanced analytics, optimisation, personalisation, marketing, predictive modelling or specialised risk management, but is not established as necessary for the business described.
 
-## H. Business Outcomes and Operational Evaluation
+Do not automatically promote potential business capabilities into Information Requirements.
 
-- What information establishes whether intended business outcomes have been achieved?
-- What information supports completion checks, monitoring, reconciliation, review or accountability?
-- What information helps identify delays, incomplete work or unsuccessful outcomes?
-- What information must remain available for subsequent operations?
+Challenge whether the business actually needs the information or whether it merely represents an optional enhancement.
 
-## I. Uncovered Information Needs
+### REQUIREMENT BOUNDARY TEST
 
-Challenge the supplied model specifically from an information perspective.
+Before including a candidate requirement, ask:
 
-- What information is logically necessary but not yet identified?
-- Which responsibilities, activities, decisions or actor interactions imply additional information needs?
-- What information dependencies or outcome-verification needs are missing?
-- What additional information is justified by the supplied business context?
+- What specific business need does this information fulfil?
+- What would the business be unable to perform, decide, coordinate, control or verify without it?
+- Is this information necessary for the described business model, or only useful for a possible future capability?
+- Is the proposed information already covered by another requirement?
+- Does the requirement combine multiple independent information needs that should be separated?
+- Does it introduce an operating policy, commercial strategy, technology or optimisation mechanism that the business model has not established?
 
-Do not invent requirements merely to increase the catalogue size.
+Only include requirements that represent meaningful business information needs.
 
-# 4. SYNTHESIZE DISTINCT REQUIREMENTS
+Where domain knowledge identifies a potentially important but unconfirmed capability, do not silently assume it is part of the business model. Include it only when its underlying business necessity can be logically justified by the domain, niche and supplied business context.
+---
 
-Generate up to ${CONFIG.DISCOVERY.REQUIREMENTS_PER_GENERATION} NEW, materially distinct information requirements in this response.
+## 4. INTELLIGENT BUSINESS INFORMATION DISCOVERY
 
-This is a per-response generation limit, not a limit on the overall discovery.
+Interrogate the business context through the following analytical questions.
 
-- Prioritise meaningful information needs over verbose descriptions.
-- Group related information when it serves the same business purpose.
-- Keep materially different business purposes as separate requirements.
-- Do not create a separate requirement for every individual information detail.
-- Preserve relevant relationships to supplied actors, responsibilities, activities and business objects.
-- Do not force every requirement to relate to an existing business object.
-- Do not turn information requirements into database schemas, technical fields, APIs or application features.
-- Do not use predefined domain categories or hardcoded expected requirement lists.
-- Do not include previously discovered requirements in the new output.
+These questions are reasoning lenses, not mandatory categories or a predefined checklist. Explore the relevant implications and discover requirements that emerge from their combined analysis.
 
-# 5. OUTPUT SCHEMA
+### A. What must the business know that its current model does not explicitly tell us?
 
-Return only valid JSON using this exact structure:
+- What facts, circumstances, conditions or knowledge must exist for the business to perform its operations successfully?
+- What would an actor need to know before accepting responsibility or taking action?
+- What information is assumed to be available but has not actually been identified?
+- What critical knowledge would be missing if the documented business model were implemented exactly as supplied?
+
+### B. What information is necessary to make the business work end-to-end?
+
+- What information must be available before a business activity can begin?
+- What information must be known or established while it is being performed?
+- What information determines whether an activity can continue, change direction or complete?
+- What information must be produced so subsequent business activities can proceed?
+- Where does one activity depend on information that another activity must establish?
+
+### C. What does the business need to understand before making a decision?
+
+- What facts must be known before the business can approve, reject, select, allocate, prioritise or commit?
+- What circumstances could change the decision?
+- What information distinguishes one possible outcome from another?
+- What must be known when information is incomplete, conflicting, outdated or uncertain?
+- What information would prevent the business from making an uninformed or incorrect decision?
+
+### D. What information must exist between different actors and business responsibilities?
+
+- What does one actor know that another actor must know to fulfil their responsibility?
+- What information must be communicated, handed over, acknowledged or confirmed?
+- What knowledge is lost or unavailable when responsibility moves between actors?
+- What information must be shared to prevent conflicting actions or inconsistent business outcomes?
+- What information dependencies are implicit in the relationships between actors and business objects?
+
+### E. What information is missing from the business objects themselves?
+
+- What knowledge is needed to interpret, evaluate or act upon a business object?
+- What information comes from outside the business or must be derived from multiple sources?
+- What information exists temporarily or contextually without necessarily being a separate business object?
+- What information is required to understand changes, history, validity or circumstances surrounding a business object?
+- What important information cannot be adequately represented by simply listing the existing business objects?
+
+### F. What happens when the expected business situation does not occur?
+
+- What information would reveal that an activity cannot proceed as expected?
+- What must the business know to understand why an operation failed or deviated from its intended outcome?
+- What information is required to choose an alternative course of action?
+- What must be known to recover, correct, reverse, resume or resolve an interrupted operation?
+- What information is necessary to distinguish a recoverable situation from one requiring intervention?
+
+### G. How does the business know whether it has achieved the intended outcome?
+
+- What evidence establishes that an operation has actually succeeded?
+- What information is required to confirm completion, correctness, accountability or compliance?
+- What information is necessary to identify discrepancies between expected and actual outcomes?
+- What knowledge must remain available for future activities, reconciliation or review?
+- What information would the business need to understand why expected outcomes were not achieved?
+
+### H. Challenge the completeness of the entire business model
+
+- If this business operated using only the information explicitly identified so far, what would its actors be unable to know or do?
+- Which responsibilities cannot realistically be fulfilled without additional information?
+- Which activities contain hidden information dependencies?
+- Which business-object interactions imply information that has not been identified?
+- What assumptions have been made about information availability without explaining what that information actually is?
+- What essential business knowledge is missing even though the documented activities appear complete?
+
+---
+
+## 5. CROSS-DIMENSION REASONING
+
+Do not discover requirements by examining actors, activities or business objects in isolation.
+
+Reason across their relationships.
+
+Investigate:
+
+- Information required by multiple actors for different responsibilities.
+- Information needed by one actor but generated or established by another.
+- Information dependencies between business activities.
+- Information needed to initiate, validate, authorise, execute or complete business operations.
+- Information that enables business objects to be created, modified, evaluated, exchanged or reconciled.
+- Information needed to coordinate operational and commercial responsibilities.
+- Information needed to manage exceptions, uncertainty and unexpected business conditions.
+- Information required to establish accountability and verify business outcomes.
+- Information that exists outside the boundaries of the currently documented business objects.
+- Missing information dependencies that could prevent the business model from functioning as intended.
+
+Identify the underlying information need rather than generating separate requirements for every actor, activity or business object that uses it.
+
+Where the same information serves genuinely different business purposes, determine whether those purposes require separate requirements or can be represented by one coherent information requirement.
+
+---
+
+## 6. DISCOVERY SYNTHESIS AND QUALITY EVALUATION
+
+After completing the analysis, consolidate all discovered information needs into a coherent Information Requirements catalogue.
+
+For each candidate requirement, internally evaluate:
+
+**Business necessity**
+- What does the business need to know?
+- Why does it need to know it?
+- What business activity, responsibility, decision or outcome depends on it?
+
+**Domain relevance**
+- Is this information need relevant to the supplied domain and niche?
+- Is the reasoning based on meaningful domain understanding rather than generic industry assumptions?
+
+**Business completeness**
+- Does the requirement address an explicit or implicit information dependency?
+- Does it expose a meaningful gap in the supplied business model?
+- Would omitting it leave an important business need unaddressed?
+
+**Distinctiveness**
+- Does this represent a genuinely distinct information need?
+- Is it already covered by another requirement?
+- Is it simply a renamed business object, activity, responsibility or data attribute?
+
+**Appropriate abstraction**
+- Does it describe what information the business needs?
+- Is it expressed at a business-information level rather than a technical implementation level?
+- Does it avoid prescribing specific technologies, platforms, databases, APIs, screens or application features?
+
+### Consolidation rules
+
+1. Identify every materially distinct information need justified through the combined business and domain analysis.
+2. Consolidate requirements that represent the same underlying information need.
+3. Keep separate requirements where the information serves materially different business purposes.
+4. Do not create one requirement for every individual data field.
+5. Do not create one requirement for every actor or business activity.
+6. Do not merely rename existing business objects or activities as Information Requirements.
+7. Do not create requirements solely to populate a predefined category.
+8. Do not omit important implicit requirements simply because they are absent from the supplied inputs.
+9. Do not invent requirements merely to increase the catalogue size.
+10. Prioritise business relevance, completeness and meaningful distinction over the number of requirements.
+
+---
+
+## 7. OUTPUT SCOPE
+
+For this discovery stage, generate ONLY the following three properties for each Information Requirement:
+
+### information_requirement
+A concise, meaningful business-level name identifying the information need.
+
+### description
+Explain what information the business needs, what it represents and the relevant business context.
+
+Describe the information need at an appropriate business level. Avoid unnecessary technical details, assumed data structures or implementation-specific terminology.
+
+### business_purpose
+Explain why the business needs this information and what business activities, responsibilities, decisions, coordination or outcomes it enables.
+
+Make the business value and necessity clear.
+
+Do not generate:
+- Actor mappings.
+- Responsibility mappings.
+- Business activity mappings.
+- Business-object mappings.
+- Information sources.
+- Decision mappings.
+- Detailed information attributes.
+- Database fields or schemas.
+- APIs, screens, forms or application features.
+- Technical implementation recommendations.
+- Confidence scores or evidence fields.
+
+These can be derived in subsequent discovery stages.
+
+---
+
+## 8. FINAL OUTPUT JSON SCHEMA
+
+Return one consolidated JSON object using exactly this structure:
 
 {
   "information_requirements": [
     {
-      "information_requirement": "",
-      "description": "",
-      "business_purpose": "",
-      "required_by_actors": [],
-      "related_responsibilities": [],
-      "related_activities": [],
-      "related_business_objects": [],
-      "information_usage": "",
-      "information_source": "",
-      "business_decisions_supported": [],
-      "required_information_details": []
+      "information_requirement": "Meaningful Information Requirement Name",
+      "description": "What information the business needs and what it represents.",
+      "business_purpose": "Why the business needs this information and what business outcome it supports."
     }
-  ],
-  "more_to_discover": true
+  ]
 }
 
-# 6. OUTPUT RULES
+### STRICT OUTPUT RULES
 
-1. Return only the JSON object. No Markdown fences, explanations or commentary.
-2. Return no more than ${CONFIG.DISCOVERY.REQUIREMENTS_PER_GENERATION} new requirements.
-3. Do not return previously discovered requirements.
-4. Keep description, business_purpose and information_usage to one concise sentence each.
-5. Use short, meaningful phrases in arrays.
-6. Include only essential information details.
-7. Populate every schema property.
-8. Use empty arrays when no relevant relationship can be established.
-9. Use an empty string only when a scalar value genuinely cannot be determined.
-10. Use exact names from the supplied model when referencing actors, responsibilities, activities and business objects.
-11. Do not fabricate references to existing business-model elements.
-12. Ensure every JSON object, array and string is completely closed.
+1. Return valid JSON only.
+2. Do not include Markdown fences, explanations, commentary or reasoning outside the JSON.
+3. Include all meaningful and distinct Information Requirements discovered through the analysis.
+4. Do not impose an arbitrary requirement count.
+5. Do not use continuation batches or generate additional stopping-control properties.
+6. Do not include a more_to_discover property.
+7. Do not include any properties other than the three specified.
+8. Every requirement must have all three properties populated with meaningful text.
+9. Ensure the final catalogue is consolidated and free of duplicate or overlapping requirements.
+10. Ensure every JSON object, array and string is completely closed.
 
-Set more_to_discover to true if meaningful, distinct information requirements remain undiscovered anywhere in the supplied business model.
+**FINAL OBJECTIVE:**
 
-Set more_to_discover to false only when the complete business model has been adequately examined and no meaningful additional information requirements remain.
+Discover what this particular business needs to know to operate, coordinate, make decisions, manage uncertainty and achieve its intended outcomes.
 
-Do not set more_to_discover to false merely because this response has reached its per-response limit.
+Use the supplied business model as evidence, domain knowledge as an intelligence resource, and critical business reasoning to discover information needs that may not yet be documented.
 
-If no new requirements are found and no meaningful requirements remain, return an empty information_requirements array and set more_to_discover to false.
-
-If no new requirements are found but meaningful requirements remain, return an empty array and set more_to_discover to true. Do not repeat previous requirements.
-
-Return the complete JSON object only.
+Return the complete Information Requirements catalogue as valid JSON only.
 `;
 }
 
 /**
- * Run bounded generations until Qwen reports that discovery is complete.
- * Each continuation receives the same complete business model and the
- * compact index derived from all previously validated Qwen outputs.
+ * Run exactly one Qwen generation, validate the three-field requirements,
+ * remove exact-name duplicates and save the consolidated catalogue.
+ * There is no continuation loop and no model-controlled stopping condition.
  */
-async function generateSemanticBlueprintAI(base, finalTargetFilePath, callback) {
+async function generateSemanticBlueprintAI(
+  base,
+  finalTargetFilePath,
+  callback
+) {
   try {
     const tempDirectory = path.join(
       CONFIG.PATHS.PROJECT_ROOT,
       CONFIG.PATHS.TMP_RELATIVE_DIR
     );
 
-    const checkpointPath = path.join(
-      path.dirname(finalTargetFilePath),
-      `${CONFIG.PATHS.EXPORT_PREFIX}.progress.json`
+    const prompt = buildInformationRequirementsPrompt(base);
+
+    const rawResponse = await runLlamaGeneration(
+      prompt,
+      1,
+      tempDirectory
     );
 
-    const inputFingerprint = crypto
-      .createHash('sha256')
-      .update(JSON.stringify(base))
-      .digest('hex');
+    const result = parseJsonResponse(rawResponse, 1);
 
-    let allRequirements = [];
-    let generationNumber = 0;
-    let moreToDiscover = true;
-    let consecutiveEmptyGenerations = 0;
-
-    // Resume only when the checkpoint belongs to the exact same input data.
-    if (fs.existsSync(checkpointPath)) {
-      try {
-        const checkpoint = JSON.parse(fs.readFileSync(checkpointPath, 'utf8'));
-
-        if (
-          checkpoint.inputFingerprint === inputFingerprint &&
-          Array.isArray(checkpoint.information_requirements) &&
-          typeof checkpoint.more_to_discover === 'boolean'
-        ) {
-          allRequirements = checkpoint.information_requirements;
-          generationNumber = Number(checkpoint.completed_generations) || 0;
-          moreToDiscover = checkpoint.more_to_discover;
-
-          console.log(
-            `\\n↻ Resuming from checkpoint: ${allRequirements.length} previously validated requirements across ${generationNumber} generations.`
-          );
-        }
-      } catch (checkpointError) {
-        console.warn('⚠️ Existing progress checkpoint is invalid; starting a fresh discovery.');
-      }
+    if (!Array.isArray(result.information_requirements)) {
+      throw new Error(
+        'The model response does not contain an information_requirements array.'
+      );
     }
 
-    const seenNames = new Set(
-      allRequirements
-        .map(item => normalizeRequirementName(item.information_requirement))
-        .filter(Boolean)
-    );
+    const acceptedRequirements = [];
+    const seenNames = new Set();
 
-    while (moreToDiscover) {
-      generationNumber++;
+    result.information_requirements.forEach((requirement, index) => {
+      validateRequirement(requirement, 1, index);
 
-      const prompt = buildInformationRequirementsPrompt(base, allRequirements);
-
-      const rawResponse = await runLlamaGeneration(
-        prompt,
-        generationNumber,
-        tempDirectory
+      const normalizedName = normalizeRequirementName(
+        requirement.information_requirement
       );
 
-      // A truncated response throws here and is never accepted.
-      const batch = parseJsonResponse(rawResponse, generationNumber);
+      if (!normalizedName || seenNames.has(normalizedName)) {
+        console.warn(
+          `   Skipping duplicate or empty requirement name: ${requirement.information_requirement || '(empty)'}`
+        );
+        return;
+      }
 
-      batch.information_requirements.forEach((requirement, index) => {
-        validateRequirement(requirement, generationNumber, index);
+      seenNames.add(normalizedName);
+
+      acceptedRequirements.push({
+        information_requirement: requirement.information_requirement.trim(),
+        description: requirement.description.trim(),
+        business_purpose: requirement.business_purpose.trim()
       });
+    });
 
-      let newlyAccepted = 0;
-
-      for (const requirement of batch.information_requirements) {
-        const key = normalizeRequirementName(requirement.information_requirement);
-
-        if (!key || seenNames.has(key)) {
-          continue;
-        }
-
-        seenNames.add(key);
-        allRequirements.push(requirement);
-        newlyAccepted++;
-      }
-
-      console.log(
-        `   Validated requirements in this generation: ${batch.information_requirements.length}`
-      );
-      console.log(`   New distinct requirements accepted: ${newlyAccepted}`);
-      console.log(`   Total accumulated requirements: ${allRequirements.length}`);
-      console.log(`   More to discover: ${batch.more_to_discover}`);
-
-      if (newlyAccepted === 0 && batch.more_to_discover) {
-        consecutiveEmptyGenerations++;
-
-        if (
-          consecutiveEmptyGenerations >=
-          CONFIG.DISCOVERY.MAX_CONSECUTIVE_EMPTY_GENERATIONS
-        ) {
-          throw new Error(
-            'Discovery stalled: Qwen repeatedly reported more requirements ' +
-            'but returned no new distinct requirements. No final file was marked successful.'
-          );
-        }
-      } else {
-        consecutiveEmptyGenerations = 0;
-      }
-
-      moreToDiscover = batch.more_to_discover;
-
-      // Persist every successfully validated generation immediately.
-      // If a later Qwen response truncates, the next run resumes here.
-      const checkpoint = {
-        inputFingerprint,
-        completed_generations: generationNumber,
-        more_to_discover: moreToDiscover,
-        information_requirements: allRequirements
-      };
-
-      const checkpointTempPath = `${checkpointPath}.tmp`;
-      fs.writeFileSync(
-        checkpointTempPath,
-        JSON.stringify(checkpoint, null, 2),
-        'utf8'
-      );
-      fs.renameSync(checkpointTempPath, checkpointPath);
-    }
-
-    // Consolidation is performed programmatically so the entire catalogue
-    // does not have to be generated again by Qwen in one oversized response.
     const finalResult = {
-      information_requirements: allRequirements
+      information_requirements: acceptedRequirements
     };
 
-    // Final schema validation before writing the final output.
-    if (!Array.isArray(finalResult.information_requirements)) {
-      throw new Error('Final information_requirements collection is invalid.');
-    }
-
     const finalJson = JSON.stringify(finalResult, null, 2);
-    JSON.parse(finalJson); // Final JSON integrity check.
+    JSON.parse(finalJson);
 
-    fs.mkdirSync(path.dirname(finalTargetFilePath), { recursive: true });
+    fs.mkdirSync(path.dirname(finalTargetFilePath), {
+      recursive: true
+    });
+
     fs.writeFileSync(finalTargetFilePath, finalJson, 'utf8');
 
-    // Remove the checkpoint only after the complete final JSON is saved.
-    if (fs.existsSync(checkpointPath)) {
-      fs.unlinkSync(checkpointPath);
-    }
-
-    console.log(`\n✅ Completed generations: ${generationNumber}`);
-    console.log(`✅ Total distinct information requirements: ${allRequirements.length}`);
+    console.log('\n✅ Single generation completed.');
+    console.log(
+      `✅ Requirements returned by Qwen: ${result.information_requirements.length}`
+    );
+    console.log(
+      `✅ Distinct requirements saved: ${acceptedRequirements.length}`
+    );
+    console.log('✅ No continuation generations were executed.');
 
     callback(null, finalTargetFilePath);
   } catch (error) {
@@ -663,18 +691,22 @@ const objectsFilePath = resolveLatestStageFile(
   OUTPUT_DIR,
   CONFIG.SCANNING_PATTERNS.STAGE_1_OBJECTS
 );
+
 const actorsFilePath = resolveLatestStageFile(
   OUTPUT_DIR,
   CONFIG.SCANNING_PATTERNS.STAGE_2_ACTORS
 );
+
 const businessResponsibilitiesFilePath = resolveLatestStageFile(
   OUTPUT_DIR,
   CONFIG.SCANNING_PATTERNS.STAGE_3_JOURNEYS
 );
+
 const actorObjectRelationshipsFilePath = resolveLatestStageFile(
   OUTPUT_DIR,
   CONFIG.SCANNING_PATTERNS.STAGE_4_TOPOLOGY
 );
+
 const businessActivitiesFilePath = resolveLatestStageFile(
   OUTPUT_DIR,
   CONFIG.SCANNING_PATTERNS.STAGE_5_TOPOLOGY
@@ -692,19 +724,54 @@ if (
   );
 }
 
-console.log(`\n📂 Reading business objects: ${path.basename(objectsFilePath)}`);
-console.log(`📂 Reading actors: ${path.basename(actorsFilePath)}`);
-console.log(`📂 Reading actor responsibilities: ${path.basename(businessResponsibilitiesFilePath)}`);
-console.log(`📂 Reading actor–business-object relationships: ${path.basename(actorObjectRelationshipsFilePath)}`);
-console.log(`📂 Reading business activities: ${path.basename(businessActivitiesFilePath)}`);
+console.log(
+  `\n📂 Reading business objects: ${path.basename(objectsFilePath)}`
+);
 
-const objectsMatrixContent = fs.readFileSync(objectsFilePath, 'utf8');
-const objectsActorsContent = fs.readFileSync(actorsFilePath, 'utf8');
-const objectsActorsRespContent = fs.readFileSync(businessResponsibilitiesFilePath, 'utf8');
-const objectsActorsRelationShip = fs.readFileSync(actorObjectRelationshipsFilePath, 'utf8');
-const objectsbusiness_activities = fs.readFileSync(businessActivitiesFilePath, 'utf8');
+console.log(
+  `📂 Reading actors: ${path.basename(actorsFilePath)}`
+);
 
-const cleanJsonArray1 = extractDomain_Niche_Main_Content(objectsMatrixContent);
+console.log(
+  `📂 Reading actor responsibilities: ${path.basename(businessResponsibilitiesFilePath)}`
+);
+
+console.log(
+  `📂 Reading actor–business-object relationships: ${path.basename(actorObjectRelationshipsFilePath)}`
+);
+
+console.log(
+  `📂 Reading business activities: ${path.basename(businessActivitiesFilePath)}`
+);
+
+const objectsMatrixContent = fs.readFileSync(
+  objectsFilePath,
+  'utf8'
+);
+
+const objectsActorsContent = fs.readFileSync(
+  actorsFilePath,
+  'utf8'
+);
+
+const objectsActorsRespContent = fs.readFileSync(
+  businessResponsibilitiesFilePath,
+  'utf8'
+);
+
+const objectsActorsRelationShip = fs.readFileSync(
+  actorObjectRelationshipsFilePath,
+  'utf8'
+);
+
+const objectsbusiness_activities = fs.readFileSync(
+  businessActivitiesFilePath,
+  'utf8'
+);
+
+const cleanJsonArray1 = extractDomain_Niche_Main_Content(
+  objectsMatrixContent
+);
 
 const base = {
   domain: cleanJsonArray1.primarydataset.domain,
@@ -716,36 +783,57 @@ const base = {
   business_activities: objectsbusiness_activities
 };
 
+/**
+ * Generate timestamp for output filename.
+ */
 const now = new Date();
+
 const day = String(now.getDate()).padStart(2, '0');
 const month = String(now.getMonth() + 1).padStart(2, '0');
 const year = String(now.getFullYear()).slice(-2);
+
 let hours = now.getHours();
+
 const minutes = String(now.getMinutes()).padStart(2, '0');
 const ampm = hours >= 12 ? 'pm' : 'am';
+
 hours = hours % 12 || 12;
+
 const formattedHours = String(hours).padStart(2, '0');
 
-const timestamp = `${day}-${month}-${year}_${formattedHours}:${minutes}${ampm}`;
+const timestamp =
+  `${day}-${month}-${year}_${formattedHours}:${minutes}${ampm}`;
+
 const finalOutputPath = path.join(
-  OUTPUT_DIR.replace(`${path.sep}baseline${path.sep}`, path.sep),
+  OUTPUT_DIR.replace(
+    `${path.sep}baseline${path.sep}`,
+    path.sep
+  ),
   `${CONFIG.PATHS.EXPORT_PREFIX}.${timestamp}.md`
 );
 
-generateSemanticBlueprintAI(base, finalOutputPath, (error, targetSavedPath) => {
-  if (error) {
-    console.error(
-      '\n❌ INFORMATION REQUIREMENTS DISCOVERY FAILED:',
-      error.message
-    );
-    process.exitCode = 1;
-    return;
-  }
+/**
+ * Execute Information Requirements Discovery.
+ */
+generateSemanticBlueprintAI(
+  base,
+  finalOutputPath,
+  (error, targetSavedPath) => {
+    if (error) {
+      console.error(
+        '\n❌ INFORMATION REQUIREMENTS DISCOVERY FAILED:',
+        error.message
+      );
 
-  console.log(
-    `\n🎉 SUCCESS: Complete Information Requirements catalogue saved using ${CONFIG.MODEL.IDENTIFIER} to: ${targetSavedPath}`
-  );
-});
+      process.exitCode = 1;
+      return;
+    }
+
+    console.log(
+      `\n🎉 SUCCESS: Complete Information Requirements catalogue saved using ${CONFIG.MODEL.IDENTIFIER} to: ${targetSavedPath}`
+    );
+  }
+);
 
 /**
  * ============================================================================
@@ -769,89 +857,154 @@ function formatPromptInput(value) {
   }
 }
 
+/**
+ * Resolve the latest matching input file.
+ */
 function resolveLatestStageFile(directory, prefixPattern) {
-  if (!fs.existsSync(directory)) return null;
-  const files = fs.readdirSync(directory);
-  const matchedFiles = files.filter(f => f.startsWith(prefixPattern));
-  if (matchedFiles.length === 0) return null;
+  if (!fs.existsSync(directory)) {
+    return null;
+  }
 
-  matchedFiles.sort((a, b) => fs.statSync(path.join(directory, b)).mtimeMs - fs.statSync(path.join(directory, a)).mtimeMs);
+  const files = fs.readdirSync(directory);
+
+  const matchedFiles = files.filter(
+    file => file.startsWith(prefixPattern)
+  );
+
+  if (matchedFiles.length === 0) {
+    return null;
+  }
+
+  matchedFiles.sort(
+    (a, b) =>
+      fs.statSync(path.join(directory, b)).mtimeMs -
+      fs.statSync(path.join(directory, a)).mtimeMs
+  );
+
   return path.join(directory, matchedFiles[0]);
 }
 
-
-
+/**
+ * Retained original extraction helper.
+ */
 function extractcontent(objectsMatrixContent) {
-    const mermaidContent = objectsMatrixContent
+  const mermaidContent = objectsMatrixContent;
 
-    function extractNodesWithoutRegex(text) {
-        const lines = text.split('\n');
-        const results = [];
-        // The specific node suffixes we want to look for
-        const targets = ['_alternate_path', '_degraded_alert', '_reject_scenario'];
-        for (let line of lines) {
-            line = line.trim();
-            // Find if the current line contains one of our target node types
-            const matchedSuffix = targets.find(suffix => line.includes(suffix));
-            // Skip lines that don't match or lines that are path definitions (containing arrows)
-            if (!matchedSuffix || line.includes('-->') || line.includes('.-.')) {
-                continue;
-            }
-            // Split by the opening character of the label block
-            let openChar = '';
-            if (line.includes('["')) openChar = '["';
-            else if (line.includes('("')) openChar = '("';
-            else if (line.includes('{"')) openChar = '{"';
-            if (!openChar) continue;
-            const parts = line.split(openChar);
-            if (parts.length < 2) continue;
-            // Clean up the Node ID
-            const nodeId = parts[0].trim();
-            // Clean up the text content by removing the closing bracket/parenthesis/quotes
-            let content = parts[1].trim();
-            content = content.replace(/["'\])}]+\$/, ''); // Simple end-of-string character cleanup
-            while (content.endsWith('"') || content.endsWith(']') || content.endsWith(')') || content.endsWith('}')) {
-                content = content.slice(0, -1);
-            }
-            results.push({
-                node_id: nodeId,
-                existing_content: content
-            });
-        }
-        return results;
+  function extractNodesWithoutRegex(text) {
+    const lines = text.split('\n');
+    const results = [];
+
+    const targets = [
+      '_alternate_path',
+      '_degraded_alert',
+      '_reject_scenario'
+    ];
+
+    for (let line of lines) {
+      line = line.trim();
+
+      const matchedSuffix = targets.find(
+        suffix => line.includes(suffix)
+      );
+
+      if (
+        !matchedSuffix ||
+        line.includes('-->') ||
+        line.includes('.-.')
+      ) {
+        continue;
+      }
+
+      let openChar = '';
+
+      if (line.includes('["')) {
+        openChar = '["';
+      } else if (line.includes('("')) {
+        openChar = '("';
+      } else if (line.includes('{"')) {
+        openChar = '{"';
+      }
+
+      if (!openChar) {
+        continue;
+      }
+
+      const parts = line.split(openChar);
+
+      if (parts.length < 2) {
+        continue;
+      }
+
+      const nodeId = parts[0].trim();
+
+      let content = parts[1].trim();
+
+      content = content.replace(
+        /["'\])}]+\$/,
+        ''
+      );
+
+      while (
+        content.endsWith('"') ||
+        content.endsWith(']') ||
+        content.endsWith(')') ||
+        content.endsWith('}')
+      ) {
+        content = content.slice(0, -1);
+      }
+
+      results.push({
+        node_id: nodeId,
+        existing_content: content
+      });
     }
-    // Execute Extraction
-    const extractedNodes = extractNodesWithoutRegex(mermaidContent);
-    // Print Output
-    console.log(JSON.stringify({
+
+    return results;
+  }
+
+  const extractedNodes = extractNodesWithoutRegex(
+    mermaidContent
+  );
+
+  console.log(
+    JSON.stringify(
+      {
         existing_content: extractedNodes
-    }, null, 2));
-    return JSON.stringify({
-        existing_content: extractedNodes
-    }, null, 2)
+      },
+      null,
+      2
+    )
+  );
+
+  return JSON.stringify(
+    {
+      existing_content: extractedNodes
+    },
+    null,
+    2
+  );
 }
 
+/**
+ * Extract domain, niche and business-object content from source JSON.
+ */
+function extractDomain_Niche_Main_Content(objectsData) {
+  const interim = JSON.parse(objectsData);
 
+  const domain = interim.domain;
+  const niche = interim.niche;
 
-function extractDomain_Niche_Main_Content(objectsData)
-{
+  const base1 = {
+    primarydataset: {
+      domain,
+      niche
+    }
+  };
 
+  delete interim.domain;
+  delete interim.niche;
 
-        let interim = JSON.parse(objectsData)
+  base1.mainContent = interim;
 
-        let domain=interim.domain
-        let niche=interim.niche
-        let base1=
-        {
-            primarydataset:{
-            domain:domain,
-            niche:niche
-            }
-        }
-        delete interim.domain;
-        delete interim.niche;
-        base1.mainContent=interim
-        //JSON.stringify(base1,null,4)
-
-        return base1
+  return base1;
 }

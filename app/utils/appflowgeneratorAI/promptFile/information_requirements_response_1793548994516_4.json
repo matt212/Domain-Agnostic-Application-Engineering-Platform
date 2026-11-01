@@ -1,3 +1,4 @@
+User:
 
 # DOMAIN-AGNOSTIC INFORMATION REQUIREMENTS DISCOVERY
 
@@ -1243,6 +1244,57 @@ Do not simply extract business-object names, reproduce object attributes or conv
       "Violation History",
       "Inspection Results"
     ]
+  },
+  {
+    "information_requirement": "Dynamic inventory synchronization latency and data freshness",
+    "business_purpose": "To enable the Order Allocation Engine to detect stale inventory data and prevent allocating orders to stores with out-of-date stock information.",
+    "required_information_details": [
+      "Data Ingestion Timestamp",
+      "Data Consumption Timestamp",
+      "Synchronization Latency Duration",
+      "Data Freshness Threshold Status"
+    ]
+  },
+  {
+    "information_requirement": "Real-time delivery partner capacity and availability status",
+    "business_purpose": "To enable the Order Allocation Engine to assign orders to delivery partners who are geographically proximate and currently available for the specific time window.",
+    "required_information_details": [
+      "Agent Current Location",
+      "Agent Current Load",
+      "Available Time Slots",
+      "Geographic Service Radius"
+    ]
+  },
+  {
+    "information_requirement": "Real-time demand forecasting and traffic volume predictions",
+    "business_purpose": "To enable the Platform Operator and Order Allocation Engine to optimize resource allocation, prevent understaffing, and adjust pricing or delivery windows proactively.",
+    "required_information_details": [
+      "Predicted Order Volume",
+      "Time Window",
+      "Geographic Zone",
+      "Historical Traffic Trend"
+    ]
+  },
+  {
+    "information_requirement": "Real-time financial transaction hold and clearance status",
+    "business_purpose": "To prevent the Order Allocation Engine from completing fulfillment processes for orders where customer funds are on hold or payment is rejected.",
+    "required_information_details": [
+      "Transaction Hold Status",
+      "Holding Reason",
+      "Expected Clearance Time",
+      "Available Funds Amount"
+    ]
+  },
+  {
+    "information_requirement": "Real-time inventory shrinkage and discrepancy alerts",
+    "business_purpose": "To enable immediate correction of stock levels, accurate financial reconciliation, and prevention of overselling on damaged or missing items.",
+    "required_information_details": [
+      "Discrepancy Type",
+      "Affected SKU",
+      "Quantity Missing",
+      "Discovery Timestamp",
+      "Store Identifier"
+    ]
   }
 ]
 
@@ -1397,3 +1449,6 @@ If no new requirements are found and no meaningful requirements remain, return a
 If no new requirements are found but meaningful requirements remain, return an empty array and set more_to_discover to true. Do not repeat previous requirements.
 
 Return the complete JSON object only.
+
+Assistant:
+

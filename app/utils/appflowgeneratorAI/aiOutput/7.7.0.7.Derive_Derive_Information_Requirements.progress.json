@@ -1,6 +1,6 @@
 {
   "inputFingerprint": "87c2f6f422c2f5d8ecca7dd2019d2a5ccf6126097c4c6984ffd2e35cc710108d",
-  "completed_generations": 1,
+  "completed_generations": 3,
   "more_to_discover": true,
   "information_requirements": [
     {
@@ -187,6 +187,180 @@
         "Compliance Certificates",
         "Violation History",
         "Inspection Results"
+      ]
+    },
+    {
+      "information_requirement": "Dynamic inventory synchronization latency and data freshness",
+      "description": "Information regarding the time elapsed between a store's stock update and its reflection in the platform's catalog and allocation engine.",
+      "business_purpose": "To enable the Order Allocation Engine to detect stale inventory data and prevent allocating orders to stores with out-of-date stock information.",
+      "required_by_actors": [
+        "Order Allocation Engine",
+        "Platform Operator"
+      ],
+      "related_responsibilities": [
+        "Inventory Provision and Synchronization",
+        "System Orchestration and Allocation"
+      ],
+      "related_activities": [
+        "Inventory Synchronization and Validation",
+        "Order Validation and Resource Allocation"
+      ],
+      "related_business_objects": [
+        "Real-Time Inventory Snapshot",
+        "Product Catalog"
+      ],
+      "information_usage": "Used to trigger validation alerts or reject allocation requests when the data freshness threshold is exceeded.",
+      "information_source": "Database latency metrics and POS sync confirmation timestamps.",
+      "business_decisions_supported": [
+        "Order Rejection",
+        "Data Quality Alert Escalation"
+      ],
+      "required_information_details": [
+        "Data Ingestion Timestamp",
+        "Data Consumption Timestamp",
+        "Synchronization Latency Duration",
+        "Data Freshness Threshold Status"
+      ]
+    },
+    {
+      "information_requirement": "Real-time delivery partner capacity and availability status",
+      "description": "Current availability and immediate capacity of delivery agents within specific geographic zones.",
+      "business_purpose": "To enable the Order Allocation Engine to assign orders to delivery partners who are geographically proximate and currently available for the specific time window.",
+      "required_by_actors": [
+        "Order Allocation Engine",
+        "Platform Operator"
+      ],
+      "related_responsibilities": [
+        "System Orchestration and Allocation",
+        "Route Execution and Navigation"
+      ],
+      "related_activities": [
+        "Order Validation and Resource Allocation",
+        "Last-Mile Logistics Execution"
+      ],
+      "related_business_objects": [
+        "Assigned Delivery Slot",
+        "Delivery Assignment"
+      ],
+      "information_usage": "Used to calculate the probability of successful slot acceptance and adjust allocation strategies for high-demand periods.",
+      "information_source": "Real-time geolocation feeds and agent availability APIs.",
+      "business_decisions_supported": [
+        "Agent Assignment",
+        "Order Reassignment"
+      ],
+      "required_information_details": [
+        "Agent Current Location",
+        "Agent Current Load",
+        "Available Time Slots",
+        "Geographic Service Radius"
+      ]
+    },
+    {
+      "information_requirement": "Real-time demand forecasting and traffic volume predictions",
+      "description": "Predicted order volume and customer traffic patterns for specific service areas during upcoming time windows.",
+      "business_purpose": "To enable the Platform Operator and Order Allocation Engine to optimize resource allocation, prevent understaffing, and adjust pricing or delivery windows proactively.",
+      "required_by_actors": [
+        "Platform Operator",
+        "Order Allocation Engine"
+      ],
+      "related_responsibilities": [
+        "System Orchestration and Allocation",
+        "Order Initiation and Demand Capture"
+      ],
+      "related_activities": [
+        "Order Validation and Resource Allocation",
+        "Market Entry and Partner Onboarding"
+      ],
+      "related_business_objects": [
+        "Service Area Definition",
+        "Assigned Delivery Slot"
+      ],
+      "information_usage": "Used to dynamically adjust the number of assigned slots, route complexity, and agent assignments before orders are fully placed.",
+      "information_source": "Historical transaction data and real-time demand sensors.",
+      "business_decisions_supported": [
+        "Dynamic Pricing Adjustment",
+        "Resource Scaling",
+        "Slot Allocation Limits"
+      ],
+      "required_information_details": [
+        "Predicted Order Volume",
+        "Time Window",
+        "Geographic Zone",
+        "Historical Traffic Trend"
+      ]
+    },
+    {
+      "information_requirement": "Real-time financial transaction hold and clearance status",
+      "description": "The exact state of funds being held by the Payment Provider, including pending clearances, holds for fraud detection, or scheduled debits.",
+      "business_purpose": "To prevent the Order Allocation Engine from completing fulfillment processes for orders where customer funds are on hold or payment is rejected.",
+      "required_by_actors": [
+        "Order Allocation Engine",
+        "Platform Operator",
+        "Customer"
+      ],
+      "related_responsibilities": [
+        "Payment Execution",
+        "Financial Settlement and Revenue Management"
+      ],
+      "related_activities": [
+        "Order Initiation and Demand Capture",
+        "Financial Settlement and Revenue Management",
+        "Order Validation and Resource Allocation"
+      ],
+      "related_business_objects": [
+        "Financial Transaction Record",
+        "Customer Profile"
+      ],
+      "information_usage": "Used to block order progression or trigger manual review if payment status indicates a hold or delay.",
+      "information_source": "Payment Provider APIs and real-time ledger checks.",
+      "business_decisions_supported": [
+        "Order Hold",
+        "Payment Retry Trigger",
+        "Order Cancellation"
+      ],
+      "required_information_details": [
+        "Transaction Hold Status",
+        "Holding Reason",
+        "Expected Clearance Time",
+        "Available Funds Amount"
+      ]
+    },
+    {
+      "information_requirement": "Real-time inventory shrinkage and discrepancy alerts",
+      "description": "Information indicating unexplained inventory loss, system discrepancies between POS and platform, or damaged goods detected during picking.",
+      "business_purpose": "To enable immediate correction of stock levels, accurate financial reconciliation, and prevention of overselling on damaged or missing items.",
+      "required_by_actors": [
+        "Store Partner",
+        "Platform Operator",
+        "Order Allocation Engine"
+      ],
+      "related_responsibilities": [
+        "Inventory Provision and Synchronization",
+        "Order Preparation and Fulfillment"
+      ],
+      "related_activities": [
+        "Inventory Synchronization and Validation",
+        "Order Preparation and Fulfillment",
+        "Dispute Resolution and Exception Handling"
+      ],
+      "related_business_objects": [
+        "Real-Time Inventory Snapshot",
+        "Dispute Ticket",
+        "Fulfillment Task"
+      ],
+      "information_usage": "Automatically invalidates the inventory snapshot for affected SKUs and triggers internal alerts for immediate inventory adjustment.",
+      "information_source": "POS system logs, store staff input, and automated reconciliation tools.",
+      "business_decisions_supported": [
+        "Inventory Adjustment",
+        "Order Cancellation",
+        "Dispute Escalation"
+      ],
+      "required_information_details": [
+        "Discrepancy Type",
+        "Affected SKU",
+        "Quantity Missing",
+        "Discovery Timestamp",
+        "Store Identifier"
       ]
     }
   ]
