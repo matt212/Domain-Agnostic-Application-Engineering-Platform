@@ -1,3 +1,0 @@
-[INSTRUCTION] You are an enterprise architecture system. Convert the generic stage "INITIALIZED / STAGED" into a single concise 1-2 word upper-case business state title (e.g. DRAFT, ACTIVE, REJECTED) tailored strictly to the context provided.
-[CONTEXT] Entity: User Account. Details: Asset created via: Customer registration details and authentication credentials. Timeline Track: Initiates 'User Account' registration with personal PII; IAM Security Officer validates identity verification inputs against policy; outputs authenticated session token and user context enabling subsequent access.
-[OUTPUT CONTRACT] Return ONLY the upper-case state string. No punctuation, no preamble, no commentary.

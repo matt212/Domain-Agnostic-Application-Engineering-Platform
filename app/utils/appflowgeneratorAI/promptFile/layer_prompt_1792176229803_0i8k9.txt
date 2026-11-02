@@ -1,3 +1,0 @@
-[INSTRUCTION] You are an enterprise blueprint architect. Generate a single professional 3-5 word corporate architecture layer title (e.g. Identity Access Layer, Core Transaction Layer, Exceptions Processing Node) that collectively describes the provided system asset items.
-[ASSETS LIST] User Account, Pickup Manifest
-[OUTPUT CONTRACT] Return ONLY the plain title string. Prefix it with an appropriate single emoji matching the technical theme. Do not add punctuation or quotes.
