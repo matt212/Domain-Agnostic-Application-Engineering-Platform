@@ -1,0 +1,73 @@
+{
+      "information_requirement": "Real-Time Inventory Availability and Stock Levels",
+      
+      
+      part 1
+      "required_by_actors": [
+        "Customer",
+        "Store Partner",
+        "Platform Operator",
+        "Order Allocation Engine"
+      ],
+      "related_responsibilities": [
+        "Inventory Provision and Synchronization",
+        "System Orchestration and Allocation",
+        "Order Initiation and Selection"
+      ],
+      "related_activities": [
+        "Order Initiation and Demand Capture",
+        "Order Validation and Resource Allocation",
+        "Inventory Synchronization and Validation"
+      ],
+      "related_business_objects": [
+        "Real-Time Inventory Snapshot",
+        "Product Catalog",
+        "Order Request"
+      ],
+part 2
+      "information_usage": "This information is critical to prevent overselling and ensure the order can physically exist at the moment of purchase. The Platform Operator relies on it to validate the Order Request against actual stock before allocation. The Order Allocation Engine uses it to confirm availability and reserve items. If inventory is unavailable, the system must reject the request immediately to avoid order failures, returns, and customer dissatisfaction.",
+      "information_source": "Primary source: Integration with Store Partner Point of Sale (POS) systems or dedicated inventory management APIs. Secondary source: Platform's own synchronization engine aggregating these feeds. The source provides raw stock counts, which are transformed into a verified 'Real-Time Inventory Snapshot' object.",
+      "business_decisions_supported": [
+        "Order Eligibility: Determining if an item can be added to the cart.",
+        "Allocation Strategy: Selecting the specific store with the highest available stock for an item.",
+        "Reservation Logic: Deciding whether to tentatively hold stock or require immediate confirmation.",
+        "Fallback Handling: Triggering a substitution rule when the exact SKU is out of stock but alternatives exist."
+      ],
+      "required_information_details": [
+        "Current Available Quantity: The exact number of units currently sellable at the store.",
+        "Item Status: Boolean or categorical status (In-Stock, Out-of-Stock, Low Stock, Pre-order, Reserved).",
+        "Reserve Stock Count: The portion of stock currently held for pending orders or specific promotions.",
+        "Reserved Stock Count: The portion of stock currently held for specific pending orders.",
+        "Excluded Stock Count: Stock that is technically in the warehouse but logically unavailable (e.g., damaged, on backorder, expired).",
+        "Effective Date/Time: Timestamp of the latest inventory update to ensure data freshness context.",
+        "SKU/Item Identifier: Unique reference to the product line item.",
+        "Location Code: Specific aisle, shelf, or bin location within the store (if relevant for fulfillment)."
+      ],
+
+      part 3
+      "functional_rules": [
+        "The Inventory Snapshot must be updated by the Store Partner within a defined maximum latency window (e.g., every 5 minutes) to ensure accuracy.",
+        "If available quantity drops to zero or below the minimum threshold, the status must immediately change to 'Out-of-Stock' in the aggregated view.",
+        "Stock reserved for a specific pending order must be deducted from the general available quantity before allocation to a new order.",
+        "Excluded stock (damaged/expired) must be clearly flagged and ignored during availability checks, even if it is physically present.",
+        "Inventory visibility is conditional on the validity of the Store Partner Agreement and active service zone status.",
+        "System must treat 'Reserved' and 'Available' as separate pools; allocation can only succeed if (Available + Reserved) meets demand, with Reserved pre-allocated."
+      ],
+      "information_validation": [
+        "Completeness Check: Ensure every ordered SKU has a corresponding stock count record in the snapshot.",
+        "Consistency Check: Verify that the sum of (Available, Reserved, Excluded, Sold) equals Total Inventory reported by the store.",
+        "Timeliness Check: Flag any Inventory Snapshot older than the configured refresh interval as 'stale' for the Allocation Engine.",
+        "Discrepancy Detection: Alert if stock count changes by more than a defined percentage between consecutive sync cycles, indicating potential data errors.",
+        "Source Verification: Require confirmation from the Store Partner that the POS data accurately reflects physical reality before trusting the count."
+      ],
+      "information_flow": {
+        "source": "Store Partner POS Systems / Inventory Management API",
+        "consumer": [
+          "Platform Operator",
+          "Order Allocation Engine"
+        ],
+        "trigger": "Periodic synchronization cycles (e.g., every 5-15 minutes) or event-driven updates (e.g., 'Sale', 'Return', 'Stock Adjustment') at the Store Partner.",
+        "outcome": "Generation of a verified Real-Time Inventory Snapshot used to validate Order Requests and allocate resources."
+      }
+    }
+    

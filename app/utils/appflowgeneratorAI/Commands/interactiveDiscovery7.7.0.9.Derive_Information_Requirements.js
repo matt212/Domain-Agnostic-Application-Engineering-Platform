@@ -300,838 +300,815 @@ function buildBaseContext(input) {
 function buildInformationRequirementsPrompt(base) {
   return `
 
-# DOMAIN-AGNOSTIC TECHNO-FUNCTIONAL INFORMATION REQUIREMENTS ELABORATION
+# DOMAIN-AGNOSTIC TECHNO-FUNCTIONAL INFORMATION REQUIREMENTS
+# PART 1 — ITERATIVE INTELLIGENT BUSINESS CONTEXT DISCOVERY
 
-## 1. ROLE AND OBJECTIVE
+## 1. ROLE AND EXPERTISE
 
-Act as a Senior Business Analyst, Domain Specialist, Enterprise
-Information Architect, Functional Consultant and Technology
-Delivery Architect.
+Act as an exceptionally experienced:
 
-Your task is to transform every supplied, previously discovered
-high-level Business Information Requirement into a comprehensive
-and detailed techno-functional information specification.
+- Senior Business Analyst
+- Industry and Domain Specialist
+- Business Process Architect
+- Enterprise Information Architect
+- Functional Consultant
+- Operational Transformation Consultant
+- Business Information Requirements Architect
 
-IMPORTANT DISTINCTION:
+Think like a senior domain consultant who understands how
+businesses actually operate, including their information needs,
+operational dependencies, responsibilities, business activities,
+decisions, exceptions and cross-functional interactions.
 
-The Parent Information Requirements supplied in this prompt have
-ALREADY been discovered in the preceding discovery stage.
+Your task is to elaborate an existing collection of parent
+Information Requirements by discovering the complete business
+context associated with EACH requirement.
 
-This stage is NOT responsible for rediscovering, filtering,
-reassessing, validating or replacing those parent requirements.
+This is an intelligent, domain-driven business discovery exercise.
 
-This stage is responsible for elaborating each discovered
-requirement into the detailed information needed to support
-actual business operations.
-
-Treat each parent Information Requirement as an established
-business information need and expand its functional meaning.
-
-The objective is to determine:
-
-- Who requires, provides, maintains and consumes the information.
-- Why the information is required and how it is used.
-- Which responsibilities depend on the information.
-- Which business activities require or generate it.
-- Which business objects contain, provide or consume it.
-- What information sources can supply the required information.
-- What individual information elements must be available.
-- Which business decisions depend on those information elements.
-- Which functional rules govern their use.
-- How completeness, accuracy, consistency and validity are established.
-- How information is generated, retrieved, transferred, updated and consumed.
-- What additional information dependencies are necessary for the
-  business requirement to function effectively.
-
-Do not merely rephrase the parent Information Requirements.
-
-Expand them into operationally meaningful, detailed and actionable
-functional information specifications.
+It is NOT a task to rediscover Information Requirements,
+extract business objects as requirements, or generate a new
+collection of parent requirements.
 
 ---
 
-## 2. BUSINESS CONTEXT
+## 2. DOMAIN AND BUSINESS DISCOVERY DATA
 
-### Domain
-
+Domain:
 ${base.domain}
 
-### Niche
-
+Niche:
 ${base.niche}
 
-### Business Objects
+### 2.1 Existing Business Objects
 
 ${JSON.stringify(base.business_objects, null, 2)}
 
-### Business Actors
+### 2.2 Existing Business Actors
 
 ${base.actor_fields}
 
-### Actor Responsibilities and Authorizations
+### 2.3 Actor Responsibilities and Authorizations
 
 ${base.actor_responsibilities}
 
-### Actor and Business Object Relationships
+### 2.4 Actor and Business Object Relationships
 
 ${base.actor_business_object_relationships}
 
-### Business Activities
+### 2.5 Existing Business Activities
 
 ${base.business_activities}
 
-### Parent Information Requirements
+IMPORTANT:
 
-${base.information_system}
+These datasets are the business discovery baseline.
 
----
+They provide information about the existing business ecosystem,
+but they are NOT the source of parent Information Requirements.
 
-## 3. DISCOVERY-DRIVEN ELABORATION PRINCIPLES
+Use these datasets to understand the business and discover
+the actors, responsibilities, activities and business-object
+relationships associated with each parent requirement.
 
-The supplied business context represents the existing business
-baseline. It is not an exhaustive inventory of all information
-needed to fulfil the discovered Information Requirements.
-
-You MUST use the baseline together with domain and niche knowledge
-to discover and elaborate additional information needs.
-
-Apply the following reasoning dimensions:
-
-### A. Existing information
-
-Identify the information explicitly available through the supplied
-business objects, actors, responsibilities, relationships and activities.
-
-### B. Implicit information
-
-Infer information that is not explicitly represented but is
-necessary to fulfil the parent Information Requirement.
-
-For example, an inventory requirement may need information beyond
-the currently recorded stock quantity, such as reserved quantities,
-unavailable quantities, stock discrepancies and inventory freshness.
-
-### C. Operational information
-
-Identify information needed to execute the actual business operation,
-including information required for initiation, processing, assignment,
-monitoring, completion and exception handling.
-
-### D. Decision-support information
-
-Identify information needed to make the business decisions associated
-with the requirement.
-
-Consider the inputs, conditions, status, evidence and outcomes needed
-to support each decision.
-
-### E. Exception and recovery information
-
-Identify information required when normal business operations cannot
-proceed as expected.
-
-Consider failures, discrepancies, rejections, delays, exceptions,
-retries, cancellations, corrections and recovery decisions where
-relevant to the domain and parent requirement.
-
-### F. Information dependencies
-
-Identify additional information needed from other business objects,
-business activities, participants or external information sources
-to fulfil the requirement.
-
-### G. Lifecycle information
-
-Consider information required across the relevant lifecycle of the
-business object or transaction, including creation, modification,
-validation, processing, completion and subsequent review.
-
-These are reasoning dimensions, not a mandatory checklist.
-Apply only those relevant to each parent Information Requirement.
-
-DISCOVERY IS EXPECTED.
-
-Do not limit the elaboration to information explicitly mentioned
-in the supplied inputs.
-
-Use domain knowledge to identify additional information elements,
-information sources, functional dependencies, business rules,
-validation requirements and operational information flows.
-
-Do not treat an inferred information need as invalid simply because
-it is absent from the supplied business objects.
+You must also use domain and niche knowledge to discover
+business context missing from these datasets.
 
 ---
 
-## 4. ACTOR TRACEABILITY
+## 3. AUTHORITATIVE PARENT INFORMATION REQUIREMENTS
+## STRICT SOURCE CONTROL
 
-Identify the actors involved in requiring, providing, maintaining,
-verifying, authorizing or consuming the information.
+The ONLY source of parent Information Requirements is:
 
-Use the supplied Business Actors and Actor Responsibilities as
-the baseline.
+${JSON.stringify(base.information_requirements, null, 2)}
 
-Apply domain reasoning to identify additional actor involvement
-where it is necessary to fulfil the parent Information Requirement.
+This is the authoritative collection of previously discovered
+Information Requirements.
 
-Distinguish between:
+Each entry provides:
 
-- Information requester.
-- Information provider.
-- Information owner.
-- Information maintainer.
-- Information verifier.
-- Information consumer.
-- Decision-maker.
+- information_requirement
+- description
+- business_purpose
 
-Include relevant existing actor names exactly as supplied.
+These entries have already been discovered and established.
 
-Do not invent arbitrary organizational roles or actor names.
+Your task is to elaborate these requirements, NOT discover
+or generate a replacement list.
 
-If a necessary participant is not represented in the supplied actors,
-do not silently invent an existing actor. Identify the information
-dependency using the available context and describe the missing
-participant only where necessary.
+### 3.1 Strict Parent Requirement Rules
 
-The required_by_actors array must contain actors who genuinely
-require or consume the information, not every actor involved
-indirectly in the business process.
+For every supplied entry:
 
----
+1. Read its information_requirement.
+2. Read its description.
+3. Read its business_purpose.
+4. Understand the actual information need represented by it.
+5. Perform the Part 1 business-context discovery for that requirement.
+6. Use its original information_requirement value in the output.
 
-## 5. RESPONSIBILITY TRACEABILITY
+The output information_requirement MUST be copied directly
+from the corresponding input entry.
 
-Identify the responsibilities that depend on or use the information.
+It must NEVER be derived from:
 
-Use the supplied Actor Responsibilities and Authorizations as
-the primary baseline.
+- Business object names.
+- Actor names.
+- Responsibility names.
+- Activity names.
+- Relationships.
+- Domain or niche terminology.
+- AI-generated interpretations.
 
-Expand the functional interpretation of those responsibilities
-using domain knowledge.
+### 3.2 Critical Conceptual Distinction
 
-Determine:
+An Information Requirement describes WHAT business information
+the organization needs.
 
-- Why the responsibility needs the information.
-- What accountability the information supports.
-- What operational action depends on it.
-- What information the actor must provide, maintain, verify
-  or consume.
-- Whether authorization or responsibility boundaries affect
-  information usage.
+A Business Object describes an entity that stores, represents,
+manages, provides or consumes business information.
 
-Do not merely copy every responsibility associated with an actor.
+These are not interchangeable concepts.
 
-Select and elaborate only those relevant to the parent requirement.
+For example:
 
-Where domain reasoning reveals a necessary responsibility that is
-not represented in the supplied baseline, describe the business
-responsibility conceptually without falsely attributing it to
-an existing actor.
+Parent Information Requirement:
+"Real-Time Inventory Availability and Stock Levels"
 
----
+Supporting Business Object:
+"Real-Time Inventory Snapshot"
 
-## 6. BUSINESS ACTIVITY TRACEABILITY
+The business object may be relevant to the Information Requirement,
+but it MUST NOT replace the parent requirement in the output.
 
-Identify the business activities that require, generate, retrieve,
-update, verify or consume the information.
+Similarly:
 
-Use the supplied Business Activities as the baseline.
+- "Delivery Zone Map" is not automatically an Information Requirement.
+- "Store Partner Agreement" is not automatically an Information Requirement.
+- "Product Catalog" is not automatically an Information Requirement.
 
-Consider the complete operational context surrounding the parent
+Even if a business object appears highly relevant, it must remain
+a supporting business object and must never become a parent
 Information Requirement.
 
-Determine whether information is required:
+### 3.3 No Parent Requirement Invention
 
-- Before an activity starts.
-- During activity execution.
-- When a business decision is made.
-- During assignment or allocation.
-- When an exception occurs.
-- When a business object is created or modified.
-- During completion or handover.
-- During subsequent monitoring, review or reconciliation.
+You are strictly prohibited from:
 
-Use existing activity names exactly as supplied.
+- Creating new Information Requirements.
+- Generating Information Requirements from business objects.
+- Using business object names as parent requirement names.
+- Renaming supplied Information Requirements.
+- Replacing supplied Information Requirements with shorter names.
+- Splitting a parent requirement into multiple output requirements.
+- Combining multiple parent requirements.
+- Omitting an existing parent requirement.
+- Reordering the parent requirements.
 
-Domain reasoning may reveal additional activity dependencies.
-Describe these as inferred business activities only when they
-are necessary to explain the information requirement.
+The parent Information Requirement collection is immutable.
 
-Do not populate the activity list with generic or unrelated
-industry activities.
-
----
-
-## 7. BUSINESS OBJECT TRACEABILITY
-
-Identify the business objects that contain, provide, consume,
-depend on or are updated using the required information.
-
-Use the supplied Business Objects and Actor-Business Object
-Relationships as the baseline.
-
-Consider:
-
-- Information held by an existing business object.
-- Information obtained from another business object.
-- Information required to create or update an object.
-- Information required to validate an object's state.
-- Information shared between related objects.
-- Information produced as a result of an activity.
-- Information required to establish relationships between objects.
-
-Do not limit the analysis to explicitly declared object attributes.
-
-An existing business object may require additional information
-elements that have not yet been modelled.
-
-Discover these information elements and relate them to the
-appropriate existing business objects.
-
-Do not automatically create new business objects simply because
-an additional information element is identified.
-
-If an additional business object appears genuinely necessary,
-describe the dependency in the relevant functional explanation
-rather than silently modifying the supplied business-object
-catalogue.
+Only its associated business-context relationships are being
+discovered and elaborated.
 
 ---
 
-## 8. INFORMATION USAGE
+## 4. ITERATIVE PROCESSING — EVERY REQUIREMENT
 
-Explain how the information is actually used to fulfil the
-parent Information Requirement.
+Process the authoritative Information Requirements collection
+one entry at a time.
 
-Describe:
+For EACH parent Information Requirement, independently:
 
-- What information is needed.
-- Who uses it and for what responsibility.
-- At which business activity or operational stage it is needed.
-- What business operation depends on it.
-- How it supports business decisions.
-- What subsequent activity or business object uses its outcome.
-- What happens when information is missing, inaccurate, outdated,
-  inconsistent or unavailable.
-- What information is needed to manage relevant exceptions.
+1. Read its original name, description and business purpose.
+2. Understand the information need in the context of the domain
+   and niche.
+3. Investigate the business capabilities that depend on it.
+4. Discover all relevant business actors.
+5. Discover the responsibilities associated with those actors.
+6. Discover the business activities associated with the requirement.
+7. Identify all relevant existing business objects.
+8. Investigate upstream and downstream dependencies.
+9. Discover implicit relationships using domain knowledge.
+10. Investigate relevant operational exceptions and alternative paths.
+11. Cross-check all four discovery dimensions.
+12. Produce exactly one output object for that parent requirement.
 
-The explanation must provide a meaningful techno-functional
-description, not simply restate the parent requirement.
+After completing one requirement, move to the next input requirement.
 
-Use concrete domain and niche examples where they clarify
-the functional meaning.
+Repeat until EVERY supplied Information Requirement has been processed.
 
-Avoid repeating information already captured in the other fields.
+### Iteration Rules
 
----
-
-## 9. INFORMATION SOURCE DISCOVERY
-
-Discover the information sources capable of supplying the
-information required by the parent requirement.
-
-Use existing business objects, actors, activities and relationships
-as the starting point.
-
-Extend the analysis using domain and niche knowledge.
-
-Consider potential information origins such as:
-
-- Existing business objects and transaction records.
-- Business actors and operational participants.
-- Business activities and their outcomes.
-- Operational observations and events.
-- Other internal business functions.
-- External business participants.
-- External information providers.
-- Public, commercial or regulatory information sources.
-- Historical and derived business information.
-
-These are discovery possibilities, not mandatory categories.
-
-For each information source, establish:
-
-- What information it provides.
-- Why it is an appropriate source.
-- Whether the information is directly captured, derived,
-  received, maintained or verified.
-- Which business activity makes the information available.
-- Whether the information requires corroboration or verification.
-
-You MAY infer relevant external information sources when
-domain and niche knowledge establishes a meaningful business need.
-
-For example, a delivery-time information requirement may reasonably
-depend on traffic, weather and geographic information providers
-where these influence delivery operations.
-
-Do not restrict discovery to the sources explicitly present in
-the supplied business objects.
-
-However, distinguish an inferred source from an established
-business integration or contracted provider.
-
-Do not fabricate named vendors, applications, APIs, databases,
-specific regulatory authorities or existing integrations.
-
-If the precise provider is unknown, identify the appropriate
-source category and indicate that provider selection requires
-business confirmation.
+- Each requirement is an independent discovery exercise.
+- Do not blindly reuse the previous requirement's results.
+- Shared actors may appear in multiple requirements when relevant.
+- Shared responsibilities may appear in multiple requirements when relevant.
+- Shared activities may appear in multiple requirements when relevant.
+- Shared business objects may appear in multiple requirements when relevant.
+- Evaluate relevance independently for each requirement.
+- Do not stop after the first requirement.
+- Do not return a representative sample.
+- Do not generate additional parent requirements.
 
 ---
 
-## 10. BUSINESS DECISIONS SUPPORTED
+## 5. INTELLIGENT DOMAIN AND BUSINESS REASONING
 
-Identify the concrete business decisions that depend on the
-required information.
+For EACH parent Information Requirement, conduct the following
+investigations independently.
 
-Use the parent requirement, business activities, actor
-responsibilities and domain knowledge together.
+Do not immediately select matching names from the supplied data.
 
-Consider relevant decisions such as:
+First understand what the information requirement actually means
+operationally in the specified domain and niche.
 
-- Eligibility and acceptance.
-- Approval and rejection.
-- Assignment and allocation.
-- Prioritization.
-- Availability and capacity.
-- Pricing and financial determination.
-- Risk and exception handling.
-- Compliance and authorization.
-- Operational intervention.
-- Completion and reconciliation.
-- Cancellation, recovery and resolution.
+### 5.1 Business Purpose Investigation
 
-These are reasoning possibilities, not mandatory decision types.
+Ask yourself:
 
-For each decision, identify the information needed to make it.
+- What actual business problem does this information requirement solve?
+- What business capability depends on this information?
+- What operational outcome is the business trying to achieve?
+- What would become impossible, unreliable or inefficient if this
+  information were unavailable?
+- Is the information required by one business function or several?
+- Which upstream business activities create the need for it?
+- Which downstream business activities depend on it?
+- Does it support execution, authorization, monitoring, control
+  or business decision-making?
+- Is the information needed continuously or at specific business events?
+- What other business information must be available to fulfil this need?
+- Are there dependencies that are not represented in the baseline?
 
-Where relevant, identify the conditions, statuses, evidence,
-quantities or other information elements that influence the decision.
+Understand the complete business purpose before selecting
+the associated entities.
 
-Do not simply list generic decisions.
+### 5.2 Actor Discovery Investigation
 
-The decision must have a clear relationship to the parent
-Information Requirement and its business purpose.
+Examine the complete business ecosystem.
 
----
+Ask:
 
-## 11. REQUIRED INFORMATION DETAILS
+- Who experiences the business problem addressed by this requirement?
+- Who needs the information to perform their responsibilities?
+- Who originates or first captures the information?
+- Who supplies the information to another participant?
+- Who is accountable for maintaining its accuracy?
+- Who verifies or confirms its correctness?
+- Who uses it to approve, reject, allocate or execute?
+- Who monitors it and intervenes when something goes wrong?
+- Who consumes it without directly creating it?
+- Who is affected when it is missing or incorrect?
+- Are there upstream or downstream participants whose responsibilities
+  depend on this information?
+- Does the domain require marketplace participants, service providers,
+  regulators, operational controllers, customers or external
+  information providers?
+- Does the existing actor catalogue omit a functionally necessary role?
+- Are there distinct business roles hidden under a generic actor?
+- Does the requirement involve both human and system actors?
 
-This is a core discovery dimension.
+Investigate participants across:
 
-Decompose each parent Information Requirement into the specific
-information elements required to support its business purpose.
-
-Go beyond the wording of the parent requirement.
-
-Identify the individual information needed by business actors,
-activities, objects and decisions.
-
-Consider, where relevant:
-
-- Identification and reference information.
-- Descriptive and classification information.
-- Status and lifecycle information.
-- Quantity and measurement information.
-- Date, time and duration information.
-- Geographic and location information.
-- Ownership and responsibility information.
-- Transaction and financial information.
-- Availability and capacity information.
-- Conditions and eligibility information.
-- Historical and performance information.
-- Evidence and supporting information.
-- Risk and exception information.
-- Validation and verification information.
-- Decision and outcome information.
-- Dependencies and relationship information.
-
-These are reasoning categories, not a fixed checklist.
-
-For every information element:
-
-- Identify the specific information required.
-- Explain its functional relevance.
-- Connect it to the relevant business activity,
-  responsibility or decision.
-- Identify the relevant business object or source where possible.
-- Distinguish captured information from calculated, derived
-  or externally obtained information.
-
-Discover additional information elements where domain reasoning
-shows that they are necessary or valuable to the parent requirement.
-
-Do not restrict information details to existing object attributes.
-
-Do not prematurely specify database columns, programming data types,
-physical schemas or API field definitions.
-
----
-
-## 12. FUNCTIONAL RULES
-
-Discover the functional rules governing how the required information
-is captured, maintained, used and acted upon.
-
-Use the supplied context and domain knowledge to derive
-business-relevant behaviour.
-
-Consider:
-
-- Information completeness requirements.
-- Information consistency requirements.
-- Information freshness and update expectations.
-- Information dependencies.
+- Information origination.
+- Information provision.
 - Information ownership.
-- Information visibility and access.
-- Authorization and usage restrictions.
-- Eligibility and acceptance conditions.
-- Business constraints.
-- Information precedence.
-- Status transitions and dependencies.
-- Exception conditions.
-- Correction and reconciliation.
-- Information retention or availability where relevant.
+- Information maintenance.
+- Information verification.
+- Information consumption.
+- Operational execution.
+- Authorization and decision-making.
+- Monitoring and control.
+- Exception handling and recovery.
+- Governance and compliance.
 
-Rules must explain expected business behaviour.
+Do not include every participant simply because they exist
+in the business ecosystem.
 
-Where domain knowledge establishes a necessary business rule,
-you may infer it even if it is not explicitly supplied.
+Include actors with a genuine functional relationship to
+the parent Information Requirement.
 
-Do not present an inferred rule as an existing organizational policy.
+You MAY discover and introduce additional actors or functional
+roles that are absent from the supplied actor baseline.
 
-Distinguish between:
+### 5.3 Responsibility Discovery Investigation
 
-- Established rule: directly supported by the supplied context.
-- Derived rule: a necessary or reasonable business implication.
-- Configurable rule: a business policy or threshold requiring
-  confirmation.
+For every relevant actor, ask:
 
-Do not invent arbitrary numerical thresholds, exact frequencies,
-SLA commitments, formulas or contractual obligations.
+- What is this actor actually accountable for?
+- Which responsibility creates the need for this information?
+- What task cannot be performed correctly without it?
+- Does the actor capture, maintain, verify, approve, consume
+  or act upon the information?
+- Does the responsibility involve operational execution or control?
+- Does the actor need this information to exercise an authorization?
+- Does the actor correct discrepancies?
+- Does the actor monitor an operational condition represented
+  by this information?
+- Is there a separation between the participant providing information
+  and the participant accountable for its accuracy?
+- Does the domain imply responsibilities absent from the baseline?
+- Are multiple responsibilities required at different lifecycle stages?
+- Does the actor have exception-resolution or escalation responsibilities?
 
-Where exact values are unknown, describe the rule conceptually
-and identify the value as requiring business configuration
-or confirmation.
+Discover specific, meaningful business responsibilities.
 
----
+You MAY infer additional responsibilities using domain and niche
+knowledge even when they are absent from the supplied catalogue.
 
-## 13. INFORMATION VALIDATION
+### 5.4 Business Activity Discovery Investigation
 
-Discover the checks required to establish that information is
-complete, accurate, current, consistent and suitable for business use.
+Investigate the complete operational lifecycle.
 
-Consider:
+Ask:
 
-- Completeness verification.
-- Accuracy verification.
-- Validity verification.
-- Consistency across business objects.
-- Cross-activity verification.
-- Authorization verification.
-- Status and lifecycle verification.
-- Timeliness and freshness checks.
-- Source reliability.
-- Evidence verification.
-- Duplicate and discrepancy identification.
-- Exception detection.
-- Reconciliation between information sources.
+- Which activity first creates the need for this information?
+- Which activity captures or generates it?
+- Which activity retrieves or consumes it?
+- Which activity verifies or validates it?
+- Which activity uses it to make a business decision?
+- Which activity updates the underlying information?
+- Which activity depends on it before proceeding?
+- Which activity uses it to complete a transaction?
+- Which activities depend on it after the initial transaction?
+- Which activities monitor changes in the information?
+- Which activities handle missing, inaccurate or conflicting information?
+- Which activities support correction, reconciliation or recovery?
+- Does the requirement support several stages of the business lifecycle?
+- Are activities in the supplied catalogue missing information dependencies?
+- Does domain knowledge indicate additional operational dependencies?
+- Are there alternative activities that consume the same information?
 
-For each validation, explain what is being checked and why.
+Investigate activities associated with:
 
-Use domain reasoning to discover relevant validation requirements
-even where they are not explicitly represented in the supplied inputs.
+- Information generation.
+- Information capture.
+- Information ingestion.
+- Information synchronization.
+- Information enrichment.
+- Information verification.
+- Information reconciliation.
+- Information retrieval.
+- Information consumption.
+- Operational execution.
+- Exception management.
+- Recovery and correction.
+- Continuous monitoring.
 
-Do not confuse information validation with technical implementation.
+These are reasoning perspectives, not mandatory activities.
 
-Do not prescribe specific validation algorithms or technologies
-unless explicitly supplied.
+You MAY discover additional domain-relevant business activities
+that are absent from the supplied activity catalogue.
 
-Where the exact acceptance criteria or threshold is unknown,
-identify it as a configurable business rule requiring confirmation.
+Do not include activities simply because they sound relevant.
+Establish their functional connection to the parent requirement.
 
----
+### 5.5 Business Object Discovery Investigation
 
-## 14. INFORMATION FLOW
+Investigate the information requirement's relationship with
+the existing business object ecosystem.
 
-Describe how information originates, becomes available,
-moves between participants and supports business operations.
+Ask:
 
-Identify:
+- Which business object represents the required information?
+- Which object initially captures the information?
+- Which object provides information to another object?
+- Which object consumes or depends on the information?
+- Which object must be updated when the information changes?
+- Which object contains evidence, status or outcomes associated
+  with the information?
+- Which objects depend on it for creation, validation or processing?
+- Does the information need to be shared across multiple objects?
+- Are there parent-child or transactional dependencies?
+- Does the information change during an object's lifecycle?
+- Does an existing business object have an implicit information
+  dependency not represented in its current definition?
+- Is an object genuinely functionally related or merely associated?
+- Which supporting objects are necessary for the information
+  to be created, verified, maintained or consumed?
 
-- Source: Where the information originates or is obtained.
-- Consumer: Which actors or participants require and use it.
-- Trigger: Which business event, activity or condition causes
-  the information to be captured, retrieved, calculated or updated.
-- Outcome: What business operation, decision or result is enabled.
+Do not restrict analysis to explicitly declared object attributes.
 
-Consider information flows across multiple business activities
-where relevant.
+Use domain knowledge to discover relationships beyond the
+supplied actor-object relationship catalogue.
 
-Distinguish between:
+### STRICT BUSINESS OBJECT RULE
 
-- Information captured directly from a participant.
-- Information retrieved from an existing business object.
-- Information received from an external source.
-- Information calculated or derived from other information.
-- Information updated following a business event.
-- Information distributed to downstream consumers.
+For this Part 1 generation, related_business_objects must contain
+only business objects from the supplied business_objects baseline.
 
-The information flow must describe functional business movement,
-not prescribe application architecture.
+Do not invent new business objects.
 
-You may identify external information dependencies as part of
-discovery without claiming that an integration already exists.
+Do not use actors, responsibilities or activities as business objects.
 
----
+Do not use a business object as a replacement parent
+Information Requirement.
 
-## 15. CROSS-DIMENSIONAL REASONING
+### 5.6 Cross-Functional Dependency Investigation
 
-Elaborate the requirement as one connected information specification.
+Think beyond individual actors, responsibilities, activities and objects.
 
-Do not treat each output field as an independent checklist.
+Ask:
 
-Establish meaningful relationships between:
+- Which business functions must cooperate to fulfil this requirement?
+- Does one actor provide information another actor relies upon?
+- Does one activity produce information consumed by another activity?
+- Does one business object depend on another object's information?
+- Is information shared between operational and control functions?
+- Are there dependencies between customer-facing and back-office
+  operations?
+- Are there financial, compliance, logistics, service or operational
+  dependencies relevant to the niche?
+- What upstream information must exist before this requirement
+  can be fulfilled?
+- Which downstream business functions consume its outcome?
+- What happens when two participants have conflicting information?
+- Does the requirement involve internal and external participants?
+- Are there dependencies across organizational or operational boundaries?
 
-- Parent Information Requirement.
-- Actors.
-- Responsibilities.
-- Business Activities.
-- Business Objects.
-- Information Sources.
-- Information Usage.
-- Business Decisions.
-- Required Information Details.
-- Functional Rules.
-- Information Validation.
-- Information Flow.
+Discover meaningful relationships even when they are not explicitly
+represented in the supplied baseline.
 
-Ensure that:
+### 5.7 Exception and Alternative Scenario Investigation
 
-- Actors have a meaningful reason to require or consume the information.
-- Responsibilities explain the actor's need.
-- Activities identify where the information is used or produced.
-- Business objects identify where information is held or consumed.
-- Information sources can plausibly provide the required details.
-- Information details support the identified decisions.
-- Functional rules govern the actual business usage.
-- Validation controls establish information suitability.
-- Information flow connects sources, triggers, consumers and outcomes.
+Do not analyse only the ideal business scenario.
 
-Discover missing information dependencies rather than silently
-assuming they do not exist.
+Ask:
 
-Avoid repeating the same information in multiple fields.
+- What happens if the information is missing?
+- What happens if it is inaccurate or outdated?
+- What happens if two information sources disagree?
+- What happens if the responsible actor cannot provide it?
+- What happens if an activity fails halfway through?
+- Does another participant need to intervene?
+- Does the business require verification, correction or reassignment?
+- Which actors and activities become involved during recovery?
+- Which existing business objects record the exception or outcome?
+- Are alternative operational paths dependent on this information?
+- Does the domain require escalation, reconciliation or compensating action?
 
----
-
-## 16. TECHNO-FUNCTIONAL ABSTRACTION
-
-Produce detailed functional specifications that can serve as
-a foundation for subsequent business analysis, information
-modelling, application requirements and solution design.
-
-Describe:
-
-- What information is required.
-- Why it is needed.
-- Who uses or provides it.
-- Where it originates.
-- How it is used in business activities.
-- Which decisions depend on it.
-- What governs its use.
-- How its quality is established.
-- How it moves through the business.
-- What operational outcomes it enables.
-
-Do not prematurely design:
-
-- Database schemas.
-- Physical data models.
-- API contracts.
-- Application screens.
-- Microservices.
-- Infrastructure.
-- Programming logic.
-- Vendor-specific implementations.
-
-Identify functional information dependencies without prescribing
-their eventual technical implementation.
-
----
-
-## 17. COMPLETENESS AND DETAIL CONTROL
-
-The output must be sufficiently detailed to support downstream
-functional specification and information modelling.
-
-Do not sacrifice discovery depth merely to produce short output.
-
-At the same time, avoid repetitive explanations and unnecessary prose.
-
-Apply the following guidance to each parent requirement:
-
-- information_usage: Explain the functional context in approximately
-  2–4 meaningful sentences.
-- information_source: Identify relevant source categories and their
-  contribution; use concise descriptions.
-- business_decisions_supported: Include all materially relevant
-  decisions, normally 2–5.
-- required_information_details: Identify the essential information
-  elements, normally 5–10 where the requirement warrants them.
-- functional_rules: Include the relevant business rules, normally 3–6.
-- information_validation: Include the relevant verification controls,
-  normally 3–6.
-- traceability arrays: Include all meaningful relationships, without
-  repeating unrelated entries.
-- information_flow: Describe the business trigger, consumers and
-  outcome clearly and concisely.
-
-These are guidance ranges, not artificial quotas.
-
-A requirement may need more or fewer elements depending on its
-business complexity.
-
-Do not create redundant information merely to reach a target count.
-
-Do not truncate meaningful discovery to satisfy a word limit.
-
-Prioritize functional completeness, domain relevance and
-cross-dimensional consistency.
+Include relevant actors, responsibilities and activities involved
+in exception handling where they genuinely relate to the requirement.
 
 ---
 
-## 18. REQUIRED JSON RESPONSE STRUCTURE
+## 6. BASELINE-PLUS-DOMAIN DISCOVERY
 
-Return exactly one JSON object with this structure:
+The supplied business datasets are the baseline, not the limit
+of business discovery.
+
+Use two complementary sources of reasoning.
+
+### A. Existing Business Data
+
+Use the supplied datasets to identify and preserve:
+
+- Existing business actors.
+- Existing responsibilities.
+- Existing activities.
+- Existing business objects.
+- Existing relationships.
+
+Preserve original names exactly when using existing entities.
+
+### B. Domain and Niche Knowledge
+
+Actively use industry knowledge, operating models, transaction
+lifecycles and operational dependencies to discover:
+
+- Missing business actors.
+- Missing functional roles.
+- Missing responsibilities.
+- Missing business activities.
+- Missing cross-functional relationships.
+- Missing upstream and downstream dependencies.
+- Missing operational participants.
+- Missing exception-handling participants.
+
+You are explicitly expected to infer and introduce additional
+business context when domain knowledge indicates it is necessary.
+
+### Inference Rules
+
+- Additional actors are permitted.
+- Additional responsibilities are permitted.
+- Additional activities are permitted.
+- Additional relationships are permitted.
+- New business objects are NOT permitted in this stage.
+- New parent Information Requirements are NOT permitted.
+- Do not invent unrelated organizational roles.
+- Do not invent named companies, vendors or deployed systems.
+- Do not fabricate company-specific policies or integrations.
+- Do not add generic industry participants without functional justification.
+- Do not suppress valid domain inference merely because the baseline
+  does not explicitly contain it.
+
+Distinguish existing baseline entities from domain-inferred entities
+through your internal reasoning.
+
+The output schema remains unchanged and does not require
+additional provenance properties.
+
+---
+
+## 7. EXHAUSTIVE TRACEABILITY DISCOVERY
+
+For EACH parent Information Requirement, independently construct
+the following four dimensions.
+
+### 7.1 required_by_actors
+
+Include all relevant actors who:
+
+- Need the information.
+- Originate the information.
+- Provide the information.
+- Maintain the information.
+- Verify the information.
+- Authorize or approve using the information.
+- Consume the information.
+- Act upon the information.
+- Monitor the information.
+- Resolve exceptions involving the information.
+
+Include newly inferred actors when domain reasoning establishes
+their functional necessity.
+
+### 7.2 related_responsibilities
+
+Include all relevant responsibilities that:
+
+- Create the need for the information.
+- Explain why an actor requires or handles it.
+- Govern its origination or provision.
+- Govern its maintenance or accuracy.
+- Require its verification.
+- Use it to make business decisions.
+- Depend on it for operational execution.
+- Require its monitoring or control.
+- Involve exception handling or recovery.
+
+Include meaningful domain-inferred responsibilities.
+
+### 7.3 related_activities
+
+Include all relevant business activities that:
+
+- Generate the information.
+- Capture the information.
+- Supply or synchronize the information.
+- Retrieve or consume the information.
+- Verify or validate the information.
+- Update or maintain the information.
+- Depend on the information.
+- Use it for business execution.
+- Monitor it.
+- Handle exceptions, corrections or recovery.
+
+Discover activities across the complete business lifecycle.
+
+Do not return only the primary activity.
+
+Include meaningful domain-inferred activities.
+
+### 7.4 related_business_objects
+
+Include all relevant existing business objects that:
+
+- Represent the information.
+- Originate the information.
+- Store or contain the information.
+- Supply the information.
+- Consume the information.
+- Depend on the information.
+- Are updated using the information.
+- Represent decisions or operational outcomes.
+- Record associated exceptions or reconciliation outcomes.
+
+Use only the supplied business_objects dataset.
+
+Do not invent additional objects.
+
+---
+
+## 8. CROSS-DIMENSIONAL COMPLETENESS REVIEW
+
+After discovering the four dimensions, cross-check their relationships.
+
+Do not investigate each dimension independently and stop.
+
+Examine whether:
+
+- Every identified actor has a meaningful information-related role.
+- Every responsibility explains why an actor requires or handles
+  the information.
+- Every activity has a genuine connection to the requirement.
+- Every business object has a genuine functional relationship
+  to the information.
+- Missing actors reveal overlooked responsibilities or activities.
+- Missing activities reveal overlooked object dependencies.
+- Upstream and downstream relationships have been considered.
+- Relevant exception and recovery participants have been considered.
+- Domain-specific business practices have informed the discovery.
+
+### Mandatory Completeness Questions
+
+Before producing each requirement's result, ask:
+
+1. Have I understood the actual business purpose?
+2. Have I identified all meaningful information stakeholders?
+3. Have I considered information providers and consumers?
+4. Have I considered operational, control and governance participants?
+5. Have I identified the responsibilities behind their involvement?
+6. Have I investigated the complete information-related activity lifecycle?
+7. Have I considered upstream and downstream dependencies?
+8. Have I investigated relationships across business objects?
+9. Have I considered relevant operational exceptions and recovery?
+10. Have I used domain and niche knowledge to discover missing elements?
+11. Have I gone beyond keyword matching against the baseline?
+12. Have I included all meaningful relationships without adding
+    unrelated entities?
+13. Have I preserved the exact original parent requirement name?
+14. Have I avoided using business object names as parent requirements?
+
+If meaningful elements are missing, revise the result before
+moving to the next parent requirement.
+
+### Completeness Constraints
+
+- Do not return a representative sample.
+- Do not arbitrarily limit array sizes.
+- Do not stop after identifying the first few obvious matches.
+- Do not optimize for a short response at the expense of discovery.
+- Do not add irrelevant entities to increase coverage.
+- Avoid duplicate entries within each array.
+
+---
+
+## 9. REQUIRED OUTPUT JSON STRUCTURE
+
+Return ONE consolidated JSON array.
+
+Generate exactly one object for EVERY entry in the authoritative
+parent Information Requirements collection.
+
+Each object must contain exactly these five properties:
 
 {
-  "elaborated_information_requirements": [
-    {
-      "information_requirement": "Original Information Requirement Name",
-
-      "required_by_actors": [
-        "Business Actor Name"
-      ],
-
-      "related_responsibilities": [
-        "Relevant Actor Responsibility"
-      ],
-
-      "related_activities": [
-        "Relevant Business Activity"
-      ],
-
-      "related_business_objects": [
-        "Relevant Business Object"
-      ],
-
-      "information_usage": "Detailed explanation of how, when and why the information is required and used in business operations.",
-
-      "information_source": "Origin or provider of the information and how it becomes available to the business.",
-
-      "business_decisions_supported": [
-        "Business decision enabled or supported by the information"
-      ],
-
-      "required_information_details": [
-        "Specific information element required and its business relevance"
-      ],
-
-      "functional_rules": [
-        "Business rule governing the information or its usage"
-      ],
-
-      "information_validation": [
-        "Validation or verification required to establish information correctness and suitability"
-      ],
-
-      "information_flow": {
-        "source": "Information origin or provider",
-
-        "consumer": [
-          "Business Actor or participant consuming the information"
-        ],
-
-        "trigger": "Business event or activity that causes the information to be required, generated, retrieved or updated.",
-
-        "outcome": "Business outcome enabled by the information."
-      }
-    }
-  ]
+  "information_requirement": "Original Parent Information Requirement",
+  "required_by_actors": [],
+  "related_responsibilities": [],
+  "related_activities": [],
+  "related_business_objects": []
 }
 
----
+### Output Example — Structure Only
 
-## 19. JSON OUTPUT RULES
+[
+  {
+    "information_requirement": "Real-Time Inventory Availability and Stock Levels",
+    "required_by_actors": [
+      "Relevant Actor"
+    ],
+    "related_responsibilities": [
+      "Relevant Responsibility"
+    ],
+    "related_activities": [
+      "Relevant Activity"
+    ],
+    "related_business_objects": [
+      "Existing Business Object"
+    ]
+  },
+  {
+    "information_requirement": "Dynamic Delivery Time Estimates based on Traffic and Weather",
+    "required_by_actors": [
+      "Relevant Actor"
+    ],
+    "related_responsibilities": [
+      "Relevant Responsibility"
+    ],
+    "related_activities": [
+      "Relevant Activity"
+    ],
+    "related_business_objects": [
+      "Existing Business Object"
+    ]
+  }
+]
 
-1. The root property must be
-   "elaborated_information_requirements".
+This example illustrates the required structure only.
 
-2. Its value must be an array.
+Populate all arrays with actual discoveries.
 
-3. Produce exactly one elaborated specification for every
-   supplied parent Information Requirement.
-
-4. Preserve every original information_requirement name exactly.
-
-5. Include all properties shown in the JSON structure.
-
-6. Array properties must contain strings.
-
-7. information_flow must contain source, consumer, trigger
-   and outcome.
-
-8. Do not add properties outside the defined structure.
-
-9. Do not return comments, explanations or Markdown code fences.
-
-10. Return syntactically valid JSON.
-
-11. Do not leave an array empty merely because the information
-    is not explicitly present in the original business objects.
-    Apply domain reasoning to discover relevant information.
-
-12. Where a specific provider, value, policy or threshold cannot
-    be established, describe the appropriate business dependency
-    and identify what requires confirmation.
-
-13. Do not invent named vendors, existing systems, contracted
-    providers or organizational policies.
-
-14. Do not hardcode example actors, activities, business objects
-    or information values from this template.
-
-15. Do not omit legitimate inferred information requirements
-    at the detail level merely because they are absent from
-    the supplied baseline.
-
-16. Do not intentionally truncate the response.
-
-17. Generate the complete catalogue.
+The example names above are illustrative parent requirement names.
+In execution, use ONLY the names supplied in the authoritative
+input collection.
 
 ---
 
-## 20. FINAL INSTRUCTION
+## 10. MANDATORY INPUT-OUTPUT VALIDATION
 
-The Parent Information Requirements have already been discovered.
+Before returning the final JSON, validate the complete collection.
 
-Your responsibility is to elaborate them into detailed,
-domain-informed, techno-functional information specifications.
+### 10.1 Parent Requirement Validation
 
-Treat the supplied business data as the baseline, not the boundary
-of discovery.
+Let:
 
-Use domain and niche knowledge to discover additional information
-elements, sources, dependencies, decisions, functional rules,
-validation requirements and information flows.
+INPUT_REQUIREMENTS =
+the exact entries in the supplied information_requirements collection.
 
-Preserve every parent Information Requirement exactly.
+OUTPUT_REQUIREMENTS =
+the information_requirement values in the generated JSON array.
 
-Produce one complete elaborated specification per parent requirement.
+Verify:
 
-Return only the complete JSON catalogue.
+- Output object count equals input requirement count.
+- Every input requirement appears exactly once.
+- Every output name exactly matches an input name.
+- Original input order is preserved.
+- No input requirement is omitted.
+- No requirement is duplicated.
+- No new requirement is introduced.
+- No business object name is used as a replacement parent requirement.
+
+If any validation fails, correct the output before returning it.
+
+### 10.2 Supporting Data Validation
+
+Verify:
+
+- Existing actors retain their supplied names.
+- Existing responsibilities retain their supplied names.
+- Existing activities retain their supplied names.
+- Existing business objects retain their supplied names.
+- Domain-inferred actors, responsibilities and activities are
+  functionally justified.
+- Related business objects come exclusively from the supplied
+  business_objects dataset.
+- No actor, responsibility or activity is incorrectly classified
+  as a business object.
+
+### 10.3 JSON Schema Validation
+
+Every output object must contain exactly:
+
+- information_requirement
+- required_by_actors
+- related_responsibilities
+- related_activities
+- related_business_objects
+
+All four relationship properties must be arrays of strings.
+
+Do not add descriptions, business purposes or any other properties.
+
+---
+
+## 11. FINAL EXECUTION INSTRUCTION
+
+Process every entry in the authoritative
+base.information_requirements collection.
+
+For each entry, independently conduct a deep business-context
+discovery using:
+
+- Its original information_requirement.
+- Its description.
+- Its business_purpose.
+- The supplied business discovery datasets.
+- Domain and niche knowledge.
+
+Use the supporting datasets as the discovery baseline.
+
+Actively infer missing actors, responsibilities, activities
+and relationships where domain knowledge justifies them.
+
+Do not generate, rename, replace, derive or invent parent
+Information Requirements.
+
+Do not use business object names as parent requirements.
+
+The parent Information Requirements must come exclusively
+from the supplied authoritative collection.
+
+Return exactly one consolidated JSON array containing one
+complete Part 1 object for every supplied parent requirement.
+
+PART 1 ONLY.
+
+Do not generate:
+
+- information_usage
+- information_source
+- business_decisions_supported
+- required_information_details
+- functional_rules
+- information_validation
+- information_flow
+
+Return only valid JSON.
 `;
 }
 

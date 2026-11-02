@@ -2064,3 +2064,210 @@ Produce one complete elaborated specification per parent requirement.
 
 Return only the complete JSON catalogue.
 
+Assistant:
+{
+  "elaborated_information_requirements": [
+    {
+      "information_requirement": "Real-Time Inventory Availability and Stock Levels",
+      "required_by_actors": [
+        "Customer",
+        "Store Partner",
+        "Platform Operator",
+        "Order Allocation Engine"
+      ],
+      "related_responsibilities": [
+        "Inventory Provision and Synchronization",
+        "System Orchestration and Allocation",
+        "Order Initiation and Selection"
+      ],
+      "related_activities": [
+        "Order Initiation and Demand Capture",
+        "Order Validation and Resource Allocation",
+        "Inventory Synchronization and Validation"
+      ],
+      "related_business_objects": [
+        "Real-Time Inventory Snapshot",
+        "Product Catalog",
+        "Order Request"
+      ],
+      "information_usage": "This information is critical to prevent overselling and ensure the order can physically exist at the moment of purchase. The Platform Operator relies on it to validate the Order Request against actual stock before allocation. The Order Allocation Engine uses it to confirm availability and reserve items. If inventory is unavailable, the system must reject the request immediately to avoid order failures, returns, and customer dissatisfaction.",
+      "information_source": "Primary source: Integration with Store Partner Point of Sale (POS) systems or dedicated inventory management APIs. Secondary source: Platform's own synchronization engine aggregating these feeds. The source provides raw stock counts, which are transformed into a verified 'Real-Time Inventory Snapshot' object.",
+      "business_decisions_supported": [
+        "Order Eligibility: Determining if an item can be added to the cart.",
+        "Allocation Strategy: Selecting the specific store with the highest available stock for an item.",
+        "Reservation Logic: Deciding whether to tentatively hold stock or require immediate confirmation.",
+        "Fallback Handling: Triggering a substitution rule when the exact SKU is out of stock but alternatives exist."
+      ],
+      "required_information_details": [
+        "Current Available Quantity: The exact number of units currently sellable at the store.",
+        "Item Status: Boolean or categorical status (In-Stock, Out-of-Stock, Low Stock, Pre-order, Reserved).",
+        "Reserve Stock Count: The portion of stock currently held for pending orders or specific promotions.",
+        "Reserved Stock Count: The portion of stock currently held for specific pending orders.",
+        "Excluded Stock Count: Stock that is technically in the warehouse but logically unavailable (e.g., damaged, on backorder, expired).",
+        "Effective Date/Time: Timestamp of the latest inventory update to ensure data freshness context.",
+        "SKU/Item Identifier: Unique reference to the product line item.",
+        "Location Code: Specific aisle, shelf, or bin location within the store (if relevant for fulfillment)."
+      ],
+      "functional_rules": [
+        "The Inventory Snapshot must be updated by the Store Partner within a defined maximum latency window (e.g., every 5 minutes) to ensure accuracy.",
+        "If available quantity drops to zero or below the minimum threshold, the status must immediately change to 'Out-of-Stock' in the aggregated view.",
+        "Stock reserved for a specific pending order must be deducted from the general available quantity before allocation to a new order.",
+        "Excluded stock (damaged/expired) must be clearly flagged and ignored during availability checks, even if it is physically present.",
+        "Inventory visibility is conditional on the validity of the Store Partner Agreement and active service zone status.",
+        "System must treat 'Reserved' and 'Available' as separate pools; allocation can only succeed if (Available + Reserved) meets demand, with Reserved pre-allocated."
+      ],
+      "information_validation": [
+        "Completeness Check: Ensure every ordered SKU has a corresponding stock count record in the snapshot.",
+        "Consistency Check: Verify that the sum of (Available, Reserved, Excluded, Sold) equals Total Inventory reported by the store.",
+        "Timeliness Check: Flag any Inventory Snapshot older than the configured refresh interval as 'stale' for the Allocation Engine.",
+        "Discrepancy Detection: Alert if stock count changes by more than a defined percentage between consecutive sync cycles, indicating potential data errors.",
+        "Source Verification: Require confirmation from the Store Partner that the POS data accurately reflects physical reality before trusting the count."
+      ],
+      "information_flow": {
+        "source": "Store Partner POS Systems / Inventory Management API",
+        "consumer": [
+          "Platform Operator",
+          "Order Allocation Engine"
+        ],
+        "trigger": "Periodic synchronization cycles (e.g., every 5-15 minutes) or event-driven updates (e.g., 'Sale', 'Return', 'Stock Adjustment') at the Store Partner.",
+        "outcome": "Generation of a verified Real-Time Inventory Snapshot used to validate Order Requests and allocate resources."
+      }
+    },
+    {
+      "information_requirement": "Dynamic Delivery Time Estimates based on Traffic and Weather",
+      "required_by_actors": [
+        "Customer",
+        "Platform Operator",
+        "Order Allocation Engine"
+      ],
+      "related_responsibilities": [
+        "System Orchestration and Allocation",
+        "Order Initiation and Selection"
+      ],
+      "related_activities": [
+        "Order Validation and Resource Allocation",
+        "Last-Mile Logistics Execution",
+        "Order Initiation and Demand Capture"
+      ],
+      "related_business_objects": [
+        "Assigned Delivery Slot",
+        "Delivery Zone Map",
+        "Historical Order Performance"
+      ],
+      "information_usage": "Accurate delivery estimates are the cornerstone of customer trust in Quick Commerce. The Platform Operator and Order Allocation Engine use this data to calculate the duration of the delivery slot and promise it to the customer. If the estimate is inaccurate due to poor data, it leads to SLA breaches, customer complaints, and potential compensation claims. The information allows the system to dynamically adjust time windows based on real-world conditions rather than static averages.",
+      "information_source": "Internal sources: Historical order performance data, aggregated route times, and delivery partner telemetry (GPS speed). External sources: Real-time traffic APIs (e.g., Google Maps, local equivalents), weather data APIs, and public transport feeds (if relevant).",
+      "business_decisions_supported": [
+        "Slot Allocation: Assigning a time window that is statistically likely to be completed within the promised duration.",
+        "Slot Availability: Determining if a specific time slot is feasible given current traffic/weather conditions.",
+        "Dynamic Pricing: Adjusting delivery fees if conditions are predicted to cause severe delays (increasing cost of failure).",
+        "Route Feasibility: Deciding if an order can be fulfilled within the strict 'under 60 minutes' niche constraint."
+      ],
+      "required_information_details": [
+        "Base Travel Time: Average historical duration for a specific route segment under normal conditions.",
+        "Current Traffic Congestion Index: Real-time traffic density data for the route and destination.",
+        "Weather Impact Factor: Quantitative adjustment value based on current forecast (e.g., rain, fog, extreme heat affecting delivery speed).",
+        "Route Complexity Metrics: Data on road closures, construction zones, or pedestrian-heavy areas.",
+        "Store-to-Corner Distance: Precise calculation of distance from pickup point (store) to drop-off point (customer).",
+        "Peak Hour Multiplier: Adjustment factor applied if the delivery is scheduled during known high-traffic periods.",
+        "Historical Performance Variance: Statistical data on how often this route exceeded the average time in the last N orders."
+      ],
+      "functional_rules": [
+        "Delivery time estimates must be calculated using a weighted average of historical data and current external conditions (traffic/weather).",
+        "A safety buffer (e.g., +10-15%) must be added to the calculated time to account for unpredictable exceptions and ensure SLA compliance.",
+        "If current traffic or weather exceeds a defined threshold (e.g., 'severe congestion'), the system must automatically adjust the estimated time window upward.",
+        "Estimated times must be dynamic; they must update in real-time if the delivery agent reports unexpected delays or the traffic situation changes.",
+        "The calculated time cannot violate the hard business rule of the niche definition (e.g., cannot promise > 60 mins if the niche is defined as < 60 mins)."
+      ],
+      "information_validation": [
+        "Source Reliability: Verify that traffic and weather data are from reputable, real-time sources with low latency.",
+        "Calibration Check: Periodically validate estimated times against actual delivered times to detect systematic over- or under-estimation.",
+        "Completeness Check: Ensure both traffic and weather data are available for the specific route before finalizing a slot estimate.",
+        "Threshold Consistency: Validate that the calculated time respects the business-defined 'fast' threshold (e.g., < 60 mins)."
+      ],
+      "information_flow": {
+        "source": "External Traffic/Weather APIs and Internal Historical Performance Data",
+        "consumer": [
+          "Order Allocation Engine",
+          "Customer Interface"
+        ],
+        "trigger": "Creation of an Order Request or initial assignment of a Delivery Slot.",
+        "outcome": "Generation of an 'Assigned Delivery Slot' with a reliable estimated arrival time communicated to the customer."
+      }
+    },
+    {
+      "information_requirement": "Active Store Partner Operational Capacity",
+      "required_by_actors": [
+        "Platform Operator",
+        "Order Allocation Engine",
+        "Store Partner"
+      ],
+      "related_responsibilities": [
+        "Partner Relationship Management",
+        "System Orchestration and Allocation",
+        "Inventory Provision and Synchronization"
+      ],
+      "related_activities": [
+        "Order Validation and Resource Allocation",
+        "Market Entry and Partner Onboarding",
+        "Order Fulfillment and Preparation"
+      ],
+      "related_business_objects": [
+        "Store Partner Agreement",
+        "Fulfillment Task",
+        "Real-Time Inventory Snapshot"
+      ],
+      "information_usage": "Allocating orders to stores that are currently overwhelmed can lead to poor service quality, delayed pickups, and customer dissatisfaction. The Platform Operator must know the current operational load (number of active orders, staff utilization) to decide which store is best suited for a new order. This information prevents bottlenecks and ensures that high-volume orders are routed to stores with sufficient capacity to handle them without compromising the primary sales operation.",
+      "information_source": "Internal sources: Store Partner API reports on active task queues, staff availability, and peak hour indicators. External sources: Real-time monitoring of store foot traffic or POS transaction velocity. Some capacity data may be inferred from historical order volume and current inventory turnover rates.",
+      "business_decisions_supported": [
+        "Store Selection: Choosing the store with the highest capacity for a given order.",
+        "Order Rejection: Deciding whether to reject an order if all nearby stores are at maximum capacity.",
+        "Staff Allocation: Determining if additional store staff (merchandisers/supervisors) are needed to handle the surge.",
+        "Routing Strategy: Prioritizing stores with lower congestion over those with higher inventory but high load."
+      ],
+      "required_information_details": [
+        "Active Task Count: Number of Fulfillment Tasks currently in progress at the store.",
+        "Staff Utilization Rate: Percentage of available store staff currently occupied with orders vs. primary sales duties.",
+        "Pick-up Lead Time: Estimated time required to complete the current queue of tasks.",
+        "Physical Space Availability: Indicator of available counter/counter space for packing orders.",
+        "Peak Hour Status: Boolean or indicator if the store is currently in a known peak sales period that reduces capacity.",
+        "Restocking Status: Indication if the store is currently occupied with restocking, reducing capacity for orders."
+      ],
+      "functional_rules": [
+        "A store's capacity is dynamically defined as the difference between total staff time and time consumed by active fulfillment tasks.",
+        "Stores in a 'Peak Hour' status (as defined by the Store Partner Agreement) should be flagged as reduced capacity.",
+        "If the active task count exceeds a predefined threshold, the store should be marked as 'Overloaded', and new orders should be routed to the next best store.",
+        "Capacity information must be refreshed in near real-time (e.g., every 5 minutes) to reflect changes in staffing and order volume.",
+        "Capacity data must be treated as a soft constraint; if no store has capacity, the system should prioritize stores with the longest queue over those with the most inventory."
+      ],
+      "information_validation": [
+        "Data Freshness: Ensure capacity metrics are not older than the configured refresh interval.",
+        "Logical Consistency: Verify that active task counts do not exceed the number of active fulfillment tasks created by the system.",
+        "Partner Confirmation: Require acknowledgment from the Store Partner that the reported capacity accurately reflects their current state."
+      ],
+      "information_flow": {
+        "source": "Store Partner Operational Dashboards / APIs",
+        "consumer": [
+          "Order Allocation Engine",
+          "Platform Operator"
+        ],
+        "trigger": "Periodic capacity polling or event-driven updates when a new order is received at a store.",
+        "outcome": "Generation of a 'Store Capacity Score' used by the Order Allocation Engine to select the optimal fulfillment node."
+      }
+    },
+    {
+      "information_requirement": "Delivery Partner Real-Time Location and Status",
+      "required_by_actors": [
+        "Customer",
+        "Platform Operator",
+        "Delivery Partner",
+        "Order Allocation Engine"
+      ],
+      "related_responsibilities": [
+        "Route Execution and Navigation",
+        "System Orchestration and Allocation",
+        "Quality Assurance and Dispute Resolution"
+      ],
+      "related_activities": [
+        "Last-Mile Logistics Execution",
+        "Order Validation and Resource Allocation
+
