@@ -1,38 +1,33 @@
 User:
 
-# DOMAIN-AGNOSTIC TECHNO-FUNCTIONAL INFORMATION REQUIREMENT ELABORATION
+# DOMAIN-AGNOSTIC TECHNO-FUNCTIONAL INFORMATION REQUIREMENTS
+## PART 3: INTELLIGENT FUNCTIONAL RULES, INFORMATION VALIDATION AND INFORMATION FLOW DISCOVERY
 
 ## 1. ROLE AND OBJECTIVE
 
-Act as a Principal Business Analyst, Enterprise Business Architect, Domain Specialist, Information Architect and Techno-Functional Solution Analyst.
+Act as a Senior Business Analyst, Domain Specialist, Business Process Architect, Functional Analyst, and Information Requirements Architect.
 
-Your task is to transform the supplied high-level Business Information Requirements into detailed, traceable and implementation-oriented Techno-Functional Information Requirement Specifications.
+Your objective is to analyse each supplied Parent Information Requirement and discover its associated:
 
-For every supplied Information Requirement, discover and elaborate:
+1. Functional Rules
+2. Information Validation
+3. Information Flow
 
-- Which actors require or consume the information.
-- Which business responsibilities depend on it.
-- Which business activities produce, consume or exchange it.
-- Which business objects contain, represent or reference it.
-- How the information is used in actual business operations.
-- Where the information originates and how it becomes available.
-- Which business decisions depend on it.
-- What specific information elements are required.
-- What functional rules govern its use.
-- How its accuracy, completeness, validity and consistency are established.
-- How the information flows between its origin, business participants and consumers.
+Translate the business context into meaningful, specific, logically consistent, and testable functional requirements.
 
-Do not merely copy the supplied Information Requirements into a larger structure.
+Discover the business rules, information constraints, validation conditions, information sources, consumers, triggers, and outcomes that genuinely govern each Parent Information Requirement.
 
-Interrogate each requirement using domain knowledge, business reasoning, process understanding and techno-functional analysis.
+The discovery must be fully domain-agnostic and adapt dynamically to the supplied domain, niche, business objects, actors, responsibilities, relationships, activities, and parent information requirements.
 
-The objective is to produce a coherent specification that can subsequently support functional requirements, business process design, data modelling, integration analysis, application specifications and solution architecture.
+Do not assume a particular industry structure, business model, operating process, organizational structure, information lifecycle, or technology architecture.
+
+Do not simply restate the supplied information requirements. Investigate the business logic behind them and derive the functional behaviour necessary to support their intended business purpose.
 
 ---
 
-## 2. SUPPLIED BUSINESS CONTEXT
+## 2. DOMAIN AND BUSINESS DISCOVERY DATA
 
-Analyse all supplied information collectively.
+Use the following supplied context as the authoritative foundation for discovery.
 
 **Domain:**
 Quick Commerce (Q-Commerce)
@@ -40,11 +35,304 @@ Quick Commerce (Q-Commerce)
 **Niche:**
 Hyperlocal Grocery Delivery
 
-**Business Objects:**
-{"business_operating_model":{"value_proposition":"To enable the immediate acquisition of fresh groceries and essential goods within minutes of ordering, solving the friction between demand and supply for time-sensitive household needs.","participants":["Customer","Store/Fulfillment Center","Merchandiser","Delivery Partner","Platform Operator","Payment Provider","Regulatory Authority"],"value_creation_monetization":{"creation_mechanism":"Aggregating fragmented inventory from hyperlocal stores into a unified digital interface, optimizing last-mile logistics through algorithmic routing, and enabling real-time order fulfillment.","monetization_streams":["Transaction Commission","Delivery Fees","Subscription Models","Advertising/Sponsored Listings","Data Analytics Services"]},"distinctive_niche":"Hyperlocal, ultra-fast (typically under 60 minutes) delivery of fresh perishables and daily essentials, relying on a dense network of micro-fulfillment centers rather than centralized warehouses."},"derived_lifecycle":[{"stage":"Foundation Establishment","description":"Defining the service area, selecting store partners, establishing logistics partnerships, and setting pricing and service level agreements.","trigger":"Strategic decision to launch a new market zone or service category."},{"stage":"Supply Chain Integration","description":"Onboarding stores, defining SKU catalogs, mapping inventory locations, and establishing synchronization mechanisms for real-time stock visibility.","trigger":"Completion of partner contracts and initial inventory data ingestion."},{"stage":"Operational Readiness","description":"Testing logistics routes, calibrating demand forecasting models, and conducting dry runs of the order-to-delivery workflow.","trigger":"Acquisition of sufficient initial inventory and confirmed delivery partner availability."},{"stage":"Order Initiation","description":"Customer expresses need, browses available catalog, selects items, and submits a request for immediate fulfillment.","trigger":"Customer action on the digital interface."},{"stage":"Order Validation & Allocation","description":"System validates inventory availability, calculates fees, confirms delivery slot, and allocates the order to a specific store and delivery agent.","trigger":"Successful submission of the order request."},{"stage":"Order Preparation","description":"Store personnel pick items, verify quality, pack for transport, and hand over to the delivery partner.","trigger":"Allocation confirmation."},{"stage":"Last-Mile Delivery","description":"Delivery partner picks up the order, navigates to the customer location, and completes the physical transfer.","trigger":"Pickup confirmation from the store."},{"stage":"Handover & Confirmation","description":"Customer receives the order, verifies contents, and confirms receipt via the platform.","trigger":"Arrival at customer location."},{"stage":"Financial Settlement","description":"Transaction is finalized, funds are transferred to the customer, and revenue share is settled between the platform and the store.","trigger":"Handover confirmation."},{"stage":"Post-Transaction Review","description":"Collection of feedback, rating of experience, and initiation of loyalty points accrual.","trigger":"Completion of settlement."},{"stage":"Lifecycle Conclusion","description":"The specific order instance is closed; data is archived for analytics; optional dispute resolution window opens.","trigger":"Completion of all feedback and settlement processes."}],"business_objects":[{"object_name":"Service Area Definition","purpose":"Geographically delimits the zones where hyperlocal delivery is currently supported.","necessity":"Essential","first_stage":"Foundation Establishment","dependencies":[],"lifecycle_role":"Configuration parameter for Store and Delivery Partner onboarding.","evidence_status":"Inferred from operational constraints","confidence_score":0.9},{"object_name":"Store Partner Agreement","purpose":"Defines the commercial and operational relationship between the platform and the physical retail store.","necessity":"Essential","first_stage":"Foundation Establishment","dependencies":["Service Area Definition"],"lifecycle_role":"Enabler for catalog synchronization and inventory access.","evidence_status":"Inferred from business model requirements","confidence_score":0.95},{"object_name":"Product Catalog","purpose":"Represents the structured list of sellable items, including descriptions, prices, images, and category hierarchies.","necessity":"Essential","first_stage":"Supply Chain Integration","dependencies":["Store Partner Agreement"],"lifecycle_role":"Source of truth for customer selection and order composition.","evidence_status":"Explicit in domain definition","confidence_score":1},{"object_name":"Real-Time Inventory Snapshot","purpose":"Records the current available quantity and status of each SKU at a specific store location.","necessity":"Essential","first_stage":"Supply Chain Integration","dependencies":["Product Catalog","Store Partner Agreement"],"lifecycle_role":"Constraint for order allocation and validation.","evidence_status":"Explicit in domain definition","confidence_score":1},{"object_name":"Delivery Zone Map","purpose":"Defines the specific geographic boundaries and travel time estimates for a store to its customers.","necessity":"Essential","first_stage":"Operational Readiness","dependencies":["Service Area Definition","Store Partner Agreement"],"lifecycle_role":"Input for fee calculation and delivery promise setting.","evidence_status":"Inferred from operational mechanics","confidence_score":0.85},{"object_name":"Customer Profile","purpose":"Holds user identification, address details, payment methods, and preference history.","necessity":"Essential","first_stage":"Order Initiation","dependencies":["Store Partner Agreement"],"lifecycle_role":"Identifier for order ownership and delivery routing.","evidence_status":"Explicit in domain definition","confidence_score":1},{"object_name":"Order Request","purpose":"Captures the customer's specific selection of items, quantities, and delivery instructions.","necessity":"Essential","first_stage":"Order Initiation","dependencies":["Product Catalog","Customer Profile"],"lifecycle_role":"Trigger for the fulfillment workflow.","evidence_status":"Explicit in domain definition","confidence_score":1},{"object_name":"Fulfillment Task","purpose":"Represents the internal operations required to pick, pack, and dispatch the order.","necessity":"Essential","first_stage":"Order Validation & Allocation","dependencies":["Order Request","Real-Time Inventory Snapshot"],"lifecycle_role":"Workflow orchestrator for store staff.","evidence_status":"Inferred from operational execution","confidence_score":0.9},{"object_name":"Assigned Delivery Slot","purpose":"Secures a specific time window for the delivery agent to execute the last-mile delivery.","necessity":"Essential","first_stage":"Order Validation & Allocation","dependencies":["Fulfillment Task","Delivery Zone Map"],"lifecycle_role":"Constraint for logistics scheduling.","evidence_status":"Inferred from operational mechanics","confidence_score":0.85},{"object_name":"Delivery Assignment","purpose":"Links a specific order to a specific delivery agent and vehicle.","necessity":"Essential","first_stage":"Order Validation & Allocation","dependencies":["Fulfillment Task","Assigned Delivery Slot"],"lifecycle_role":"Trigger for the physical movement of goods.","evidence_status":"Inferred from operational mechanics","confidence_score":0.9},{"object_name":"Financial Transaction Record","purpose":"Documents the exchange of value, including item costs, fees, taxes, and payment status.","necessity":"Essential","first_stage":"Financial Settlement","dependencies":["Order Request","Delivery Assignment"],"lifecycle_role":"Proof of payment and settlement trigger.","evidence_status":"Inferred from business model requirements","confidence_score":0.95},{"object_name":"Delivery Proof","purpose":"Verifies that the goods were physically transferred to the customer.","necessity":"Essential","first_stage":"Handover & Confirmation","dependencies":["Delivery Assignment","Customer Profile"],"lifecycle_role":"Closure condition for the logistics workflow.","evidence_status":"Inferred from operational mechanics","confidence_score":0.9},{"object_name":"Feedback Record","purpose":"Captures customer satisfaction ratings and textual comments regarding the order and delivery.","necessity":"Conditional","first_stage":"Post-Transaction Review","dependencies":["Delivery Proof"],"lifecycle_role":"Input for quality improvement and agent performance evaluation.","evidence_status":"Inferred from standard industry practice","confidence_score":0.7},{"object_name":"Dispute Ticket","purpose":"Tracks unresolved issues such as missing items, damaged goods, or failed deliveries.","necessity":"Conditional","first_stage":"Lifecycle Conclusion","dependencies":["Feedback Record","Financial Transaction Record"],"lifecycle_role":"Exception handling mechanism for order closure.","evidence_status":"Inferred from standard industry practice","confidence_score":0.7}],"alternative_models_assumptions_gaps":{"alternative_operating_models":[{"model_name":"Marketplace Aggregator Model","description":"The platform acts only as a connector without owning inventory, relying entirely on third-party stores to fulfill orders directly.","impact":"Reduces capital expenditure on warehousing but may compromise speed and quality control; requires robust API integrations with multiple store systems."},{"model_name":"Dark Store / Centralized Fulfillment Model","description":"The platform operates its own micro-warehouses ('dark stores') to consolidate orders and reduce travel time.","impact":"Enables faster delivery and better assortment control but significantly increases operational costs and complexity."},{"model_name":"Hybrid Model","description":"A mix of dark stores for high-frequency items and store pickup for bulk or large items.","impact":"Balances cost and speed but requires complex logic to route orders to the optimal fulfillment node."}],"key_assumptions":["Customers prioritize speed over cost, making them willing to pay premium delivery fees.","Stores are willing to dedicate staff and space for third-party order fulfillment without disrupting their primary sales.","Real-time inventory synchronization between the physical store and the digital platform is technically feasible and reliable.","The geographic density of customers allows for efficient route optimization for delivery agents."],"unresolved_dependencies":["Regulatory compliance regarding food safety and labor laws for gig-economy delivery workers varies significantly by region and may impact operational readiness.","The exact threshold for 'immediate' delivery (e.g., 15 mins vs 45 mins) depends on local traffic patterns and weather conditions, which are dynamic variables."],"evidence_gaps":["Specific data on the failure rate of orders due to inventory discrepancies between the POS system and the platform catalog is unavailable.","The precise cost structure for the 'Dark Store' model versus the 'Store Partner' model varies by city and is not universally quantifiable."]}}
+### 2.1 Existing Business Objects
 
-**Actors:**
-"
+{
+  "business_operating_model": {
+    "value_proposition": "To enable the immediate acquisition of fresh groceries and essential goods within minutes of ordering, solving the friction between demand and supply for time-sensitive household needs.",
+    "participants": [
+      "Customer",
+      "Store/Fulfillment Center",
+      "Merchandiser",
+      "Delivery Partner",
+      "Platform Operator",
+      "Payment Provider",
+      "Regulatory Authority"
+    ],
+    "value_creation_monetization": {
+      "creation_mechanism": "Aggregating fragmented inventory from hyperlocal stores into a unified digital interface, optimizing last-mile logistics through algorithmic routing, and enabling real-time order fulfillment.",
+      "monetization_streams": [
+        "Transaction Commission",
+        "Delivery Fees",
+        "Subscription Models",
+        "Advertising/Sponsored Listings",
+        "Data Analytics Services"
+      ]
+    },
+    "distinctive_niche": "Hyperlocal, ultra-fast (typically under 60 minutes) delivery of fresh perishables and daily essentials, relying on a dense network of micro-fulfillment centers rather than centralized warehouses."
+  },
+  "derived_lifecycle": [
+    {
+      "stage": "Foundation Establishment",
+      "description": "Defining the service area, selecting store partners, establishing logistics partnerships, and setting pricing and service level agreements.",
+      "trigger": "Strategic decision to launch a new market zone or service category."
+    },
+    {
+      "stage": "Supply Chain Integration",
+      "description": "Onboarding stores, defining SKU catalogs, mapping inventory locations, and establishing synchronization mechanisms for real-time stock visibility.",
+      "trigger": "Completion of partner contracts and initial inventory data ingestion."
+    },
+    {
+      "stage": "Operational Readiness",
+      "description": "Testing logistics routes, calibrating demand forecasting models, and conducting dry runs of the order-to-delivery workflow.",
+      "trigger": "Acquisition of sufficient initial inventory and confirmed delivery partner availability."
+    },
+    {
+      "stage": "Order Initiation",
+      "description": "Customer expresses need, browses available catalog, selects items, and submits a request for immediate fulfillment.",
+      "trigger": "Customer action on the digital interface."
+    },
+    {
+      "stage": "Order Validation & Allocation",
+      "description": "System validates inventory availability, calculates fees, confirms delivery slot, and allocates the order to a specific store and delivery agent.",
+      "trigger": "Successful submission of the order request."
+    },
+    {
+      "stage": "Order Preparation",
+      "description": "Store personnel pick items, verify quality, pack for transport, and hand over to the delivery partner.",
+      "trigger": "Allocation confirmation."
+    },
+    {
+      "stage": "Last-Mile Delivery",
+      "description": "Delivery partner picks up the order, navigates to the customer location, and completes the physical transfer.",
+      "trigger": "Pickup confirmation from the store."
+    },
+    {
+      "stage": "Handover & Confirmation",
+      "description": "Customer receives the order, verifies contents, and confirms receipt via the platform.",
+      "trigger": "Arrival at customer location."
+    },
+    {
+      "stage": "Financial Settlement",
+      "description": "Transaction is finalized, funds are transferred to the customer, and revenue share is settled between the platform and the store.",
+      "trigger": "Handover confirmation."
+    },
+    {
+      "stage": "Post-Transaction Review",
+      "description": "Collection of feedback, rating of experience, and initiation of loyalty points accrual.",
+      "trigger": "Completion of settlement."
+    },
+    {
+      "stage": "Lifecycle Conclusion",
+      "description": "The specific order instance is closed; data is archived for analytics; optional dispute resolution window opens.",
+      "trigger": "Completion of all feedback and settlement processes."
+    }
+  ],
+  "business_objects": [
+    {
+      "object_name": "Service Area Definition",
+      "purpose": "Geographically delimits the zones where hyperlocal delivery is currently supported.",
+      "necessity": "Essential",
+      "first_stage": "Foundation Establishment",
+      "dependencies": [],
+      "lifecycle_role": "Configuration parameter for Store and Delivery Partner onboarding.",
+      "evidence_status": "Inferred from operational constraints",
+      "confidence_score": 0.9
+    },
+    {
+      "object_name": "Store Partner Agreement",
+      "purpose": "Defines the commercial and operational relationship between the platform and the physical retail store.",
+      "necessity": "Essential",
+      "first_stage": "Foundation Establishment",
+      "dependencies": [
+        "Service Area Definition"
+      ],
+      "lifecycle_role": "Enabler for catalog synchronization and inventory access.",
+      "evidence_status": "Inferred from business model requirements",
+      "confidence_score": 0.95
+    },
+    {
+      "object_name": "Product Catalog",
+      "purpose": "Represents the structured list of sellable items, including descriptions, prices, images, and category hierarchies.",
+      "necessity": "Essential",
+      "first_stage": "Supply Chain Integration",
+      "dependencies": [
+        "Store Partner Agreement"
+      ],
+      "lifecycle_role": "Source of truth for customer selection and order composition.",
+      "evidence_status": "Explicit in domain definition",
+      "confidence_score": 1
+    },
+    {
+      "object_name": "Real-Time Inventory Snapshot",
+      "purpose": "Records the current available quantity and status of each SKU at a specific store location.",
+      "necessity": "Essential",
+      "first_stage": "Supply Chain Integration",
+      "dependencies": [
+        "Product Catalog",
+        "Store Partner Agreement"
+      ],
+      "lifecycle_role": "Constraint for order allocation and validation.",
+      "evidence_status": "Explicit in domain definition",
+      "confidence_score": 1
+    },
+    {
+      "object_name": "Delivery Zone Map",
+      "purpose": "Defines the specific geographic boundaries and travel time estimates for a store to its customers.",
+      "necessity": "Essential",
+      "first_stage": "Operational Readiness",
+      "dependencies": [
+        "Service Area Definition",
+        "Store Partner Agreement"
+      ],
+      "lifecycle_role": "Input for fee calculation and delivery promise setting.",
+      "evidence_status": "Inferred from operational mechanics",
+      "confidence_score": 0.85
+    },
+    {
+      "object_name": "Customer Profile",
+      "purpose": "Holds user identification, address details, payment methods, and preference history.",
+      "necessity": "Essential",
+      "first_stage": "Order Initiation",
+      "dependencies": [
+        "Store Partner Agreement"
+      ],
+      "lifecycle_role": "Identifier for order ownership and delivery routing.",
+      "evidence_status": "Explicit in domain definition",
+      "confidence_score": 1
+    },
+    {
+      "object_name": "Order Request",
+      "purpose": "Captures the customer's specific selection of items, quantities, and delivery instructions.",
+      "necessity": "Essential",
+      "first_stage": "Order Initiation",
+      "dependencies": [
+        "Product Catalog",
+        "Customer Profile"
+      ],
+      "lifecycle_role": "Trigger for the fulfillment workflow.",
+      "evidence_status": "Explicit in domain definition",
+      "confidence_score": 1
+    },
+    {
+      "object_name": "Fulfillment Task",
+      "purpose": "Represents the internal operations required to pick, pack, and dispatch the order.",
+      "necessity": "Essential",
+      "first_stage": "Order Validation & Allocation",
+      "dependencies": [
+        "Order Request",
+        "Real-Time Inventory Snapshot"
+      ],
+      "lifecycle_role": "Workflow orchestrator for store staff.",
+      "evidence_status": "Inferred from operational execution",
+      "confidence_score": 0.9
+    },
+    {
+      "object_name": "Assigned Delivery Slot",
+      "purpose": "Secures a specific time window for the delivery agent to execute the last-mile delivery.",
+      "necessity": "Essential",
+      "first_stage": "Order Validation & Allocation",
+      "dependencies": [
+        "Fulfillment Task",
+        "Delivery Zone Map"
+      ],
+      "lifecycle_role": "Constraint for logistics scheduling.",
+      "evidence_status": "Inferred from operational mechanics",
+      "confidence_score": 0.85
+    },
+    {
+      "object_name": "Delivery Assignment",
+      "purpose": "Links a specific order to a specific delivery agent and vehicle.",
+      "necessity": "Essential",
+      "first_stage": "Order Validation & Allocation",
+      "dependencies": [
+        "Fulfillment Task",
+        "Assigned Delivery Slot"
+      ],
+      "lifecycle_role": "Trigger for the physical movement of goods.",
+      "evidence_status": "Inferred from operational mechanics",
+      "confidence_score": 0.9
+    },
+    {
+      "object_name": "Financial Transaction Record",
+      "purpose": "Documents the exchange of value, including item costs, fees, taxes, and payment status.",
+      "necessity": "Essential",
+      "first_stage": "Financial Settlement",
+      "dependencies": [
+        "Order Request",
+        "Delivery Assignment"
+      ],
+      "lifecycle_role": "Proof of payment and settlement trigger.",
+      "evidence_status": "Inferred from business model requirements",
+      "confidence_score": 0.95
+    },
+    {
+      "object_name": "Delivery Proof",
+      "purpose": "Verifies that the goods were physically transferred to the customer.",
+      "necessity": "Essential",
+      "first_stage": "Handover & Confirmation",
+      "dependencies": [
+        "Delivery Assignment",
+        "Customer Profile"
+      ],
+      "lifecycle_role": "Closure condition for the logistics workflow.",
+      "evidence_status": "Inferred from operational mechanics",
+      "confidence_score": 0.9
+    },
+    {
+      "object_name": "Feedback Record",
+      "purpose": "Captures customer satisfaction ratings and textual comments regarding the order and delivery.",
+      "necessity": "Conditional",
+      "first_stage": "Post-Transaction Review",
+      "dependencies": [
+        "Delivery Proof"
+      ],
+      "lifecycle_role": "Input for quality improvement and agent performance evaluation.",
+      "evidence_status": "Inferred from standard industry practice",
+      "confidence_score": 0.7
+    },
+    {
+      "object_name": "Dispute Ticket",
+      "purpose": "Tracks unresolved issues such as missing items, damaged goods, or failed deliveries.",
+      "necessity": "Conditional",
+      "first_stage": "Lifecycle Conclusion",
+      "dependencies": [
+        "Feedback Record",
+        "Financial Transaction Record"
+      ],
+      "lifecycle_role": "Exception handling mechanism for order closure.",
+      "evidence_status": "Inferred from standard industry practice",
+      "confidence_score": 0.7
+    }
+  ],
+  "alternative_models_assumptions_gaps": {
+    "alternative_operating_models": [
+      {
+        "model_name": "Marketplace Aggregator Model",
+        "description": "The platform acts only as a connector without owning inventory, relying entirely on third-party stores to fulfill orders directly.",
+        "impact": "Reduces capital expenditure on warehousing but may compromise speed and quality control; requires robust API integrations with multiple store systems."
+      },
+      {
+        "model_name": "Dark Store / Centralized Fulfillment Model",
+        "description": "The platform operates its own micro-warehouses ('dark stores') to consolidate orders and reduce travel time.",
+        "impact": "Enables faster delivery and better assortment control but significantly increases operational costs and complexity."
+      },
+      {
+        "model_name": "Hybrid Model",
+        "description": "A mix of dark stores for high-frequency items and store pickup for bulk or large items.",
+        "impact": "Balances cost and speed but requires complex logic to route orders to the optimal fulfillment node."
+      }
+    ],
+    "key_assumptions": [
+      "Customers prioritize speed over cost, making them willing to pay premium delivery fees.",
+      "Stores are willing to dedicate staff and space for third-party order fulfillment without disrupting their primary sales.",
+      "Real-time inventory synchronization between the physical store and the digital platform is technically feasible and reliable.",
+      "The geographic density of customers allows for efficient route optimization for delivery agents."
+    ],
+    "unresolved_dependencies": [
+      "Regulatory compliance regarding food safety and labor laws for gig-economy delivery workers varies significantly by region and may impact operational readiness.",
+      "The exact threshold for 'immediate' delivery (e.g., 15 mins vs 45 mins) depends on local traffic patterns and weather conditions, which are dynamic variables."
+    ],
+    "evidence_gaps": [
+      "Specific data on the failure rate of orders due to inventory discrepancies between the POS system and the platform catalog is unavailable.",
+      "The precise cost structure for the 'Dark Store' model versus the 'Store Partner' model varies by city and is not universally quantifiable."
+    ]
+  }
+}
+
+### 2.2 Existing Business Actors
+
+
 [
   {
     "actor_name": "Customer",
@@ -84,10 +372,11 @@ Hyperlocal Grocery Delivery
   }
 ]
 
-"
 
-**Actor Responsibilities:**
-"
+
+### 2.3 Actor Responsibilities and Authorizations
+
+
 {
   "business_context": {
     "domain": "Quick Commerce (Q-Commerce)",
@@ -350,10 +639,11 @@ Hyperlocal Grocery Delivery
 }
 
 
-"
 
-**Actor–Business Object Relationships:**
-"
+
+### 2.4 Actor and Business Object Relationships
+
+
 {
   "actor_business_object_relationships": [
     {
@@ -687,10 +977,11 @@ Hyperlocal Grocery Delivery
   ]
 }
 
-"
 
-**Business Activities:**
-"
+
+### 2.5 Existing Business Activities
+
+
 {
   "business_activities": [
     {
@@ -914,9 +1205,10 @@ Hyperlocal Grocery Delivery
   ]
 }
 
-"
 
-**Previously Discovered Information Requirements:**
+
+### 2.6 Parent Information Requirements
+
 "{
   "information_requirements": [
     {
@@ -997,613 +1289,573 @@ Hyperlocal Grocery Delivery
   ]
 }"
 
-Treat the supplied business model and Information Requirements as the primary business context.
+---
 
-Preserve the identity and meaning of every supplied Information Requirement. Do not silently rename, merge, split or replace the parent requirements.
+## 3. CORE DISCOVERY PRINCIPLE
+
+Treat every Parent Information Requirement as an independent business information capability requiring contextual functional discovery.
+
+For each requirement:
+
+- Understand what the information represents within the supplied domain and niche.
+- Determine why the information is needed and how it supports business operations.
+- Discover the business rules governing its creation, maintenance, interpretation, and use.
+- Identify the conditions that establish whether the information is valid and reliable.
+- Discover the actors, activities, and logical sources responsible for providing or maintaining it.
+- Identify the business events and conditions that initiate its creation, retrieval, modification, or consumption.
+- Determine the business decisions and outcomes enabled by the information.
+- Identify relevant dependencies, exceptions, and alternative business behaviour.
+- Preserve the boundaries and intended scope of the parent requirement.
+
+The supplied business context is the primary source of truth.
+
+Use domain knowledge to derive relevant business behaviour where the supplied information implies it, but do not introduce unsupported policies, processes, responsibilities, or implementation assumptions.
+
+**Domain-agnostic does not mean generic.** The output must be specific to the supplied business context without being restricted to predefined industry concepts.
+
+The discovery dimensions below are reasoning guidance, not mandatory output categories. Investigate only those that are relevant to each requirement.
 
 ---
 
-## 3. DOMAIN KNOWLEDGE AND TECHNO-FUNCTIONAL REASONING
+## 4. INTELLIGENT, DOMAIN-AGNOSTIC DISCOVERY
 
-Use knowledge of the supplied domain and niche as an active reasoning resource.
+For every Parent Information Requirement, independently discover the relevant business and functional logic using the supplied domain, niche, and business discovery data.
 
-Understand how the business operates in practice, including:
+Generate and investigate relevant questions dynamically based on the meaning and context of each Parent Information Requirement.
 
-- Operational dependencies and information exchanges.
-- Responsibilities and decision-making authority.
-- Business-object creation, modification and lifecycle.
-- Information required before, during and after business activities.
-- Business controls, validations and operational constraints.
-- Exception handling, recovery and reconciliation.
-- External parties, systems and information dependencies.
-- Expected business outcomes and accountability.
+Do not force every discovery dimension into every requirement.
 
-Use this understanding to elaborate the supplied Information Requirements into realistic techno-functional specifications.
+### 4.1 Discover the Meaning and Scope of Information
 
-Do not limit the analysis to information explicitly stated in the inputs.
+Internally investigate:
 
-However, distinguish between:
+- What does this information represent within the supplied business domain?
+- What business purpose does it serve?
+- What specific facts, conditions, measurements, events, classifications, or states does it describe?
+- What is included in and excluded from its scope?
+- Are there related concepts that have different business meanings and must remain distinct?
+- At what level does the information apply?
+- Is it captured, declared, observed, calculated, derived, verified, or approved?
+- What other business information is necessary to interpret it correctly?
 
-1. Explicitly established business information and operating practices.
-2. Functional requirements logically implied by the supplied business context.
-3. Reasonable domain-based inferences necessary to explain how the business operates.
-4. Unconfirmed operating policies, technical decisions or optional capabilities.
+Do not impose predefined information categories or assume that every requirement represents a record, status, measurement, or transaction.
 
-Do not present the fourth category as established business facts.
+### 4.2 Discover Business Ownership and Responsibilities
 
-Where information is missing, identify the gap rather than inventing an answer.
+Internally investigate:
+
+- Which business actor, function, activity, or source originates the information?
+- Who is responsible for maintaining and correcting it?
+- Who is authorized to create, modify, verify, approve, or use it?
+- Who relies on it, and for what business purpose?
+- Does responsibility change depending on the business event or information lifecycle?
+- What happens when responsibility is transferred or the responsible source becomes unavailable?
+- Are there ownership, authorization, or accountability conflicts?
+
+Ground conclusions in the supplied actors, responsibilities, authorizations, relationships, and activities.
+
+Infer additional logical responsibilities only when justified by the business context.
+
+### 4.3 Discover Information and Business Lifecycle Behaviour
+
+Internally investigate:
+
+- What causes this information to originate?
+- How does it change throughout its relevant business lifecycle?
+- What events or conditions permit or prevent an update?
+- Are there meaningful states, transitions, versions, effective periods, or expiry conditions?
+- What dependencies influence its creation, modification, acceptance, or use?
+- Can information be corrected, superseded, withdrawn, cancelled, or reinstated?
+- What happens when changes occur out of sequence, arrive late, conflict, or fail?
+- What historical information must remain available?
+
+Discover lifecycle behaviour only where relevant.
+
+Do not assume that every information requirement has a state machine or requires every possible lifecycle stage.
+
+### 4.4 Discover Functional Rules and Constraints
+
+Internally investigate:
+
+- What business conditions govern the creation, maintenance, interpretation, and use of this information?
+- What conditions must be satisfied before a related business operation can proceed?
+- Which business policies, constraints, eligibility conditions, dependencies, or precedence rules apply?
+- Are there calculations, classifications, or derived outcomes? What determines their inputs and interpretation?
+- What circumstances permit, restrict, reject, defer, or change an operation?
+- Are different conditions applicable to different business actors, objects, activities, or operating circumstances?
+- What happens when conditions change after an operation has started?
+- Which rules prevent incorrect, unauthorized, inconsistent, or unintended business outcomes?
+
+Derive the rules from the actual business context.
+
+Do not invent policies, calculations, thresholds, or operational procedures to make the output appear comprehensive.
+
+### 4.5 Discover Decisions and Consequences
+
+Internally investigate:
+
+- What business decisions are supported by this information?
+- Which actors or functions make or execute those decisions?
+- What conditions and information determine each possible outcome?
+- What happens when information is incomplete, uncertain, invalid, unavailable, or contradictory?
+- Does the decision require human judgment, an established business policy, automated evaluation, or a combination?
+- What subsequent business action or outcome follows?
+- What is the business consequence of using incorrect or outdated information?
+
+Distinguish the information itself, the decision made using it, and the activity performed as a result.
+
+### 4.6 Discover Validation and Verification Requirements
+
+Internally investigate:
+
+- What establishes that the information is sufficiently complete and correct for its intended purpose?
+- What business evidence, source, relationship, or other information can verify it?
+- Which values, relationships, conditions, or derived results must be consistent?
+- How can missing, duplicate, invalid, contradictory, outdated, or unreliable information be detected?
+- Does verification require an authorized source, independent confirmation, review, approval, or supporting evidence?
+- What determines whether the information is current enough for its intended use?
+- How should unexpected changes, discrepancies, or unusual patterns be identified?
+- What happens when validation fails?
+- Can an issue be corrected, or does it require investigation or a business decision?
+
+Distinguish structural validation from verification of business correctness.
+
+Apply only the validation dimensions relevant to the information.
+
+### 4.7 Discover Exceptions and Alternative Business Behaviour
+
+Internally investigate:
+
+- What relevant conditions could prevent the expected business outcome?
+- What happens when an actor, source, dependency, or required information is unavailable?
+- What happens when a business operation fails or only partially completes?
+- Can the operation be repeated, corrected, reversed, or compensated?
+- Are alternative business paths available?
+- Which exceptions require restriction, investigation, escalation, or human intervention?
+- What information must be retained to explain the exception and its resolution?
+- What must happen before normal processing can resume?
+
+Discover exception behaviour from the business context.
+
+Do not prescribe generic technical retry, rollback, notification, or escalation mechanisms without business justification.
+
+### 4.8 Discover Information Sources and Flows
+
+Internally investigate:
+
+- Where does the information originate?
+- Which actor, business object, activity, external participant, or logical system provides it?
+- Which sources create, maintain, verify, enrich, or derive it?
+- Which source is authoritative for the information it provides?
+- Who or what consumes the information?
+- For what business purpose does each consumer use it?
+- What business event, request, condition, or schedule triggers its creation, retrieval, modification, or transfer?
+- Does it require transformation, aggregation, calculation, enrichment, or verification before use?
+- What happens when information is delayed, duplicated, incomplete, or unavailable?
+- What business outcome is enabled by the information reaching its consumer?
+
+Do not assume that information originates from a software system or that every flow requires an integration.
+
+### 4.9 Discover Relationships and Dependencies
+
+Internally investigate:
+
+- What other business information is necessary to interpret or use this information?
+- Which supplied business objects, actors, responsibilities, and activities are directly related?
+- Does this requirement depend on another Parent Information Requirement?
+- What is the nature of that dependency?
+- Which requirement owns the underlying information?
+- Are there conflicting rules, overlapping responsibilities, or duplicated information?
+- What happens if dependent information is unavailable or changes?
+
+Maintain the boundaries of each Parent Information Requirement.
+
+Recognize genuine dependencies without duplicating the scope of related requirements.
+
+### 4.10 Synthesize the Discovery
+
+After investigating the relevant questions:
+
+1. Establish the business meaning and scope of the information.
+2. Determine the relevant ownership, responsibilities, and authorizations.
+3. Understand the applicable lifecycle and operational behaviour.
+4. Identify the genuine functional rules, conditions, and constraints.
+5. Establish the decisions and outcomes supported by the information.
+6. Identify relevant validation and verification controls.
+7. Determine applicable exceptions and alternative business behaviour.
+8. Identify logical information sources, consumers, and triggers.
+9. Verify dependencies and boundaries with related information requirements.
+10. Retain only findings that are relevant, justified, and useful for functional design.
+
+The purpose is to discover the business logic that genuinely governs the information, not to complete every discovery category or maximize the number of generated statements.
 
 ---
 
-## 4. INFORMATION REQUIREMENT TRACEABILITY ANALYSIS
+## 5. DOMAIN-AGNOSTIC INFERENCE AND REASONING
 
-For each Information Requirement, establish its relationships with the supplied business model.
+Use the supplied business context and appropriate domain knowledge to derive meaningful functional requirements.
 
-### A. Required actors
+### 5.1 Contextual Inference
 
-Identify every actor that genuinely requires, consumes, provides, validates, maintains or acts upon the information.
+- Derive findings from the supplied business objects, actors, responsibilities, authorizations, relationships, activities, and Parent Information Requirements.
+- Use domain knowledge to understand business behaviour that is not explicitly described but is logically necessary.
+- Do not restrict discovery to the literal wording of the supplied information requirement.
+- Do not introduce concepts merely because they are common in another domain or industry.
+- Do not force assumptions about how the business operates.
 
-Consider:
+### 5.2 Distinguish Evidence from Business Policy
 
-- Actors that need the information to perform their responsibilities.
-- Actors that generate or establish the information.
-- Actors that receive the information through a business handover.
-- Actors that validate or authorise its use.
-- Actors that depend on the information to make decisions.
-- Automated business actors or system components, but only where they are represented or logically established in the supplied context.
+Internally distinguish:
 
-Do not assign an actor merely because it is associated with a related business object or activity.
+- Information or behaviour established by supplied context.
+- Business behaviour reasonably inferred from the domain and niche.
+- Policies, thresholds, conditions, and limits that require business definition.
+- Assumptions that cannot be justified.
 
-Do not invent new actors to complete the specification.
+Express justified inferences as functional requirements.
 
-### B. Related responsibilities
+Where an important policy is not specified, use a business-defined or configurable condition without inventing its value.
 
-Identify the specific responsibilities that depend on the information.
+Do not convert an unsupported assumption into a mandatory business or system rule.
 
-Evaluate:
+### 5.3 Preserve Business Meaning
 
-- Which responsibilities require this information to be available?
-- Which responsibilities generate, maintain or validate it?
-- Which responsibilities use it to control or complete business operations?
-- Which responsibilities require it for accountability or outcome verification?
+- Do not combine different business concepts merely because they are related.
+- Do not confuse information ownership with information consumption.
+- Do not confuse information validation with a business decision.
+- Do not confuse a business decision with the activity performed as a result.
+- Do not assume that a calculated value is independently observed or verified.
+- Do not assume that every information source is authoritative.
+- Do not assume that every information update requires approval or that every exception requires escalation.
 
-Use the responsibility names from the supplied context wherever applicable.
+### 5.4 Avoid Prescriptive Architecture
 
-Do not replace responsibilities with generic department names or newly invented responsibilities.
+- Do not assume specific software products, vendors, applications, databases, APIs, integration patterns, or infrastructure.
+- Do not prescribe a technical implementation when the business requirement can be expressed independently of technology.
+- Logical systems and source categories may be inferred where useful, but must not be represented as confirmed implementations.
+- Describe required business behaviour rather than inventing how a particular system must implement it.
 
-### C. Related business activities
+### 5.5 Avoid Arbitrary Business Policies and Values
 
-Identify the activities in which the information is:
+Do not invent:
 
-- Required before execution.
-- Consumed during execution.
-- Generated or updated during execution.
-- Exchanged between participants.
-- Used to determine the next action or outcome.
-- Required after execution for confirmation, reconciliation or review.
+- Numerical thresholds, limits, percentages, durations, or freshness windows.
+- Mandatory approval hierarchies or authorization levels.
+- Contractual obligations or commercial arrangements.
+- Regulatory obligations or jurisdiction-specific controls.
+- Fixed business operating hours or service commitments.
+- Automatic rejection, reassignment, suspension, cancellation, escalation, or financial adjustments.
+- Mandatory evidence, documentation, or verification methods without business justification.
 
-Distinguish between activities that directly use the information and activities that are only indirectly related.
-
-Use the supplied business activity names wherever possible.
-
-### D. Related business objects
-
-Identify the business objects that:
-
-- Contain the information.
-- Represent the information.
-- Reference or depend on the information.
-- Receive updates based on the information.
-- Provide the context needed to interpret the information.
-
-Do not associate every related business object automatically.
-
-Do not create new business objects simply to accommodate information details.
-
-Information may exist externally, temporarily or contextually without necessarily requiring a separate business object.
+Where a decision depends on an unspecified policy, express the condition as subject to the applicable business-defined policy.
 
 ---
 
-## 5. INFORMATION USAGE ANALYSIS
+## 6. FUNCTIONAL RULES DISCOVERY
 
-Determine precisely how the business uses the information.
+Generate specific and meaningful functional rules that describe the business or system behaviour required to govern the Parent Information Requirement.
 
-Describe its functional role in business operations.
+Functional rules must:
 
-Investigate whether the information is used for:
+- Describe an identifiable business condition, constraint, obligation, or permitted operation.
+- Establish the conditions under which relevant information can be created, maintained, changed, interpreted, or consumed.
+- Reflect the supplied actors, business objects, responsibilities, and activities where relevant.
+- Define meaningful dependencies and relationships between information.
+- Describe relevant business decision conditions and resulting behaviour.
+- Address relevant lifecycle changes and exceptions.
+- Be sufficiently precise to support functional design and testing.
+- Remain within the scope of the Parent Information Requirement.
 
-- Business activity initiation.
-- Eligibility or completeness checks.
-- Validation and verification.
-- Authorisation and approval.
-- Selection, allocation or prioritisation.
-- Execution and coordination.
-- Monitoring and status evaluation.
-- Exception identification and resolution.
-- Reconciliation and financial control.
-- Completion confirmation and outcome verification.
+Each rule should express one coherent business or functional condition.
 
-Explain the relationship between the information and the actual business operation.
+Prefer clear, testable statements over generic statements such as:
 
-The description must establish:
+- "The system must ensure data accuracy."
+- "Information must be updated regularly."
+- "The system should maintain consistency."
+- "All records must be validated."
 
-1. What information is being consumed or produced.
-2. Which business operation requires it.
-3. At what business stage it is needed.
-4. What the information enables the business to establish or determine.
-5. What subsequent action or outcome depends on it.
+Instead, describe what must be checked, under which business conditions, and what the expected behaviour must be.
 
-Do not describe only a generic purpose such as "used for operational efficiency".
+Do not generate rules that merely repeat the Parent Information Requirement.
 
-Do not prescribe an API, screen, application feature or technical mechanism as the information usage.
+Do not confuse functional rules with technical implementation instructions.
 
----
-
-## 6. INFORMATION SOURCE AND ORIGIN ANALYSIS
-
-Determine where the required information originates.
-
-Consider relevant sources such as:
-
-- Existing business objects.
-- Information maintained by internal actors.
-- Information generated through business activities.
-- External business participants or partners.
-- External organisations or authoritative information providers.
-- Existing enterprise applications or operational systems.
-- Derived or calculated information based on other business information.
-- Information established through verification, confirmation or reconciliation.
-
-For each Information Requirement, describe the source and its relationship to the business.
-
-Distinguish between:
-
-**Information origin:** Where the information is originally established or generated.
-
-**Information provider:** The actor, organisation or system that makes it available.
-
-**Information acquisition:** The business interaction or exchange through which the information becomes available.
-
-Do not automatically prescribe direct API integration, real-time event streaming, databases, message queues or specific technology platforms.
-
-Only identify a particular source system or integration mechanism when it is explicitly supplied or logically established.
-
-When the exact source is unknown, state that it requires business or solution confirmation. Do not invent a specific system.
+Do not force a fixed number of functional rules. Generate the number justified by the business context.
 
 ---
 
-## 7. BUSINESS DECISIONS SUPPORTED
+## 7. INFORMATION VALIDATION DISCOVERY
 
-Identify the meaningful business decisions that depend on the Information Requirement.
+Discover specific validation and verification checks required to establish the completeness, correctness, consistency, reliability, and suitability of the information for its intended business use.
 
-Consider decisions involving:
+Validation checks must:
 
-- Acceptance or rejection.
-- Eligibility determination.
-- Approval or authorisation.
-- Selection or assignment.
-- Allocation or prioritisation.
-- Continuation, suspension or termination.
-- Exception handling and recovery.
-- Financial determination or reconciliation.
-- Completion and closure.
+- Identify the information or condition being validated.
+- Explain the relevant validation condition.
+- Describe the expected validation outcome.
+- Be connected to the supplied business context.
+- Support the relevant functional rules.
+- Address relevant data relationships, source authority, lifecycle conditions, and business constraints.
+- Distinguish between invalid information, incomplete information, outdated information, and information requiring further verification.
+- Identify relevant exception behaviour when validation fails.
 
-For every decision, determine:
+Validation may include, where relevant:
 
-1. What is being decided?
-2. What information is necessary to make the decision?
-3. Which actor or business component is responsible for the decision?
-4. What business outcome depends on it?
+- Completeness checks.
+- Format and structural checks.
+- Business condition checks.
+- Cross-information consistency checks.
+- Relationship and dependency checks.
+- Authorization and responsibility checks.
+- Source and provenance checks.
+- Timeliness and effective-period checks.
+- Duplicate and conflict detection.
+- Calculation and derived-value verification.
+- Evidence and supporting-information verification.
+- Lifecycle and transition eligibility checks.
 
-Identify business decisions, not individual technical operations.
+These are possible validation dimensions, not mandatory categories.
 
-Do not invent decision policies, commercial strategies, thresholds or approval hierarchies that are not supported by the supplied context or justified by essential business reasoning.
+Do not assume every requirement requires every type of validation.
 
----
+Do not treat successful structural validation as proof of business correctness.
 
-## 8. REQUIRED INFORMATION DETAILS DISCOVERY
+Do not invent arbitrary values, thresholds, or mandatory evidence requirements.
 
-Discover the individual information elements needed to satisfy each Information Requirement.
+Do not generate vague validation statements without an identifiable check and expected outcome.
 
-This is a critical analytical exercise.
-
-Do not merely extract fields from existing business objects.
-
-Determine what information must actually be available to perform the relevant business operations.
-
-For each candidate information element, evaluate:
-
-- What does the business need to establish or understand?
-- Why is the information necessary?
-- Which responsibility or activity uses it?
-- Which business decision depends on it?
-- Is it an independent information element or simply a technical representation?
-- Is it already covered by another information element?
-- Is it required for operational execution, validation, coordination, exception handling or outcome verification?
-
-Consider relevant information characteristics such as:
-
-- Identity and reference information.
-- Quantities, amounts and measurements.
-- Status and conditions.
-- Dates, times and validity periods.
-- Location and contextual information.
-- Ownership and responsibility.
-- Evidence and verification.
-- Constraints and eligibility.
-- Relationships and dependencies.
-- Historical changes and current state.
-- Source and freshness information.
-
-These are analytical considerations, not mandatory categories.
-
-Discover only the information elements justified by the particular requirement and business context.
-
-### Information detail naming
-
-Use clear, business-meaningful names.
-
-Examples of naming patterns include:
-
-- Product Identifier.
-- Available Quantity.
-- Business Partner Reference.
-- Transaction Status.
-- Effective Date.
-- Verification Timestamp.
-
-Do not generate database column names, programming variable names, data types or physical schema definitions at this stage.
-
-Avoid redundant details and unnecessary decomposition into trivial fields.
+Do not force a fixed number of validation checks.
 
 ---
 
-## 9. FUNCTIONAL RULES DISCOVERY
+## 8. INFORMATION FLOW DISCOVERY
 
-Discover the business and functional rules governing how the information is interpreted, evaluated and used.
+Discover how the information originates, moves, is maintained, and is consumed to support the relevant business purpose.
 
-Investigate:
+For every Parent Information Requirement, determine the relevant logical information flow.
 
-- Conditions under which information is considered valid.
-- Eligibility and completeness requirements.
-- Business constraints and dependencies.
-- Rules governing information updates.
-- Conditions that permit or prevent an activity from proceeding.
-- Rules governing conflicting or inconsistent information.
-- Conditions requiring additional verification.
-- Rules governing exception handling and alternative outcomes.
-- Requirements for reconciliation and completion confirmation.
+### 8.1 Source
 
-For every rule, distinguish between:
+Identify the logical origin of the information.
 
-1. Explicit business rules supplied in the input.
-2. Functional rules logically required to execute the documented business operations.
-3. Domain-based rules that are necessary and reasonably justified.
-4. Policies or thresholds that require business confirmation.
+The source may be:
 
-Do not invent arbitrary numerical thresholds, SLAs, priorities, approval levels, pricing policies or operating procedures.
+- A business actor.
+- A business object.
+- A business activity.
+- An external participant or source.
+- A logical system or information capability.
+- A derived or calculated information source.
 
-Do not convert possible technical implementation behaviour into a business rule.
+Identify the source according to its actual responsibility for originating, maintaining, or providing the information.
 
-Rules must be clear, testable and expressed in business or functional language wherever possible.
+Do not invent a specific application, vendor, database, or integration.
 
-If no meaningful functional rule can be established, return an empty array rather than inventing one.
+### 8.2 Consumer
 
----
+Identify the relevant recipients or users of the information.
 
-## 10. INFORMATION VALIDATION AND INTEGRITY
+Consumers may include:
 
-Determine how the business establishes that the information is suitable for use.
-
-Investigate relevant validation dimensions:
-
-**Completeness**
-- Is all necessary information available?
-- Are mandatory information elements missing?
-
-**Accuracy**
-- Can the information be verified against an authoritative source?
-- What establishes that the information represents the actual business condition?
-
-**Validity**
-- Does the information satisfy relevant business conditions?
-- Is it applicable to the relevant business object, participant or activity?
-
-**Consistency**
-- Does the information agree with related business objects and other information sources?
-- How are conflicting values identified and resolved?
-
-**Timeliness**
-- Is the information current enough for the intended business operation?
-- Does its age or validity period affect whether it can be used?
-
-**Integrity and traceability**
-- Can the origin, changes, confirmation or verification of the information be established where necessary?
-
-Only include validation requirements relevant to the Information Requirement.
-
-Do not assume that every information requirement needs every validation dimension.
-
-Do not invent freshness thresholds, tolerances or verification mechanisms without supporting context.
-
-Describe the required validation outcome, not an assumed technical implementation.
-
----
-
-## 11. INFORMATION FLOW AND EXCHANGE ANALYSIS
-
-Establish how information moves through the business.
-
-Determine:
-
-- Where the information originates.
-- Which actor or system establishes or provides it.
-- How it becomes available to the business.
-- Which actors, activities or business components consume it.
-- When the information is required.
-- Whether it is created, received, updated, transferred or confirmed.
-- Whether subsequent business activities depend on its availability.
-- What happens when it is unavailable, incomplete, inconsistent or outdated.
-
-Distinguish between information origin, information provider, information producer and information consumer.
-
-Describe the business information flow rather than assuming a particular integration architecture.
-
-Identify the relevant business trigger or event when it can be established.
-
-Do not automatically assume real-time processing, continuous synchronisation, APIs or event-driven architecture.
-
-Where timing, triggering or exchange mechanisms are not established, explicitly indicate that confirmation is required.
-
----
-
-## 12. CROSS-DIMENSION TECHNO-FUNCTIONAL REASONING
-
-Do not elaborate each Information Requirement by examining its fields independently.
-
-Reason across the relationships between:
-
-- Actors.
-- Responsibilities.
+- Business actors.
 - Business activities.
-- Business objects.
-- Information sources.
-- Business decisions.
-- Functional rules.
-- Information details.
-- Validation requirements.
-- Information flows.
+- Business functions.
+- Related business objects.
+- Logical systems or information capabilities.
+- External participants.
 
-Identify dependencies that become apparent only when these dimensions are considered together.
+Represent consumers as an array of relevant logical consumers.
 
-For example, information required by one actor may be generated by another actor through a different business activity and subsequently consumed by another activity.
+Each consumer must have a meaningful relationship to the information and its intended business use.
 
-Determine whether the information must be established before a business activity begins, updated during execution or confirmed after completion.
+Do not list every available actor or activity. Include only relevant consumers.
 
-Identify gaps between the information currently represented and what is necessary for the business process to function.
+### 8.3 Trigger
 
-Where the supplied context reveals a genuine information dependency that is missing from the original requirement, elaborate that dependency only when it is a necessary part of the same underlying Information Requirement.
+Identify the business event, request, condition, or scheduled mechanism that initiates the information flow.
 
-Do not silently introduce unrelated Information Requirements during this elaboration stage.
+Examples of possible trigger types include:
 
----
+- A business event.
+- A business activity.
+- A change in information.
+- A request for information.
+- A relevant condition becoming true.
+- A scheduled business process.
+- A lifecycle transition.
 
-## 13. TECHNO-FUNCTIONAL ABSTRACTION BOUNDARIES
+These are illustrative possibilities, not mandatory trigger categories.
 
-Maintain a clear distinction between business information specification and technical solution design.
+Do not invent event schedules or timing intervals.
 
-The objective is to produce techno-functional specifications, not detailed solution architecture.
+### 8.4 Outcome
 
-### Include
+Describe the business or operational outcome enabled by the information flow.
 
-- Business information elements.
-- Actor and responsibility traceability.
-- Activity dependencies.
-- Information origins and providers.
-- Functional usage.
-- Business decisions.
-- Business and functional rules.
-- Validation and integrity requirements.
-- Information exchange and flow.
-- Operational dependencies and exceptions.
+The outcome must explain why the information is delivered to its consumer and what business purpose it supports.
 
-### Do not prescribe without supporting evidence
+Distinguish the information flow outcome from the information itself and from any subsequent business decision or activity.
 
-- Specific APIs or API endpoints.
-- Database tables and physical schemas.
-- Programming languages or frameworks.
-- Specific enterprise software products.
-- Cloud services or infrastructure.
-- Message brokers or event-streaming platforms.
-- User interface designs or screen layouts.
-- Specific integration protocols.
-- Technical algorithms or implementation patterns.
-- Unconfirmed automation capabilities.
+Avoid generic outcomes such as "data is available" or "the system is updated" unless that is genuinely the required business outcome.
 
-Where technical implications are apparent, describe the underlying functional need without selecting an implementation.
+### 8.5 Flow Integrity
+
+Ensure that:
+
+- The source can logically originate, maintain, or provide the information.
+- The consumer has a valid business reason to use it.
+- The trigger is relevant to the information lifecycle or business activity.
+- The outcome is connected to the intended business purpose.
+- The source, consumer, trigger, and outcome describe one coherent information flow.
+- The flow does not introduce unsupported technology or integration assumptions.
+
+Do not force multiple flows when one coherent flow adequately describes the requirement.
 
 ---
 
-## 14. QUALITY CONTROL AND CONSOLIDATION
+## 9. CROSS-SECTION DISCOVERY AND CONSISTENCY VALIDATION
 
-Before generating the final output, independently review every elaborated Information Requirement.
+Before generating the final JSON, review each Parent Information Requirement independently.
 
-### A. Traceability validation
+### 9.1 Requirement Traceability
 
-- Are the identified actors actually relevant?
-- Are the related responsibilities supported by the supplied context?
-- Are the activities directly or meaningfully dependent on the information?
-- Are the business objects genuinely associated with the information?
+Every generated rule, validation check, source, consumer, trigger, and outcome must have a meaningful relationship to the relevant Parent Information Requirement.
 
-### B. Functional completeness
+### 9.2 Business Context Consistency
 
-- Is the information usage specific and meaningful?
-- Are the sources and origins explained?
-- Are the relevant business decisions identified?
-- Are the required information details sufficiently complete?
-- Are necessary functional rules identified?
-- Are relevant validation requirements established?
-- Is the information flow understandable?
+Ensure that the discoveries are consistent with the supplied domain, niche, business objects, actors, responsibilities, authorizations, relationships, and activities.
 
-### C. Business and domain correctness
+### 9.3 Semantic Consistency
 
-- Does the specification reflect the supplied business domain and niche?
-- Are domain-based inferences logically justified?
-- Have unsupported policies and assumptions been avoided?
-- Does the specification represent realistic business operations?
+Ensure that distinct business concepts retain their correct meanings.
 
-### D. Technical and functional separation
+Do not merge different information types, statuses, responsibilities, decisions, or lifecycle concepts.
 
-- Are information needs distinguished from implementation mechanisms?
-- Have technical solutions been introduced without justification?
-- Are rules expressed as functional requirements rather than assumed algorithms?
-- Are source systems and integration methods supported by evidence?
+### 9.4 Lifecycle Consistency
 
-### E. Consistency and duplication
+Ensure that discovered conditions, updates, transitions, and exception behaviour are logically consistent with the relevant business lifecycle.
 
-- Are information details unnecessarily repeated?
-- Are rules duplicated?
-- Are decisions incorrectly represented as information elements?
-- Are actors, responsibilities and activities consistently named?
-- Does the elaborated requirement preserve the meaning of its original parent requirement?
+### 9.5 Rule and Validation Consistency
 
-Correct inconsistencies before generating the final result.
+Ensure that validation checks establish the correctness or reliability of the information and conditions required by the functional rules.
 
-Do not add fields simply to make every requirement look equally detailed.
+Do not introduce validation expectations that contradict the functional rules.
 
-Use empty arrays where no meaningful items can be established.
+### 9.6 Source and Responsibility Consistency
 
-For string fields, explicitly state when information is not established and requires confirmation rather than inventing details.
+Ensure that identified sources, owners, verifiers, and consumers have logically justified relationships to the information.
+
+Do not assign responsibilities or authority without sufficient business context.
+
+### 9.7 Dependency and Boundary Consistency
+
+Ensure that dependencies on related information requirements are correctly recognized without duplicating their responsibilities or introducing unrelated functionality.
+
+### 9.8 Exception and Outcome Consistency
+
+Ensure that exception handling and resulting business outcomes are justified by the discovered business behaviour.
+
+Do not assume automatic rejection, reassignment, suspension, financial adjustment, or escalation without a supported business condition.
+
+### 9.9 Evidence-Based Inference
+
+Remove arbitrary values, unsupported policies, invented regulatory requirements, assumed contractual conditions, and unconfirmed implementation details.
+
+Where business policy is unknown, retain a configurable or business-defined condition.
+
+### 9.10 Relevance and Discovery Completeness
+
+Remove generic, repetitive, irrelevant, and speculative statements.
+
+Ensure that all materially relevant business rules, validations, and information flows have been considered, without forcing unnecessary discovery categories or producing excessive detail.
+
+### 9.11 Cross-Requirement Consistency
+
+Compare related Parent Information Requirements to identify:
+
+- Contradictory business rules.
+- Conflicting information ownership.
+- Duplicate functional responsibilities.
+- Inconsistent definitions or interpretations.
+- Overlapping validation responsibilities.
+- Incorrect source or consumer relationships.
+- Conflicting lifecycle or exception behaviour.
+- Dependencies that have been incorrectly represented.
+
+Preserve each requirement's scope. Do not duplicate another requirement's detailed functionality merely to demonstrate a relationship.
 
 ---
 
-## 15. OUTPUT STRUCTURE
+## 10. REQUIRED OUTPUT STRUCTURE
 
-Generate one elaborated specification for each supplied Information Requirement.
+Return exactly one JSON array containing one object for each supplied Parent Information Requirement.
 
-Use exactly the following structure:
+Maintain the original order of Parent Information Requirements.
 
-{
-  "elaborated_information_requirements": [
-    {
-      "information_requirement": "Original Information Requirement Name",
+For each parent requirement, generate exactly three top-level properties:
 
-      "required_by_actors": [],
+1. functional_rules
+2. information_validation
+3. information_flow
 
-      "related_responsibilities": [],
+Use the following exact structure:
 
-      "related_activities": [],
-
-      "related_business_objects": [],
-
-      "information_usage": "Detailed functional explanation of how the business uses this information.",
-
-      "information_source": "Origin of the information, relevant provider and how the information becomes available.",
-
-      "business_decisions_supported": [],
-
-      "required_information_details": [],
-
-      "functional_rules": [],
-
-      "information_validation": [],
-
-      "information_flow": {
-        "source": "Information origin or provider.",
-        "consumer": [],
-        "trigger": "Relevant business trigger or event.",
-        "outcome": "Business outcome enabled by the information flow."
-      }
+[
+  {
+    "functional_rules": [
+      "A specific, meaningful, and testable business or system rule."
+    ],
+    "information_validation": [
+      "A specific validation check explaining what must be checked and the expected validation outcome."
+    ],
+    "information_flow": {
+      "source": "Logical origin of the information.",
+      "consumer": [
+        "Relevant business actor, activity, or logical system."
+      ],
+      "trigger": "Business event, request, condition, or scheduled mechanism that initiates the information flow.",
+      "outcome": "Business or operational outcome enabled by the information flow."
     }
-  ]
-}
-
-### FIELD DEFINITIONS
-
-**information_requirement**
-
-Preserve the exact name of the original parent Information Requirement.
-
-**required_by_actors**
-
-Array of actors that genuinely require, provide, consume, maintain, validate or act upon the information.
-
-**related_responsibilities**
-
-Array of relevant responsibilities from the supplied business context.
-
-**related_activities**
-
-Array of relevant business activities from the supplied business context.
-
-**related_business_objects**
-
-Array of relevant business objects from the supplied business context.
-
-**information_usage**
-
-Explain how the information is functionally used, when it is needed, what it enables and which operational outcome depends on it.
-
-**information_source**
-
-Explain the origin and availability of the information. Identify actual source systems only where established. Distinguish confirmed sources from inferred sources and unconfirmed source arrangements.
-
-**business_decisions_supported**
-
-Array of meaningful business decisions that depend on the information.
-
-**required_information_details**
-
-Array of business-meaningful information elements necessary to satisfy the requirement.
-
-**functional_rules**
-
-Array of business or functional rules governing how the information is interpreted and used.
-
-**information_validation**
-
-Array of relevant validation and integrity requirements.
-
-**information_flow**
-
-Describe the source, consumers, trigger and business outcome associated with the information exchange.
+  }
+]
 
 ---
 
-## 16. STRICT OUTPUT RULES
+## 11. STRICT OUTPUT RULES
 
-1. Return valid JSON only.
-2. Do not include Markdown fences, explanations, commentary or reasoning outside the JSON.
-3. Generate one elaborated specification for every supplied parent Information Requirement.
-4. Preserve the exact original Information Requirement names.
-5. Do not omit a parent requirement merely because some details are unavailable.
-6. Do not invent actors, responsibilities, activities or business objects.
-7. Use supplied entity names consistently.
-8. Do not create speculative technical source systems or integration mechanisms.
-9. Do not invent business policies, decision thresholds or operational constraints.
-10. Distinguish necessary functional inference from unconfirmed business assumptions.
-11. Do not populate arrays with generic or irrelevant content.
-12. Use empty arrays when no justified items can be identified.
-13. For unknown string values, clearly state that the information is not established and requires confirmation.
-14. Do not generate additional parent Information Requirements.
-15. Do not introduce properties outside the specified JSON structure.
-16. Do not duplicate information across fields unnecessarily.
-17. Ensure every requirement is sufficiently elaborated for downstream functional analysis.
-18. Ensure all JSON objects, arrays and strings are properly closed.
+### 11.1 Schema Compliance
 
----
+- Return valid JSON only.
+- Return one array containing one output object for each input Parent Information Requirement.
+- Preserve the original input order.
+- Every output object must contain exactly three top-level properties: functional_rules, information_validation, and information_flow.
+- The first two properties must contain arrays of individual statements.
+- The information_flow property must contain exactly four properties: source, consumer, trigger, and outcome.
+- The consumer property must contain an array of relevant consumers.
+- Do not add any additional properties.
 
-## FINAL OBJECTIVE
+### 11.2 Content Compliance
 
-Transform each high-level Business Information Requirement into a comprehensive, traceable and domain-relevant Techno-Functional Information Requirement Specification.
+- Do not include Parent Information Requirement names or identifiers in the output.
+- Do not include explanations, introductions, summaries, markdown, or code fences.
+- Do not include assumptions, confidence scores, evidence metadata, or reasoning traces as additional fields.
+- Do not invent business policies, numerical values, thresholds, regulatory obligations, contractual requirements, vendors, software products, or technical architecture.
+- Do not force a fixed number of rules, validations, or consumers.
+- Do not produce generic or repetitive statements.
+- Do not include irrelevant business concepts.
+- Do not confuse information, business rules, validation, decisions, activities, and information flows.
+- Do not duplicate another Parent Information Requirement's scope.
+- Do not omit meaningful functional behaviour merely because it is not explicitly stated in the parent requirement when it can be reasonably derived from the supplied context.
 
-Establish who needs the information, why they need it, where it originates, how it is used, which business decisions depend on it, what information elements are required, what functional rules govern it, how its validity is established and how it flows through business operations.
+### 11.3 Final Quality Requirement
 
-Use business context as evidence, domain knowledge as an intelligence resource and techno-functional reasoning to establish the complete information specification.
+The output must represent a coherent, domain-specific, technology-independent functional discovery baseline.
 
-The result must be sufficiently structured and precise to serve as an input to subsequent functional requirements engineering, business process design, data modelling, integration analysis and solution architecture.
+Every generated statement must be meaningful, relevant, and logically justified by the supplied business context or reasonable domain inference.
 
-Return the complete elaborated Information Requirements catalogue as valid JSON only.
+Prioritize business accuracy, semantic precision, functional completeness, and testability over output volume.
 
-Assistant:
+Return JSON only.
+  
 

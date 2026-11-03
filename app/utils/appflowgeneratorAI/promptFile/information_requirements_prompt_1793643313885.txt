@@ -1,17 +1,374 @@
-User:
 
-# INFORMATION REQUIREMENTS DISCOVERY
+# DOMAIN-AGNOSTIC TECHNO-FUNCTIONAL INFORMATION REQUIREMENTS
+## PART 2 — INTELLIGENT INFORMATION ELABORATION AND DISCOVERY
 
-Act as a senior business analyst, business domain specialist, enterprise business architect and information architect.
+### 1. ROLE AND EXPECTED EXPERTISE
 
-Your task is to independently discover the information requirements of the supplied business domain and niche by reasoning about how the business operates, what its actors are responsible for, what activities they perform, what decisions they make, and what information is necessary to achieve business outcomes.
+Act as a Senior Business Information Architect, Enterprise Business Analyst, Domain Specialist, Business Process Architect, Data and Information Architect, and Functional Solution Architect.
 
-## 1. Reference Inputs
+Your responsibility is to deeply investigate and elaborate each supplied Parent Information Requirement using:
 
-The following information is provided as the initial reference baseline:
+- Domain and niche knowledge.
+- Business and operational understanding.
+- The supplied business objects, actors, responsibilities, authorizations, relationships, and activities.
+- Logical reasoning about how information is generated, acquired, consumed, interpreted, and used in business operations.
 
-**Business Context and Actors and it's Responsibilities:**
-"
+Do not simply map the supplied datasets or rephrase their contents. Treat them as the starting baseline for discovery, not as the boundary of your analysis.
+
+**Your primary task is to ask and answer the right business questions for every Parent Information Requirement before producing its elaborated specification.**
+
+---
+
+### 2. DOMAIN AND BUSINESS DISCOVERY DATA
+
+**Domain:**
+Quick Commerce (Q-Commerce)
+
+**Niche:**
+Hyperlocal Grocery Delivery
+
+#### 2.1 Existing Business Objects
+
+{
+  "business_operating_model": {
+    "value_proposition": "To enable the immediate acquisition of fresh groceries and essential goods within minutes of ordering, solving the friction between demand and supply for time-sensitive household needs.",
+    "participants": [
+      "Customer",
+      "Store/Fulfillment Center",
+      "Merchandiser",
+      "Delivery Partner",
+      "Platform Operator",
+      "Payment Provider",
+      "Regulatory Authority"
+    ],
+    "value_creation_monetization": {
+      "creation_mechanism": "Aggregating fragmented inventory from hyperlocal stores into a unified digital interface, optimizing last-mile logistics through algorithmic routing, and enabling real-time order fulfillment.",
+      "monetization_streams": [
+        "Transaction Commission",
+        "Delivery Fees",
+        "Subscription Models",
+        "Advertising/Sponsored Listings",
+        "Data Analytics Services"
+      ]
+    },
+    "distinctive_niche": "Hyperlocal, ultra-fast (typically under 60 minutes) delivery of fresh perishables and daily essentials, relying on a dense network of micro-fulfillment centers rather than centralized warehouses."
+  },
+  "derived_lifecycle": [
+    {
+      "stage": "Foundation Establishment",
+      "description": "Defining the service area, selecting store partners, establishing logistics partnerships, and setting pricing and service level agreements.",
+      "trigger": "Strategic decision to launch a new market zone or service category."
+    },
+    {
+      "stage": "Supply Chain Integration",
+      "description": "Onboarding stores, defining SKU catalogs, mapping inventory locations, and establishing synchronization mechanisms for real-time stock visibility.",
+      "trigger": "Completion of partner contracts and initial inventory data ingestion."
+    },
+    {
+      "stage": "Operational Readiness",
+      "description": "Testing logistics routes, calibrating demand forecasting models, and conducting dry runs of the order-to-delivery workflow.",
+      "trigger": "Acquisition of sufficient initial inventory and confirmed delivery partner availability."
+    },
+    {
+      "stage": "Order Initiation",
+      "description": "Customer expresses need, browses available catalog, selects items, and submits a request for immediate fulfillment.",
+      "trigger": "Customer action on the digital interface."
+    },
+    {
+      "stage": "Order Validation & Allocation",
+      "description": "System validates inventory availability, calculates fees, confirms delivery slot, and allocates the order to a specific store and delivery agent.",
+      "trigger": "Successful submission of the order request."
+    },
+    {
+      "stage": "Order Preparation",
+      "description": "Store personnel pick items, verify quality, pack for transport, and hand over to the delivery partner.",
+      "trigger": "Allocation confirmation."
+    },
+    {
+      "stage": "Last-Mile Delivery",
+      "description": "Delivery partner picks up the order, navigates to the customer location, and completes the physical transfer.",
+      "trigger": "Pickup confirmation from the store."
+    },
+    {
+      "stage": "Handover & Confirmation",
+      "description": "Customer receives the order, verifies contents, and confirms receipt via the platform.",
+      "trigger": "Arrival at customer location."
+    },
+    {
+      "stage": "Financial Settlement",
+      "description": "Transaction is finalized, funds are transferred to the customer, and revenue share is settled between the platform and the store.",
+      "trigger": "Handover confirmation."
+    },
+    {
+      "stage": "Post-Transaction Review",
+      "description": "Collection of feedback, rating of experience, and initiation of loyalty points accrual.",
+      "trigger": "Completion of settlement."
+    },
+    {
+      "stage": "Lifecycle Conclusion",
+      "description": "The specific order instance is closed; data is archived for analytics; optional dispute resolution window opens.",
+      "trigger": "Completion of all feedback and settlement processes."
+    }
+  ],
+  "business_objects": [
+    {
+      "object_name": "Service Area Definition",
+      "purpose": "Geographically delimits the zones where hyperlocal delivery is currently supported.",
+      "necessity": "Essential",
+      "first_stage": "Foundation Establishment",
+      "dependencies": [],
+      "lifecycle_role": "Configuration parameter for Store and Delivery Partner onboarding.",
+      "evidence_status": "Inferred from operational constraints",
+      "confidence_score": 0.9
+    },
+    {
+      "object_name": "Store Partner Agreement",
+      "purpose": "Defines the commercial and operational relationship between the platform and the physical retail store.",
+      "necessity": "Essential",
+      "first_stage": "Foundation Establishment",
+      "dependencies": [
+        "Service Area Definition"
+      ],
+      "lifecycle_role": "Enabler for catalog synchronization and inventory access.",
+      "evidence_status": "Inferred from business model requirements",
+      "confidence_score": 0.95
+    },
+    {
+      "object_name": "Product Catalog",
+      "purpose": "Represents the structured list of sellable items, including descriptions, prices, images, and category hierarchies.",
+      "necessity": "Essential",
+      "first_stage": "Supply Chain Integration",
+      "dependencies": [
+        "Store Partner Agreement"
+      ],
+      "lifecycle_role": "Source of truth for customer selection and order composition.",
+      "evidence_status": "Explicit in domain definition",
+      "confidence_score": 1
+    },
+    {
+      "object_name": "Real-Time Inventory Snapshot",
+      "purpose": "Records the current available quantity and status of each SKU at a specific store location.",
+      "necessity": "Essential",
+      "first_stage": "Supply Chain Integration",
+      "dependencies": [
+        "Product Catalog",
+        "Store Partner Agreement"
+      ],
+      "lifecycle_role": "Constraint for order allocation and validation.",
+      "evidence_status": "Explicit in domain definition",
+      "confidence_score": 1
+    },
+    {
+      "object_name": "Delivery Zone Map",
+      "purpose": "Defines the specific geographic boundaries and travel time estimates for a store to its customers.",
+      "necessity": "Essential",
+      "first_stage": "Operational Readiness",
+      "dependencies": [
+        "Service Area Definition",
+        "Store Partner Agreement"
+      ],
+      "lifecycle_role": "Input for fee calculation and delivery promise setting.",
+      "evidence_status": "Inferred from operational mechanics",
+      "confidence_score": 0.85
+    },
+    {
+      "object_name": "Customer Profile",
+      "purpose": "Holds user identification, address details, payment methods, and preference history.",
+      "necessity": "Essential",
+      "first_stage": "Order Initiation",
+      "dependencies": [
+        "Store Partner Agreement"
+      ],
+      "lifecycle_role": "Identifier for order ownership and delivery routing.",
+      "evidence_status": "Explicit in domain definition",
+      "confidence_score": 1
+    },
+    {
+      "object_name": "Order Request",
+      "purpose": "Captures the customer's specific selection of items, quantities, and delivery instructions.",
+      "necessity": "Essential",
+      "first_stage": "Order Initiation",
+      "dependencies": [
+        "Product Catalog",
+        "Customer Profile"
+      ],
+      "lifecycle_role": "Trigger for the fulfillment workflow.",
+      "evidence_status": "Explicit in domain definition",
+      "confidence_score": 1
+    },
+    {
+      "object_name": "Fulfillment Task",
+      "purpose": "Represents the internal operations required to pick, pack, and dispatch the order.",
+      "necessity": "Essential",
+      "first_stage": "Order Validation & Allocation",
+      "dependencies": [
+        "Order Request",
+        "Real-Time Inventory Snapshot"
+      ],
+      "lifecycle_role": "Workflow orchestrator for store staff.",
+      "evidence_status": "Inferred from operational execution",
+      "confidence_score": 0.9
+    },
+    {
+      "object_name": "Assigned Delivery Slot",
+      "purpose": "Secures a specific time window for the delivery agent to execute the last-mile delivery.",
+      "necessity": "Essential",
+      "first_stage": "Order Validation & Allocation",
+      "dependencies": [
+        "Fulfillment Task",
+        "Delivery Zone Map"
+      ],
+      "lifecycle_role": "Constraint for logistics scheduling.",
+      "evidence_status": "Inferred from operational mechanics",
+      "confidence_score": 0.85
+    },
+    {
+      "object_name": "Delivery Assignment",
+      "purpose": "Links a specific order to a specific delivery agent and vehicle.",
+      "necessity": "Essential",
+      "first_stage": "Order Validation & Allocation",
+      "dependencies": [
+        "Fulfillment Task",
+        "Assigned Delivery Slot"
+      ],
+      "lifecycle_role": "Trigger for the physical movement of goods.",
+      "evidence_status": "Inferred from operational mechanics",
+      "confidence_score": 0.9
+    },
+    {
+      "object_name": "Financial Transaction Record",
+      "purpose": "Documents the exchange of value, including item costs, fees, taxes, and payment status.",
+      "necessity": "Essential",
+      "first_stage": "Financial Settlement",
+      "dependencies": [
+        "Order Request",
+        "Delivery Assignment"
+      ],
+      "lifecycle_role": "Proof of payment and settlement trigger.",
+      "evidence_status": "Inferred from business model requirements",
+      "confidence_score": 0.95
+    },
+    {
+      "object_name": "Delivery Proof",
+      "purpose": "Verifies that the goods were physically transferred to the customer.",
+      "necessity": "Essential",
+      "first_stage": "Handover & Confirmation",
+      "dependencies": [
+        "Delivery Assignment",
+        "Customer Profile"
+      ],
+      "lifecycle_role": "Closure condition for the logistics workflow.",
+      "evidence_status": "Inferred from operational mechanics",
+      "confidence_score": 0.9
+    },
+    {
+      "object_name": "Feedback Record",
+      "purpose": "Captures customer satisfaction ratings and textual comments regarding the order and delivery.",
+      "necessity": "Conditional",
+      "first_stage": "Post-Transaction Review",
+      "dependencies": [
+        "Delivery Proof"
+      ],
+      "lifecycle_role": "Input for quality improvement and agent performance evaluation.",
+      "evidence_status": "Inferred from standard industry practice",
+      "confidence_score": 0.7
+    },
+    {
+      "object_name": "Dispute Ticket",
+      "purpose": "Tracks unresolved issues such as missing items, damaged goods, or failed deliveries.",
+      "necessity": "Conditional",
+      "first_stage": "Lifecycle Conclusion",
+      "dependencies": [
+        "Feedback Record",
+        "Financial Transaction Record"
+      ],
+      "lifecycle_role": "Exception handling mechanism for order closure.",
+      "evidence_status": "Inferred from standard industry practice",
+      "confidence_score": 0.7
+    }
+  ],
+  "alternative_models_assumptions_gaps": {
+    "alternative_operating_models": [
+      {
+        "model_name": "Marketplace Aggregator Model",
+        "description": "The platform acts only as a connector without owning inventory, relying entirely on third-party stores to fulfill orders directly.",
+        "impact": "Reduces capital expenditure on warehousing but may compromise speed and quality control; requires robust API integrations with multiple store systems."
+      },
+      {
+        "model_name": "Dark Store / Centralized Fulfillment Model",
+        "description": "The platform operates its own micro-warehouses ('dark stores') to consolidate orders and reduce travel time.",
+        "impact": "Enables faster delivery and better assortment control but significantly increases operational costs and complexity."
+      },
+      {
+        "model_name": "Hybrid Model",
+        "description": "A mix of dark stores for high-frequency items and store pickup for bulk or large items.",
+        "impact": "Balances cost and speed but requires complex logic to route orders to the optimal fulfillment node."
+      }
+    ],
+    "key_assumptions": [
+      "Customers prioritize speed over cost, making them willing to pay premium delivery fees.",
+      "Stores are willing to dedicate staff and space for third-party order fulfillment without disrupting their primary sales.",
+      "Real-time inventory synchronization between the physical store and the digital platform is technically feasible and reliable.",
+      "The geographic density of customers allows for efficient route optimization for delivery agents."
+    ],
+    "unresolved_dependencies": [
+      "Regulatory compliance regarding food safety and labor laws for gig-economy delivery workers varies significantly by region and may impact operational readiness.",
+      "The exact threshold for 'immediate' delivery (e.g., 15 mins vs 45 mins) depends on local traffic patterns and weather conditions, which are dynamic variables."
+    ],
+    "evidence_gaps": [
+      "Specific data on the failure rate of orders due to inventory discrepancies between the POS system and the platform catalog is unavailable.",
+      "The precise cost structure for the 'Dark Store' model versus the 'Store Partner' model varies by city and is not universally quantifiable."
+    ]
+  }
+}
+
+#### 2.2 Existing Business Actors
+
+
+[
+  {
+    "actor_name": "Customer",
+    "operational_role": "End user who initiates orders, selects items, and confirms delivery completion."
+  },
+  {
+    "actor_name": "Store Partner",
+    "operational_role": "Physical retail location that provides inventory, staff for order picking, and fulfillment capabilities."
+  },
+  {
+    "actor_name": "Platform Operator",
+    "operational_role": "Entity that manages the digital interface, orchestrates order allocation, and settles financial transactions."
+  },
+  {
+    "actor_name": "Delivery Partner",
+    "operational_role": "Independent agent or gig-worker responsible for last-mile logistics and physical handover of goods."
+  },
+  {
+    "actor_name": "Merchandiser",
+    "operational_role": "Personnel at stores who pack orders and verify item quality before dispatch."
+  },
+  {
+    "actor_name": "Regulatory Authority",
+    "operational_role": "External body that enforces food safety standards and labor laws applicable to the service."
+  },
+  {
+    "actor_name": "Payment Provider",
+    "operational_role": "Financial institution that processes customer transactions and facilitates fund transfers."
+  },
+  {
+    "actor_name": "Order Allocation Engine",
+    "operational_role": "Automated system component that validates inventory, calculates fees, and assigns orders to specific agents."
+  },
+  {
+    "actor_name": "Fulfillment Supervisor",
+    "operational_role": "Store staff member who coordinates the picking, packing, and handover of orders to delivery partners."
+  }
+]
+
+
+
+#### 2.3 Actor Responsibilities and Authorizations
+
+
 {
   "business_context": {
     "domain": "Quick Commerce (Q-Commerce)",
@@ -274,13 +631,11 @@ The following information is provided as the initial reference baseline:
 }
 
 
-"
 
-**Business Objects:**
-{"business_operating_model":{"value_proposition":"To enable the immediate acquisition of fresh groceries and essential goods within minutes of ordering, solving the friction between demand and supply for time-sensitive household needs.","participants":["Customer","Store/Fulfillment Center","Merchandiser","Delivery Partner","Platform Operator","Payment Provider","Regulatory Authority"],"value_creation_monetization":{"creation_mechanism":"Aggregating fragmented inventory from hyperlocal stores into a unified digital interface, optimizing last-mile logistics through algorithmic routing, and enabling real-time order fulfillment.","monetization_streams":["Transaction Commission","Delivery Fees","Subscription Models","Advertising/Sponsored Listings","Data Analytics Services"]},"distinctive_niche":"Hyperlocal, ultra-fast (typically under 60 minutes) delivery of fresh perishables and daily essentials, relying on a dense network of micro-fulfillment centers rather than centralized warehouses."},"derived_lifecycle":[{"stage":"Foundation Establishment","description":"Defining the service area, selecting store partners, establishing logistics partnerships, and setting pricing and service level agreements.","trigger":"Strategic decision to launch a new market zone or service category."},{"stage":"Supply Chain Integration","description":"Onboarding stores, defining SKU catalogs, mapping inventory locations, and establishing synchronization mechanisms for real-time stock visibility.","trigger":"Completion of partner contracts and initial inventory data ingestion."},{"stage":"Operational Readiness","description":"Testing logistics routes, calibrating demand forecasting models, and conducting dry runs of the order-to-delivery workflow.","trigger":"Acquisition of sufficient initial inventory and confirmed delivery partner availability."},{"stage":"Order Initiation","description":"Customer expresses need, browses available catalog, selects items, and submits a request for immediate fulfillment.","trigger":"Customer action on the digital interface."},{"stage":"Order Validation & Allocation","description":"System validates inventory availability, calculates fees, confirms delivery slot, and allocates the order to a specific store and delivery agent.","trigger":"Successful submission of the order request."},{"stage":"Order Preparation","description":"Store personnel pick items, verify quality, pack for transport, and hand over to the delivery partner.","trigger":"Allocation confirmation."},{"stage":"Last-Mile Delivery","description":"Delivery partner picks up the order, navigates to the customer location, and completes the physical transfer.","trigger":"Pickup confirmation from the store."},{"stage":"Handover & Confirmation","description":"Customer receives the order, verifies contents, and confirms receipt via the platform.","trigger":"Arrival at customer location."},{"stage":"Financial Settlement","description":"Transaction is finalized, funds are transferred to the customer, and revenue share is settled between the platform and the store.","trigger":"Handover confirmation."},{"stage":"Post-Transaction Review","description":"Collection of feedback, rating of experience, and initiation of loyalty points accrual.","trigger":"Completion of settlement."},{"stage":"Lifecycle Conclusion","description":"The specific order instance is closed; data is archived for analytics; optional dispute resolution window opens.","trigger":"Completion of all feedback and settlement processes."}],"business_objects":[{"object_name":"Service Area Definition","purpose":"Geographically delimits the zones where hyperlocal delivery is currently supported.","necessity":"Essential","first_stage":"Foundation Establishment","dependencies":[],"lifecycle_role":"Configuration parameter for Store and Delivery Partner onboarding.","evidence_status":"Inferred from operational constraints","confidence_score":0.9},{"object_name":"Store Partner Agreement","purpose":"Defines the commercial and operational relationship between the platform and the physical retail store.","necessity":"Essential","first_stage":"Foundation Establishment","dependencies":["Service Area Definition"],"lifecycle_role":"Enabler for catalog synchronization and inventory access.","evidence_status":"Inferred from business model requirements","confidence_score":0.95},{"object_name":"Product Catalog","purpose":"Represents the structured list of sellable items, including descriptions, prices, images, and category hierarchies.","necessity":"Essential","first_stage":"Supply Chain Integration","dependencies":["Store Partner Agreement"],"lifecycle_role":"Source of truth for customer selection and order composition.","evidence_status":"Explicit in domain definition","confidence_score":1},{"object_name":"Real-Time Inventory Snapshot","purpose":"Records the current available quantity and status of each SKU at a specific store location.","necessity":"Essential","first_stage":"Supply Chain Integration","dependencies":["Product Catalog","Store Partner Agreement"],"lifecycle_role":"Constraint for order allocation and validation.","evidence_status":"Explicit in domain definition","confidence_score":1},{"object_name":"Delivery Zone Map","purpose":"Defines the specific geographic boundaries and travel time estimates for a store to its customers.","necessity":"Essential","first_stage":"Operational Readiness","dependencies":["Service Area Definition","Store Partner Agreement"],"lifecycle_role":"Input for fee calculation and delivery promise setting.","evidence_status":"Inferred from operational mechanics","confidence_score":0.85},{"object_name":"Customer Profile","purpose":"Holds user identification, address details, payment methods, and preference history.","necessity":"Essential","first_stage":"Order Initiation","dependencies":["Store Partner Agreement"],"lifecycle_role":"Identifier for order ownership and delivery routing.","evidence_status":"Explicit in domain definition","confidence_score":1},{"object_name":"Order Request","purpose":"Captures the customer's specific selection of items, quantities, and delivery instructions.","necessity":"Essential","first_stage":"Order Initiation","dependencies":["Product Catalog","Customer Profile"],"lifecycle_role":"Trigger for the fulfillment workflow.","evidence_status":"Explicit in domain definition","confidence_score":1},{"object_name":"Fulfillment Task","purpose":"Represents the internal operations required to pick, pack, and dispatch the order.","necessity":"Essential","first_stage":"Order Validation & Allocation","dependencies":["Order Request","Real-Time Inventory Snapshot"],"lifecycle_role":"Workflow orchestrator for store staff.","evidence_status":"Inferred from operational execution","confidence_score":0.9},{"object_name":"Assigned Delivery Slot","purpose":"Secures a specific time window for the delivery agent to execute the last-mile delivery.","necessity":"Essential","first_stage":"Order Validation & Allocation","dependencies":["Fulfillment Task","Delivery Zone Map"],"lifecycle_role":"Constraint for logistics scheduling.","evidence_status":"Inferred from operational mechanics","confidence_score":0.85},{"object_name":"Delivery Assignment","purpose":"Links a specific order to a specific delivery agent and vehicle.","necessity":"Essential","first_stage":"Order Validation & Allocation","dependencies":["Fulfillment Task","Assigned Delivery Slot"],"lifecycle_role":"Trigger for the physical movement of goods.","evidence_status":"Inferred from operational mechanics","confidence_score":0.9},{"object_name":"Financial Transaction Record","purpose":"Documents the exchange of value, including item costs, fees, taxes, and payment status.","necessity":"Essential","first_stage":"Financial Settlement","dependencies":["Order Request","Delivery Assignment"],"lifecycle_role":"Proof of payment and settlement trigger.","evidence_status":"Inferred from business model requirements","confidence_score":0.95},{"object_name":"Delivery Proof","purpose":"Verifies that the goods were physically transferred to the customer.","necessity":"Essential","first_stage":"Handover & Confirmation","dependencies":["Delivery Assignment","Customer Profile"],"lifecycle_role":"Closure condition for the logistics workflow.","evidence_status":"Inferred from operational mechanics","confidence_score":0.9},{"object_name":"Feedback Record","purpose":"Captures customer satisfaction ratings and textual comments regarding the order and delivery.","necessity":"Conditional","first_stage":"Post-Transaction Review","dependencies":["Delivery Proof"],"lifecycle_role":"Input for quality improvement and agent performance evaluation.","evidence_status":"Inferred from standard industry practice","confidence_score":0.7},{"object_name":"Dispute Ticket","purpose":"Tracks unresolved issues such as missing items, damaged goods, or failed deliveries.","necessity":"Conditional","first_stage":"Lifecycle Conclusion","dependencies":["Feedback Record","Financial Transaction Record"],"lifecycle_role":"Exception handling mechanism for order closure.","evidence_status":"Inferred from standard industry practice","confidence_score":0.7}],"alternative_models_assumptions_gaps":{"alternative_operating_models":[{"model_name":"Marketplace Aggregator Model","description":"The platform acts only as a connector without owning inventory, relying entirely on third-party stores to fulfill orders directly.","impact":"Reduces capital expenditure on warehousing but may compromise speed and quality control; requires robust API integrations with multiple store systems."},{"model_name":"Dark Store / Centralized Fulfillment Model","description":"The platform operates its own micro-warehouses ('dark stores') to consolidate orders and reduce travel time.","impact":"Enables faster delivery and better assortment control but significantly increases operational costs and complexity."},{"model_name":"Hybrid Model","description":"A mix of dark stores for high-frequency items and store pickup for bulk or large items.","impact":"Balances cost and speed but requires complex logic to route orders to the optimal fulfillment node."}],"key_assumptions":["Customers prioritize speed over cost, making them willing to pay premium delivery fees.","Stores are willing to dedicate staff and space for third-party order fulfillment without disrupting their primary sales.","Real-time inventory synchronization between the physical store and the digital platform is technically feasible and reliable.","The geographic density of customers allows for efficient route optimization for delivery agents."],"unresolved_dependencies":["Regulatory compliance regarding food safety and labor laws for gig-economy delivery workers varies significantly by region and may impact operational readiness.","The exact threshold for 'immediate' delivery (e.g., 15 mins vs 45 mins) depends on local traffic patterns and weather conditions, which are dynamic variables."],"evidence_gaps":["Specific data on the failure rate of orders due to inventory discrepancies between the POS system and the platform catalog is unavailable.","The precise cost structure for the 'Dark Store' model versus the 'Store Partner' model varies by city and is not universally quantifiable."]}}
 
-**Actor–Business Object Relationships:**
-"
+#### 2.4 Actor and Business Object Relationships
+
+
 {
   "actor_business_object_relationships": [
     {
@@ -614,10 +969,11 @@ The following information is provided as the initial reference baseline:
   ]
 }
 
-"
 
-**Business Activities:**
-"
+
+#### 2.5 Existing Business Activities
+
+
 {
   "business_activities": [
     {
@@ -841,529 +1197,278 @@ The following information is provided as the initial reference baseline:
   ]
 }
 
-"
 
-These inputs provide an initial understanding of the business. They are reference material, not a complete or restrictive specification of its information requirements.
 
-Do not assume that the supplied information is exhaustive, fully accurate or sufficient to explain every aspect of the business.
+#### 2.6 Parent Information Requirements
 
-## 2. Discovery Objective
+undefined
 
-Independently determine what information the business requires to operate effectively and achieve its business outcomes.
+---
 
-Reason beyond the explicit information contained in the supplied inputs.
+### 3. CORE DISCOVERY OBJECTIVE
 
-Understand the business context, actor responsibilities, business activities, interactions and business processes. From this understanding, discover the information that must be available, obtained, generated, communicated, maintained, evaluated or consumed for the business to function.
+For every Parent Information Requirement, independently discover and elaborate the following five dimensions:
 
-Do not simply extract existing business-object names, reproduce their attributes, or convert business activities into information requirements.
+1. information_requirement
+2. information_usage
+3. information_source
+4. business_decisions_supported
+5. required_information_details
 
-Discover the actual information needs arising from the business itself.
+The Parent Information Requirement is the anchor for the entire analysis.
 
-## 3. Required Reasoning
+Do not create new Parent Information Requirements, rename existing ones, combine them, split them, or omit them.
 
-### A. Understand business information needs
+Process each requirement independently and completely.
 
-For each relevant actor and business responsibility, independently determine:
+---
 
-- What information the actor needs to perform the responsibility.
-- What information the actor needs before initiating or executing an activity.
-- What information the actor must obtain from other actors, business operations or external parties.
-- What information must be generated or updated through business activities.
-- What information is required to monitor progress, evaluate results and complete responsibilities.
+### 4. QUESTION-DRIVEN DISCOVERY METHODOLOGY
 
-Consider both information explicitly represented in the inputs and information that the business logically requires but which has not yet been identified.
+Before generating the output for each Parent Information Requirement, conduct an internal investigation by asking and answering the questions below.
 
-### B. Discover information required by business activities
+These questions are analytical prompts, not mandatory output fields. Use the questions that are relevant to the specific requirement, and introduce additional domain-specific questions wherever necessary.
 
-Examine the supplied business activities and reason about the information needed throughout their execution.
+#### 4.1 Investigate Information Usage
 
-Determine:
+First establish why the business needs this information and how it is actually used.
 
-- Information required to initiate an activity.
-- Information required to perform its individual operations.
-- Information required to evaluate conditions and make business decisions.
-- Information required to coordinate interactions between actors.
-- Information generated as an activity progresses or completes.
-- Information required to handle alternative outcomes, exceptions and unresolved situations.
-- Information required by subsequent activities.
+Ask:
 
-Do not assume that an activity's listed inputs and outputs fully describe its information requirements.
+- What business problem does this information solve?
+- Why does the business need this information?
+- What would happen if this information were unavailable, inaccurate, incomplete, or outdated?
+- Which business processes or operational activities depend on it?
+- At what point in a business process is the information required?
+- Which actors need to consume, access, interpret, or act upon it?
+- What responsibility does each actor perform using this information?
+- Is the information needed before an activity, during execution, or after completion?
+- Is it required continuously, periodically, on demand, or when a business event occurs?
+- Does the information support operational execution, monitoring, control, compliance, financial management, customer service, or strategic decisions?
+- Does one activity produce information that another activity subsequently consumes?
+- Does the information need to be shared between actors, business functions, or external parties?
+- What operational exceptions or business scenarios make this information particularly important?
+- What business consequences arise when the information is incorrect or unavailable?
 
-### C. Discover information supporting business decisions
+Use the answers to explain the actual business purpose, consumers, operational dependencies, timing, and outcomes.
 
-Independently identify the decisions that business actors or automated business operations must make.
+Do not produce generic descriptions such as "used to support business operations." Explain precisely how and why the information is used in the identified domain and niche.
 
-For each relevant decision, determine what information is necessary to make that decision and why.
+#### 4.2 Investigate Information Sources
 
-Consider operational decisions, business-rule evaluations, eligibility, availability, prioritisation, financial decisions, coordination and exception handling wherever relevant to the actual business.
+Next establish where the information originates and how the business obtains it.
 
-Do not force predefined decision categories onto the business. Discover them from the supplied context and your own business reasoning.
+Ask:
 
-### D. Discover information beyond existing business objects
+- Who or what originally generates this information?
+- Which business actor is responsible for creating, maintaining, confirming, or updating it?
+- Which business object contains or represents the information?
+- Which business activity generates or changes the information?
+- Is the information internally generated, externally provided, derived, calculated, observed, or collected?
+- Does it originate from a transaction, operational event, business record, external service, regulatory source, physical activity, or another information source?
+- Does the business depend on another organization, partner, service provider, or external authority to obtain it?
+- What logical system or source category would normally provide this information in this domain?
+- How is the information acquired: direct entry, transaction capture, system integration, event notification, periodic synchronization, measurement, or another mechanism?
+- Does the information require verification, reconciliation, enrichment, or transformation before it can be trusted?
+- How frequently must the source provide updates?
+- What event would trigger an update?
+- What happens when the source is unavailable, delayed, inconsistent, or unreliable?
+- Is there a secondary or fallback source?
+- How can the business establish the origin, freshness, and reliability of the information?
 
-The supplied business objects are reference inputs, not the boundaries of information discovery.
+Identify the logical source categories and acquisition mechanisms appropriate to the domain.
 
-Determine whether the business needs information that:
+You may infer relevant categories such as operational systems, partner systems, financial services, external data providers, regulatory sources, physical records, or business-generated information where justified.
 
-- Is not represented by an existing business object.
-- Is obtained from external parties, services or systems.
-- Is derived by evaluating or combining existing information.
-- Is generated through business activities.
-- Is needed temporarily to make a decision or execute an operation.
-- Is required for coordination, monitoring, reconciliation or business control.
+However:
 
-Do not automatically create new business objects for every information requirement.
+- Do not claim that a specific vendor, product, application, API, or integration is deployed unless the input explicitly confirms it.
+- Distinguish logical source requirements from confirmed existing integrations.
+- Do not invent named systems or organizations.
+- Explain the information's origin and acquisition mechanism, not merely the name of a business object.
 
-An information requirement describes what information is needed by the business. A business object is a business entity that may hold or represent that information. They are related concepts, but they are not interchangeable.
+#### 4.3 Investigate Business Decisions Supported
 
-### E. Examine information dependencies and continuity
+Determine what actual business decisions depend on the information.
 
-Reason about how information moves across business activities and actors.
+Ask:
 
-Identify information that must be available from one activity to another, information that must be updated as circumstances change, and information that must remain available to support subsequent business operations.
+- What decision becomes possible because this information is available?
+- Who makes the decision: a business actor, an authorized role, or an automated business function?
+- At which business activity or decision point is it made?
+- What information is evaluated before the decision?
+- What conditions, alternatives, or business circumstances influence the decision?
+- What possible outcomes can result?
+- Does the decision authorize, reject, approve, select, allocate, prioritize, assign, release, suspend, escalate, reconcile, or trigger another action?
+- Does the decision affect a customer, transaction, business object, operational resource, financial position, or compliance obligation?
+- Does the decision need to be revisited when information changes?
+- What decisions are required when information is missing, conflicting, invalid, or outside acceptable business conditions?
+- What decisions require human intervention rather than automated processing?
+- What downstream business activities depend on the decision outcome?
 
-Consider whether missing, outdated, inconsistent or unavailable information could prevent an activity, decision or business outcome.
+Identify specific business decisions rather than merely listing activities.
 
-### F. Challenge the initial understanding
+For each decision, explain the actual choice being made and the business purpose it serves.
 
-Do not accept the supplied actors, relationships, activities or business objects as necessarily complete.
+Examples of decision types to consider, only where relevant:
 
-Use your understanding of the business to identify additional information needs that the supplied model does not adequately explain.
+- Eligibility and qualification.
+- Approval and authorization.
+- Selection and prioritization.
+- Allocation and assignment.
+- Pricing and financial calculation.
+- Risk assessment and exception handling.
+- Operational scheduling and resource planning.
+- Compliance and policy enforcement.
+- Reconciliation and settlement.
+- Escalation, suspension, cancellation, or recovery.
 
-Where an information requirement exposes a possible missing business activity, responsibility, actor interaction or business object, capture the information requirement itself. Do not regenerate or modify those other discovery dimensions in this pass.
+Do not force every decision category into every requirement. Discover decisions from the actual domain context.
 
-## 4. Information Requirement Definition
+#### 4.4 Investigate Required Information Details
 
-An information requirement must describe a meaningful business information need, not an individual database column, technical field, API parameter, screen input or generic data attribute.
+Determine the specific information elements the business needs to fulfil the requirement.
 
-Each requirement should identify:
+Ask:
 
-- **Information requirement:** What information the business needs.
-- **Description:** What the information represents and what it covers.
-- **Business purpose:** Why the information is needed and what business need it fulfils.
-- **Required by actors:** Which actors need or consume this information.
-- **Related responsibilities:** Which responsibilities require it.
-- **Related activities:** Which activities use, generate or depend on it.
-- **Related business objects:** Which existing business objects represent or contain the information, where applicable.
-- **Information usage:** How the information is used, such as obtained, consumed, generated, evaluated, communicated, maintained or updated.
-- **Information source:** Where the information originates or is obtained, where identifiable.
-- **Business decisions supported:** Decisions that depend on this information.
-- **Required information details:** The substantive information content necessary to fulfil the requirement.
+- What exact information must be known to satisfy this requirement?
+- What attributes, facts, measurements, classifications, identifiers, and statuses are necessary?
+- What distinguishes one relevant business entity, transaction, event, location, resource, or record from another?
+- What quantities, values, dates, times, durations, or measurements are needed?
+- What conditions or classifications affect how the information is interpreted?
+- What lifecycle status or progress information is required?
+- What information identifies ownership, responsibility, authorization, or accountability?
+- What contextual information is needed to understand the circumstances in which the information was created?
+- What information is required to determine whether the information is current and reliable?
+- Are historical values, change records, event timestamps, or previous decisions necessary?
+- Is supporting evidence, a reference, a reason code, or an audit trail required?
+- What information is calculated or derived from other information elements?
+- What additional details are needed for exception handling, reconciliation, investigation, or recovery?
+- What information is required by different actors for their respective responsibilities?
+- What information would be missing if the business attempted to execute the relevant activity using only the currently identified details?
 
-Create distinct information requirements where the business purpose, usage, consumers or decision needs are materially different. Avoid splitting one coherent information need into multiple superficial requirements.
+Discover information at a meaningful business level.
 
-## 5. Discovery Constraints
+For each information detail, describe:
 
-1. Treat all supplied inputs as reference material, not a closed list of information requirements.
-2. Independently reason about the business and discover information requirements rather than merely extracting information from existing objects.
-3. Do not restrict discovery to the supplied actors, responsibilities, objects, relationships or activities.
-4. Do not invent information needs without a meaningful business rationale.
-5. Do not assume every actor needs access to every information requirement.
-6. Do not assume every business activity requires a separate information requirement.
-7. Do not duplicate information requirements using slightly different names.
-8. Do not mistake business outcomes, activities, decisions or business objects for information requirements.
-9. Do not turn information requirements into database schemas, technical designs, APIs or application features.
-10. Do not regenerate business context, actors, responsibilities, business objects, relationships or activities.
-11. Do not introduce a predefined catalogue of information requirement categories. Discover the relevant information needs from the business context.
-12. Preserve meaningful business terminology from the supplied inputs.
+- What the information represents.
+- What business meaning it carries.
+- Why it is needed.
+- Where relevant, the context in which it is used.
 
-## 6. Output Requirements
+Examples of information dimensions to consider include:
 
-Return only valid JSON using the following structure:
+- Business identifiers and reference information.
+- Quantities, amounts, measurements, and calculated values.
+- Business classifications and categories.
+- Operational statuses and lifecycle states.
+- Dates, timestamps, durations, and effective periods.
+- Geographic and location context.
+- Ownership, responsibility, and authorization context.
+- Transactional and financial information.
+- Source, freshness, and reliability information.
+- Historical changes and supporting evidence.
+- Exception, rejection, and reconciliation information.
 
-{
-  "information_requirements": [
-    {
-      "information_requirement": "",
-      "description": "",
-      "business_purpose": "",
-      "required_by_actors": [],
-      "related_responsibilities": [],
-      "related_activities": [],
-      "related_business_objects": [],
-      "information_usage": "",
-      "information_source": "",
-      "business_decisions_supported": [],
-      "required_information_details": []
-    }
-  ]
-}
+These are discovery considerations, not a mandatory checklist. Include only information details that have a meaningful relationship to the specific Parent Information Requirement.
 
-Output rules:
+Do not reduce the output to generic database field names. Describe the business information and its meaning.
 
-- Return only the JSON object. Do not include Markdown, explanations, commentary or additional top-level properties.
-- Populate each property with meaningful business-specific information.
-- Use the terminology of the supplied business model where appropriate.
-- Use empty arrays when no relevant relationship can be established.
-- Use an empty string only when a scalar value genuinely cannot be determined.
-- Do not fabricate references to actors, responsibilities, activities or business objects that do not exist in the supplied inputs.
-- Where a relevant information need reveals a possible missing business element, describe the information requirement without pretending that the missing element has already been formally established.
-- Discover all materially distinct information requirements necessary to explain how the business operates. Avoid arbitrary limits on the number of requirements.
+---
 
-The objective is to produce a comprehensive, business-driven Information Requirements Catalogue that captures what information the business needs, why it needs it, who needs it, how it is used and which business operations depend on it.
+### 5. DOMAIN-DRIVEN DISCOVERY AND INFERENCE
 
-Assistant:
-{
-  "information_requirements": [
-    {
-      "information_requirement": "Real-time Stock Availability Status",
-      "description": "The current exact quantity of each SKU available for immediate sale at every specific store node, distinguishing between 'in stock', 'low stock', and 'out of stock' states at the moment of order validation.",
-      "business_purpose": "To prevent overselling, ensure order allocation accuracy, and maintain the integrity of the 'instant acquisition' value proposition.",
-      "required_by_actors": [
-        "Customer",
-        "Order Allocation Engine",
-        "Platform Operator",
-        "Store Partner",
-        "Merchandiser"
-      ],
-      "related_responsibilities": [
-        "Inventory Provision and Synchronization",
-        "System Orchestration and Allocation",
-        "Order Initiation and Selection"
-      ],
-      "related_activities": [
-        "Order Validation and Resource Allocation",
-        "Inventory Synchronization and Validation",
-        "Product Catalog Curation and Strategy"
-      ],
-      "related_business_objects": [
-        "Real-Time Inventory Snapshot",
-        "Product Catalog",
-        "Store Partner Agreement"
-      ],
-      "information_usage": "Obtained via API polling or event-driven triggers; consumed for visibility; validated against POS data; used to generate error messages for customers.",
-      "information_source": "Store Point of Sale (POS) systems, dedicated inventory management software, or real-time webhooks from Store Partners.",
-      "business_decisions_supported": [
-        "Eligibility of an item for ordering",
-        "Pricing of a specific SKU at a specific store",
-        "Determination of store priority in order allocation"
-      ],
-      "required_information_details": [
-        "SKU identifier",
-        "Exact quantity available",
-        "Last updated timestamp",
-        "Location (store ID)",
-        "Status flag (available/reserved/sold)"
-      ]
-    },
-    {
-      "information_requirement": "Dynamic Delivery Radius and Time Estimates",
-      "description": "Granular geographic data defining travel times and distances between specific pickup locations (stores) and potential drop-off points (customer addresses), calculated dynamically based on current traffic, weather, and delivery agent capacity.",
-      "business_purpose": "To enable accurate SLA adherence (e.g., 60-minute delivery), optimize route efficiency, and set realistic delivery fees.",
-      "required_by_actors": [
-        "Customer",
-        "Order Allocation Engine",
-        "Platform Operator",
-        "Delivery Partner"
-      ],
-      "related_responsibilities": [
-        "System Orchestration and Allocation",
-        "Partner Relationship Management",
-        "Order Initiation and Selection"
-      ],
-      "related_activities": [
-        "Order Validation and Resource Allocation",
-        "Last-Mile Logistics Execution",
-        "Market Entry and Partner Onboarding"
-      ],
-      "related_business_objects": [
-        "Service Area Definition",
-        "Delivery Zone Map",
-        "Customer Profile",
-        "Assigned Delivery Slot"
-      ],
-      "information_usage": "Computed in real-time during allocation; used to calculate time windows; consumed by delivery agents for navigation; displayed to customers as ETAs.",
-      "information_source": "Mapping APIs (e.g., Google Maps, Mapbox), internal traffic analytics, historical delivery time data, and real-time traffic feeds.",
-      "business_decisions_supported": [
-        "Allocation of an order to a specific store",
-        "Assignment of an order to a specific delivery agent",
-        "Calculation of delivery fees",
-        "Definition of service boundaries"
-      ],
-      "required_information_details": [
-        "Store coordinates",
-        "Customer address coordinates",
-        "Estimated travel time under normal conditions",
-        "Current traffic congestion factor",
-        "Weather impact modifier",
-        "Available delivery windows for the store"
-      ]
-    },
-    {
-      "information_requirement": "Real-Time Order Allocation Status and Queue Depth",
-      "description": "Live metrics indicating the number of pending orders per store, the average time to fulfill an order at the store, and the current backlog status of each store node.",
-      "business_purpose": "To balance load across the network, prevent store saturation, and dynamically adjust inventory visibility or delivery slot availability based on operational capacity.",
-      "required_by_actors": [
-        "Order Allocation Engine",
-        "Platform Operator",
-        "Store Partner"
-      ],
-      "related_responsibilities": [
-        "System Orchestration and Allocation",
-        "Inventory Provision and Synchronization",
-        "Service Level Compliance"
-      ],
-      "related_activities": [
-        "Order Validation and Resource Allocation",
-        "Order Fulfillment and Preparation",
-        "Market Entry and Partner Onboarding"
-      ],
-      "related_business_objects": [
-        "Order Request",
-        "Fulfillment Task",
-        "Assigned Delivery Slot",
-        "Store Partner Agreement"
-      ],
-      "information_usage": "Aggregated and monitored continuously; used to trigger dynamic pricing or slot adjustments; consumed to pause orders during peak congestion.",
-      "information_source": "Store backend systems, internal order processing logs, and real-time status updates from Delivery Partners.",
-      "business_decisions_supported": [
-        "Dynamic pricing of delivery slots",
-        "Temporary suspension of orders from specific stores",
-        "Rerouting of orders to less busy stores",
-        "Allocation of additional delivery resources"
-      ],
-      "required_information_details": [
-        "Count of active orders per store",
-        "Average fulfillment time per store",
-        "Current staff utilization percentage",
-        "Estimated time to clear current queue",
-        "Store operational status (open/closed/limited)"
-      ]
-    },
-    {
-      "information_requirement": "Live Delivery Agent Capacity and Proximity",
-      "description": "Real-time data on the number of available delivery agents in proximity to pickup points, their current route status (idle, picking up, in transit, delivering), and their vehicle/e-bike capacity limits.",
-      "business_purpose": "To ensure efficient matching of orders to agents, minimize deadhead travel, and guarantee that delivery slots can be fulfilled within the promised timeframe.",
-      "required_by_actors": [
-        "Order Allocation Engine",
-        "Platform Operator",
-        "Delivery Partner"
-      ],
-      "related_responsibilities": [
-        "System Orchestration and Allocation",
-        "Route Execution and Navigation",
-        "Quality Assurance and Dispute Resolution"
-      ],
-      "related_activities": [
-        "Order Validation and Resource Allocation",
-        "Last-Mile Logistics Execution",
-        "Dispute Resolution and Exception Handling"
-      ],
-      "related_business_objects": [
-        "Delivery Assignment",
-        "Assigned Delivery Slot",
-        "Delivery Partner"
-      ],
-      "information_usage": "Queried for agent search; updated via GPS pings; consumed to create delivery assignments; monitored for performance analytics.",
-      "information_source": "Mobile applications used by Delivery Partners, GPS tracking systems, and internal dispatch software.",
-      "business_decisions_supported": [
-        "Assignment of a specific order to a specific agent",
-        "Batching of orders for a single agent",
-        "Dynamic pricing of delivery slots based on agent scarcity",
-        "Identification of underperforming agents"
-      ],
-      "required_information_details": [
-        "Agent ID and current location (coordinates)",
-        "Current status (idle/busy/on-route)",
-        "Number of active orders per agent",
-        "Estimated time to reach next pickup point",
-        "Vehicle type and cargo capacity",
-        "Current route efficiency score"
-      ]
-    },
-    {
-      "information_requirement": "Real-Time Financial Settlement and Commission Breakdown",
-      "description": "Detailed records of transaction amounts, deducted fees, commission rates applied, store payouts, and tax calculations for every completed order, updated immediately upon delivery confirmation and payment authorization.",
-      "business_purpose": "To ensure accurate revenue collection, timely payouts to stores and partners, and transparent financial reconciliation between all parties.",
-      "required_by_actors": [
-        "Customer",
-        "Store Partner",
-        "Delivery Partner",
-        "Platform Operator",
-        "Payment Provider"
-      ],
-      "related_responsibilities": [
-        "Financial Settlement and Revenue Management",
-        "Payment Execution",
-        "Partner Relationship Management"
-      ],
-      "related_activities": [
-        "Payment Processing and Financial Settlement",
-        "Dispute Resolution and Exception Handling",
-        "Order Initiation and Demand Capture"
-      ],
-      "related_business_objects": [
-        "Financial Transaction Record",
-        "Store Partner Agreement",
-        "Delivery Assignment",
-        "Order Request"
-      ],
-      "information_usage": "Calculated automatically; reconciled with bank transfers; presented in customer and partner portals; audited for compliance.",
-      "information_source": "Payment gateway APIs, internal settlement engines, and historical transaction logs.",
-      "business_decisions_supported": [
-        "Approval of store payout requests",
-        "Adjustment of commission rates",
-        "Initiation of refunds or chargebacks",
-        "Calculation of loyalty points and rewards eligibility"
-      ],
-      "required_information_details": [
-        "Total order value",
-        "Customer payment amount",
-        "Platform commission rate and amount",
-        "Store commission and payout amount",
-        "Delivery fee charged to customer",
-        "Tax liability and amount",
-        "Currency and exchange rate used",
-        "Transaction ID and timestamp"
-      ]
-    },
-    {
-      "information_requirement": "Real-Time Quality Metrics and Performance Indicators",
-      "description": "Live data aggregates on customer ratings, delivery times, product quality issues, damage reports, and agent performance scores, updated immediately after each interaction.",
-      "business_purpose": "To monitor service quality, identify systemic issues, reward high-performing partners/agents, and trigger corrective actions or escalations.",
-      "required_by_actors": [
-        "Customer",
-        "Platform Operator",
-        "Store Partner",
-        "Delivery Partner",
-        "Merchandiser"
-      ],
-      "related_responsibilities": [
-        "Feedback and Review",
-        "Quality Assurance and Dispute Resolution",
-        "Assortment Strategy",
-        "Route Execution and Navigation"
-      ],
-      "related_activities": [
-        "Post-Transaction Review and Feedback Collection",
-        "Dispute Resolution and Exception Handling",
-        "Last-Mile Logistics Execution"
-      ],
-      "related_business_objects": [
-        "Feedback Record",
-        "Delivery Proof",
-        "Dispute Ticket",
-        "Assigned Delivery Slot"
-      ],
-      "information_usage": "Aggregated for dashboards; used to rank agents and stores; triggers automated actions (e.g., reassignment); analyzed for trend identification.",
-      "information_source": "Customer app submissions, automated analytics from delivery logs, and internal audit reports.",
-      "business_decisions_supported": [
-        "Termination or renewal of store partnerships",
-        "Reassignment of underperforming delivery agents",
-        "Adjustment of store inventory or assortment",
-        "Identification of high-risk zones or products"
-      ],
-      "required_information_details": [
-        "Customer star rating and review text",
-        "Average delivery time vs. promised time",
-        "Count of missing/damaged items",
-        "Agent performance score (last 30 days)",
-        "Store fulfillment accuracy rate",
-        "Complaint count and severity level",
-        "Repeat customer satisfaction rate"
-      ]
-    },
-    {
-      "information_requirement": "Compliance and Regulatory Status Indicators",
-      "description": "Current valid status of all operating licenses, food safety certifications for stores, labor compliance status for delivery agents, and adherence to local zoning laws in service areas.",
-      "business_purpose": "To mitigate legal risk, ensure regulatory compliance, and maintain operational authority in specific zones.",
-      "required_by_actors": [
-        "Platform Operator",
-        "Regulatory Authority",
-        "Store Partner",
-        "Delivery Partner"
-      ],
-      "related_responsibilities": [
-        "Partner Relationship Management",
-        "Compliance Enforcement",
-        "Quality Assurance and Dispute Resolution"
-      ],
-      "related_activities": [
-        "Market Entry and Partner Onboarding",
-        "Dispute Resolution and Exception Handling",
-        "Order Validation and Resource Allocation"
-      ],
-      "related_business_objects": [
-        "Service Area Definition",
-        "Store Partner Agreement",
-        "Delivery Partner"
-      ],
-      "information_usage": "Validated during onboarding; monitored continuously; checked before order allocation in restricted zones; used for regulatory reporting.",
-      "information_source": "Government databases, licensing portals, periodic audits, and self-declaration forms from partners.",
-      "business_decisions_supported": [
-        "Authorization to operate in a specific zone",
-        "Revocation of store or agent privileges",
-        "Initiation of legal proceedings",
-        "Determination of service availability in certain areas"
-      ],
-      "required_information_details": [
-        "Active license status and expiration date",
-        "Type of license (food safety, general business, labor)",
-        "Jurisdiction of the license",
-        "Compliance audit results",
-        "Known violations or penalties",
-        "Valid service area boundaries for the license"
-      ]
-    },
-    {
-      "information_requirement": "Exception Handling and Dispute Evidence",
-      "description": "Detailed records and multimedia evidence (photos, video logs) regarding missing items, damaged goods, delivery failures, customer complaints, and investigation notes during the dispute resolution process.",
-      "business_purpose": "To facilitate fair resolution of service failures, determine liability between parties, and provide audit trails for regulatory and financial adjustments.",
-      "required_by_actors": [
-        "Customer",
-        "Platform Operator",
-        "Store Partner",
-        "Delivery Partner"
-      ],
-      "related_responsibilities": [
-        "Receipt Verification and Handover",
-        "Quality Assurance and Dispute Resolution",
-        "Commodity Management"
-      ],
-      "related_activities": [
-        "Dispute Resolution and Exception Handling",
-        "Delivery Handover and Proof Generation"
-      ],
-      "related_business_objects": [
-        "Dispute Ticket",
-        "Feedback Record",
-        "Financial Transaction Record",
-        "Delivery Proof"
-      ],
-      "information_usage": "Collected via app uploads; reviewed by support teams; used to generate refunds; archived for legal compliance.",
-      "information_source": "Customer app uploads, delivery agent photo logs, store internal records, and platform investigation logs.",
-      "business_decisions_supported": [
-        "Approval of refunds or replacements",
-        "Determination of financial liability",
-        "Adjustment of loyalty points or rewards",
-        "Initiation of disciplinary action against agents/stores"
-      ],
-      "required_information_details": [
-        "Dispute ticket ID and type (missing item, damage, wrong address, etc.)",
-        "Date and time of incident",
-        "Reference to order ID",
-        "Customer description of the issue",
-        "Store or agent response and evidence",
-        "Platform investigation notes and decisions",
-        "Photos or videos of the issue",
-        "Proposed resolution and final outcome"
-      ]
-    },
-    {
-      "information_requirement": "Predictive Demand Forecasting and Inventory Replenishment Signals",
-      "description": "Anticipated demand patterns for specific SKUs in specific zones based on historical data, seasonality, weather forecasts, and local events, used to signal stores to prepare inventory.",
-      "business_purpose": "To proactively manage inventory levels, reduce out-of-stock situations, and optimize store staffing and packaging resources before orders are placed.",
-      "required_by_actors": [
-        "Platform Operator",
-        "Store Partner",
-        "Merchandiser"
-      ],
-      "related_responsibilities": [
-        "Inventory Provision and Synchronization",
-        "Assortment Strategy",
-        "System Orchestration and Allocation"
-      ],
-      "related_activities": [
-        "Product Catalog Curation and Strategy",
-        "Inventory Synchronization and Validation",
+Apply domain and niche expertise actively throughout the investigation.
 
+The supplied business objects, actors, responsibilities, relationships, and activities provide an initial understanding of the business. They do not necessarily represent the complete information landscape.
+
+For every Parent Information Requirement, ask:
+
+- What additional information would a competent business domain specialist expect to be necessary?
+- What operational dependencies have not been explicitly represented in the supplied datasets?
+- Are there upstream information needs that must be satisfied before the information can be used?
+- Are there downstream information needs created by its use?
+- Are there external information dependencies?
+- What information is needed to handle normal, alternate, and exceptional business scenarios?
+- What information is necessary to establish accountability, traceability, and business control?
+- Are there important information details that are implicit in the domain but absent from the supplied business objects or activities?
+
+Infer missing business information when it is logically justified by the domain, niche, and requirement.
+
+You may identify additional logical actors, source categories, business events, information dependencies, attributes, and derived information even when they are not explicitly supplied.
+
+However, maintain the following distinction:
+
+**Valid domain inference:**
+- Identifying a logical information source category.
+- Discovering a necessary business attribute or status.
+- Identifying a missing operational information dependency.
+- Identifying information needed for an exception or alternate scenario.
+- Identifying a relevant decision supported by the requirement.
+
+**Unsupported fabrication:**
+- Claiming that a specific software product or vendor is deployed.
+- Inventing company-specific procedures or policies.
+- Creating arbitrary numerical thresholds, regulatory obligations, or service-level targets.
+- Claiming that a particular integration or data feed already exists without evidence.
+
+The objective is comprehensive business discovery, not speculation and not restrictive mapping.
+
+---
+
+### 6. CROSS-DIMENSIONAL CONSISTENCY AND COMPLETENESS
+
+Before finalizing each requirement, challenge your own findings.
+
+Ask:
+
+- Does the information usage explain why the requirement exists?
+- Do the information sources plausibly provide the information being consumed?
+- Are the source and acquisition mechanisms appropriate for the domain?
+- Does each business decision genuinely depend on this information?
+- Does each decision have sufficient information details to support it?
+- Are the required information details sufficient to fulfil the stated usage?
+- Have relevant actors, activities, and business objects been considered?
+- Have upstream and downstream dependencies been considered?
+- Have important exception scenarios been considered?
+- Have you included any irrelevant information merely because it exists in the supplied business datasets?
+- Are there duplicate or overlapping information details that should be consolidated?
+- Are any descriptions vague, generic, repetitive, or unsupported?
+
+Remove irrelevant associations and duplicate information concepts.
+
+Where two information details appear similar, determine whether they represent genuinely different business meanings. Keep them separate only when their distinction is meaningful.
+
+Do not force completeness by adding irrelevant details. Equally, do not sacrifice important domain-specific information simply because it was not explicitly provided in the input.
+
+---
+
+### 7. OUTPUT STRUCTURE — STRICT JSON
+
+Return one JSON array containing exactly one elaborated entry for each Parent Information Requirement.
+
+Use precisely the following structure:
+
+[
+  {
+    "information_requirement": "Original Parent Information Requirement",
+    "information_usage": "Detailed explanation of why, how, when, and by whom the information is used in the business.",
+    "information_source": "Detailed explanation of the logical information origin, source categories, providers, and acquisition mechanisms.",
+    "business_decisions_supported": [
+      "Specific business decision and the choice or outcome it supports."
+    ],
+    "required_information_details": [
+      "Specific information element, its business meaning, and why it is required."
+    ]
+  }
+]
+
+#### Field requirements
+
+**information_requirement**
+- Copy the Parent Information Requirement name exactly as supplied.
+- Do not rename, paraphrase, or modify it.
+
+**information_usage**
+- Provide a detailed business explanation.
+- Explain purpose, consumers, operational context, timing, dependencies, and business outcomes where relevant
