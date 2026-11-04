@@ -299,85 +299,168 @@ function buildBaseContext(input) {
 
 function buildInformationRequirementsPrompt(base) {
   return `
-# PART 3: INTELLIGENT FUNCTIONAL RULES AND VALIDATION GENERATION
+You are a Senior Business Analyst, Domain Specialist and Business Information Architect.
 
-Act as an expert Business Analyst and Domain Specialist.
+Your task is to perform first-time discovery of functional business rules and information validation requirements for every supplied Information Requirement.
 
-Analyse each Parent Information Requirement and intelligently generate its relevant functional rules and information validation checks.
+Think critically, apply domain expertise and examine the supplied business context. Use the information as a discovery baseline, not as a closed set of facts.
 
-## BUSINESS CONTEXT
+Your objective is to discover essential, real-world business conditions and information checks that the application must support.
 
-**Domain:** ${base.domain}
+# 1. INPUT CONTEXT
 
-**Niche:** ${base.niche}
+**Domain:**
+${base.domain}
 
-**Business Objects:**
+**Niche:**
+${base.niche}
+
+### 2.1 Existing Business Objects
 ${JSON.stringify(base.business_objects, null, 2)}
 
-**Business Actors:**
+### 2.2 Existing Business Actors
 ${base.actor_fields}
 
-**Actor Responsibilities and Authorizations:**
+### 2.3 Actor Responsibilities and Authorizations
 ${base.actor_responsibilities}
 
-**Actor and Business Object Relationships:**
+### 2.4 Actor and Business Object Relationships
 ${base.actor_business_object_relationships}
 
-**Business Activities:**
+### 2.5 Existing Business Activities
 ${base.business_activities}
 
-**Parent Information Requirements:**
+### 2.6 Information Requirements
 ${JSON.stringify(base.information_system, null, 2)}
 
-## DISCOVERY AND REASONING
+# 2. DISCOVERY APPROACH
 
-For each Parent Information Requirement, perform one focused, independent analysis. Treat the supplied context as baseline information, not as the limit of discovery.
+Analyse each Information Requirement independently, using the following questions as an internal reasoning checklist. Do not output the questions or your reasoning.
 
-Use domain knowledge and business reasoning to identify explicit and implicit requirements.
+## A. FUNCTIONAL RULE DISCOVERY
 
-**Discover functional rules by asking:**
-- What business conditions govern this information and its use?
-- What prerequisites, eligibility, restrictions, dependencies and authorization conditions apply?
-- What operations must be permitted, prevented, restricted or reversed?
-- What business decisions, calculations, lifecycle behaviours and exception scenarios are relevant?
-- What additional rules are necessary to prevent incorrect business outcomes?
+Determine the business conditions governing the required information.
 
-**Discover information validations by asking:**
-- What establishes completeness, accuracy and consistency?
-- Which attributes, values, combinations and relationships must be checked?
-- What conditions identify missing, duplicate, invalid, conflicting or outdated information?
-- What verification, reconciliation and integrity checks are necessary?
-- What changes or dependencies could invalidate previously accepted information?
+Ask:
 
-Apply realistic domain scenarios and expert inference to discover requirements missing from the supplied descriptions. Do not restrict findings to explicitly provided statements.
+1. What business purpose does this information serve?
+2. What business conditions govern its creation or initial availability?
+3. Under what circumstances can the information be modified or updated?
+4. What conditions must be satisfied before it can be used?
+5. Are there business constraints governing permissible values or states?
+6. Does the information depend on another business object or related information?
+7. Must changes to related information affect this requirement?
+8. Which actors can create, modify, approve or maintain this information?
+9. Are there ownership or authorisation conditions relevant to its maintenance?
+10. What business conditions must remain true throughout its lifecycle?
+11. What happens when the required business condition is not satisfied?
+12. Are there domain-specific obligations or constraints that are essential to this information?
 
-## GENERATION RULES
+Generate distinct functional rules only where the business context supports them.
 
-- Generate atomic, independent and actionable findings.
-- Each functional rule must describe a distinct business condition and required behaviour.
-- Each validation must describe a distinct check and the condition that establishes validity.
-- Distinguish functional rules from information validations.
-- Include relevant implicit business requirements, dependencies and exceptions.
-- Do not invent organisation-specific policies, exact thresholds, percentages, time intervals or configured values. Use business-defined or configurable conditions where necessary.
-- Do not assume specific software, APIs or infrastructure.
-- Exclude generic, repetitive, irrelevant or unsupported findings.
-- Do not force a fixed number of findings.
-- Keep every finding concise and specific.
+## B. INFORMATION VALIDATION DISCOVERY
 
-Perform one analysis and generation pass. Do not conduct repeated analysis, reproduce discovery questions, generate intermediate outputs or perform lengthy self-review.
+Determine what must be checked to establish that the information is fit for its intended business purpose.
 
-## OUTPUT
+Ask:
 
-Return one JSON array with exactly one object per Parent Information Requirement, preserving input order.
+1. What information must be present for this requirement to be meaningful?
+2. Which fields or attributes are essential?
+3. What makes the supplied information valid for this business context?
+4. Are there permissible value, format or range constraints?
+5. Must values be consistent with related business objects?
+6. Are there dependencies between attributes that must be checked?
+7. Can duplicate, conflicting or contradictory information occur?
+8. Does the information need to be checked against its current business status?
+9. What conditions could make previously valid information invalid?
+10. Are there domain-specific integrity or compliance checks?
+11. What must be rejected, flagged or corrected when validation fails?
+12. Which checks are essential before the information is accepted or used?
+
+Generate distinct validations only where they provide meaningful protection against incorrect or unusable information.
+
+# 3. CROSS-CONTEXT REASONING
+
+Use the supplied context to strengthen discovery:
+
+- **Business objects:** Identify relevant attributes, relationships, dependencies and integrity conditions.
+- **Actors:** Identify relevant business ownership and authorised information operations.
+- **Responsibilities and authorisations:** Determine who can maintain or act upon the information.
+- **Business activities:** Identify the business events and conditions that create, change or consume the information.
+- **Information requirements:** Establish the intended business purpose and required information coverage.
+
+Consider implicit business requirements that a knowledgeable domain analyst would reasonably identify, even if they are not explicitly stated.
+
+Do not assume every actor, object or activity is relevant to every Information Requirement.
+
+# 4. FINDING QUALITY AND RELEVANCE
+
+Apply these rules to every finding:
+
+1. It must directly govern or validate the respective Information Requirement.
+2. It must express a distinct and meaningful business condition.
+3. It must be logically defensible using supplied context or established domain knowledge.
+4. It must describe a business requirement, not an implementation solution.
+5. It must be specific enough to guide subsequent application requirements discovery.
+6. Combine related conditions when they can be expressed without losing meaning.
+7. Remove duplicate, overlapping, generic and low-value findings.
+
+Do not invent organisation-specific policies, exact thresholds, formulas, timings, penalties, approval hierarchies or technical mechanisms.
+
+Where a business policy is unknown, express the underlying requirement generically rather than inventing a value or decision.
+
+Do not introduce unnecessary automation, optimisation, notifications, integrations, financial decisions or workflow behaviour.
+
+# 5. OUTPUT LENGTH AND GENERATION CONTROL
+
+- Discover all materially relevant functional rules and validations.
+- Do not impose a fixed number or minimum count of findings.
+- Do not limit discovery to one finding per category.
+- Both categories are mandatory for every Information Requirement.
+- Each individual finding must contain no more than 120 characters, including spaces.
+- Use one concise, self-contained business statement per finding.
+- Preserve logical meaning; do not use vague abbreviations or remove essential conditions.
+- Do not include explanations, examples, reasoning or recommendations.
+- Do not split one logical condition into multiple findings simply to meet the character limit.
+- Do not generate additional findings merely to increase coverage.
+
+If no distinct condition is found, identify the most fundamental business rule or validation logically required by the Information Requirement. Do not invent an unsupported policy.
+
+# 6. OUTPUT STRUCTURE
+
+Return exactly one object for every input Information Requirement, preserving the original order and exact requirement name or description.
+
+Required JSON structure:
 
 [
   {
-    "functional_rules": [],
-    "information_validation": []
+    "information_requirement": "Exact input requirement name or description",
+    "functional_rules": [
+      "Concise business rule",
+      "Another distinct business rule, if applicable"
+    ],
+    "information_validation": [
+      "Concise validation check",
+      "Another distinct validation, if applicable"
+    ]
   }
 ]
 
-Return compact, valid JSON only. Do not include information_flow, additional properties, explanations or Markdown.
+# 7. STRICT OUTPUT CONSTRAINTS
+
+- Return valid JSON only.
+- Return exactly one object per input Information Requirement.
+- Preserve the input order and requirement names.
+- Include exactly these three properties in every object.
+- Both functional_rules and information_validation must be arrays.
+- Both arrays must contain at least one finding.
+- Every finding must be 120 characters or fewer.
+- Do not add IDs, parent IDs, information_flow or additional properties.
+- Do not omit any Information Requirement.
+- Do not output the internal reasoning or discovery questions.
+- Do not include Markdown, explanations or text outside the JSON array.
+
+Prioritise business correctness, meaningful discovery and logical completeness over the quantity of generated content.
   `
 }
 

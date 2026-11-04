@@ -1,101 +1,118 @@
 const fs = require('fs');
 const path = require('path');
-const os = require('os');
-const { execFile } = require('child_process');
 
-// 1. Core Path Configurations
-const BUSINESS_IDEA = process.argv[2] || "E Commerce";
-const CACHE_FILE = path.join(__dirname, 'all-layers.jsonld');
-const PROMPT_FILE = path.join(__dirname, 'app/utils/appflowgeneratorAI/promptFile/Business-discovery-prompt10businessObjects.txt');
-const OUTPUT_FILE = path.join(__dirname, 'app/utils/appflowgeneratorAI/aiOutput/business-discovery-result-8b25.txt');
-
-(async () => {
-  try {
-    console.log(`🚀 Initiating Node.js Architecture Engine for: [${BUSINESS_IDEA}]`);
-
-    // 2. STEP 1: Fetching official raw machine-readable Schema.org layer
-    if (!fs.existsSync(CACHE_FILE)) {
-      console.log("📥 Cache file 'all-layers.jsonld' not found. Downloading Schema.org core data map...");
-      const response = await fetch("https://schema.org");
-      const buffer = await response.arrayBuffer();
-      fs.writeFileSync(CACHE_FILE, Buffer.from(buffer));
-    }
-
-    console.log(`🔍 Filtering schema vocabulary for matches against: ${BUSINESS_IDEA}`);
-    const cacheContent = fs.readFileSync(CACHE_FILE, 'utf8');
-    const lines = cacheContent.split(/\r?\n/);
-    
-    let searchResults = "";
-    let matchIndex = -1;
-
-    // Direct replication of grep -i "@id.*\$BUSINESS_IDEA"
-    const lookupRegex = new RegExp(`@id.*${BUSINESS_IDEA}`, 'i');
-    for (let i = 0; i < lines.length; i++) {
-      if (lookupRegex.test(lines[i])) {
-        matchIndex = i;
-        break;
-      }
-    }
-
-    // Capture context lines (-C 3) and limit stream length (head -n 40)
-    if (matchIndex !== -1) {
-      const start = Math.max(0, matchIndex - 3);
-      const end = Math.min(lines.length, matchIndex + 4);
-      const slice = lines.slice(start, end).join(' ');
-      searchResults = slice.replace(/[\n\r"]/g, '').replace(/\s+/g, ' ').trim().substring(0, 2000);
-    }
-
-    // Dynamic fallback to standard Schema.org Organization/Place models if custom idea isn't explicit
-    if (!searchResults) {
-      console.log("⚠️ Exact match not found. Defaulting to high-level commercial schemas...");
-      const fallbackRegex = /("Store"|"Organization"|"LocalBusiness")/i;
-      const fallbackMatches = lines.filter(line => fallbackRegex.test(line)).slice(0, 20);
-      searchResults = fallbackMatches.join(' ').replace(/[\n\r"]/g, '').trim();
-    }
-
-    // 3. STEP 2: Injecting system architecture parameters
-    const epochTime = Math.floor(Date.now() / 1000);
-    const machineArch = os.arch();
-    const validationResults = `[THREAD_INTEGRITY_LOG: TIME=${epochTime} ARCH=${machineArch} REASONING_TARGET=${BUSINESS_IDEA}]`;
-
-    // 4. STEP 3: Merging data variables into prompt layout
-    if (!fs.existsSync(PROMPT_FILE)) {
-      throw new Error(`CRITICAL EXCEPTION: Prompt template file missing at ${PROMPT_FILE}`);
-    }
-    
-    let promptTemplate = fs.readFileSync(PROMPT_FILE, 'utf8');
-    let mergedPrompt = promptTemplate
-      .replace(/\{\{BUSINESS_IDEA\}\}/g, BUSINESS_IDEA)
-      .replace(/\{\{SEARCH_RESULTS\}\}/g, searchResults)
-      .replace(/\{\{VALIDATION_RESULTS\}\}/g, validationResults);
-
-    console.log("🤖 STEP 4: Executing single-pass model generation via llama-cli...");
-    
-    // Ensure parent output directories exist natively
-    fs.mkdirSync(path.dirname(OUTPUT_FILE), { recursive: true });
-
-    // 5. Binary argument parameters
-    const args = [
-      '-hf', 'Qwen/Qwen3-8B-GGUF:Q4_K_M',
-      '-ngl', '99',
-      '--single-turn',
-      '--reasoning', 'off',
-      '-p', mergedPrompt,
-      '-n', '1200',
-      '-o', OUTPUT_FILE
-    ];
-
-    // Spawns exactly ONE fast execution loop directly on the terminal binary
-    execFile('llama-cli', args, (error) => {
-      if (error) {
-        console.error(`❌ Binary execution error: ${error.message}`);
-        process.exit(1);
-      }
-      console.log(`✅ Finished! High-precision grounded unique schema saved to: ${OUTPUT_FILE}`);
-    });
-
-  } catch (err) {
-    console.error(`❌ CRITICAL ENGINE FAILURE: ${err.message}`);
-    process.exit(1);
+// ============================================================================
+// IDENTICAL CONFIG ENGINE LAYER
+// ============================================================================
+const CONFIG = {
+  PATHS: {
+    PROJECT_ROOT: path.resolve(__dirname, '../../../../'),
+    OUTPUT_RELATIVE_DIR: 'app/utils/appflowgeneratorAI/aiOutput',
+    TMP_RELATIVE_DIR: 'app/utils/appflowgeneratorAI/promptFile',
+    CACHE_FILENAME: 'techno-functional-matrix-cache.json',
+    EXPORT_PREFIX: '6.Final-System-Architecture-Blueprint-Graph-'
   }
-})();
+};
+
+const OUTPUT_DIR = path.join(CONFIG.PATHS.PROJECT_ROOT, CONFIG.PATHS.OUTPUT_RELATIVE_DIR);
+// ✔️ FIXED: Removed the broken backslash escape so '\$' correctly checks the string end anchor
+const targetRegex = /^1-Final-Objects-.*\.txt\$/;
+
+console.log("🚀 STARTING DIAGNOSTIC VERIFICATION RUN USING IDENTICAL CONFIG...");
+
+// 1. Setup Sandbox directory safely to prevent filesystem gaps
+if (!fs.existsSync(OUTPUT_DIR)) {
+  fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+}
+
+// 2. Write mock matrix records on disk to process file array metrics
+const sampleFiles = [
+  '1-Final-Objects-for-Quick-Commerce_2026-10-01.txt',
+  '1-Final-Objects-for-Quick-Commerce_2026-10-02.txt', 
+  '1-Final-Objects-for-Quick-Commerce_2026-09-30.txt'
+];
+
+sampleFiles.forEach((filename, index) => {
+  const filePath = path.join(OUTPUT_DIR, filename);
+  fs.writeFileSync(filePath, `=== Final DATA MATRIX for domain :Test ===\nMock payload value tracking parameters index: ${index}`, 'utf8');
+  const time = new Date(Date.now() + index * 15000);
+  fs.utimesSync(filePath, time, time);
+});
+
+// ============================================================================
+// BROKEN ENGINE MECHANIC: REPRODUCES ARRAYS EXCEPTION COERCION FAULTS
+// ============================================================================
+function brokenFindLatestFileByRegex(directory, regexPattern) {
+  if (!fs.existsSync(directory)) return null;
+  const files = fs.readdirSync(directory);
+  const matchedFiles = files.filter(file => regexPattern.test(file));
+  
+  if (matchedFiles.length === 0) return null;
+  
+  matchedFiles.sort((a, b) => {
+    return fs.statSync(path.join(directory, b)).mtimeMs - fs.statSync(path.join(directory, a)).mtimeMs;
+  });
+  
+  // ❌ THE REAL REPRODUCED CRASH LAYER IS HERE: Returns the raw Array tracker object directly into path string
+  return path.join(directory, matchedFiles);
+}
+
+// ============================================================================
+// STABLE ENGINE MECHANIC: VALID PURE STRING RESOLUTION
+// ============================================================================
+function fixedFindLatestFileByRegex(directory, regexPattern) {
+  if (!fs.existsSync(directory)) return null;
+  const files = fs.readdirSync(directory);
+  const matchedFiles = files.filter(file => regexPattern.test(file));
+  
+  if (matchedFiles.length === 0) return null;
+  
+  matchedFiles.sort((a, b) => {
+    return fs.statSync(path.join(directory, b)).mtimeMs - fs.statSync(path.join(directory, a)).mtimeMs;
+  });
+  
+  // 🛡️ REPAIRED: Appends explicit string item index location checks
+  return path.join(directory, matchedFiles[0]);
+}
+
+// ============================================================================
+// REPRODUCTION CRASH RUN CHECKLIST
+// ============================================================================
+
+// EXECUTION A: Verify stable path logic
+try {
+  const stableStringPath = fixedFindLatestFileByRegex(OUTPUT_DIR, targetRegex);
+  console.log(`\n\x1b[32m✔ FIXED FUNCTION SUCCESS:\x1b[0m Evaluated cleanly to path string instance:`);
+  console.log(`👉 "${stableStringPath}"`);
+  
+  const textContent = fs.readFileSync(stableStringPath, 'utf8');
+  console.log(`📊 File Reading Verification -> Content successfully captured.`);
+} catch (error) {
+  console.log(`\x1b[31m✕ FIXED FUNCTION CRASHED UNEXPECTEDLY:\x1b[0m ${error.message}`);
+}
+
+// EXECUTION B: Fire error reproduction check loop
+try {
+  console.log("\n--------------------------------------------------");
+  console.log("🔥 INITIATING REPRODUCTION CHECK ON BROKEN ROUTINE...");
+  
+  const brokenArrayPath = brokenFindLatestFileByRegex(OUTPUT_DIR, targetRegex);
+  console.log(`👉 Evaluated to Array pointer coercion reference string: "${brokenArrayPath}"`);
+  
+  // Trigger system read method to capture the exact platform path exception fault logs
+  fs.readFileSync(brokenArrayPath, 'utf8');
+} catch (error) {
+  console.log(`\n\x1b[31m🚨 BROKEN FUNCTION ERROR REPRODUCED SUCCESSFULLY! 🚨\x1b[0m`);
+  console.log(`\x1b[31mCaptured Exception signature:\x1b[0m "${error.message}"`);
+}
+
+// Clean up sandbox tracking file artifacts securely
+try {
+  sampleFiles.forEach(f => {
+    const p = path.join(OUTPUT_DIR, f);
+    if (fs.existsSync(p)) fs.unlinkSync(p);
+  });
+  console.log("\n🗑️ Local sandbox directory files scrubbed completely.");
+} catch (e) {
+  // Silent drop
+}

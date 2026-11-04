@@ -1,0 +1,1363 @@
+
+You are a Senior Business Analyst, Domain Architect, Information Architect and Domain Specialist.
+
+Your task is to discover the business information flows associated with every supplied Information Requirement.
+
+Perform intelligent, domain-driven discovery using the supplied business context as a baseline. Do not simply repeat the input. Reason about how information originates, moves between business actors and objects, is consumed, and supports business operations.
+
+Your objective is to identify the actual business information flow, not design technical integrations.
+
+# 1. INPUT CONTEXT
+
+**Domain:**
+Quick Commerce (Q-Commerce)
+
+**Niche:**
+Hyperlocal Grocery Delivery
+
+### 2.1 Existing Business Objects
+{
+  "business_operating_model": {
+    "value_proposition": "To enable the immediate acquisition of fresh groceries and essential goods within minutes of ordering, solving the friction between demand and supply for time-sensitive household needs.",
+    "participants": [
+      "Customer",
+      "Store/Fulfillment Center",
+      "Merchandiser",
+      "Delivery Partner",
+      "Platform Operator",
+      "Payment Provider",
+      "Regulatory Authority"
+    ],
+    "value_creation_monetization": {
+      "creation_mechanism": "Aggregating fragmented inventory from hyperlocal stores into a unified digital interface, optimizing last-mile logistics through algorithmic routing, and enabling real-time order fulfillment.",
+      "monetization_streams": [
+        "Transaction Commission",
+        "Delivery Fees",
+        "Subscription Models",
+        "Advertising/Sponsored Listings",
+        "Data Analytics Services"
+      ]
+    },
+    "distinctive_niche": "Hyperlocal, ultra-fast (typically under 60 minutes) delivery of fresh perishables and daily essentials, relying on a dense network of micro-fulfillment centers rather than centralized warehouses."
+  },
+  "derived_lifecycle": [
+    {
+      "stage": "Foundation Establishment",
+      "description": "Defining the service area, selecting store partners, establishing logistics partnerships, and setting pricing and service level agreements.",
+      "trigger": "Strategic decision to launch a new market zone or service category."
+    },
+    {
+      "stage": "Supply Chain Integration",
+      "description": "Onboarding stores, defining SKU catalogs, mapping inventory locations, and establishing synchronization mechanisms for real-time stock visibility.",
+      "trigger": "Completion of partner contracts and initial inventory data ingestion."
+    },
+    {
+      "stage": "Operational Readiness",
+      "description": "Testing logistics routes, calibrating demand forecasting models, and conducting dry runs of the order-to-delivery workflow.",
+      "trigger": "Acquisition of sufficient initial inventory and confirmed delivery partner availability."
+    },
+    {
+      "stage": "Order Initiation",
+      "description": "Customer expresses need, browses available catalog, selects items, and submits a request for immediate fulfillment.",
+      "trigger": "Customer action on the digital interface."
+    },
+    {
+      "stage": "Order Validation & Allocation",
+      "description": "System validates inventory availability, calculates fees, confirms delivery slot, and allocates the order to a specific store and delivery agent.",
+      "trigger": "Successful submission of the order request."
+    },
+    {
+      "stage": "Order Preparation",
+      "description": "Store personnel pick items, verify quality, pack for transport, and hand over to the delivery partner.",
+      "trigger": "Allocation confirmation."
+    },
+    {
+      "stage": "Last-Mile Delivery",
+      "description": "Delivery partner picks up the order, navigates to the customer location, and completes the physical transfer.",
+      "trigger": "Pickup confirmation from the store."
+    },
+    {
+      "stage": "Handover & Confirmation",
+      "description": "Customer receives the order, verifies contents, and confirms receipt via the platform.",
+      "trigger": "Arrival at customer location."
+    },
+    {
+      "stage": "Financial Settlement",
+      "description": "Transaction is finalized, funds are transferred to the customer, and revenue share is settled between the platform and the store.",
+      "trigger": "Handover confirmation."
+    },
+    {
+      "stage": "Post-Transaction Review",
+      "description": "Collection of feedback, rating of experience, and initiation of loyalty points accrual.",
+      "trigger": "Completion of settlement."
+    },
+    {
+      "stage": "Lifecycle Conclusion",
+      "description": "The specific order instance is closed; data is archived for analytics; optional dispute resolution window opens.",
+      "trigger": "Completion of all feedback and settlement processes."
+    }
+  ],
+  "business_objects": [
+    {
+      "object_name": "Service Area Definition",
+      "purpose": "Geographically delimits the zones where hyperlocal delivery is currently supported.",
+      "necessity": "Essential",
+      "first_stage": "Foundation Establishment",
+      "dependencies": [],
+      "lifecycle_role": "Configuration parameter for Store and Delivery Partner onboarding.",
+      "evidence_status": "Inferred from operational constraints",
+      "confidence_score": 0.9
+    },
+    {
+      "object_name": "Store Partner Agreement",
+      "purpose": "Defines the commercial and operational relationship between the platform and the physical retail store.",
+      "necessity": "Essential",
+      "first_stage": "Foundation Establishment",
+      "dependencies": [
+        "Service Area Definition"
+      ],
+      "lifecycle_role": "Enabler for catalog synchronization and inventory access.",
+      "evidence_status": "Inferred from business model requirements",
+      "confidence_score": 0.95
+    },
+    {
+      "object_name": "Product Catalog",
+      "purpose": "Represents the structured list of sellable items, including descriptions, prices, images, and category hierarchies.",
+      "necessity": "Essential",
+      "first_stage": "Supply Chain Integration",
+      "dependencies": [
+        "Store Partner Agreement"
+      ],
+      "lifecycle_role": "Source of truth for customer selection and order composition.",
+      "evidence_status": "Explicit in domain definition",
+      "confidence_score": 1
+    },
+    {
+      "object_name": "Real-Time Inventory Snapshot",
+      "purpose": "Records the current available quantity and status of each SKU at a specific store location.",
+      "necessity": "Essential",
+      "first_stage": "Supply Chain Integration",
+      "dependencies": [
+        "Product Catalog",
+        "Store Partner Agreement"
+      ],
+      "lifecycle_role": "Constraint for order allocation and validation.",
+      "evidence_status": "Explicit in domain definition",
+      "confidence_score": 1
+    },
+    {
+      "object_name": "Delivery Zone Map",
+      "purpose": "Defines the specific geographic boundaries and travel time estimates for a store to its customers.",
+      "necessity": "Essential",
+      "first_stage": "Operational Readiness",
+      "dependencies": [
+        "Service Area Definition",
+        "Store Partner Agreement"
+      ],
+      "lifecycle_role": "Input for fee calculation and delivery promise setting.",
+      "evidence_status": "Inferred from operational mechanics",
+      "confidence_score": 0.85
+    },
+    {
+      "object_name": "Customer Profile",
+      "purpose": "Holds user identification, address details, payment methods, and preference history.",
+      "necessity": "Essential",
+      "first_stage": "Order Initiation",
+      "dependencies": [
+        "Store Partner Agreement"
+      ],
+      "lifecycle_role": "Identifier for order ownership and delivery routing.",
+      "evidence_status": "Explicit in domain definition",
+      "confidence_score": 1
+    },
+    {
+      "object_name": "Order Request",
+      "purpose": "Captures the customer's specific selection of items, quantities, and delivery instructions.",
+      "necessity": "Essential",
+      "first_stage": "Order Initiation",
+      "dependencies": [
+        "Product Catalog",
+        "Customer Profile"
+      ],
+      "lifecycle_role": "Trigger for the fulfillment workflow.",
+      "evidence_status": "Explicit in domain definition",
+      "confidence_score": 1
+    },
+    {
+      "object_name": "Fulfillment Task",
+      "purpose": "Represents the internal operations required to pick, pack, and dispatch the order.",
+      "necessity": "Essential",
+      "first_stage": "Order Validation & Allocation",
+      "dependencies": [
+        "Order Request",
+        "Real-Time Inventory Snapshot"
+      ],
+      "lifecycle_role": "Workflow orchestrator for store staff.",
+      "evidence_status": "Inferred from operational execution",
+      "confidence_score": 0.9
+    },
+    {
+      "object_name": "Assigned Delivery Slot",
+      "purpose": "Secures a specific time window for the delivery agent to execute the last-mile delivery.",
+      "necessity": "Essential",
+      "first_stage": "Order Validation & Allocation",
+      "dependencies": [
+        "Fulfillment Task",
+        "Delivery Zone Map"
+      ],
+      "lifecycle_role": "Constraint for logistics scheduling.",
+      "evidence_status": "Inferred from operational mechanics",
+      "confidence_score": 0.85
+    },
+    {
+      "object_name": "Delivery Assignment",
+      "purpose": "Links a specific order to a specific delivery agent and vehicle.",
+      "necessity": "Essential",
+      "first_stage": "Order Validation & Allocation",
+      "dependencies": [
+        "Fulfillment Task",
+        "Assigned Delivery Slot"
+      ],
+      "lifecycle_role": "Trigger for the physical movement of goods.",
+      "evidence_status": "Inferred from operational mechanics",
+      "confidence_score": 0.9
+    },
+    {
+      "object_name": "Financial Transaction Record",
+      "purpose": "Documents the exchange of value, including item costs, fees, taxes, and payment status.",
+      "necessity": "Essential",
+      "first_stage": "Financial Settlement",
+      "dependencies": [
+        "Order Request",
+        "Delivery Assignment"
+      ],
+      "lifecycle_role": "Proof of payment and settlement trigger.",
+      "evidence_status": "Inferred from business model requirements",
+      "confidence_score": 0.95
+    },
+    {
+      "object_name": "Delivery Proof",
+      "purpose": "Verifies that the goods were physically transferred to the customer.",
+      "necessity": "Essential",
+      "first_stage": "Handover & Confirmation",
+      "dependencies": [
+        "Delivery Assignment",
+        "Customer Profile"
+      ],
+      "lifecycle_role": "Closure condition for the logistics workflow.",
+      "evidence_status": "Inferred from operational mechanics",
+      "confidence_score": 0.9
+    },
+    {
+      "object_name": "Feedback Record",
+      "purpose": "Captures customer satisfaction ratings and textual comments regarding the order and delivery.",
+      "necessity": "Conditional",
+      "first_stage": "Post-Transaction Review",
+      "dependencies": [
+        "Delivery Proof"
+      ],
+      "lifecycle_role": "Input for quality improvement and agent performance evaluation.",
+      "evidence_status": "Inferred from standard industry practice",
+      "confidence_score": 0.7
+    },
+    {
+      "object_name": "Dispute Ticket",
+      "purpose": "Tracks unresolved issues such as missing items, damaged goods, or failed deliveries.",
+      "necessity": "Conditional",
+      "first_stage": "Lifecycle Conclusion",
+      "dependencies": [
+        "Feedback Record",
+        "Financial Transaction Record"
+      ],
+      "lifecycle_role": "Exception handling mechanism for order closure.",
+      "evidence_status": "Inferred from standard industry practice",
+      "confidence_score": 0.7
+    }
+  ],
+  "alternative_models_assumptions_gaps": {
+    "alternative_operating_models": [
+      {
+        "model_name": "Marketplace Aggregator Model",
+        "description": "The platform acts only as a connector without owning inventory, relying entirely on third-party stores to fulfill orders directly.",
+        "impact": "Reduces capital expenditure on warehousing but may compromise speed and quality control; requires robust API integrations with multiple store systems."
+      },
+      {
+        "model_name": "Dark Store / Centralized Fulfillment Model",
+        "description": "The platform operates its own micro-warehouses ('dark stores') to consolidate orders and reduce travel time.",
+        "impact": "Enables faster delivery and better assortment control but significantly increases operational costs and complexity."
+      },
+      {
+        "model_name": "Hybrid Model",
+        "description": "A mix of dark stores for high-frequency items and store pickup for bulk or large items.",
+        "impact": "Balances cost and speed but requires complex logic to route orders to the optimal fulfillment node."
+      }
+    ],
+    "key_assumptions": [
+      "Customers prioritize speed over cost, making them willing to pay premium delivery fees.",
+      "Stores are willing to dedicate staff and space for third-party order fulfillment without disrupting their primary sales.",
+      "Real-time inventory synchronization between the physical store and the digital platform is technically feasible and reliable.",
+      "The geographic density of customers allows for efficient route optimization for delivery agents."
+    ],
+    "unresolved_dependencies": [
+      "Regulatory compliance regarding food safety and labor laws for gig-economy delivery workers varies significantly by region and may impact operational readiness.",
+      "The exact threshold for 'immediate' delivery (e.g., 15 mins vs 45 mins) depends on local traffic patterns and weather conditions, which are dynamic variables."
+    ],
+    "evidence_gaps": [
+      "Specific data on the failure rate of orders due to inventory discrepancies between the POS system and the platform catalog is unavailable.",
+      "The precise cost structure for the 'Dark Store' model versus the 'Store Partner' model varies by city and is not universally quantifiable."
+    ]
+  }
+}
+
+### 2.2 Existing Business Actors
+
+[
+  {
+    "actor_name": "Customer",
+    "operational_role": "End user who initiates orders, selects items, and confirms delivery completion."
+  },
+  {
+    "actor_name": "Store Partner",
+    "operational_role": "Physical retail location that provides inventory, staff for order picking, and fulfillment capabilities."
+  },
+  {
+    "actor_name": "Platform Operator",
+    "operational_role": "Entity that manages the digital interface, orchestrates order allocation, and settles financial transactions."
+  },
+  {
+    "actor_name": "Delivery Partner",
+    "operational_role": "Independent agent or gig-worker responsible for last-mile logistics and physical handover of goods."
+  },
+  {
+    "actor_name": "Merchandiser",
+    "operational_role": "Personnel at stores who pack orders and verify item quality before dispatch."
+  },
+  {
+    "actor_name": "Regulatory Authority",
+    "operational_role": "External body that enforces food safety standards and labor laws applicable to the service."
+  },
+  {
+    "actor_name": "Payment Provider",
+    "operational_role": "Financial institution that processes customer transactions and facilitates fund transfers."
+  },
+  {
+    "actor_name": "Order Allocation Engine",
+    "operational_role": "Automated system component that validates inventory, calculates fees, and assigns orders to specific agents."
+  },
+  {
+    "actor_name": "Fulfillment Supervisor",
+    "operational_role": "Store staff member who coordinates the picking, packing, and handover of orders to delivery partners."
+  }
+]
+
+
+
+### 2.3 Actor Responsibilities and Authorizations
+
+{
+  "business_context": {
+    "domain": "Quick Commerce (Q-Commerce)",
+    "niche": "Hyperlocal Grocery Delivery",
+    "business_description": "A digital platform that aggregates inventory from hyperlocal physical stores to enable the immediate acquisition of fresh groceries and daily essentials, facilitated by an algorithmic last-mile delivery network.",
+    "business_purpose": "To eliminate the friction between time-sensitive household demand and the availability of physical inventory, providing ultra-fast (under 60 minutes) delivery of fresh perishables and essentials.",
+    "products_and_services": [
+      "Real-time access to aggregated grocery inventory via digital interface",
+      "Algorithmic routing and order allocation services",
+      "Hyperlocal last-mile delivery of physical goods",
+      "Data analytics and advertising services derived from transaction data"
+    ],
+    "customer_and_business_participants": [
+      "Customer",
+      "Store/Fulfillment Center",
+      "Merchandiser",
+      "Delivery Partner",
+      "Platform Operator",
+      "Payment Provider",
+      "Regulatory Authority"
+    ],
+    "business_model": "Aggregator Model with gig-economy logistics; monetized through transaction commissions, delivery fees, subscriptions, advertising, and data services.",
+    "business_functions": [
+      "Marketplace aggregation and catalog management",
+      "Inventory synchronization and validation",
+      "Order orchestration and allocation",
+      "Logistics coordination and fulfillment",
+      "Financial settlement and revenue management",
+      "Customer relationship and support",
+      "Compliance and regulatory adherence"
+    ],
+    "business_outcomes": [
+      "Successful order fulfillment within target timeframes (e.g., <60 mins)",
+      "Accurate inventory availability and reduced overselling",
+      "Satisfied customers with high ratings and repeat usage",
+      "Efficient utilization of store staff and delivery agents",
+      "Optimized revenue streams and cost control",
+      "Regulatory compliance and risk mitigation"
+    ]
+  },
+  "actor_responsibilities": [
+    {
+      "actor": "Customer",
+      "actor_type": "Human Role",
+      "business_purpose": "To identify immediate needs and facilitate the exchange of value for goods.",
+      "responsibilities": [
+        {
+          "responsibility": "Order Initiation and Selection",
+          "responsibility_description": "Identifying specific grocery items, selecting quantities, and submitting a request for immediate fulfillment.",
+          "business_function": "Order Initiation",
+          "role_in_responsibility": "Initiator and Requester",
+          "business_purpose": "To generate the specific demand that triggers the fulfillment workflow.",
+          "business_outcome": "Creation of a valid Order Request that defines the scope of fulfillment."
+        },
+        {
+          "responsibility": "Payment Execution",
+          "responsibility_description": "Selecting a payment method and completing the financial transaction to secure the order.",
+          "business_function": "Financial Settlement",
+          "role_in_responsibility": "Payer and Initiator",
+          "business_purpose": "To provide funds for the acquisition of goods and service fees.",
+          "business_outcome": "Generation of a Financial Transaction Record that authorizes settlement."
+        },
+        {
+          "responsibility": "Receipt Verification and Handover",
+          "responsibility_description": "Receiving the physical goods, verifying contents against the order, and confirming delivery completion.",
+          "business_function": "Last-Mile Delivery",
+          "role_in_responsibility": "Recipient and Validator",
+          "business_purpose": "To close the physical loop of the transaction and ensure goods integrity.",
+          "business_outcome": "Creation of Delivery Proof and confirmation of successful fulfillment."
+        },
+        {
+          "responsibility": "Feedback and Review",
+          "responsibility_description": "Evaluating the experience (product quality, delivery speed) and submitting ratings/comments.",
+          "business_function": "Post-Transaction Review",
+          "role_in_responsibility": "Evaluator and Feedback Provider",
+          "business_purpose": "To inform quality improvement and agent performance metrics.",
+          "business_outcome": "Generation of Feedback Record influencing service quality."
+        }
+      ]
+    },
+    {
+      "actor": "Store/Fulfillment Center",
+      "actor_type": "Organizational Entity",
+      "business_purpose": "To serve as the physical node for inventory holding and order picking.",
+      "responsibilities": [
+        {
+          "responsibility": "Inventory Provision and Synchronization",
+          "responsibility_description": "Maintaining stock levels of sellable SKUs and synchronizing data with the platform to ensure real-time visibility.",
+          "business_function": "Supply Chain Integration",
+          "role_in_responsibility": "Inventory Owner and Data Source",
+          "business_purpose": "To ensure the platform's catalog reflects actual available stock.",
+          "business_outcome": "Accurate Real-Time Inventory Snapshots preventing overselling."
+        },
+        {
+          "responsibility": "Order Preparation and Fulfillment",
+          "responsibility_description": "Picking items from the store, verifying quality, packing orders, and handing them to the delivery partner.",
+          "business_function": "Order Preparation",
+          "role_in_responsibility": "Executor and Handler",
+          "business_purpose": "To physically prepare the order for outbound transport.",
+          "business_outcome": "Completion of Fulfillment Task and readiness for pickup."
+        },
+        {
+          "responsibility": "Service Level Compliance",
+          "responsibility_description": "Adhering to agreed SLAs regarding picking times, packing accuracy, and availability within the defined service area.",
+          "business_function": "Operational Readiness",
+          "role_in_responsibility": "Compliance Maintainer",
+          "business_purpose": "To ensure operational reliability for the platform's promise.",
+          "business_outcome": "Meeting delivery time windows and maintaining store partnership health."
+        }
+      ]
+    },
+    {
+      "actor": "Merchandiser",
+      "actor_type": "Human Role",
+      "business_purpose": "To curate the digital assortment and manage product lifecycle from a commercial perspective.",
+      "responsibilities": [
+        {
+          "responsibility": "Catalog Curation and Optimization",
+          "responsibility_description": "Selecting, categorizing, and updating product descriptions, images, and pricing to ensure relevance and appeal.",
+          "business_function": "Supply Chain Integration",
+          "role_in_responsibility": "Content Creator and Manager",
+          "business_purpose": "To maintain a high-quality, accurate Product Catalog that drives sales.",
+          "business_outcome": "A robust and up-to-date catalog maximizing conversion rates."
+        },
+        {
+          "responsibility": "Assortment Strategy",
+          "responsibility_description": "Deciding which SKUs to include based on demand, margins, and seasonality, and managing exclusions.",
+          "business_function": "Business Decision",
+          "role_in_responsibility": "Strategist",
+          "business_purpose": "To optimize the mix of available goods for profitability and customer demand.",
+          "business_outcome": "A commercially viable assortment aligned with market trends."
+        },
+        {
+          "responsibility": "Commodity Management",
+          "responsibility_description": "Overseeing the lifecycle of products, including promotions, discounts, and handling of returns or damaged goods.",
+          "business_function": "Financial Settlement",
+          "role_in_responsibility": "Policy Setter and Dispute Resolver",
+          "business_purpose": "To manage the commercial aspects of product availability and pricing.",
+          "business_outcome": "Optimized pricing and resolution of quality disputes."
+        }
+      ]
+    },
+    {
+      "actor": "Delivery Partner",
+      "actor_type": "Human Role",
+      "business_purpose": "To execute the physical movement of goods from the fulfillment node to the customer.",
+      "responsibilities": [
+        {
+          "responsibility": "Route Execution and Navigation",
+          "responsibility_description": "Executing the assigned delivery slot, navigating to the pickup point, and then the customer location.",
+          "business_function": "Last-Mile Delivery",
+          "role_in_responsibility": "Executor and Traveler",
+          "business_purpose": "To physically transport the goods and complete the delivery promise.",
+          "business_outcome": "Physical transfer of goods and completion of the delivery journey."
+        },
+        {
+          "responsibility": "Pickup and Handover",
+          "responsibility_description": "Collecting the order from the Store/Fulfillment Center and verifying its condition before transport.",
+          "business_function": "Order Preparation",
+          "role_in_responsibility": "Receiver",
+          "business_purpose": "To ensure the order is ready for transit.",
+          "business_outcome": "Confirmation of pickup from the store."
+        },
+        {
+          "responsibility": "Customer Interaction and Proof Generation",
+          "responsibility_description": "Interacting with the customer at the drop-off point and generating the Delivery Proof (signature/photo).",
+          "business_function": "Handover & Confirmation",
+          "role_in_responsibility": "Agent",
+          "business_purpose": "To facilitate the final transfer of ownership and secure the closure of the order.",
+          "business_outcome": "Generation of Delivery Proof and confirmed handover."
+        }
+      ]
+    },
+    {
+      "actor": "Platform Operator",
+      "actor_type": "Organizational Entity",
+      "business_purpose": "To own the digital ecosystem, manage operations, and ensure the viability of the business model.",
+      "responsibilities": [
+        {
+          "responsibility": "System Orchestration and Allocation",
+          "responsibility_description": "Running the algorithms to validate inventory, calculate fees, allocate orders to stores, and assign delivery agents.",
+          "business_function": "Order Validation & Allocation",
+          "role_in_responsibility": "Orchestrator and Allocator",
+          "business_purpose": "To coordinate the complex interactions between inventory, customers, and logistics.",
+          "business_outcome": "Efficient order processing and optimal resource utilization."
+        },
+        {
+          "responsibility": "Financial Settlement and Revenue Management",
+          "responsibility_description": "Calculating commissions, processing payouts to stores and partners, and managing subscription models.",
+          "business_function": "Financial Settlement",
+          "role_in_responsibility": "Settlement Officer and Revenue Manager",
+          "business_purpose": "To ensure accurate financial flows and monetization.",
+          "business_outcome": "Finalized Financial Transaction Records and revenue collection."
+        },
+        {
+          "responsibility": "Partner Relationship Management",
+          "responsibility_description": "Negotiating contracts, onboarding stores, and managing the Store Partner Agreement.",
+          "business_function": "Foundation Establishment",
+          "role_in_responsibility": "Contractor and Enabler",
+          "business_purpose": "To secure the network of physical inventory sources.",
+          "business_outcome": "Established network of active store partners."
+        },
+        {
+          "responsibility": "Quality Assurance and Dispute Resolution",
+          "responsibility_description": "Reviewing feedback records, investigating disputes (e.g., missing items), and initiating loyalty point adjustments.",
+          "business_function": "Post-Transaction Review",
+          "role_in_responsibility": "Auditor and Resolver",
+          "business_purpose": "To maintain service quality and resolve exceptions.",
+          "business_outcome": "Resolved Dispute Tickets and improved customer satisfaction."
+        }
+      ]
+    },
+    {
+      "actor": "Payment Provider",
+      "actor_type": "External Organisation",
+      "business_purpose": "To enable the secure and reliable transfer of value between parties.",
+      "responsibilities": [
+        {
+          "responsibility": "Transaction Facilitation",
+          "responsibility_description": "Processing the customer's payment, verifying funds, and executing the transfer.",
+          "business_function": "Financial Settlement",
+          "role_in_responsibility": "Processor and Validator",
+          "business_purpose": "To provide the necessary infrastructure for monetary exchange.",
+          "business_outcome": "Successful and secure completion of the Financial Transaction Record."
+        },
+        {
+          "responsibility": "Risk Management and Fraud Detection",
+          "responsibility_description": "Monitoring transactions for fraud and ensuring the solvency of the payer.",
+          "business_function": "Financial Settlement",
+          "role_in_responsibility": "Risk Controller",
+          "business_purpose": "To mitigate financial risk and ensure payment validity.",
+          "business_outcome": "Validated payment status and reduced fraud exposure."
+        }
+      ]
+    },
+    {
+      "actor": "Regulatory Authority",
+      "actor_type": "External Organisation",
+      "business_purpose": "To enforce laws and standards governing the operation of the business and its stakeholders.",
+      "responsibilities": [
+        {
+          "responsibility": "Compliance Enforcement",
+          "responsibility_description": "Enforcing regulations regarding food safety, data privacy, and labor laws for delivery workers.",
+          "business_function": "Business Context (Regulatory)",
+          "role_in_responsibility": "Regulator and Enforcer",
+          "business_purpose": "To ensure the business operates within legal boundaries.",
+          "business_outcome": "Adherence to local laws and avoidance of regulatory penalties."
+        },
+        {
+          "responsibility": "Licensing and Inspection",
+          "responsibility_description": "Granting operating licenses for specific zones or service categories and conducting periodic inspections.",
+          "business_function": "Foundation Establishment",
+          "role_in_responsibility": "Licensor and Inspectors",
+          "business_purpose": "To authorize the business to operate in a specific market zone.",
+          "business_outcome": "Validated operational authority for Service Area Definition."
+        }
+      ]
+    }
+  ]
+}
+
+
+
+
+### 2.4 Actor and Business Object Relationships
+
+{
+  "actor_business_object_relationships": [
+    {
+      "actor": "Customer",
+      "business_object": "Product Catalog",
+      "interaction_type": "Accesses",
+      "interaction_description": "Browses available items, views product descriptions, images, and pricing.",
+      "business_purpose": "To identify immediate needs and facilitate the selection of goods.",
+      "related_responsibility": "Order Initiation and Selection"
+    },
+    {
+      "actor": "Customer",
+      "business_object": "Customer Profile",
+      "interaction_type": "Maintains",
+      "interaction_description": "Updates address details, payment methods, and preference history.",
+      "business_purpose": "To ensure accurate delivery routing and enable seamless financial transactions.",
+      "related_responsibility": "Order Initiation and Selection"
+    },
+    {
+      "actor": "Customer",
+      "business_object": "Order Request",
+      "interaction_type": "Creates",
+      "interaction_description": "Submits a specific list of items, quantities, and delivery instructions.",
+      "business_purpose": "To formally trigger the fulfillment workflow and define the scope of goods to be acquired.",
+      "related_responsibility": "Order Initiation and Selection"
+    },
+    {
+      "actor": "Customer",
+      "business_object": "Financial Transaction Record",
+      "interaction_type": "Creates",
+      "interaction_description": "Initiates the payment request and confirms the authorization of funds.",
+      "business_purpose": "To provide the necessary value exchange for the acquisition of goods.",
+      "related_responsibility": "Payment Execution"
+    },
+    {
+      "actor": "Customer",
+      "business_object": "Assigned Delivery Slot",
+      "interaction_type": "Accesses",
+      "interaction_description": "Views estimated arrival times and delivery windows before the order is fulfilled.",
+      "business_purpose": "To manage expectations and ensure alignment with time-sensitive household needs.",
+      "related_responsibility": "Order Initiation and Selection"
+    },
+    {
+      "actor": "Customer",
+      "business_object": "Delivery Proof",
+      "interaction_type": "Receives",
+      "interaction_description": "Physically receives the goods and provides a signature or photo upon handover.",
+      "business_purpose": "To formally close the physical loop of the transaction and verify goods integrity.",
+      "related_responsibility": "Receipt Verification and Handover"
+    },
+    {
+      "actor": "Customer",
+      "business_object": "Feedback Record",
+      "interaction_type": "Creates",
+      "interaction_description": "Submits ratings, comments, and feedback regarding product quality and service speed.",
+      "business_purpose": "To provide data for quality improvement and agent performance evaluation.",
+      "related_responsibility": "Feedback and Review"
+    },
+    {
+      "actor": "Customer",
+      "business_object": "Dispute Ticket",
+      "interaction_type": "Initiates",
+      "interaction_description": "Files a request for investigation regarding missing items, damaged goods, or delivery failures.",
+      "business_purpose": "To initiate exception handling and seek resolution for service failures.",
+      "related_responsibility": "Receipt Verification and Handover"
+    },
+    {
+      "actor": "Store Partner",
+      "business_object": "Store Partner Agreement",
+      "interaction_type": "Maintains",
+      "interaction_description": "Holds and adheres to the commercial terms, SLAs, and operational constraints defined by the platform.",
+      "business_purpose": "To formalize the relationship and ensure compliance with agreed service levels.",
+      "related_responsibility": "Service Level Compliance"
+    },
+    {
+      "actor": "Store Partner",
+      "business_object": "Product Catalog",
+      "interaction_type": "Maintains",
+      "interaction_description": "Updates local inventory availability, pricing, and product details in real-time.",
+      "business_purpose": "To ensure the platform's catalog reflects actual available stock and prevent overselling.",
+      "related_responsibility": "Inventory Provision and Synchronization"
+    },
+    {
+      "actor": "Store Partner",
+      "business_object": "Real-Time Inventory Snapshot",
+      "interaction_type": "Maintains",
+      "interaction_description": "Generates and updates the current status and quantity of SKUs available for immediate fulfillment.",
+      "business_purpose": "To provide the accurate data constraints required for order allocation and validation.",
+      "related_responsibility": "Inventory Provision and Synchronization"
+    },
+    {
+      "actor": "Store Partner",
+      "business_object": "Fulfillment Task",
+      "interaction_type": "Creates",
+      "interaction_description": "Executes the picking, packing, and verification steps for assigned orders.",
+      "business_purpose": "To physically prepare the order for outbound transport to the delivery partner.",
+      "related_responsibility": "Order Preparation and Fulfillment"
+    },
+    {
+      "actor": "Store Partner",
+      "business_object": "Delivery Assignment",
+      "interaction_type": "Exchanges",
+      "interaction_description": "Handover the completed order to the designated delivery agent upon task completion.",
+      "business_purpose": "To transfer possession of the goods and initiate the last-mile logistics leg.",
+      "related_responsibility": "Order Preparation and Fulfillment"
+    },
+    {
+      "actor": "Store Partner",
+      "business_object": "Dispute Ticket",
+      "interaction_type": "Responds",
+      "interaction_description": "Provides evidence and details regarding inventory discrepancies or damaged items.",
+      "business_purpose": "To resolve quality disputes and determine liability or refund requirements.",
+      "related_responsibility": "Commodity Management"
+    },
+    {
+      "actor": "Merchandiser",
+      "business_object": "Product Catalog",
+      "interaction_type": "Maintains",
+      "interaction_description": "Curates product descriptions, images, categories, and ensures data accuracy.",
+      "business_purpose": "To maintain a high-quality, relevant, and up-to-date digital assortment.",
+      "related_responsibility": "Catalog Curation and Optimization"
+    },
+    {
+      "actor": "Merchandiser",
+      "business_object": "Product Catalog",
+      "interaction_type": "Modifies",
+      "interaction_description": "Adjusts SKU visibility, pricing, and availability based on demand and seasonality.",
+      "business_purpose": "To optimize the assortment mix for profitability and market relevance.",
+      "related_responsibility": "Assortment Strategy"
+    },
+    {
+      "actor": "Merchandiser",
+      "business_object": "Commodity Management",
+      "interaction_type": "Maintains",
+      "interaction_description": "Oversees product lifecycle, promotions, discounts, and quality standards.",
+      "business_purpose": "To manage commercial aspects and resolve disputes regarding product quality or pricing.",
+      "related_responsibility": "Commodity Management"
+    },
+    {
+      "actor": "Delivery Partner",
+      "business_object": "Delivery Assignment",
+      "interaction_type": "Receives",
+      "interaction_description": "Is assigned a specific order and customer location by the system.",
+      "business_purpose": "To define the scope of the delivery task and target delivery location.",
+      "related_responsibility": "Route Execution and Navigation"
+    },
+    {
+      "actor": "Delivery Partner",
+      "business_object": "Delivery Assignment",
+      "interaction_type": "Creates",
+      "interaction_description": "Updates the status of the assignment to indicate pickup, en route, or delivered.",
+      "business_purpose": "To provide real-time visibility into the logistics journey.",
+      "related_responsibility": "Route Execution and Navigation"
+    },
+    {
+      "actor": "Delivery Partner",
+      "business_object": "Fulfillment Task",
+      "interaction_type": "Receives",
+      "interaction_description": "Collects the physical order from the store handler upon completion of the task.",
+      "business_purpose": "To ensure the goods are ready for transit before pickup.",
+      "related_responsibility": "Pickup and Handover"
+    },
+    {
+      "actor": "Delivery Partner",
+      "business_object": "Delivery Assignment",
+      "interaction_type": "Creates",
+      "interaction_description": "Executes the final leg of the journey and confirms physical delivery to the customer.",
+      "business_purpose": "To complete the logistics workflow and transfer ownership of goods.",
+      "related_responsibility": "Route Execution and Navigation"
+    },
+    {
+      "actor": "Delivery Partner",
+      "business_object": "Delivery Proof",
+      "interaction_type": "Creates",
+      "interaction_description": "Generates a digital signature, photo, or timestamp upon successful handover.",
+      "business_purpose": "To provide irrefutable evidence of successful delivery and closure of the order.",
+      "related_responsibility": "Customer Interaction and Proof Generation"
+    },
+    {
+      "actor": "Platform Operator",
+      "business_object": "Service Area Definition",
+      "interaction_type": "Maintains",
+      "interaction_description": "Defines the geographic zones where hyperlocal delivery is supported.",
+      "business_purpose": "To determine valid service boundaries for customer onboarding and store selection.",
+      "related_responsibility": "Partner Relationship Management"
+    },
+    {
+      "actor": "Platform Operator",
+      "business_object": "Store Partner Agreement",
+      "interaction_type": "Maintains",
+      "interaction_description": "Negotiates and enforces contract terms between the platform and store partners.",
+      "business_purpose": "To secure the network of physical inventory sources and define operational rules.",
+      "related_responsibility": "Partner Relationship Management"
+    },
+    {
+      "actor": "Platform Operator",
+      "business_object": "Product Catalog",
+      "interaction_type": "Synthesizes",
+      "interaction_description": "Aggregates inventory data from all store partners into a unified digital view.",
+      "business_purpose": "To provide customers with a seamless, real-time selection interface.",
+      "related_responsibility": "Marketplace aggregation and catalog management"
+    },
+    {
+      "actor": "Platform Operator",
+      "business_object": "Real-Time Inventory Snapshot",
+      "interaction_type": "Validates",
+      "interaction_description": "Checks availability against the snapshot to ensure orders can be fulfilled.",
+      "business_purpose": "To prevent overselling and ensure accurate order allocation.",
+      "related_responsibility": "System Orchestration and Allocation"
+    },
+    {
+      "actor": "Platform Operator",
+      "business_object": "Order Request",
+      "interaction_type": "Processes",
+      "interaction_description": "Validates the request against inventory, calculates fees, and allocates resources.",
+      "business_purpose": "To coordinate the complex interactions between demand and supply efficiently.",
+      "related_responsibility": "System Orchestration and Allocation"
+    },
+    {
+      "actor": "Platform Operator",
+      "business_object": "Fulfillment Task",
+      "interaction_type": "Creates",
+      "interaction_description": "Generates the internal task instructions for store staff to pick and pack orders.",
+      "business_purpose": "To orchestrate the physical preparation workflow at the fulfillment node.",
+      "related_responsibility": "System Orchestration and Allocation"
+    },
+    {
+      "actor": "Platform Operator",
+      "business_object": "Assigned Delivery Slot",
+      "interaction_type": "Creates",
+      "interaction_description": "Allocates a specific time window and maps it to a store's capabilities.",
+      "business_purpose": "To optimize logistics scheduling and meet delivery time promises.",
+      "related_responsibility": "System Orchestration and Allocation"
+    },
+    {
+      "actor": "Platform Operator",
+      "business_object": "Delivery Assignment",
+      "interaction_type": "Creates",
+      "interaction_description": "Assigns the specific order to a delivery agent based on proximity and capacity.",
+      "business_purpose": "To execute the efficient allocation of the last-mile logistics resource.",
+      "related_responsibility": "System Orchestration and Allocation"
+    },
+    {
+      "actor": "Platform Operator",
+      "business_object": "Financial Transaction Record",
+      "interaction_type": "Processes",
+      "interaction_description": "Calculates commissions, deductions, and settles funds between parties.",
+      "business_purpose": "To ensure accurate financial flows and monetization of the platform.",
+      "related_responsibility": "Financial Settlement and Revenue Management"
+    },
+    {
+      "actor": "Platform Operator",
+      "business_object": "Feedback Record",
+      "interaction_type": "Processes",
+      "interaction_description": "Analyzes customer feedback and ratings to adjust service quality metrics.",
+      "business_purpose": "To monitor service quality and identify areas for improvement.",
+      "related_responsibility": "Quality Assurance and Dispute Resolution"
+    },
+    {
+      "actor": "Platform Operator",
+      "business_object": "Dispute Ticket",
+      "interaction_type": "Resolves",
+      "interaction_description": "Investigates the ticket, reviews evidence, and adjusts loyalty points or refunds.",
+      "business_purpose": "To maintain service quality and provide fair resolution for exceptions.",
+      "related_responsibility": "Quality Assurance and Dispute Resolution"
+    },
+    {
+      "actor": "Order Allocation Engine",
+      "business_object": "Real-Time Inventory Snapshot",
+      "interaction_type": "Accesses",
+      "interaction_description": "Reads current stock levels to validate order eligibility.",
+      "business_purpose": "To ensure accurate order validation without manual intervention.",
+      "related_responsibility": "System Orchestration and Allocation"
+    },
+    {
+      "actor": "Order Allocation Engine",
+      "business_object": "Delivery Zone Map",
+      "interaction_type": "Accesses",
+      "interaction_description": "Calculates travel times and distances to assign delivery slots and agents.",
+      "business_purpose": "To optimize route efficiency and meet strict time delivery SLAs.",
+      "related_responsibility": "System Orchestration and Allocation"
+    },
+    {
+      "actor": "Order Allocation Engine",
+      "business_object": "Delivery Assignment",
+      "interaction_type": "Creates",
+      "interaction_description": "Automatically generates the link between an order and a specific agent.",
+      "business_purpose": "To automate resource allocation and reduce manual scheduling overhead.",
+      "related_responsibility": "System Orchestration and Allocation"
+    },
+    {
+      "actor": "Payment Provider",
+      "business_object": "Financial Transaction Record",
+      "interaction_type": "Validates",
+      "interaction_description": "Processes the payment request and verifies the solvency of the payer.",
+      "business_purpose": "To ensure the financial transaction is secure and funds are available.",
+      "related_responsibility": "Transaction Facilitation"
+    },
+    {
+      "actor": "Payment Provider",
+      "business_object": "Financial Transaction Record",
+      "interaction_type": "Exchanges",
+      "interaction_description": "Executes the transfer of funds from the customer to the platform/store.",
+      "business_purpose": "To facilitate the monetary exchange required for order fulfillment.",
+      "related_responsibility": "Transaction Facilitation"
+    },
+    {
+      "actor": "Regulatory Authority",
+      "business_object": "Service Area Definition",
+      "interaction_type": "Validates",
+      "interaction_description": "Approves or restricts specific zones based on local licensing requirements.",
+      "business_purpose": "To ensure the business operates within legal boundaries and holds valid licenses.",
+      "related_responsibility": "Licensing and Inspection"
+    },
+    {
+      "actor": "Regulatory Authority",
+      "business_object": "Store Partner Agreement",
+      "interaction_type": "Enforces",
+      "interaction_description": "Oversees compliance with labor laws and food safety regulations at partner stores.",
+      "business_purpose": "To ensure the business adheres to all applicable local laws.",
+      "related_responsibility": "Compliance Enforcement"
+    },
+    {
+      "actor": "Regulatory Authority",
+      "business_object": "Delivery Partner",
+      "interaction_type": "Monitors",
+      "interaction_description": "Inspects gig-workers to ensure they meet labor standards and safety protocols.",
+      "business_purpose": "To enforce labor laws and ensure the safety of delivery operations.",
+      "related_responsibility": "Compliance Enforcement"
+    }
+  ]
+}
+
+
+
+### 2.5 Existing Business Activities
+
+{
+  "business_activities": [
+    {
+      "activity_name": "Market Entry and Partner Onboarding",
+      "activity_description": "Defining service zones, establishing legal licenses, and negotiating commercial agreements with physical store partners to enable the hyperlocal ecosystem.",
+      "primary_actor": "Platform Operator",
+      "supporting_actors": [
+        "Regulatory Authority",
+        "Merchandiser"
+      ],
+      "related_responsibility": "Partner Relationship Management",
+      "input_business_objects": [
+        "Service Area Definition",
+        "Store Partner Agreement"
+      ],
+      "output_business_objects": [
+        "Validated Service Zones",
+        "Active Store Network"
+      ],
+      "trigger_or_precondition": "Strategic decision to launch in a new geographic region or regulatory zone.",
+      "business_outcome": "Establishment of operational authority and a viable network of inventory sources."
+    },
+    {
+      "activity_name": "Product Catalog Curation and Strategy",
+      "activity_description": "Curating the digital assortment, setting pricing strategies, and managing the lifecycle of SKUs to ensure relevance and commercial viability.",
+      "primary_actor": "Merchandiser",
+      "supporting_actors": [],
+      "related_responsibility": "Assortment Strategy",
+      "input_business_objects": [
+        "Product Catalog",
+        "Store Partner Agreement"
+      ],
+      "output_business_objects": [
+        "Optimized Catalog Mix",
+        "Updated Product Descriptions and Pricing"
+      ],
+      "trigger_or_precondition": "Ongoing market demand changes, seasonality shifts, or inventory replenishment cycles.",
+      "business_outcome": "A robust, relevant, and profitable product assortment driving customer conversion."
+    },
+    {
+      "activity_name": "Inventory Synchronization and Validation",
+      "activity_description": "Receiving real-time stock data from partners and validating availability against the platform catalog to ensure data accuracy for order processing.",
+      "primary_actor": "Platform Operator",
+      "supporting_actors": [
+        "Store Partner",
+        "Order Allocation Engine"
+      ],
+      "related_responsibility": "Inventory Provision and Synchronization",
+      "input_business_objects": [
+        "Real-Time Inventory Snapshot",
+        "Product Catalog"
+      ],
+      "output_business_objects": [
+        "Verified Inventory Status",
+        "Error Alerts for Stock Discrepancies"
+      ],
+      "trigger_or_precondition": "Periodic sync schedules or immediate alerts from store POS systems.",
+      "business_outcome": "Accurate, real-time visibility of sellable stock to prevent overselling and fulfillment failures."
+    },
+    {
+      "activity_name": "Order Initiation and Demand Capture",
+      "activity_description": "Customers browsing the catalog, selecting items, and formally requesting immediate fulfillment.",
+      "primary_actor": "Customer",
+      "supporting_actors": [],
+      "related_responsibility": "Order Initiation and Selection",
+      "input_business_objects": [
+        "Product Catalog",
+        "Customer Profile",
+        "Assigned Delivery Slot"
+      ],
+      "output_business_objects": [
+        "Order Request",
+        "Pending Payment Authorization"
+      ],
+      "trigger_or_precondition": "Customer identification of immediate household needs and availability of desired items.",
+      "business_outcome": "Creation of a validated demand record triggering the fulfillment workflow."
+    },
+    {
+      "activity_name": "Order Validation and Resource Allocation",
+      "activity_description": "Automated validation of inventory availability, fee calculation, and assignment of the order to a specific store and delivery agent.",
+      "primary_actor": "Order Allocation Engine",
+      "supporting_actors": [
+        "Platform Operator"
+      ],
+      "related_responsibility": "System Orchestration and Allocation",
+      "input_business_objects": [
+        "Order Request",
+        "Real-Time Inventory Snapshot",
+        "Delivery Zone Map",
+        "Fulfillment Task",
+        "Assigned Delivery Slot"
+      ],
+      "output_business_objects": [
+        "Confirmed Order Assignment",
+        "Allocated Fulfillment Task",
+        "Assigned Delivery Slot"
+      ],
+      "trigger_or_precondition": "Successful submission of an Order Request with a valid Customer Profile.",
+      "business_outcome": "Optimized routing of demand to the nearest capable store and agent within the service zone."
+    },
+    {
+      "activity_name": "Order Fulfillment and Preparation",
+      "activity_description": "Store staff picking items, verifying quality, packing orders, and transferring possession to the delivery partner.",
+      "primary_actor": "Store Partner",
+      "supporting_actors": [
+        "Merchandiser",
+        "Fulfillment Supervisor"
+      ],
+      "related_responsibility": "Order Preparation and Fulfillment",
+      "input_business_objects": [
+        "Fulfillment Task",
+        "Delivery Assignment"
+      ],
+      "output_business_objects": [
+        "Completed Fulfillment Task",
+        "Ready-for-Dispatch Order",
+        "Pickup Confirmation"
+      ],
+      "trigger_or_precondition": "Reception of an allocated Fulfillment Task from the platform.",
+      "business_outcome": "Physical preparation of the order and readiness for outbound transport."
+    },
+    {
+      "activity_name": "Last-Mile Logistics Execution",
+      "activity_description": "Delivery partners navigating routes, picking up orders from stores, and transporting goods to customer locations.",
+      "primary_actor": "Delivery Partner",
+      "supporting_actors": [
+        "Order Allocation Engine"
+      ],
+      "related_responsibility": "Route Execution and Navigation",
+      "input_business_objects": [
+        "Delivery Assignment",
+        "Fulfillment Task"
+      ],
+      "output_business_objects": [
+        "In-Transit Status",
+        "Delivery Completion Status"
+      ],
+      "trigger_or_precondition": "Assignment of a specific Delivery Assignment linked to a store's completed task.",
+      "business_outcome": "Physical movement of goods from the fulfillment node to the customer."
+    },
+    {
+      "activity_name": "Delivery Handover and Proof Generation",
+      "activity_description": "Physical transfer of goods to the customer, verification of contents, and generation of proof of delivery.",
+      "primary_actor": "Delivery Partner",
+      "supporting_actors": [
+        "Customer"
+      ],
+      "related_responsibility": "Customer Interaction and Proof Generation",
+      "input_business_objects": [
+        "Delivery Assignment",
+        "Delivery Proof"
+      ],
+      "output_business_objects": [
+        "Signed/Photo Delivery Proof",
+        "Order Closure Status"
+      ],
+      "trigger_or_precondition": "Arrival at the customer's designated location.",
+      "business_outcome": "Secure closure of the logistics workflow and confirmed transfer of ownership."
+    },
+    {
+      "activity_name": "Payment Processing and Financial Settlement",
+      "activity_description": "Processing customer payments, calculating commissions, and transferring funds between parties.",
+      "primary_actor": "Payment Provider",
+      "supporting_actors": [
+        "Platform Operator",
+        "Store Partner"
+      ],
+      "related_responsibility": "Financial Settlement and Revenue Management",
+      "input_business_objects": [
+        "Financial Transaction Record",
+        "Customer Profile"
+      ],
+      "output_business_objects": [
+        "Processed Payment",
+        "Finalized Settlement Records",
+        "Commission Deductions"
+      ],
+      "trigger_or_precondition": "Confirmation of delivery and customer authorization of the transaction.",
+      "business_outcome": "Resolution of value exchange and accurate monetization of the transaction."
+    },
+    {
+      "activity_name": "Post-Transaction Review and Feedback Collection",
+      "activity_description": "Gathering customer ratings, analyzing service quality metrics, and updating performance records.",
+      "primary_actor": "Customer",
+      "supporting_actors": [
+        "Platform Operator"
+      ],
+      "related_responsibility": "Feedback and Review",
+      "input_business_objects": [
+        "Feedback Record"
+      ],
+      "output_business_objects": [
+        "Customer Ratings and Comments",
+        "Service Quality Metrics Update"
+      ],
+      "trigger_or_precondition": "Completion of financial settlement and delivery handover.",
+      "business_outcome": "Data-driven insights for quality improvement and agent performance evaluation."
+    },
+    {
+      "activity_name": "Dispute Resolution and Exception Handling",
+      "activity_description": "Investigating claims regarding missing items, damages, or failed deliveries and determining liability.",
+      "primary_actor": "Platform Operator",
+      "supporting_actors": [
+        "Customer",
+        "Store Partner"
+      ],
+      "related_responsibility": "Quality Assurance and Dispute Resolution",
+      "input_business_objects": [
+        "Dispute Ticket",
+        "Feedback Record",
+        "Financial Transaction Record"
+      ],
+      "output_business_objects": [
+        "Resolved Dispute",
+        "Adjusted Loyalty Points",
+        "Refund or Credit Issuance"
+      ],
+      "trigger_or_precondition": "Initiation of a Dispute Ticket by the customer due to fulfillment or quality issues.",
+      "business_outcome": "Fair resolution of exceptions, preservation of customer trust, and accurate financial adjustments."
+    }
+  ]
+}
+
+
+
+### 2.6 Information Requirements
+"{\n  \"information_requirements\": [\n    {\n      \"information_requirement\": \"Real-Time Inventory Availability and Stock Levels\",\n      \"description\": \"Precise, immediate visibility into the exact quantity of each SKU available at each specific store partner location at the moment of order placement.\",\n      \"business_purpose\": \"To prevent overselling and order failures caused by stock discrepancies between the digital catalog and physical reality, ensuring customer promises can be kept.\"\n    },\n    {\n      \"information_requirement\": \"Dynamic Delivery Time Estimates based on Traffic and Weather\",\n      \"description\": \"Context-aware data reflecting current local traffic congestion, road closures, weather conditions, and historical delivery performance for specific routes and time slots.\",\n      \"business_purpose\": \"To provide accurate delivery time windows that meet customer expectations and SLAs, preventing customer frustration and potential compensation claims due to delays.\"\n    },\n    {\n      \"information_requirement\": \"Active Store Partner Operational Capacity\",\n      \"description\": \"Real-time data on the current workload, staff availability, and physical capacity of each store partner to handle new pick-up tasks without disrupting their primary sales operations.\",\n      \"business_purpose\": \"To optimize order allocation by directing high-volume orders to capable stores, ensuring timely fulfillment and preventing store partners from becoming bottlenecks.\"\n    },\n    {\n      \"information_requirement\": \"Delivery Partner Real-Time Location and Status\",\n      \"description\": \"Continuous, live tracking of the physical location and current status (idle, picking, in-transit, en-route) of all assigned delivery agents within the service area.\",\n      \"business_purpose\": \"To enable dynamic rerouting of orders to the nearest available agent, ensure efficient use of the delivery fleet, and provide customers with accurate progress updates.\"\n    },\n    {\n      \"information_requirement\": \"Product Quality and Integrity Status at Handover\",\n      \"description\": \"Verified confirmation from the store partner that items are fresh, undamaged, and correctly matched to the order before the delivery agent picks up the package.\",\n      \"business_purpose\": \"To mitigate post-delivery disputes regarding damaged or spoiled goods, reducing the platform's liability and the frequency of refunds or replacements.\"\n    },\n    {\n      \"information_requirement\": \"Comprehensive Order Line Item Details and Quantities\",\n      \"description\": \"Detailed records of every specific item ordered, including variant attributes (e.g., size, brand, temperature), exact quantities, and customer-specific instructions (e.g., 'doorbell only', 'call on arrival').\",\n      \"business_purpose\": \"To ensure accurate fulfillment, enable precise payment calculation, and provide the necessary context for resolving disputes regarding missing or incorrect items.\"\n    },\n    {\n      \"information_requirement\": \"Regulatory Compliance Status for Service Zones and Partners\",\n      \"description\": \"Up-to-date records of valid operating licenses, food safety certifications for stores, and labor law compliance status for delivery partners within each geographic zone.\",\n      \"business_purpose\": \"To ensure the business operates legally, avoid regulatory fines, and maintain the ability to operate in specific high-density service areas.\"\n    },\n    {\n      \"information_requirement\": \"Historical Order Performance and Failure Patterns\",\n      \"description\": \"Archived data tracking reasons for order cancellations, delays, failed deliveries, returns, and disputes across specific stores, agents, and time periods.\",\n      \"business_purpose\": \"To identify systemic issues, optimize network performance, adjust pricing models based on failure rates, and improve allocation algorithms to reduce operational losses.\"\n    },\n    {\n      \"information_requirement\": \"Customer Creditworthiness and Payment Risk Profile\",\n      \"description\": \"Assessed risk data regarding a customer's payment history, fraud flags, and ability to pay, available at the point of order initiation.\",\n      \"business_purpose\": \"To minimize financial loss from non-payment, enable risk-based decision-making on payment methods (e.g., requiring card-on-file for new users), and manage cash flow.\"\n    },\n    {\n      \"information_requirement\": \"Delivery Fee and Commission Calculations based on Dynamic Variables\",\n      \"description\": \"Transparent and pre-calculated breakdowns of total order value including item costs, platform fees, delivery charges, taxes, and applicable promotions/discounts.\",\n      \"business_purpose\": \"To ensure accurate customer billing, facilitate trust through price transparency, and correctly allocate revenue shares between the platform, store partners, and delivery agents.\"\n    },\n    {\n      \"information_requirement\": \"Validated Customer Address and Access Instructions\",\n      \"description\": \"Confirmed and detailed address data for the customer, including specific building numbers, floor levels, access restrictions, and preferred drop-off instructions.\",\n      \"business_purpose\": \"To ensure the delivery agent can successfully complete the last-mile handover, reducing failed delivery attempts and the associated time and cost penalties.\"\n    },\n    {\n      \"information_requirement\": \"Fulfillment Task Priority and Routing Constraints\",\n      \"description\": \"Internal data defining the priority level of orders (e.g., paid vs. credit, subscription tier benefits) and any physical constraints (e.g., elevator availability, heavy item limits) for the picking process.\",\n      \"business_purpose\": \"To maximize the efficiency of store staff during the preparation phase, ensuring high-priority orders are fulfilled first and complex orders are handled with appropriate resources.\"\n    },\n    {\n      \"information_requirement\": \"Dispute Resolution Context and Evidence Repository\",\n      \"description\": \"Comprehensive records of all interactions, photos, signatures, and communications related to a specific order dispute, including statements from the customer, store, and delivery agent.\",\n      \"business_purpose\": \"To provide a complete factual basis for investigating claims, determining liability, making fair financial adjustments (refunds/credits), and preventing future recurrence of similar issues.\"\n    },\n    {\n      \"information_requirement\": \"Financial Settlement Timing and Payout Schedule\",\n      \"description\": \"Defined rules and data regarding when funds are collected from customers, when they are allocated to stores and partners, and the specific intervals for automated payouts.\",\n      \"business_purpose\": \"To maintain accurate cash flow management, ensure timely payments to store partners and delivery agents to maintain network stability, and comply with financial regulations.\"\n    },\n    {\n      \"information_requirement\": \"Device and Network Capability of Customer Location\",\n      \"description\": \"Information regarding the customer's internet connectivity and device capabilities, if the platform requires digital proof (photo/signature) or app-based interactions during delivery.\",\n      \"business_purpose\": \"To ensure successful generation of Delivery Proof and complete order closure, allowing the system to decide between digital proof methods or manual exception handling if connectivity is lost.\"\n    }\n  ]\n}"
+
+# 2. INFORMATION FLOW DISCOVERY
+
+For every Information Requirement, independently discover its information flow.
+
+Use the following questions as an internal reasoning framework. Explore the relevant questions rather than mechanically producing an answer for each one.
+
+## A. SOURCE DISCOVERY
+
+Determine where the required information originates.
+
+Ask yourself:
+
+1. Which business actor initially provides or creates this information?
+2. Which business object contains or represents the originating information?
+3. Is the information generated through a business activity or transaction?
+4. Is it derived from another business object or existing information?
+5. Does another business actor or external business entity provide it?
+6. Is the information maintained by an operational business function?
+7. Can multiple legitimate sources contribute to the information?
+8. Which source is authoritative when multiple sources exist?
+9. Is the information directly captured, derived or received?
+10. What is the most defensible business source based on the supplied context?
+
+Identify the business source, not an assumed technical system.
+
+## B. CONSUMER DISCOVERY
+
+Determine who or what uses the information.
+
+Ask yourself:
+
+1. Which actors need this information to perform their responsibilities?
+2. Which business activities depend on it?
+3. Which business objects consume, reference or depend on it?
+4. Does the information support a business decision or operational action?
+5. Is it consumed by another business function or organisational role?
+6. Does it support customer, partner, operational, financial or regulatory activities?
+7. Are there multiple legitimate consumers?
+8. Which consumers require the information directly versus indirectly?
+9. What business responsibility makes each consumer relevant?
+
+Identify actual business consumers. Do not add generic platform components or hypothetical engines without justification.
+
+## C. TRIGGER DISCOVERY
+
+Determine what causes the information to be created, provided, updated or made available.
+
+Ask yourself:
+
+1. What business event first creates the information?
+2. Is it triggered by a customer request, business transaction or operational activity?
+3. Does a change in a related business object trigger an update?
+4. Is it generated by a lifecycle transition or business status change?
+5. Is it supplied in response to another actor's request?
+6. Is it required before a particular business activity can proceed?
+7. Does it change when an underlying business condition changes?
+8. Is the trigger event-driven, request-driven, transaction-driven or periodic?
+9. Is a periodic trigger genuinely established or necessary?
+10. What is the actual business event, rather than an assumed technical scheduling mechanism?
+
+Describe the business trigger. Do not invent update intervals, frequencies or technical event mechanisms.
+
+## D. BUSINESS OUTCOME DISCOVERY
+
+Determine what the information enables or supports.
+
+Ask yourself:
+
+1. What business decision does this information support?
+2. What business activity becomes possible through its availability?
+3. What business object is created, maintained or updated using it?
+4. Does it enable a transaction, fulfilment activity or operational decision?
+5. Does it support financial, compliance, service or customer outcomes?
+6. What business dependency would be affected if the information were unavailable or incorrect?
+7. What is the direct outcome of providing this information?
+8. Does the outcome reflect the actual Information Requirement rather than a speculative downstream benefit?
+
+Describe the resulting business outcome, not a technical implementation result.
+
+# 3. CROSS-CONTEXT REASONING
+
+Before determining each flow, correlate:
+
+- Information Requirement and its business purpose.
+- Business objects and their relationships.
+- Actors and their responsibilities.
+- Actor authorisations and permitted business activities.
+- Business activities that create, modify or consume the information.
+- Dependencies between the information and related business objects.
+
+Use established domain knowledge to identify reasonable implicit information flows.
+
+Distinguish between:
+- Information origin and information storage.
+- Information provider and information consumer.
+- Business event and technical update mechanism.
+- Information outcome and downstream workflow action.
+
+Do not assume that the actor who creates information is necessarily its only source or consumer.
+
+# 4. DISCOVERY QUALITY RULES
+
+1. Discover the information flow independently for every Information Requirement.
+2. Identify all materially relevant sources and consumers where justified.
+3. Do not impose a fixed number of sources or consumers.
+4. Use business actors, business objects and activities from the supplied context wherever applicable.
+5. Domain knowledge may be used to infer legitimate business sources and consumers.
+6. Treat supplied information as a baseline, not a closed set of facts.
+7. Do not invent organisation-specific systems, APIs, integrations, vendors or platforms.
+8. Do not invent synchronisation intervals, processing frequencies, response times or update schedules.
+9. Do not assume a particular technical architecture or communication mechanism.
+10. Do not introduce hypothetical actors, consumers or processing engines without a defensible business reason.
+11. When the precise source, consumer or trigger is unknown, describe the logical business role or event generically.
+12. Do not present uncertain technical assumptions as established business facts.
+13. Avoid duplicate consumers and redundant descriptions.
+14. Keep each information flow directly relevant to its Information Requirement.
+
+# 5. OUTPUT CONTENT AND LENGTH CONTROL
+
+For each Information Requirement, produce:
+
+**source**
+- Concise identification of the originating business actor, object or business function.
+- Maximum 120 characters.
+
+**consumer**
+- Array of distinct business actors, business functions or justified business objects.
+- Maximum 100 characters per consumer entry.
+
+**trigger**
+- Concise description of the originating business event or information change.
+- Maximum 160 characters.
+
+**outcome**
+- Concise description of the business purpose or result supported by the information.
+- Maximum 160 characters.
+
+Use precise business terminology. Avoid explanations, examples, alternatives and technical implementation details.
+
+Do not generate additional content merely to increase output size.
+
+# 6. OUTPUT STRUCTURE
+
+Return exactly one object per input Information Requirement, preserving the original order and exact requirement name or description.
+
+[
+  {
+    "information_requirement": "Exact input Information Requirement",
+    "information_flow": {
+      "source": "Originating business source",
+      "consumer": [
+        "Relevant business consumer"
+      ],
+      "trigger": "Business event that creates or updates the information",
+      "outcome": "Business outcome supported by the information"
+    }
+  }
+]
+
+# 7. STRICT OUTPUT CONSTRAINTS
+
+- Return valid JSON only.
+- Include exactly one object per Information Requirement.
+- Preserve input order and exact requirement names.
+- Include exactly the two top-level properties shown.
+- information_flow must always be an object.
+- source, trigger and outcome must always be non-empty strings.
+- consumer must always be a non-empty array.
+- Enforce all specified character limits.
+- Do not add IDs, functional_rules, information_validation or other properties.
+- Do not omit any Information Requirement.
+- Do not output internal reasoning or discovery questions.
+- Do not include Markdown or commentary outside the JSON array.
+
+Prioritise accurate business information lineage, defensible domain reasoning and logical completeness over technical assumptions or verbosity.
+  
