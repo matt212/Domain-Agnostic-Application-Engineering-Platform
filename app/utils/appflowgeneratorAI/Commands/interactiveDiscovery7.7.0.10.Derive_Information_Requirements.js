@@ -50,8 +50,8 @@ const CONFIG = {
     EXEC_BINARY: 'llama-cli',
     IDENTIFIER: 'unsloth/Qwen3.5-4B-GGUF',
     NGL: '0',
-    CONTEXT_SIZE: '24576',
-    MAX_OUTPUT_TOKENS: '8192',
+    CONTEXT_SIZE: '26384',
+    MAX_OUTPUT_TOKENS: '13192',
     BATCH_SIZE: '512',
     THREADS: '8',
     REASONING_MODE: 'off'
