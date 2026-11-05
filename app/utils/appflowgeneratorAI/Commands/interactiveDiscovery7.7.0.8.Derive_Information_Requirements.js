@@ -19,9 +19,10 @@ const CONFIG = {
 
   MODEL: {
     EXEC_BINARY: 'llama-cli',
-    IDENTIFIER: 'unsloth/Qwen3.5-4B-GGUF',
+    //IDENTIFIER: 'unsloth/Qwen3.5-4B-GGUF',
+    IDENTIFIER: 'unsloth/Qwen3.5-9B-GGUF',
     NGL: '0',
-    CONTEXT_SIZE: '16384',
+    CONTEXT_SIZE: '26384',
     MAX_OUTPUT_TOKENS: '8192',
     BATCH_SIZE: '512',
     THREADS: '8',
@@ -302,9 +303,72 @@ ${JSON.stringify(base.business_activities)}
 
 Treat these inputs as the available business-model evidence. Analyse them collectively rather than treating each dataset as an independent source.
 
+
+
+## 2. BASELINE INFORMATION DISCOVERY AND PRESERVATION
+
+### A. Establish the Existing Information Baseline
+
+Analyse all supplied business inputs, particularly the Business Activities and the data sources, datasets, records and information references described within them.
+
+Answer the following questions:
+
+1. What distinct data sources and datasets are explicitly identified in the supplied business activities?
+2. What business information does each source or dataset actually represent?
+3. What business facts, records, attributes, conditions, statuses and outcomes are contained in or represented by these sources?
+4. What information is already available, maintained, created, consumed, exchanged or updated by the business?
+5. What information do the documented actors need from these sources to fulfil their responsibilities?
+6. What information is required to initiate, execute, validate or complete the documented business activities?
+7. Which information needs are represented across multiple sources?
+8. Which sources represent the same underlying information need, and which represent genuinely distinct information needs?
+9. What meaningful business Information Requirements can be derived directly from the information represented in the supplied baseline?
+
+Do not treat data sources merely as contextual evidence for discovering other requirements. Understand and identify the actual business information they represent.
+
+### B. Preserve Baseline Information Requirements
+
+For every information need identified in the baseline, answer the following questions:
+
+1. Has this information need been represented by a meaningful business-level Information Requirement?
+2. Does the proposed requirement preserve the original business meaning and scope of the information?
+3. Has information been omitted because it appeared obvious, implicit, familiar or derivable from domain knowledge?
+4. Has an existing information need been absorbed into an overly broad requirement that loses its distinct business meaning?
+5. Are multiple sources describing the same underlying information need that should be consolidated?
+6. Are different information needs incorrectly being merged merely because they originate from the same source or business object?
+7. Does the requirement describe the information the business needs rather than simply repeating a source name, dataset name or document description?
+
+If a materially distinct baseline information need is not represented, include it in the catalogue.
+
+### C. Discover Additional Information Beyond the Baseline
+
+After identifying the baseline, independently answer the following questions:
+
+1. What additional information does the business need that is not represented in the supplied sources?
+2. What information is necessary to fulfil documented responsibilities but is not currently identified?
+3. What information is required to make business decisions that cannot be made using the identified baseline alone?
+4. What information must be obtained from external participants, organisations or systems?
+5. What information must be created, calculated, validated, confirmed, communicated or maintained to complete business activities?
+6. What information is required to manage exceptions, unexpected conditions, failures and alternative outcomes?
+7. What information dependencies are necessary for business operations but remain inadequately covered by the baseline?
+8. Which additional information needs are genuinely necessary for this particular domain and niche rather than merely optional capabilities or industry conventions?
+
+Do not restrict discovery to the supplied baseline. Equally, do not invent additional requirements without a logical business justification.
+
+### D. Consolidate Baseline and Additional Requirements
+
+Before finalising the catalogue, answer the following questions:
+
+1. Have all materially distinct baseline information needs been preserved?
+2. Have all additional, logically justified information needs been incorporated?
+3. Are any additional requirements already covered by baseline requirements?
+4. Have overlapping requirements been consolidated without losing meaningful business distinctions?
+5. Does each requirement describe a distinct and meaningful business information need?
+6. Does the combined catalogue represent both existing information needs and additional information required for the business to operate?
+
+Produce one consolidated catalogue, not separate baseline and additional catalogues.
 ---
 
-## 2. DOMAIN KNOWLEDGE, BUSINESS INFERENCE AND ASSUMPTION-BASED DISCOVERY
+## 3. DOMAIN KNOWLEDGE, BUSINESS INFERENCE AND ASSUMPTION-BASED DISCOVERY
 
 Use your knowledge of the supplied business domain and niche as an active reasoning resource. Do not restrict discovery to information explicitly documented in the supplied business model.
 
@@ -339,7 +403,7 @@ Do not impose a predefined list of domain-specific capabilities, business object
 
 Discover the information requirements that emerge from reasoning about the actual business context, including important needs that the supplied model may have overlooked.
 
-## 3. INFORMATION NECESSITY, BUSINESS SCOPE AND CAPABILITY DISTINCTION
+## 4. INFORMATION NECESSITY, BUSINESS SCOPE AND CAPABILITY DISTINCTION
 
 Domain knowledge may reveal many possible business capabilities. However, not every capability creates a necessary Information Requirement.
 
@@ -377,7 +441,7 @@ Only include requirements that represent meaningful business information needs.
 Where domain knowledge identifies a potentially important but unconfirmed capability, do not silently assume it is part of the business model. Include it only when its underlying business necessity can be logically justified by the domain, niche and supplied business context.
 ---
 
-## 4. INTELLIGENT BUSINESS INFORMATION DISCOVERY
+## 5. INTELLIGENT BUSINESS INFORMATION DISCOVERY
 
 Interrogate the business context through the following analytical questions.
 
@@ -449,7 +513,7 @@ These questions are reasoning lenses, not mandatory categories or a predefined c
 
 ---
 
-## 5. CROSS-DIMENSION REASONING
+## 6. CROSS-DIMENSION REASONING
 
 Do not discover requirements by examining actors, activities or business objects in isolation.
 
@@ -474,7 +538,7 @@ Where the same information serves genuinely different business purposes, determi
 
 ---
 
-## 6. DISCOVERY SYNTHESIS AND QUALITY EVALUATION
+## 7. DISCOVERY SYNTHESIS AND QUALITY EVALUATION
 
 After completing the analysis, consolidate all discovered information needs into a coherent Information Requirements catalogue.
 
@@ -517,9 +581,129 @@ For each candidate requirement, internally evaluate:
 9. Do not invent requirements merely to increase the catalogue size.
 10. Prioritise business relevance, completeness and meaningful distinction over the number of requirements.
 
----
 
-## 7. OUTPUT SCOPE
+## 8. NON-NEGOTIABLE BUSINESS INFORMATION COMPLETENESS
+
+The discovery process must establish whether the identified Information Requirements collectively provide the information necessary for the supplied business to function according to its actual business model.
+
+Do not confuse requirement relevance with business completeness.
+
+A catalogue may contain individually valid and meaningful requirements while still omitting information essential to the business.
+
+### A. Discover fundamental business information dependencies
+
+Independently examine the supplied domain, niche, business objects, actors, responsibilities, relationships and activities.
+
+Determine:
+
+- What must the business know to perform its fundamental activities?
+- What information must exist before actors can fulfil their responsibilities?
+- What information enables necessary business decisions and commitments?
+- What information is required to execute the business's intended operations?
+- What information is necessary to fulfil its obligations to relevant parties?
+- What information establishes whether intended outcomes have actually been achieved?
+- What information is required to manage deviations, failures and unresolved obligations?
+- What information must be retained to establish accountability and business continuity?
+
+Discover these requirements from the actual business context. Do not assume that all businesses have the same activities, obligations, operating stages or information needs.
+
+### B. Apply the non-negotiable information test
+
+For every fundamental business activity, responsibility, obligation and intended outcome identified in the supplied context, evaluate whether the necessary information is represented in the catalogue.
+
+Ask:
+
+1. Can the business perform this activity without the identified information?
+2. Can the responsible actor make the decisions necessary to fulfil their responsibility?
+3. Can the business establish whether the required conditions for proceeding have been satisfied?
+4. Can the business achieve and verify the intended outcome?
+5. Can the business fulfil its applicable obligations?
+6. Can the business establish accountability when an activity fails or produces an unexpected outcome?
+
+If the absence of particular information makes a fundamental business activity impossible, invalid, non-compliant or materially unaccountable, that information requirement is non-negotiable and must be included.
+
+### C. Distinguish universal necessity from domain-specific necessity
+
+Do not interpret non-negotiable requirements as a universal list of information categories.
+
+The same underlying business principle may produce entirely different Information Requirements across different domains and niches.
+
+Discover the actual information required by this particular business.
+
+A requirement must not be included merely because it is common in another industry or appeared in a previous discovery exercise.
+
+Equally, an essential requirement must not be omitted simply because it is not explicitly documented in the supplied business model.
+
+### D. Prevent false consolidation and omission
+
+Evaluate requirements according to their underlying business purpose and information dependency.
+
+Do not consider two requirements interchangeable merely because they involve the same business object, actor, activity or information source.
+
+Preserve distinct requirements when they support independently necessary business decisions, obligations or outcomes.
+
+Do not merge different information needs into an overly broad requirement that obscures an essential business dependency.
+
+### E. Final completeness validation
+
+After consolidating the discovered requirements, independently re-examine the supplied business context.
+
+Identify any fundamental business activity, responsibility, decision, obligation or outcome for which the required information is still missing.
+
+Compare those information dependencies against the final catalogue.
+
+Add any missing non-negotiable requirements before producing the output.
+
+Do not impose predefined industry categories, mandatory requirement names, fixed lifecycle stages, minimum requirement counts or domain-specific checklists.
+
+**FINAL RULE:**
+
+The catalogue must be complete relative to the actual business model and its justified domain-specific requirements, not relative to a predetermined universal list.
+
+Business-operability completeness takes precedence over minimising the number of requirements. Avoid speculative capabilities, but never omit fundamental information dependencies merely because they are implicit or undocumented.
+
+
+---
+## 9. FINAL BASELINE COVERAGE AND PRESERVATION VALIDATION
+
+Before producing the final JSON, independently revisit the supplied business inputs and answer the following questions.
+
+### A. Baseline Coverage Validation
+
+1. Have all supplied data sources and datasets been examined for their actual business information content?
+2. Has every materially distinct information need represented in those sources been captured in the catalogue?
+3. Does each corresponding Information Requirement preserve the business meaning of the original information?
+4. Has any existing information need been omitted because it was considered implicit, obvious or already understood?
+5. Has consolidation accidentally removed or obscured a distinct baseline information need?
+6. Have overlapping information needs from different sources been consolidated appropriately without losing their meaning?
+7. Can every materially distinct baseline information need be accounted for by at least one requirement in the final catalogue?
+
+If any baseline information need is missing, add or correct the relevant requirement before proceeding.
+
+### B. Additional Discovery Validation
+
+1. What fundamental business information dependencies remain uncovered after comparing the catalogue against the complete business model?
+2. Can every documented business activity be performed using the information represented in the catalogue?
+3. Can every responsible actor fulfil their documented responsibilities and make the necessary decisions?
+4. Can the business establish whether the conditions for proceeding have been satisfied?
+5. Can the business verify the intended outcomes of its activities?
+6. Can the business manage relevant exceptions, failures and unresolved obligations?
+7. Are there additional information needs that are necessary but not adequately represented in the baseline?
+8. Have optional, speculative or unjustified capabilities been excluded?
+
+Add any missing, logically justified information requirements before producing the final output.
+
+### C. Final Acceptance Questions
+
+1. Does the final catalogue preserve all materially distinct information needs represented in the supplied baseline?
+2. Does it include additional information needs justified by business and domain reasoning?
+3. Has any baseline requirement been lost through consolidation or abstraction?
+4. Has any additional requirement been introduced without a genuine business necessity?
+5. Does the catalogue collectively represent the information this particular business needs to operate, make decisions, coordinate activities and achieve its intended outcomes?
+
+**Final acceptance condition:** Both baseline preservation and additional business information discovery must be satisfied. Neither can substitute for the other.
+
+## 10. OUTPUT SCOPE
 
 For this discovery stage, generate ONLY the following three properties for each Information Requirement:
 
@@ -553,7 +737,7 @@ These can be derived in subsequent discovery stages.
 
 ---
 
-## 8. FINAL OUTPUT JSON SCHEMA
+## 11. FINAL OUTPUT JSON SCHEMA
 
 Return one consolidated JSON object using exactly this structure:
 

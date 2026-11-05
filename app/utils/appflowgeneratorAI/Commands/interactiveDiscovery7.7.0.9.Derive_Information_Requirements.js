@@ -967,7 +967,7 @@ Each object must contain exactly these five properties:
 
 [
   {
-    "information_requirement": "Real-Time Inventory Availability and Stock Levels",
+    "information_requirement": "Original Parent Information Requirement",
     "required_by_actors": [
       "Relevant Actor"
     ],
@@ -982,7 +982,7 @@ Each object must contain exactly these five properties:
     ]
   },
   {
-    "information_requirement": "Dynamic Delivery Time Estimates based on Traffic and Weather",
+    "information_requirement": "Original Parent Information Requirement",
     "required_by_actors": [
       "Relevant Actor"
     ],
