@@ -78,7 +78,7 @@ const CONFIG = {
       '7.7.0.6.Derive_ACTOR_BUSINESS_Activities.',
 
     STAGE_6_INFORMATION_REQUIREMENTS:
-      '7.7.0.8.Derive_Information_Requirements.'
+      '7.7.0.8.Derive_Information_Requirements.05-11-26_03:40pm.md'
   }
 };
 
