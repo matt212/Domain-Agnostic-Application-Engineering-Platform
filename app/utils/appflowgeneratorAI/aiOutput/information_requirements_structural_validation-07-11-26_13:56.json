@@ -1,0 +1,298 @@
+{
+  "validation_metadata": {
+    "validation_name": "Information Requirements Structural and Reference Validation",
+    "validation_timestamp": "2026-11-07T08:26:38.124Z",
+    "validation_type": "DETERMINISTIC_STRUCTURAL_AND_REFERENCE_VALIDATION",
+    "merged_input_file": "merged_information_requirements_06_11_26_07_50_PM.json",
+    "original_input_modified": false,
+    "reference_validation_limitation": "Reference checks use exact textual phrase matching. They do not prove semantic validity or exact actor-object pair relationships."
+  },
+  "source_inventory": [
+    {
+      "source_key": "BUSINESS_OBJECTS",
+      "file_name": "7.6 Business Objects.24-10-26_06:41pm.md",
+      "file_path": "/Users/apple/Documents/Projects/fastify/Nodejs_Postgresql_VanillaJS_Fastify/app/utils/appflowgeneratorAI/aiOutput/baseline/7.6 Business Objects.24-10-26_06:41pm.md",
+      "loaded_successfully": true,
+      "content_characters": 12893
+    },
+    {
+      "source_key": "ACTORS",
+      "file_name": "7.7.1 Actors_list.29-10-26_05:14pm.md",
+      "file_path": "/Users/apple/Documents/Projects/fastify/Nodejs_Postgresql_VanillaJS_Fastify/app/utils/appflowgeneratorAI/aiOutput/baseline/7.7.1 Actors_list.29-10-26_05:14pm.md",
+      "loaded_successfully": true,
+      "content_characters": 1531
+    },
+    {
+      "source_key": "RESPONSIBILITIES",
+      "file_name": "7.7.0.4.Derive_Actors_Roles_Resonsibility_Authorization.30-10-26_03:13pm.md",
+      "file_path": "/Users/apple/Documents/Projects/fastify/Nodejs_Postgresql_VanillaJS_Fastify/app/utils/appflowgeneratorAI/aiOutput/baseline/7.7.0.4.Derive_Actors_Roles_Resonsibility_Authorization.30-10-26_03:13pm.md",
+      "loaded_successfully": true,
+      "content_characters": 15028
+    },
+    {
+      "source_key": "ACTOR_OBJECT_RELATIONSHIPS",
+      "file_name": "7.7.0.5.Derive_ACTOR_BUSINESS_OBJECT_RELATIONSHIP.31-10-26_09:23am.md",
+      "file_path": "/Users/apple/Documents/Projects/fastify/Nodejs_Postgresql_VanillaJS_Fastify/app/utils/appflowgeneratorAI/aiOutput/baseline/7.7.0.5.Derive_ACTOR_BUSINESS_OBJECT_RELATIONSHIP.31-10-26_09:23am.md",
+      "loaded_successfully": true,
+      "content_characters": 17098
+    },
+    {
+      "source_key": "BUSINESS_ACTIVITIES",
+      "file_name": "7.7.0.6.Derive_ACTOR_BUSINESS_Activities.31-10-26_06:46pm.md",
+      "file_path": "/Users/apple/Documents/Projects/fastify/Nodejs_Postgresql_VanillaJS_Fastify/app/utils/appflowgeneratorAI/aiOutput/baseline/7.7.0.6.Derive_ACTOR_BUSINESS_Activities.31-10-26_06:46pm.md",
+      "loaded_successfully": true,
+      "content_characters": 9646
+    },
+    {
+      "source_key": "INFORMATION_REQUIREMENTS_SOURCE",
+      "file_name": "7.7.0.8.Derive_Information_Requirements.05-11-26_03:40pm.md",
+      "file_path": "/Users/apple/Documents/Projects/fastify/Nodejs_Postgresql_VanillaJS_Fastify/app/utils/appflowgeneratorAI/aiOutput/baseline/7.7.0.8.Derive_Information_Requirements.05-11-26_03:40pm.md",
+      "loaded_successfully": true,
+      "content_characters": 9514
+    }
+  ],
+  "validation_summary": {
+    "total_information_requirements": 20,
+    "structural_findings": 3,
+    "reference_findings": 7,
+    "total_findings": 10,
+    "severity_counts": {
+      "CRITICAL": 0,
+      "HIGH": 0,
+      "MEDIUM": 7,
+      "LOW": 3
+    },
+    "category_counts": {
+      "DUPLICATE_VALIDATION": 3,
+      "REFERENCE_VALIDATION": 6,
+      "RELATIONSHIP_EVIDENCE_VALIDATION": 1
+    },
+    "structural_validation_status": "REQUIRES_REVIEW"
+  },
+  "structural_findings": [
+    {
+      "information_requirement": "Customer Satisfaction and Quality Feedback",
+      "validation_category": "DUPLICATE_VALIDATION",
+      "finding_type": "DUPLICATE_ARRAY_ENTRY",
+      "severity": "LOW",
+      "field": "related_activities[3]",
+      "problem": "Duplicate string entry 'Post-Transaction Review and Feedback Collection' detected.",
+      "expected": "Unique entries",
+      "actual": "Post-Transaction Review and Feedback Collection",
+      "source_file": null
+    },
+    {
+      "information_requirement": "Exception and Dispute Ticket Registry",
+      "validation_category": "DUPLICATE_VALIDATION",
+      "finding_type": "DUPLICATE_ARRAY_ENTRY",
+      "severity": "LOW",
+      "field": "related_activities[3]",
+      "problem": "Duplicate string entry 'Dispute Resolution and Exception Handling' detected.",
+      "expected": "Unique entries",
+      "actual": "Dispute Resolution and Exception Handling",
+      "source_file": null
+    },
+    {
+      "information_requirement": "Compliance and Regulatory Status",
+      "validation_category": "DUPLICATE_VALIDATION",
+      "finding_type": "DUPLICATE_ARRAY_ENTRY",
+      "severity": "LOW",
+      "field": "related_activities[2]",
+      "problem": "Duplicate string entry 'Market Entry and Partner Onboarding' detected.",
+      "expected": "Unique entries",
+      "actual": "Market Entry and Partner Onboarding",
+      "source_file": null
+    }
+  ],
+  "reference_findings": [
+    {
+      "information_requirement": "Real-Time Stock Availability and Status",
+      "validation_category": "REFERENCE_VALIDATION",
+      "finding_type": "REFERENCE_NOT_FOUND_IN_SOURCE",
+      "severity": "MEDIUM",
+      "field": "related_responsibilities",
+      "problem": "The reference 'Product Catalog Curation and Strategy' was not found as an exact phrase in the RESPONSIBILITIES Markdown artefact.",
+      "expected": "Reference should be identifiable in the corresponding discovery artefact.",
+      "actual": "Product Catalog Curation and Strategy",
+      "source_file": "7.7.0.4.Derive_Actors_Roles_Resonsibility_Authorization.30-10-26_03:13pm.md"
+    },
+    {
+      "information_requirement": "Geospatial Service Boundary Definition",
+      "validation_category": "REFERENCE_VALIDATION",
+      "finding_type": "REFERENCE_NOT_FOUND_IN_SOURCE",
+      "severity": "MEDIUM",
+      "field": "related_activities",
+      "problem": "The reference 'Compliance Enforcement' was not found as an exact phrase in the BUSINESS_ACTIVITIES Markdown artefact.",
+      "expected": "Reference should be identifiable in the corresponding discovery artefact.",
+      "actual": "Compliance Enforcement",
+      "source_file": "7.7.0.6.Derive_ACTOR_BUSINESS_Activities.31-10-26_06:46pm.md"
+    },
+    {
+      "information_requirement": "Aggregated Product Catalog and Pricing",
+      "validation_category": "REFERENCE_VALIDATION",
+      "finding_type": "REFERENCE_NOT_FOUND_IN_SOURCE",
+      "severity": "MEDIUM",
+      "field": "related_activities",
+      "problem": "The reference 'Marketplace aggregation and catalog management' was not found as an exact phrase in the BUSINESS_ACTIVITIES Markdown artefact.",
+      "expected": "Reference should be identifiable in the corresponding discovery artefact.",
+      "actual": "Marketplace aggregation and catalog management",
+      "source_file": "7.7.0.6.Derive_ACTOR_BUSINESS_Activities.31-10-26_06:46pm.md"
+    },
+    {
+      "information_requirement": "Fulfillment Task Allocation and Routing",
+      "validation_category": "REFERENCE_VALIDATION",
+      "finding_type": "REFERENCE_NOT_FOUND_IN_SOURCE",
+      "severity": "MEDIUM",
+      "field": "related_activities",
+      "problem": "The reference 'Marketplace aggregation and catalog management' was not found as an exact phrase in the BUSINESS_ACTIVITIES Markdown artefact.",
+      "expected": "Reference should be identifiable in the corresponding discovery artefact.",
+      "actual": "Marketplace aggregation and catalog management",
+      "source_file": "7.7.0.6.Derive_ACTOR_BUSINESS_Activities.31-10-26_06:46pm.md"
+    },
+    {
+      "information_requirement": "Compliance and Regulatory Status",
+      "validation_category": "REFERENCE_VALIDATION",
+      "finding_type": "REFERENCE_NOT_FOUND_IN_SOURCE",
+      "severity": "MEDIUM",
+      "field": "related_activities",
+      "problem": "The reference 'Compliance Enforcement' was not found as an exact phrase in the BUSINESS_ACTIVITIES Markdown artefact.",
+      "expected": "Reference should be identifiable in the corresponding discovery artefact.",
+      "actual": "Compliance Enforcement",
+      "source_file": "7.7.0.6.Derive_ACTOR_BUSINESS_Activities.31-10-26_06:46pm.md"
+    },
+    {
+      "information_requirement": "Compliance and Regulatory Status",
+      "validation_category": "REFERENCE_VALIDATION",
+      "finding_type": "REFERENCE_NOT_FOUND_IN_SOURCE",
+      "severity": "MEDIUM",
+      "field": "related_activities",
+      "problem": "The reference 'Licensing and Inspection' was not found as an exact phrase in the BUSINESS_ACTIVITIES Markdown artefact.",
+      "expected": "Reference should be identifiable in the corresponding discovery artefact.",
+      "actual": "Licensing and Inspection",
+      "source_file": "7.7.0.6.Derive_ACTOR_BUSINESS_Activities.31-10-26_06:46pm.md"
+    },
+    {
+      "information_requirement": "Order Preparation and Handover Confirmation",
+      "validation_category": "RELATIONSHIP_EVIDENCE_VALIDATION",
+      "finding_type": "ACTOR_NOT_FOUND_IN_RELATIONSHIP_SOURCE",
+      "severity": "MEDIUM",
+      "field": "required_by_actors",
+      "problem": "Actor 'Fulfillment Supervisor' was not found in the Actor–Business Object Relationship artefact.",
+      "expected": "Actor should appear in relationship source",
+      "actual": "Fulfillment Supervisor",
+      "source_file": "7.7.0.5.Derive_ACTOR_BUSINESS_OBJECT_RELATIONSHIP.31-10-26_09:23am.md"
+    }
+  ],
+  "validation_findings": [
+    {
+      "information_requirement": "Customer Satisfaction and Quality Feedback",
+      "validation_category": "DUPLICATE_VALIDATION",
+      "finding_type": "DUPLICATE_ARRAY_ENTRY",
+      "severity": "LOW",
+      "field": "related_activities[3]",
+      "problem": "Duplicate string entry 'Post-Transaction Review and Feedback Collection' detected.",
+      "expected": "Unique entries",
+      "actual": "Post-Transaction Review and Feedback Collection",
+      "source_file": null
+    },
+    {
+      "information_requirement": "Exception and Dispute Ticket Registry",
+      "validation_category": "DUPLICATE_VALIDATION",
+      "finding_type": "DUPLICATE_ARRAY_ENTRY",
+      "severity": "LOW",
+      "field": "related_activities[3]",
+      "problem": "Duplicate string entry 'Dispute Resolution and Exception Handling' detected.",
+      "expected": "Unique entries",
+      "actual": "Dispute Resolution and Exception Handling",
+      "source_file": null
+    },
+    {
+      "information_requirement": "Compliance and Regulatory Status",
+      "validation_category": "DUPLICATE_VALIDATION",
+      "finding_type": "DUPLICATE_ARRAY_ENTRY",
+      "severity": "LOW",
+      "field": "related_activities[2]",
+      "problem": "Duplicate string entry 'Market Entry and Partner Onboarding' detected.",
+      "expected": "Unique entries",
+      "actual": "Market Entry and Partner Onboarding",
+      "source_file": null
+    },
+    {
+      "information_requirement": "Real-Time Stock Availability and Status",
+      "validation_category": "REFERENCE_VALIDATION",
+      "finding_type": "REFERENCE_NOT_FOUND_IN_SOURCE",
+      "severity": "MEDIUM",
+      "field": "related_responsibilities",
+      "problem": "The reference 'Product Catalog Curation and Strategy' was not found as an exact phrase in the RESPONSIBILITIES Markdown artefact.",
+      "expected": "Reference should be identifiable in the corresponding discovery artefact.",
+      "actual": "Product Catalog Curation and Strategy",
+      "source_file": "7.7.0.4.Derive_Actors_Roles_Resonsibility_Authorization.30-10-26_03:13pm.md"
+    },
+    {
+      "information_requirement": "Geospatial Service Boundary Definition",
+      "validation_category": "REFERENCE_VALIDATION",
+      "finding_type": "REFERENCE_NOT_FOUND_IN_SOURCE",
+      "severity": "MEDIUM",
+      "field": "related_activities",
+      "problem": "The reference 'Compliance Enforcement' was not found as an exact phrase in the BUSINESS_ACTIVITIES Markdown artefact.",
+      "expected": "Reference should be identifiable in the corresponding discovery artefact.",
+      "actual": "Compliance Enforcement",
+      "source_file": "7.7.0.6.Derive_ACTOR_BUSINESS_Activities.31-10-26_06:46pm.md"
+    },
+    {
+      "information_requirement": "Aggregated Product Catalog and Pricing",
+      "validation_category": "REFERENCE_VALIDATION",
+      "finding_type": "REFERENCE_NOT_FOUND_IN_SOURCE",
+      "severity": "MEDIUM",
+      "field": "related_activities",
+      "problem": "The reference 'Marketplace aggregation and catalog management' was not found as an exact phrase in the BUSINESS_ACTIVITIES Markdown artefact.",
+      "expected": "Reference should be identifiable in the corresponding discovery artefact.",
+      "actual": "Marketplace aggregation and catalog management",
+      "source_file": "7.7.0.6.Derive_ACTOR_BUSINESS_Activities.31-10-26_06:46pm.md"
+    },
+    {
+      "information_requirement": "Fulfillment Task Allocation and Routing",
+      "validation_category": "REFERENCE_VALIDATION",
+      "finding_type": "REFERENCE_NOT_FOUND_IN_SOURCE",
+      "severity": "MEDIUM",
+      "field": "related_activities",
+      "problem": "The reference 'Marketplace aggregation and catalog management' was not found as an exact phrase in the BUSINESS_ACTIVITIES Markdown artefact.",
+      "expected": "Reference should be identifiable in the corresponding discovery artefact.",
+      "actual": "Marketplace aggregation and catalog management",
+      "source_file": "7.7.0.6.Derive_ACTOR_BUSINESS_Activities.31-10-26_06:46pm.md"
+    },
+    {
+      "information_requirement": "Compliance and Regulatory Status",
+      "validation_category": "REFERENCE_VALIDATION",
+      "finding_type": "REFERENCE_NOT_FOUND_IN_SOURCE",
+      "severity": "MEDIUM",
+      "field": "related_activities",
+      "problem": "The reference 'Compliance Enforcement' was not found as an exact phrase in the BUSINESS_ACTIVITIES Markdown artefact.",
+      "expected": "Reference should be identifiable in the corresponding discovery artefact.",
+      "actual": "Compliance Enforcement",
+      "source_file": "7.7.0.6.Derive_ACTOR_BUSINESS_Activities.31-10-26_06:46pm.md"
+    },
+    {
+      "information_requirement": "Compliance and Regulatory Status",
+      "validation_category": "REFERENCE_VALIDATION",
+      "finding_type": "REFERENCE_NOT_FOUND_IN_SOURCE",
+      "severity": "MEDIUM",
+      "field": "related_activities",
+      "problem": "The reference 'Licensing and Inspection' was not found as an exact phrase in the BUSINESS_ACTIVITIES Markdown artefact.",
+      "expected": "Reference should be identifiable in the corresponding discovery artefact.",
+      "actual": "Licensing and Inspection",
+      "source_file": "7.7.0.6.Derive_ACTOR_BUSINESS_Activities.31-10-26_06:46pm.md"
+    },
+    {
+      "information_requirement": "Order Preparation and Handover Confirmation",
+      "validation_category": "RELATIONSHIP_EVIDENCE_VALIDATION",
+      "finding_type": "ACTOR_NOT_FOUND_IN_RELATIONSHIP_SOURCE",
+      "severity": "MEDIUM",
+      "field": "required_by_actors",
+      "problem": "Actor 'Fulfillment Supervisor' was not found in the Actor–Business Object Relationship artefact.",
+      "expected": "Actor should appear in relationship source",
+      "actual": "Fulfillment Supervisor",
+      "source_file": "7.7.0.5.Derive_ACTOR_BUSINESS_OBJECT_RELATIONSHIP.31-10-26_09:23am.md"
+    }
+  ]
+}
