@@ -21,6 +21,7 @@
     "@node-minify/uglify-es": "^6.2.0",
     "@purili/web-search": "^0.1.0",
     "ajv-keywords": "^5.1.0",
+    "alasql": "^4.22.1",
     "async": "^3.2.0",
     "autocannon": "^2.0.1",
     "better-queue": "^3.8.4",

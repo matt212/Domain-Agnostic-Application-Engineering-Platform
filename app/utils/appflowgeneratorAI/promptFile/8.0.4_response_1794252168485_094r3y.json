@@ -1,0 +1,433 @@
+User:
+You are an expert Business Analyst, Enterprise Solution
+Analyst and Functional Requirements Architect.
+
+Your responsibility is to independently discover, investigate
+and define meaningful, complete and implementable functional
+requirements for the supplied business domain and niche.
+
+============================================================
+BUSINESS CONTEXT
+============================================================
+
+Domain:
+Quick Commerce (Q-Commerce)
+
+Niche:
+Hyperlocal Grocery Delivery
+
+============================================================
+KNOWLEDGE BASE BASELINE
+============================================================
+
+A Knowledge Base JSON file is available to you through two
+AlaSQL tables:
+
+TABLE: records
+
+Fields:
+- id
+- source_stage
+- source_file
+- section
+- record_type
+- content
+- searchable_text
+
+TABLE: sources
+
+Fields:
+- source_stage
+- source_file
+- format
+- file_extension
+- character_count
+- raw_content
+
+The Knowledge Base contains baseline business artefacts.
+
+IMPORTANT:
+
+1. The baseline is reference material, not the source of truth.
+2. Do not mechanically copy the baseline into requirements.
+3. Do not assume the baseline contains every valid business
+   capability, process, rule or requirement.
+4. Independently reason about the domain and niche.
+5. Identify what business information you need to investigate.
+6. Decide whether retrieving baseline information would help.
+7. When retrieval is needed, generate your own SQL query.
+8. Do not generate generic searches or predefined business
+   keyword combinations.
+9. Do not assume that a missing SQL result means a business
+   capability does not exist.
+10. Continue independent business reasoning even when the
+    baseline does not contain relevant information.
+
+============================================================
+PREVIOUS INVESTIGATION NOTES
+============================================================
+
+As a Business Analyst, I need to verify if the provided Knowledge Base contains any existing business artefacts, process descriptions, or specific constraints related to the Quick Commerce and Hyperlocal Grocery niche. This will prevent me from starting completely from scratch and allow me to refine my independent reasoning against any provided context. I will query the 'records' table to see what business content is available.
+
+============================================================
+LATEST ALA SQL RESULT
+============================================================
+
+{
+  "investigation_question": "What specific baseline data, constraints, or initial functional descriptions exist in the Knowledge Base regarding Hyperlocal Grocery Delivery that can inform the initial functional requirements?",
+  "sql": "SELECT section, record_type, searchable_text, content FROM records WHERE section LIKE '%Grocery%' OR section LIKE '%Delivery%' OR section LIKE '%Hyperlocal%' OR searchable_text LIKE '%Grocery%' OR searchable_text LIKE '%Delivery%' LIMIT 20",
+  "rows_returned": 20,
+  "results": [
+    {
+      "section": "Business Operating Model > Participants",
+      "record_type": "JSON_ARRAY_ITEM",
+      "searchable_text": "Business Operating Model > Participants Delivery Partner",
+      "content": "Delivery Partner"
+    },
+    {
+      "section": "Business Operating Model > Value Creation Monetization > Monetization Streams",
+      "record_type": "JSON_ARRAY_ITEM",
+      "searchable_text": "Business Operating Model > Value Creation Monetization > Monetization Streams Delivery Fees",
+      "content": "Delivery Fees"
+    },
+    {
+      "section": "Business Operating Model",
+      "record_type": "JSON_METADATA",
+      "searchable_text": "Business Operating Model {"value_proposition":"To enable the immediate acquisition of fresh groceries and essential goods within minutes of ordering, solving the friction between demand and supply for time-sensitive household needs.","distinctive_niche":"Hyperlocal, ultra-fast (typically under 60 minutes) delivery of fresh perishables and daily essentials, relying on a dense network of micro-fulfillment centers rather than centralized warehouses."}",
+      "content": {
+        "value_proposition": "To enable the immediate acquisition of fresh groceries and essential goods within minutes of ordering, solving the friction between demand and supply for time-sensitive household needs.",
+        "distinctive_niche": "Hyperlocal, ultra-fast (typically under 60 minutes) delivery of fresh perishables and daily essentials, relying on a dense network of micro-fulfillment centers rather than centralized warehouses."
+      }
+    },
+    {
+      "section": "Derived Lifecycle > Operational Readiness",
+      "record_type": "JSON_ARRAY_ITEM",
+      "searchable_text": "Derived Lifecycle > Operational Readiness {"stage":"Operational Readiness","description":"Testing logistics routes, calibrating demand forecasting models, and conducting dry runs of the order-to-delivery workflow.","trigger":"Acquisition of sufficient initial inventory and confirmed delivery partner availability."}",
+      "content": {
+        "stage": "Operational Readiness",
+        "description": "Testing logistics routes, calibrating demand forecasting models, and conducting dry runs of the order-to-delivery workflow.",
+        "trigger": "Acquisition of sufficient initial inventory and confirmed delivery partner availability."
+      }
+    },
+    {
+      "section": "Derived Lifecycle > Order Validation & Allocation",
+      "record_type": "JSON_ARRAY_ITEM",
+      "searchable_text": "Derived Lifecycle > Order Validation & Allocation {"stage":"Order Validation & Allocation","description":"System validates inventory availability, calculates fees, confirms delivery slot, and allocates the order to a specific store and delivery agent.","trigger":"Successful submission of the order request."}",
+      "content": {
+        "stage": "Order Validation & Allocation",
+        "description": "System validates inventory availability, calculates fees, confirms delivery slot, and allocates the order to a specific store and delivery agent.",
+        "trigger": "Successful submission of the order request."
+      }
+    },
+    {
+      "section": "Derived Lifecycle > Order Preparation",
+      "record_type": "JSON_ARRAY_ITEM",
+      "searchable_text": "Derived Lifecycle > Order Preparation {"stage":"Order Preparation","description":"Store personnel pick items, verify quality, pack for transport, and hand over to the delivery partner.","trigger":"Allocation confirmation."}",
+      "content": {
+        "stage": "Order Preparation",
+        "description": "Store personnel pick items, verify quality, pack for transport, and hand over to the delivery partner.",
+        "trigger": "Allocation confirmation."
+      }
+    },
+    {
+      "section": "Derived Lifecycle > Last-Mile Delivery",
+      "record_type": "JSON_ARRAY_ITEM",
+      "searchable_text": "Derived Lifecycle > Last-Mile Delivery {"stage":"Last-Mile Delivery","description":"Delivery partner picks up the order, navigates to the customer location, and completes the physical transfer.","trigger":"Pickup confirmation from the store."}",
+      "content": {
+        "stage": "Last-Mile Delivery",
+        "description": "Delivery partner picks up the order, navigates to the customer location, and completes the physical transfer.",
+        "trigger": "Pickup confirmation from the store."
+      }
+    },
+    {
+      "section": "Business Objects > Service Area Definition",
+      "record_type": "JSON_ARRAY_ITEM",
+      "searchable_text": "Business Objects > Service Area Definition {"object_name":"Service Area Definition","purpose":"Geographically delimits the zones where hyperlocal delivery is currently supported.","necessity":"Essential","first_stage":"Foundation Establishment","dependencies":[],"lifecycle_role":"Configuration parameter for Store and Delivery Partner onboarding.","evidence_status":"Inferred from operational constraints","confidence_score":0.9}",
+      "content": {
+        "object_name": "Service Area Definition",
+        "purpose": "Geographically delimits the zones where hyperlocal delivery is currently supported.",
+        "necessity": "Essential",
+        "first_stage": "Foundation Establishment",
+        "dependencies": [],
+        "lifecycle_role": "Configuration parameter for Store and Delivery Partner onboarding.",
+        "evidence_status": "Inferred from operational constraints",
+        "confidence_score": 0.9
+      }
+    },
+    {
+      "section": "Business Objects > Delivery Zone Map",
+      "record_type": "JSON_ARRAY_ITEM",
+      "searchable_text": "Business Objects > Delivery Zone Map {"object_name":"Delivery Zone Map","purpose":"Defines the specific geographic boundaries and travel time estimates for a store to its customers.","necessity":"Essential","first_stage":"Operational Readiness","dependencies":["Service Area Definition","Store Partner Agreement"],"lifecycle_role":"Input for fee calculation and delivery promise setting.","evidence_status":"Inferred from operational mechanics","confidence_score":0.85}",
+      "content": {
+        "object_name": "Delivery Zone Map",
+        "purpose": "Defines the specific geographic boundaries and travel time estimates for a store to its customers.",
+        "necessity": "Essential",
+        "first_stage": "Operational Readiness",
+        "dependencies": [
+          "Service Area Definition",
+          "Store Partner Agreement"
+        ],
+        "lifecycle_role": "Input for fee calculation and delivery promise setting.",
+        "evidence_status": "Inferred from operational mechanics",
+        "confidence_score": 0.85
+      }
+    },
+    {
+      "section": "Business Objects > Customer Profile",
+      "record_type": "JSON_ARRAY_ITEM",
+      "searchable_text": "Business Objects > Customer Profile {"object_name":"Customer Profile","purpose":"Holds user identification, address details, payment methods, and preference history.","necessity":"Essential","first_stage":"Order Initiation","dependencies":["Store Partner Agreement"],"lifecycle_role":"Identifier for order ownership and delivery routing.","evidence_status":"Explicit in domain definition","confidence_score":1}",
+      "content": {
+        "object_name": "Customer Profile",
+        "purpose": "Holds user identification, address details, payment methods, and preference history.",
+        "necessity": "Essential",
+        "first_stage": "Order Initiation",
+        "dependencies": [
+          "Store Partner Agreement"
+        ],
+        "lifecycle_role": "Identifier for order ownership and delivery routing.",
+        "evidence_status": "Explicit in domain definition",
+        "confidence_score": 1
+      }
+    },
+    {
+      "section": "Business Objects > Order Request",
+      "record_type": "JSON_ARRAY_ITEM",
+      "searchable_text": "Business Objects > Order Request {"object_name":"Order Request","purpose":"Captures the customer's specific selection of items, quantities, and delivery instructions.","necessity":"Essential","first_stage":"Order Initiation","dependencies":["Product Catalog","Customer Profile"],"lifecycle_role":"Trigger for the fulfillment workflow.","evidence_status":"Explicit in domain definition","confidence_score":1}",
+      "content": {
+        "object_name": "Order Request",
+        "purpose": "Captures the customer's specific selection of items, quantities, and delivery instructions.",
+        "necessity": "Essential",
+        "first_stage": "Order Initiation",
+        "dependencies": [
+          "Product Catalog",
+          "Customer Profile"
+        ],
+        "lifecycle_role": "Trigger for the fulfillment workflow.",
+        "evidence_status": "Explicit in domain definition",
+        "confidence_score": 1
+      }
+    },
+    {
+      "section": "Business Objects > Assigned Delivery Slot",
+      "record_type": "JSON_ARRAY_ITEM",
+      "searchable_text": "Business Objects > Assigned Delivery Slot {"object_name":"Assigned Delivery Slot","purpose":"Secures a specific time window for the delivery agent to execute the last-mile delivery.","necessity":"Essential","first_stage":"Order Validation & Allocation","dependencies":["Fulfillment Task","Delivery Zone Map"],"lifecycle_role":"Constraint for logistics scheduling.","evidence_status":"Inferred from operational mechanics","confidence_score":0.85}",
+      "content": {
+        "object_name": "Assigned Delivery Slot",
+        "purpose": "Secures a specific time window for the delivery agent to execute the last-mile delivery.",
+        "necessity": "Essential",
+        "first_stage": "Order Validation & Allocation",
+        "dependencies": [
+          "Fulfillment Task",
+          "Delivery Zone Map"
+        ],
+        "lifecycle_role": "Constraint for logistics scheduling.",
+        "evidence_status": "Inferred from operational mechanics",
+        "confidence_score": 0.85
+      }
+    },
+    {
+      "section": "Business Objects > Delivery Assignment",
+      "record_type": "JSON_ARRAY_ITEM",
+      "searchable_text": "Business Objects > Delivery Assignment {"object_name":"Delivery Assignment","purpose":"Links a specific order to a specific delivery agent and vehicle.","necessity":"Essential","first_stage":"Order Validation & Allocation","dependencies":["Fulfillment Task","Assigned Delivery Slot"],"lifecycle_role":"Trigger for the physical movement of goods.","evidence_status":"Inferred from operational mechanics","confidence_score":0.9}",
+      "content": {
+        "object_name": "Delivery Assignment",
+        "purpose": "Links a specific order to a specific delivery agent and vehicle.",
+        "necessity": "Essential",
+        "first_stage": "Order Validation & Allocation",
+        "dependencies": [
+          "Fulfillment Task",
+          "Assigned Delivery Slot"
+        ],
+        "lifecycle_role": "Trigger for the physical movement of goods.",
+        "evidence_status": "Inferred from operational mechanics",
+        "confidence_score": 0.9
+      }
+    },
+    {
+      "section": "Business Objects > Financial Transaction Record",
+      "record_type": "JSON_ARRAY_ITEM",
+      "searchable_text": "Business Objects > Financial Transaction Record {"object_name":"Financial Transaction Record","purpose":"Documents the exchange of value, including item costs, fees, taxes, and payment status.","necessity":"Essential","first_stage":"Financial Settlement","dependencies":["Order Request","Delivery Assignment"],"lifecycle_role":"Proof of payment and settlement trigger.","evidence_status":"Inferred from business model requirements","confidence_score":0.95}",
+      "content": {
+        "object_name": "Financial Transaction Record",
+        "purpose": "Documents the exchange of value, including item costs, fees, taxes, and payment status.",
+        "necessity": "Essential",
+        "first_stage": "Financial Settlement",
+        "dependencies": [
+          "Order Request",
+          "Delivery Assignment"
+        ],
+        "lifecycle_role": "Proof of payment and settlement trigger.",
+        "evidence_status": "Inferred from business model requirements",
+        "confidence_score": 0.95
+      }
+    },
+    {
+      "section": "Business Objects > Delivery Proof",
+      "record_type": "JSON_ARRAY_ITEM",
+      "searchable_text": "Business Objects > Delivery Proof {"object_name":"Delivery Proof","purpose":"Verifies that the goods were physically transferred to the customer.","necessity":"Essential","first_stage":"Handover & Confirmation","dependencies":["Delivery Assignment","Customer Profile"],"lifecycle_role":"Closure condition for the logistics workflow.","evidence_status":"Inferred from operational mechanics","confidence_score":0.9}",
+      "content": {
+        "object_name": "Delivery Proof",
+        "purpose": "Verifies that the goods were physically transferred to the customer.",
+        "necessity": "Essential",
+        "first_stage": "Handover & Confirmation",
+        "dependencies": [
+          "Delivery Assignment",
+          "Customer Profile"
+        ],
+        "lifecycle_role": "Closure condition for the logistics workflow.",
+        "evidence_status": "Inferred from operational mechanics",
+        "confidence_score": 0.9
+      }
+    },
+    {
+      "section": "Business Objects > Feedback Record",
+      "record_type": "JSON_ARRAY_ITEM",
+      "searchable_text": "Business Objects > Feedback Record {"object_name":"Feedback Record","purpose":"Captures customer satisfaction ratings and textual comments regarding the order and delivery.","necessity":"Conditional","first_stage":"Post-Transaction Review","dependencies":["Delivery Proof"],"lifecycle_role":"Input for quality improvement and agent performance evaluation.","evidence_status":"Inferred from standard industry practice","confidence_score":0.7}",
+      "content": {
+        "object_name": "Feedback Record",
+        "purpose": "Captures customer satisfaction ratings and textual comments regarding the order and delivery.",
+        "necessity": "Conditional",
+        "first_stage": "Post-Transaction Review",
+        "dependencies": [
+          "Delivery Proof"
+        ],
+        "lifecycle_role": "Input for quality improvement and agent performance evaluation.",
+        "evidence_status": "Inferred from standard industry practice",
+        "confidence_score": 0.7
+      }
+    },
+    {
+      "section": "Alternative Models Assumptions Gaps > Alternative Operating Models > Dark Store / Centralized Fulfillment Model",
+      "record_type": "JSON_ARRAY_ITEM",
+      "searchable_text": "Alternative Models Assumptions Gaps > Alternative Operating Models > Dark Store / Centralized Fulfillment Model {"model_name":"Dark Store / Centralized Fulfillment Model","description":"The platform operates its own micro-warehouses ('dark stores') to consolidate orders and reduce travel time.","impact":"Enables faster delivery and better assortment control but significantly increases operational costs and complexity."}",
+      "content": {
+        "model_name": "Dark Store / Centralized Fulfillment Model",
+        "description": "The platform operates its own micro-warehouses ('dark stores') to consolidate orders and reduce travel time.",
+        "impact": "Enables faster delivery and better assortment control but significantly increases operational costs and complexity."
+      }
+    },
+    {
+      "section": "Alternative Models Assumptions Gaps > Key Assumptions",
+      "record_type": "JSON_ARRAY_ITEM",
+      "searchable_text": "Alternative Models Assumptions Gaps > Key Assumptions Customers prioritize speed over cost, making them willing to pay premium delivery fees.",
+      "content": "Customers prioritize speed over cost, making them willing to pay premium delivery fees."
+    },
+    {
+      "section": "Alternative Models Assumptions Gaps > Key Assumptions",
+      "record_type": "JSON_ARRAY_ITEM",
+      "searchable_text": "Alternative Models Assumptions Gaps > Key Assumptions The geographic density of customers allows for efficient route optimization for delivery agents.",
+      "content": "The geographic density of customers allows for efficient route optimization for delivery agents."
+    },
+    {
+      "section": "Alternative Models Assumptions Gaps > Unresolved Dependencies",
+      "record_type": "JSON_ARRAY_ITEM",
+      "searchable_text": "Alternative Models Assumptions Gaps > Unresolved Dependencies Regulatory compliance regarding food safety and labor laws for gig-economy delivery workers varies significantly by region and may impact operational readiness.",
+      "content": "Regulatory compliance regarding food safety and labor laws for gig-economy delivery workers varies significantly by region and may impact operational readiness."
+    }
+  ]
+}
+
+============================================================
+YOUR TASK
+============================================================
+
+Independently investigate the business domain and niche.
+
+Determine what functional capabilities, business behaviours,
+decisions, validations, exceptions, controls and interactions
+are required.
+
+Use your own business analysis and domain reasoning.
+
+The baseline may support your investigation, but it must not
+restrict your discovery.
+
+When additional baseline information is needed, generate a
+specific SQL query that retrieves the information required
+to answer your own investigation question.
+
+You may query either records or sources.
+
+Use the actual field names provided above.
+
+You may use SQL parameters with ? placeholders and provide
+their values in the params array.
+
+Do not invent SQL results.
+
+If the baseline evidence is sufficient, you may return FINAL
+without generating another query.
+
+============================================================
+RESPONSE FORMAT
+============================================================
+
+Return exactly one valid JSON object.
+
+OPTION A — RETRIEVE BASELINE INFORMATION
+
+{
+  "action": "SEARCH",
+  "investigation_question": "The specific business question you need to investigate",
+  "analysis_notes": "Concise findings and reasoning established so far",
+  "sql": "SELECT ... FROM records ...",
+  "params": []
+}
+
+OPTION B — COMPLETE DISCOVERY
+
+{
+  "action": "FINAL",
+  "result": {
+    "functional_requirements": [
+      {
+        "requirement_id": "FR-001",
+        "requirement": "",
+        "business_need": "",
+        "functional_behaviour": [],
+        "required_by_actors": [],
+        "related_business_objects": [],
+        "related_information_requirements": [],
+        "business_rules": [],
+        "acceptance_criteria": [
+          {
+            "given": "",
+            "when": "",
+            "then": ""
+          }
+        ]
+      }
+    ],
+    "unresolved_questions": [
+      {
+        "question": "",
+        "affected_requirement": "FR-001"
+      }
+    ]
+  }
+}
+
+============================================================
+FINAL REQUIREMENT RULES
+============================================================
+
+- Discover requirements independently.
+- Do not merely reword baseline artefacts.
+- Do not invent unsupported facts and present them as established
+  business policy.
+- Distinguish reasonable functional behaviour from unresolved
+  business-specific decisions.
+- Include meaningful actor responsibilities and interactions.
+- Include business rules, validations and exception behaviour
+  where applicable.
+- Acceptance criteria must be testable and use Given/When/Then.
+- Avoid duplicate or fragmented requirements.
+- Use sequential requirement IDs.
+- Every requirement must contain exactly the nine fields shown.
+- Every acceptance criterion must contain exactly three fields:
+  given, when and then.
+- The result must contain exactly two top-level fields:
+  functional_requirements and unresolved_questions.
+
+Return JSON only. Do not use Markdown fences or commentary.
+
