@@ -48,11 +48,11 @@ const CONFIG = {
 
   MODEL: {
     EXEC_BINARY: 'llama-cli',
-    IDENTIFIER: 'unsloth/Qwen3.5-4B-GGUF',
+    IDENTIFIER: 'unsloth/Qwen3.5-9B-GGUF',
     NGL: '0',
     CONTEXT_SIZE: '31723',
-    MAX_OUTPUT_TOKENS: '26851',
-    BATCH_SIZE: '512',
+    MAX_OUTPUT_TOKENS: '5500',
+    BATCH_SIZE: '128',
     THREADS: '8',
     REASONING_MODE: 'off'
   },
@@ -332,441 +332,283 @@ function buildBaseContext(input) {
 function buildInformationRequirementsPrompt(base) {
   return `
 
-# BUSINESS CAPABILITY AND FUNCTIONAL REQUIREMENTS DISCOVERY — END-TO-END PROMPT
 
-## 1. ROLE
+You are an expert Business Analyst, Enterprise Solution Analyst and Functional Requirements Architect.
 
-Act as an expert Business Architect and Senior Business Analyst responsible for discovering business capabilities and functional requirements.
+Your task is to independently discover, reason, derive and establish the Functional Requirements for the given business domain and niche.
 
-Your responsibility is to independently understand the business, discover what it needs to accomplish, identify the capabilities required to achieve those outcomes, establish the functionality required to support those capabilities, and interactively question the user to obtain the necessary business knowledge.
+The objective is to produce a comprehensive, logically consistent and business-relevant Functional Requirements Catalogue.
 
-You must think independently and challenge the completeness of the available information.
+IMPORTANT PRINCIPLE:
 
-**The AI is responsible for discovering what needs to be asked. The user is responsible for answering the questions.**
+The supplied data sources are BASELINE BUSINESS CONTEXT, NOT THE COMPLETE DEFINITION OF THE BUSINESS AND NOT THE SOURCE OF TRUTH FOR ALL FUNCTIONAL REQUIREMENTS.
 
-Do not merely extract, validate, rename or reorganise existing information.
+They provide initial knowledge about the business, its objects, actors, responsibilities, activities and information requirements.
 
-## 2. BASELINE DATA SOURCES
+You are responsible for using advanced reasoning and domain understanding to independently identify what functionality the application should provide.
 
-Use the following supplied artefacts as the initial business context:
+Do not restrict your discovery to what is explicitly mentioned in the supplied sources.
 
-// Source 0.1 - Domain and niche 
- Domain:${base.domain}
- niche:${base.niche}
-// SOURCE 1 — MERGED INFORMATION REQUIREMENTS
+Do not simply transform existing business activities or information requirements into functional requirements.
+
+Do not assume that the absence of a requirement in the baseline means that the functionality is unnecessary.
+
+Do not invent unconfirmed business policies, operational decisions, thresholds, financial rules or organisational procedures and present them as established facts.
+
+==================================================
+1. BASELINE DATA SOURCES
+==================================================
+
+DOMAIN AND NICHE:
+
+Domain: ${base.domain}
+Niche: ${base.niche}
+
+SOURCE 1 — MERGED INFORMATION REQUIREMENTS:
+
 ${JSON.stringify(base.merged_information_system, null, 2)}
 
-// SOURCE 2 — BUSINESS OBJECTS
+SOURCE 2 — BUSINESS OBJECTS:
+
 ${JSON.stringify(base.business_objects, null, 2)}
 
-// SOURCE 3 — ACTORS
+SOURCE 3 — ACTORS:
+
 ${base.actor_fields}
 
-// SOURCE 4 — ACTOR RESPONSIBILITIES AND AUTHORIZATIONS
+SOURCE 4 — ACTOR RESPONSIBILITIES AND AUTHORIZATIONS:
+
 ${base.actor_responsibilities}
 
-// SOURCE 5 — ACTOR–BUSINESS OBJECT RELATIONSHIPS
+SOURCE 5 — ACTOR–BUSINESS OBJECT RELATIONSHIPS:
+
 ${base.actor_business_object_relationships}
 
-// SOURCE 6 — BUSINESS ACTIVITIES
+SOURCE 6 — BUSINESS ACTIVITIES:
+
 ${base.business_activities}
 
+==================================================
+2. INDEPENDENT FUNCTIONAL REQUIREMENTS DISCOVERY
+==================================================
 
-### IMPORTANT — HOW TO USE THESE SOURCES
+Analyse the supplied baseline sources together with your understanding of the specified domain and niche.
 
-These six sources are the baseline context, NOT the complete definition of the business and NOT the boundary of discovery.
+Independently reason about:
 
-They do not prove that all business capabilities, business outcomes, operational behaviours, business rules or functional requirements have been identified.
+- What the business needs an application to accomplish.
+- What functionality the application must provide.
+- What behaviour users and other authorised actors should be able to perform.
+- What information the application must capture, process, retrieve, update and communicate.
+- What conditions, constraints and business rules govern that behaviour.
+- What validations and exception handling are necessary.
+- What outcomes must be achieved for the functionality to be considered successful.
 
-Use them to understand the existing business context and establish relevant relationships.
+Identify functional requirements that are:
 
-You are independently responsible for discovering:
+1. Explicitly supported by the baseline.
+2. Implied by relationships between baseline information.
+3. Necessary to fulfil the identified business outcomes.
+4. Missing from the baseline but reasonably required by the domain and niche.
+5. Dependent on additional business decisions that must be clarified.
 
-- Additional business capabilities.
-- Additional business outcomes.
-- Missing or incomplete business activities.
-- Business decisions and policies.
-- Operational responsibilities and behaviours.
-- Additional information needs.
-- Business rules and validations.
-- Functional requirements.
-- Alternative scenarios and exception handling.
-- Dependencies and conditions necessary for business operations.
+Use independent reasoning to discover missing functionality. Do not wait for the user to identify gaps.
 
-Do not limit discovery to the information already documented in the sources.
+Avoid:
+- Merely renaming business activities as functional requirements.
+- Creating generic CRUD requirements without meaningful business behaviour.
+- Producing duplicate or overlapping requirements.
+- Creating requirements that describe technical implementation rather than business functionality.
+- Assuming that every business object requires a separate functional requirement.
+- Treating every possible domain feature as mandatory.
 
-Do not assume that an undocumented capability or requirement is unnecessary.
+==================================================
+3. FUNCTIONAL REQUIREMENT DEFINITION
+==================================================
 
-## 3. INDEPENDENT BUSINESS UNDERSTANDING
+Each functional requirement must describe a meaningful application capability or behaviour.
 
-Analyse all six sources collectively to understand the business.
+For every requirement, establish:
 
-Reason about the business as a whole rather than treating each source independently.
+A. REQUIREMENT
 
-Understand:
+Provide a clear, concise and uniquely identifiable functional requirement.
 
-- What the business is trying to achieve.
-- What outcomes it must deliver.
-- What the business needs to be capable of doing.
-- How actors participate in business operations.
-- What activities are performed and why.
-- What decisions must be made.
-- What information supports those decisions.
-- How business objects participate in operations.
-- What rules, dependencies and controls govern business behaviour.
-- What application functionality may be required.
+B. BUSINESS NEED
 
-Use the supplied information as context for your reasoning, but independently identify what else must be established.
+Explain what business need or outcome the functionality addresses.
 
-Do not immediately generate the final JSON.
+C. FUNCTIONAL BEHAVIOUR
 
-## 4. BUSINESS CAPABILITY DISCOVERY
+Describe the actual behaviour the application must provide.
 
-Identify and derive the business capabilities necessary to achieve the business outcomes.
+Identify relevant inputs, processing, conditions, outputs and resulting actions wherever applicable.
 
-A **business capability** describes WHAT the business must be able to do, independently of the technology or application used to perform it.
+The behaviour must be sufficiently detailed to communicate what the application is expected to do.
 
-For each potential capability, determine:
+D. REQUIRED BY ACTORS
 
-1. What business ability is required?
-2. What business outcome does it enable?
-3. Why is this capability necessary?
-4. What business activities contribute to it?
-5. What other capabilities or business abilities does it depend on?
-6. What additional business knowledge is required to define it properly?
+Identify actors who need or interact with the functionality.
 
-Discover capabilities through independent reasoning.
+Use baseline actors where applicable.
 
-Do not simply rename existing business activities.
+If additional actors appear necessary, do not silently invent them as established actors. Ask for clarification where their existence or responsibilities affect the requirement.
 
-Do not use predefined capability categories, industry checklists or hardcoded domain-specific capability lists.
+E. RELATED BUSINESS OBJECTS
 
-Group related business abilities logically and avoid duplicate or overlapping capabilities.
+Identify relevant business objects involved in the functionality.
 
-Where the purpose, scope or expected outcome of a capability is unclear, generate a question for the user.
+Do not force unrelated objects into a requirement.
 
-## 5. HYPER-INTELLIGENT AI QUESTION GENERATION
+F. RELATED INFORMATION REQUIREMENTS
 
-This is a critical part of the discovery process.
+Identify relevant information requirements that support the functionality.
 
-**You must independently generate intelligent questions that enable the user to establish the actual business requirements.**
+Do not assume that information requirements fully define the functional behaviour.
 
-Do not wait for the user to identify gaps.
+G. BUSINESS RULES
 
-Do not ask the user what capabilities or requirements are missing. Discover potential gaps yourself and ask specific questions about them.
+Derive meaningful business rules governing the functionality.
 
-For every identified or potential business capability, reason about what additional business knowledge is required.
+Consider applicable:
+- Eligibility and preconditions.
+- Validation and constraints.
+- Calculation and decision conditions.
+- Authorisation and responsibility.
+- State and transition conditions.
+- Exception and failure handling.
+- Consistency and integrity requirements.
 
-For every potential functional requirement, reason about what behaviour the application must provide and what decisions must be established.
+Rules must be specific and testable wherever possible.
 
-Generate questions by independently examining the following dimensions:
+Distinguish established rules from rules requiring business confirmation.
 
-### A. Business outcomes
+H. ACCEPTANCE CRITERIA
 
-- What outcome must the business achieve?
-- What conditions determine whether that outcome is successfully achieved?
-- Are there additional outcomes or business obligations that have not been established?
-- What happens when the intended outcome cannot be achieved?
+Define measurable and verifiable acceptance criteria.
 
-### B. Business operations
+Use Given / When / Then format.
 
-- What must happen for the business to perform the identified activity?
-- What steps, responsibilities or operational decisions are necessary?
-- What must happen before and after an activity?
-- What happens when an activity cannot proceed?
-- Are there alternative ways to achieve the same business outcome?
+Acceptance criteria must demonstrate:
+- Expected successful behaviour.
+- Relevant validation behaviour.
+- Important alternative outcomes.
+- Relevant exception or failure behaviour.
 
-### C. Business decisions and policies
+Do not create vague acceptance criteria such as "the system should work correctly".
 
-- What decisions must the business make?
-- Who is responsible for making or approving those decisions?
-- What conditions, information or policies determine the decision?
-- What happens when conditions conflict?
-- What happens when a decision cannot be made?
+Do not repeat the requirement statement as an acceptance criterion.
 
-### D. Functional behaviour
+==================================================
+4. INTELLIGENT BUSINESS QUESTIONING
+==================================================
 
-- What must the application do to support the business?
-- What information must users provide or receive?
-- What processing or validation must occur?
-- What actions must be permitted or restricted?
-- What results must the application produce?
-- What happens when processing fails or produces an unexpected result?
+You are responsible for identifying missing business knowledge.
 
-### E. Information and business rules
+Do not ask the user to identify missing requirements or tell you what functionality to discover.
 
-- What information is required to execute the functionality?
-- Is additional information necessary to support a business decision?
-- What conditions must be validated?
-- What rules determine acceptance, rejection or alternative outcomes?
-- What happens when information is missing, inconsistent or invalid?
+Instead:
 
-### F. Actors and responsibilities
+1. Analyse the baseline and your independently derived candidate requirements.
+2. Identify ambiguities, missing business decisions, incomplete behaviour and unresolved policies.
+3. Determine which missing information materially affects the correctness or completeness of a functional requirement.
+4. Generate a specific, contextual and intelligent question to establish that information.
+5. Ask ONE highest-priority question at a time.
+6. Wait for the user's answer.
+7. Interpret the answer in the context of the domain, baseline and existing discoveries.
+8. Update the affected requirements, behaviours, rules and acceptance criteria.
+9. Identify the next most important unresolved question.
 
-- Which actors perform or authorize the required activities?
-- Are additional responsibilities or approval decisions necessary?
-- Who handles exceptions?
-- What actions should each actor be permitted or prohibited from performing?
+Questions must be generated through your own reasoning.
 
-### G. Business objects and dependencies
+Do not ask questions whose answers are already established in the baseline or previous user responses.
 
-- Which business objects are involved?
-- How do changes to one object affect other objects?
-- What dependencies must be satisfied before an operation can proceed?
-- What happens when a dependent object or operation is unavailable?
-- What business consequences follow from a change, cancellation or failure?
+Do not ask generic questions such as:
+- What else should the application do?
+- Are there any other requirements?
+- Is anything missing?
 
-### H. Exceptions and alternative scenarios
+Instead, ask questions that expose a specific business decision or expected application behaviour.
 
-- What alternative business outcomes must be supported?
-- What happens when an operation fails?
-- Can an operation be retried, reversed, redirected or escalated?
-- What decisions determine the appropriate recovery behaviour?
-- What happens when an exception cannot be resolved?
+When a question involves multiple valid business policies, briefly explain the relevant alternatives where useful, without assuming which one is correct.
 
-These are reasoning dimensions, NOT a fixed questionnaire.
+Do not block discovery of unrelated requirements while waiting for an answer to one question.
 
-Generate questions based on your independent understanding of the actual business. Do not force every dimension into every capability.
+==================================================
+5. DISCOVERY QUALITY
+==================================================
 
-## 6. QUESTION QUALITY AND PRIORITISATION
+Before considering a functional requirement complete, assess:
 
-Every question must be:
+1. Is the business need clear?
+2. Is the expected application behaviour sufficiently defined?
+3. Are relevant actors identified?
+4. Are relevant business objects and information requirements linked?
+5. Are business rules meaningful and sufficiently defined?
+6. Are acceptance criteria verifiable?
+7. Are important exceptions and alternative outcomes addressed?
+8. Are unresolved business decisions explicitly identified?
 
-- Generated by your own analysis.
-- Specific to the business context.
-- Relevant to a capability or functional requirement.
-- Designed to establish missing business knowledge.
-- Focused on a decision, expected outcome, rule or behaviour.
-- Necessary to improve the completeness or correctness of discovery.
+Use domain reasoning to determine what is relevant. Do not force every consideration into every requirement.
 
-Before asking a question, internally determine:
+Do not mark a requirement as complete merely because all JSON fields are populated.
 
-1. What business uncertainty are you trying to resolve?
-2. Why does it matter?
-3. What capability or functional requirement does it affect?
-4. Has the answer already been established?
-5. Would the answer materially change the discovered business or application behaviour?
+A requirement containing generic, superficial or invented content is not a complete requirement.
 
-Prioritise questions according to their impact on business outcomes, operational correctness, business decisions, financial consequences, controls and functional completeness.
+==================================================
+6. FINAL OUTPUT
+==================================================
 
-Ask the highest-priority unresolved question first.
+Only after interactive discovery and clarification are complete, produce the final output.
 
-Avoid generic questions such as:
-
-- Are there any other capabilities?
-- Are there any missing requirements?
-- Are there any other business rules?
-- Is there anything else to add?
-
-Instead, identify the actual subject requiring clarification and formulate the question yourself.
-
-## 7. INTERACTIVE DISCOVERY — ONE QUESTION AT A TIME
-
-Follow this interaction process:
-
-**Step 1 — Analyse**
-
-Analyse all six baseline sources and independently identify potential business capabilities, outcomes, functional behaviours and knowledge gaps.
-
-**Step 2 — Generate**
-
-Generate and prioritise the questions necessary to establish the business capabilities and functional requirements.
-
-**Step 3 — Ask**
-
-Present ONLY the single highest-priority question to the user.
-
-Explain briefly what needs clarification and ask for the specific business answer.
-
-Where helpful, provide possible interpretations or alternatives to make answering easier. Do not assume any option is correct.
-
-**Step 4 — Interpret**
-
-Wait for the user's answer.
-
-Interpret the answer in the context of the entire business, not just the question that was asked.
-
-**Step 5 — Refine**
-
-Update your understanding of the relevant business capabilities, outcomes, activities, functional requirements, rules, actors, objects and dependencies.
-
-**Step 6 — Discover further questions**
-
-Use the new information to identify additional implications and questions.
-
-Ask the next highest-priority question.
-
-**Step 7 — Repeat**
-
-Continue this process until the business capabilities and functional requirements are sufficiently defined.
-
-### Interaction rules
-
-- Ask ONE question at a time.
-- Never present the entire question inventory to the user.
-- Do not generate the final JSON before discovery is complete.
-- Do not ask questions already answered by the user or explicitly established in the baseline.
-- Do not stop simply because related information exists in the baseline.
-- Do not silently invent business decisions or policies.
-- If the user cannot answer a question, record it as unresolved and continue with other discoverable areas.
-- Revisit unresolved questions when subsequent answers provide additional context.
-- Do not repeat questions unnecessarily.
-
-## 8. FUNCTIONAL REQUIREMENTS DERIVATION
-
-Once business expectations have been established, derive the functional requirements needed to enable the discovered capabilities.
-
-A **functional requirement** describes WHAT functionality the application must provide to support a business capability.
-
-Each requirement must express a meaningful, identifiable application behaviour.
-
-For each functional requirement establish:
-
-**Requirement**
-- What must the application do?
-- What business behaviour does it support?
-
-**Capability relationship**
-- Which business capability does it enable?
-
-**Actor relationship**
-- Which actors require or perform the functionality?
-
-**Business object relationship**
-- Which business objects are involved?
-
-**Information relationship**
-- Which Information Requirements support the functionality?
-- Are additional information needs necessary?
-
-**Business rules**
-- What business rules govern the functionality?
-- What conditions determine the expected behaviour?
-
-**Acceptance criteria**
-- How can successful implementation and execution be verified?
-- What observable results establish that the requirement is satisfied?
-- What relevant alternative or exception behaviour must be tested?
-
-Do not create functional requirements simply by copying Information Requirements.
-
-Do not create artificial requirements to achieve numerical coverage.
-
-Do not describe technical implementation choices as business functional requirements unless the user has explicitly established them as business needs.
-
-## 9. DISCOVERY QUALITY AND COMPLETENESS
-
-Before finalising, internally assess the discovered capabilities and functional requirements.
-
-### Business capabilities
-
-- Does each capability describe a genuine business ability?
-- Is its business outcome clear?
-- Are its related activities relevant?
-- Are overlapping or duplicate capabilities avoided?
-- Have additional capabilities been independently considered?
-
-### Functional requirements
-
-- Does each requirement enable a business capability?
-- Does it describe meaningful application functionality?
-- Are actor and business object relationships appropriate?
-- Are related Information Requirements relevant?
-- Are business rules established rather than assumed?
-- Are acceptance criteria observable and testable?
-
-### Overall discovery
-
-- Have the necessary business outcomes been established?
-- Have material business decisions been explored?
-- Have missing operational behaviours been investigated?
-- Have important dependencies and alternative scenarios been considered?
-- Have significant exceptions and recovery behaviours been examined?
-- Are unresolved matters explicitly recorded?
-
-If material information remains unknown, continue asking questions rather than pretending discovery is complete.
-
-## 10. FINAL JSON OUTPUT
-
-Only after interactive discovery is sufficiently complete, produce the final result using EXACTLY this JSON structure:
-
+Return ONLY valid JSON using exactly the following structure:
 
 {
-  "business_capabilities": [
-    {
-      "capability_id": "BC-001",
-      "capability": "",
-      "business_outcome": "",
-      "related_activities": []
-    }
-  ],
   "functional_requirements": [
     {
       "requirement_id": "FR-001",
       "requirement": "",
-      "capability_id": "BC-001",
+      "business_need": "",
+      "functional_behaviour": [],
       "required_by_actors": [],
       "related_business_objects": [],
       "related_information_requirements": [],
       "business_rules": [],
-      "acceptance_criteria": []
+      "acceptance_criteria": [
+        {
+          "given": "",
+          "when": "",
+          "then": ""
+        }
+      ]
     }
   ],
   "unresolved_questions": [
     {
       "question": "",
-      "affected_capability": ""
+      "affected_requirement": "FR-001"
     }
   ]
 }
 
+FINAL OUTPUT RULES:
 
-### JSON RULES
+- Return valid JSON only.
+- Do not include Markdown fences or explanatory text.
+- Generate unique sequential requirement IDs beginning with FR-001.
+- Do not create duplicate functional requirements.
+- Use arrays for all array-valued fields.
+- Keep acceptance criteria in Given / When / Then structure.
+- Include only relevant actor, business object and information requirement references.
+- Preserve unresolved business decisions in unresolved_questions.
+- Do not represent assumptions as confirmed business rules.
+- Do not add additional JSON fields.
+- Do not create a separate Business Capability Catalogue.
+- Do not impose an arbitrary requirement count.
+- Do not omit necessary functionality merely because it is absent from the baseline.
 
-1. Return valid JSON only.
-2. Do not add properties, metadata, explanations or additional sections.
-3. Use unique, sequential IDs for capabilities and functional requirements.
-4. Business capabilities must contain ONLY:
-   - capability_id
-   - capability
-   - business_outcome
-   - related_activities
-5. Functional requirements must contain ONLY:
-   - requirement_id
-   - requirement
-   - capability_id
-   - required_by_actors
-   - related_business_objects
-   - related_information_requirements
-   - business_rules
-   - acceptance_criteria
-6. Unresolved questions must contain ONLY:
-   - question
-   - affected_capability
-7. Use exact names from the baseline when referencing existing activities, actors, business objects and Information Requirements.
-8. Newly discovered capabilities and requirements are allowed even when they do not exist in the baseline.
-9. Do not fabricate business rules, actor relationships or information relationships.
-10. Keep descriptions concise, specific and meaningful.
-11. Do not include speculative possibilities as confirmed requirements.
-12. Include only genuinely unresolved questions in the unresolved_questions array.
+The final catalogue must represent the functional behaviour the application needs to provide for the specified domain and niche, established through baseline analysis, independent reasoning and user-confirmed business decisions.
 
-## 11. EXECUTION INSTRUCTION
-
-Start now.
-
-Read all six baseline data sources and independently reason about the business.
-
-Discover potential business capabilities and functional requirements.
-
-Identify what business knowledge must be established.
-
-Generate your own intelligent, contextual and high-priority questions.
-
-**Do not ask the user to tell you what is missing. You must discover what is missing and ask the user the questions necessary to establish it.**
-
-Ask the first highest-priority question and WAIT for the user's answer.
-
-Do not generate the final JSON until interactive discovery has been completed.
 
   `
 }
@@ -1063,20 +905,20 @@ async function generateSemanticBlueprintAI() {
     );
 
     // 6. Extract assistant response.
-    const assistantResponse = extractAssistantResponse(
-      rawResponse
-    );
+    // const assistantResponse = extractAssistantResponse(
+    //   rawResponse
+    // );
 
-    if (!assistantResponse || !assistantResponse.trim()) {
-      throw new Error('Extracted assistant response is empty.');
-    }
+    // if (!assistantResponse || !assistantResponse.trim()) {
+    //   throw new Error('Extracted assistant response is empty.');
+    // }
 
     // 7. Generate output path.
     const outputPath = generateOutputFilePath();
 
     // 8. Save complete assistant response.
     saveResponseToFile(
-      assistantResponse,
+      rawResponse,
       outputPath
     );
 
