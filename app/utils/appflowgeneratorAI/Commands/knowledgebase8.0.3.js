@@ -81,7 +81,25 @@ function getFormattedDateTime() {
 // Detects JSON from actual file content, not file extension.
 // This supports JSON-formatted content inside .md files.
 // ============================================================
+function getRecordLabel(value) {
+  if (!value || typeof value !== 'object' || Array.isArray(value)) {
+    return null;
+  }
 
+  const entries = Object.entries(value).filter(
+    ([, item]) =>
+      typeof item === 'string' &&
+      item.trim().length > 0
+  );
+
+  // Prefer fields that identify what the record represents.
+  const preferred = entries.find(([key]) =>
+    /name|title|label|requirement|business_object|actor|activity|responsibility|relationship|role/i.test(key)
+  );
+
+  // Fallback to the first available meaningful text.
+  return (preferred || entries[0] || [null, null])[1];
+}
 function detectSourceFormat(content, sourceFile) {
   const trimmed = content
     .replace(/^\uFEFF/, '')
@@ -210,10 +228,12 @@ function createRecord({
     content,
 
     // Searchable representation for AlaSQL.
-    searchable_text:
-      typeof content === 'string'
-        ? content
-        : JSON.stringify(content)
+    searchable_text: [
+  section || '',
+  typeof content === 'string'
+    ? content
+    : JSON.stringify(content)
+].join(' ')
   };
 }
 
@@ -448,7 +468,16 @@ function processJSON({
       value.forEach((item, index) => {
   const itemPath = `${currentPath}[${index}]`;
 
-  const section = sectionParts.join(' > ') || 'DOCUMENT CONTENT';
+  const parentSection =
+    sectionParts.join(' > ') || 'DOCUMENT CONTENT';
+
+  // Extract the actual identifying content from the record.
+  const recordLabel = getRecordLabel(item);
+
+  // Append the actual record name to its section hierarchy.
+  const section = recordLabel
+    ? `${parentSection} > ${recordLabel.trim()}`
+    : parentSection;
 
   addRecord(
     section,
