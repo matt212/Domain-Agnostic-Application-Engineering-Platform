@@ -43,14 +43,16 @@
     "mv": "^2.1.1",
     "os": "^0.1.1",
     "path": "^0.12.7",
-    "pg": "^8.22.0",
+    "pg": "^8.23.1",
     "pg-copy-streams": "^5.1.1",
     "pg-query-stream": "^4.0.0",
     "pino-inspector": "^0.1.0",
-    "sequelize": "^6.37.8",
+    "sequelize": "^3.30.0",
     "socket.io": "^4.8.3",
     "socket.io-redis": "^6.1.0",
     "sqlstring": "^2.3.2",
+    "stream-chain": "^4.4.2",
+    "stream-json": "^3.9.0",
     "swagger-jsdoc": "^6.1.0",
     "swagger-ui-express": "^4.1.6",
     "through2": "^4.0.2",
@@ -60,7 +62,7 @@
   "devDependencies": {
     "@playwright/test": "^1.63.0",
     "chai": "^4.3.4",
-    "mocha": "^12.0.0",
+    "mocha": "^11.0.0",
     "supertest": "^6.1.3"
   },
   "scripts": {
