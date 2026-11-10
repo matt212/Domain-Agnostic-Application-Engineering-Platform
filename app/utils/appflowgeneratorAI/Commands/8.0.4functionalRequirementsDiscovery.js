@@ -294,23 +294,37 @@ function executeKnowledgeBaseSQL(sql, params) {
 // 6. JSON RESPONSE EXTRACTION
 // ============================================================================
 
+// ============================================================================
+// 6. JSON RESPONSE EXTRACTION
+// ============================================================================
+
 function extractJsonObject(rawText) {
   const text = String(rawText || '').trim();
 
-  // Try the complete response first.
-  try {
-    return JSON.parse(text);
-  } catch (_) {
-    // Continue to locate a JSON object in the response.
+  if (!text) {
+    throw new Error('Qwen returned an empty response.');
   }
 
-  // Locate balanced JSON objects while respecting quoted strings.
+  // First, try parsing the complete response.
+  try {
+    const parsed = JSON.parse(text);
+
+    if (
+      parsed &&
+      typeof parsed === 'object' &&
+      !Array.isArray(parsed)
+    ) {
+      return parsed;
+    }
+  } catch (_) {
+    // The response may contain additional llama-cli output.
+  }
+
+  // Extract balanced JSON objects.
   const candidates = [];
 
   for (let start = 0; start < text.length; start++) {
-    if (text[start] !== '{') {
-      continue;
-    }
+    if (text[start] !== '{') continue;
 
     let depth = 0;
     let inString = false;
@@ -339,12 +353,20 @@ function extractJsonObject(rawText) {
         depth--;
 
         if (depth === 0) {
-          const candidate = text.slice(start, end + 1);
-
           try {
-            candidates.push(JSON.parse(candidate));
+            const candidate = JSON.parse(
+              text.slice(start, end + 1)
+            );
+
+            if (
+              candidate &&
+              typeof candidate === 'object' &&
+              !Array.isArray(candidate)
+            ) {
+              candidates.push(candidate);
+            }
           } catch (_) {
-            // Ignore invalid candidate.
+            // Ignore invalid JSON candidates.
           }
 
           break;
@@ -353,20 +375,30 @@ function extractJsonObject(rawText) {
     }
   }
 
-  const valid = candidates.filter(
-    candidate =>
-      candidate &&
-      typeof candidate === 'object' &&
-      !Array.isArray(candidate)
-  );
-
-  if (!valid.length) {
+  if (!candidates.length) {
     throw new Error(
       'No valid JSON object found in the generated response.'
     );
   }
 
-  return valid[valid.length - 1];
+  // Discovery responses must return the outer SEARCH or FINAL object.
+  // This prevents selecting the nested "result" object.
+  const actionResponses = candidates.filter(
+    candidate =>
+      candidate.action === 'FINAL' ||
+      candidate.action === 'SEARCH'
+  );
+
+  if (actionResponses.length) {
+    // Select the last action response in case prompt examples
+    // or other JSON objects were included before the actual output.
+    return actionResponses[actionResponses.length - 1];
+  }
+
+  // Direct original-source fallback responses use:
+  // { "analysis_notes": "..." }
+  // They do not have an action property.
+  return candidates[candidates.length - 1];
 }
 
 // ============================================================================

@@ -431,3 +431,302 @@ FINAL REQUIREMENT RULES
 
 Return JSON only. Do not use Markdown fences or commentary.
 
+Assistant:
+{
+  "action": "FINAL",
+  "result": {
+    "functional_requirements": [
+      {
+        "requirement_id": "FR-001",
+        "requirement": "The system shall allow customers to define and save multiple delivery addresses, distinguishing between 'Home', 'Work', and 'Other' locations.",
+        "business_need": "Customers frequently order to different locations; manual entry is slow and error-prone, hindering the speed objective of Q-Commerce.",
+        "functional_behaviour": [
+          "User selects an existing address or enters a new one.",
+          "System validates address format (geocoding) and calculates estimated delivery time based on nearest store.",
+          "System saves the address and allows assignment to specific profiles (e.g., 'Default', 'Gift').",
+          "System enforces a maximum of 10 saved addresses per user."
+        ],
+        "required_by_actors": [
+          "Customer",
+          "Customer Support (for manual address update in special cases)"
+        ],
+        "related_business_objects": [
+          "Customer Profile",
+          "Assigned Delivery Slot",
+          "Delivery Zone Map"
+        ],
+        "related_information_requirements": [
+          "Full address string, coordinates (lat/long), address label (Home/Work), default status flag."
+        ],
+        "business_rules": [
+          "An address is considered valid only if it falls within a defined Delivery Zone Map for at least one active store.",
+          "Estimated delivery time must be recalculated if a new address is added that is outside the current service radius."
+        ],
+        "acceptance_criteria": [
+          {
+            "given": "A customer has accessed the 'Addresses' section of the mobile app.",
+            "when": "The customer taps 'Add New Address' and enters valid postal data for a known location.",
+            "then": "The system geocodes the address, identifies the nearest micro-fulfillment center, calculates an ETA, and saves the address as 'Other' with a confirmation message."
+          },
+          {
+            "given": "A customer attempts to save an address in a remote area not covered by any store.",
+            "when": "The system validates the address coordinates against the Delivery Zone Map.",
+            "then": "The system displays a warning 'Service not available at this location' and prevents saving the address."
+          }
+        ]
+      },
+      {
+        "requirement_id": "FR-002",
+        "requirement": "The system shall implement a 'Smart Cart' that aggregates items across multiple micro-fulfillment centers to optimize delivery efficiency.",
+        "business_need": "To reduce delivery costs and improve speed, the system must consolidate orders from the same customer located near the boundary of two different micro-warehouses.",
+        "functional_behaviour": [
+          "When a customer adds items to the cart, the system checks if items exist in nearby stores (within X km).",
+          "System calculates a 'Split Order' option: Option A (One store, longer wait/larger fee) vs Option B (Two stores, shorter wait per store).",
+          "If the customer selects the split option, the system creates two separate Order Requests internally but links them for a single Delivery Assignment.",
+          "The Delivery Partner receives one consolidated trip with two distinct handover points."
+        ],
+        "required_by_actors": [
+          "Customer",
+          "System (Automated)"
+        ],
+        "related_business_objects": [
+          "Order Request",
+          "Delivery Assignment",
+          "Delivery Zone Map",
+          "Financial Transaction Record"
+        ],
+        "related_information_requirements": [
+          "Inventory levels at all nearby stores, calculated consolidated delivery fee, individual store ETAs."
+        ],
+        "business_rules": [
+          "A split order is only suggested if the combined delivery time difference is less than 2 minutes compared to the single-store option.",
+          "If an item is out of stock in the primary store, the system must automatically search the secondary store in the cluster.",
+          "The customer must explicitly confirm the 'Split Order' strategy as delivery fees may be calculated differently."
+        ],
+        "acceptance_criteria": [
+          {
+            "given": "A customer adds 'Milk' to the cart while located 1km from Store A and 1km from Store B.",
+            "when": "The system checks inventory and proximity.",
+            "then": "The system presents a prompt: 'Items in Store A and Store B. Want to split order to reduce wait time?' with a toggle switch."
+          },
+          {
+            "given": "The customer accepts the split order option.",
+            "when": "The system processes the order.",
+            "then": "Two Order Requests are created with unique IDs, but a single Delivery Assignment is generated containing both pick-up points and one drop-off location."
+          }
+        ]
+      },
+      {
+        "requirement_id": "FR-003",
+        "requirement": "The system shall enforce dynamic 'Order Lock-in' based on real-time inventory volatility.",
+        "business_need": "In high-demand scenarios, inventory changes rapidly. The system must prevent 'flash sales' where a customer orders an item that is simultaneously sold to another user.",
+        "functional_behaviour": [
+          "Upon order submission, the system immediately reserves the specific SKU quantity at the allocated store.",
+          "System applies a 'Lock Timer' (e.g., 15 minutes) during which the inventory is held but not allocated to a delivery agent.",
+          "If the customer does not pay within the Lock Timer, the reservation is automatically released.",
+          "If the store receives a lower-level notification (out of stock) during the lock period, the order is cancelled automatically."
+        ],
+        "required_by_actors": [
+          "Customer",
+          "Store Personnel (Inventory Management)",
+          "System (Automated)"
+        ],
+        "related_business_objects": [
+          "Order Request",
+          "Financial Transaction Record",
+          "Service Area Definition"
+        ],
+        "related_information_requirements": [
+          "Current stock levels, stock velocity, payment gateway response time."
+        ],
+        "business_rules": [
+          "Stock reservations cannot exceed 20% of total store inventory for any single SKU to prevent stockpiling.",
+          "A customer cannot place a new order for the same SKU if a previous order for that SKU is still in 'Locked' status.",
+          "Cancellation due to stock depletion must trigger a notification to the customer with a reason code."
+        ],
+        "acceptance_criteria": [
+          {
+            "given": "A customer places an order for 10 units of a product with 10 units in stock.",
+            "when": "The customer takes longer than 15 minutes to complete payment.",
+            "then": "The system automatically releases the stock reservation and notifies the customer that the order was cancelled due to stock expiry."
+          },
+          {
+            "given": "The inventory system updates the stock of the reserved item to 0 while the order is locked.",
+            "when": "The system monitors the 'Locked' status event stream.",
+            "then": "The system cancels the order, notifies the customer via push notification, and logs the cancellation reason as 'Out of Stock during Lock Period'."
+          }
+        ]
+      },
+      {
+        "requirement_id": "FR-004",
+        "requirement": "The system shall facilitate asynchronous 'Delivery Proof' capture via geofencing and photo verification.",
+        "business_need": "To ensure the 'Last-Mile Delivery' is accurate and reduce disputes over missing items, proof of delivery must be captured reliably.",
+        "functional_behaviour": [
+          "The system defines a geofence around the customer's drop-off address (e.g., 50m radius).",
+          "The delivery agent's mobile app triggers a 'Confirm Delivery' button only when entering the geofence.",
+          "Upon button press, the camera module is activated to capture a photo of the customer and the package (or QR code scan if no photo).",
+          "System encrypts the image metadata (timestamp, GPS) and links it to the Financial Transaction Record."
+        ],
+        "required_by_actors": [
+          "Delivery Partner",
+          "Customer",
+          "System (Automated)"
+        ],
+        "related_business_objects": [
+          "Delivery Proof",
+          "Delivery Assignment",
+          "Financial Transaction Record"
+        ],
+        "related_information_requirements": [
+          "GPS coordinates, timestamp, image file hash, customer signature (digital or physical)."
+        ],
+        "business_rules": [
+          "Delivery Proof is considered invalid if the photo does not contain a recognizable face or the GPS error exceeds 10m.",
+          "If the customer is not present, the system requires a 'Code' or 'Signature on behalf of' entry, validated by a secondary code sent to the customer.",
+          "Delivery Proof must be submitted within 30 minutes of the estimated delivery slot expiration."
+        ],
+        "acceptance_criteria": [
+          {
+            "given": "The delivery agent arrives at the customer's address.",
+            "when": "The agent enters the defined geofence and taps 'Confirm Delivery' in the app.",
+            "then": "The app automatically activates the camera to request a photo of the handover."
+          },
+          {
+            "given": "The agent attempts to confirm delivery without being in the geofence.",
+            "when": "The agent taps 'Confirm Delivery'.",
+            "then": "The system displays an error message: 'Please enter the delivery zone before confirming' and disables the button."
+          }
+        ]
+      },
+      {
+        "requirement_id": "FR-005",
+        "requirement": "The system shall automatically adjust delivery fees based on dynamic 'Peak Demand' coefficients.",
+        "business_need": "To balance supply and demand during rush hours (lunch, dinner) and ensure delivery partners are compensated, fees must fluctuate.",
+        "functional_behaviour": [
+          "System calculates a 'Demand Score' for each micro-fulfillment center based on order volume vs. active agents.",
+          "When Demand Score exceeds a threshold, a 'Surge Multiplier' is applied to the base delivery fee.",
+          "The updated fee is displayed to the customer before they confirm the Order Request.",
+          "If the customer accepts the fee change, the Order Request proceeds; if not, the order is cancelled."
+        ],
+        "required_by_actors": [
+          "Customer",
+          "Delivery Partner (via compensation logic)",
+          "System (Automated)"
+        ],
+        "related_business_objects": [
+          "Order Request",
+          "Delivery Assignment",
+          "Financial Transaction Record"
+        ],
+        "related_information_requirements": [
+          "Real-time order count per zone, real-time agent availability, base fee configuration."
+        ],
+        "business_rules": [
+          "Surge pricing cannot exceed a maximum cap (e.g., 3x base fee) to prevent customer churn.",
+          "Delivery partners must accept the surge fee offer before a Delivery Assignment is generated; otherwise, the order is queued for later.",
+          "Surge pricing is only applied during pre-defined 'Peak Windows'."
+        ],
+        "acceptance_criteria": [
+          {
+            "given": "The number of orders in the 'Downtown Zone' exceeds the number of available agents by 30%.",
+            "when": "The system triggers the fee calculation engine.",
+            "then": "The app displays an updated delivery fee (e.g., $5.00 instead of $3.50) and a 'Accept Fee' button."
+          },
+          {
+            "given": "The customer declines the increased fee.",
+            "when": "The customer taps 'Cancel' or ignores the fee update.",
+            "then": "The system cancels the Order Request and releases the stock reservation."
+          }
+        ]
+      },
+      {
+        "requirement_id": "FR-006",
+        "requirement": "The system shall support 'Scheduled Re-order' for repeat customers with perishable goods.",
+        "business_need": "Q-Commerce often involves daily essentials (milk, bread). Customers want to automate these purchases to save time and ensure freshness.",
+        "functional_behaviour": [
+          "System prompts the user to create a 'Repeat Order' from a previous Order Request.",
+          "User sets a recurring interval (e.g., 'Every Monday') or a specific date.",
+          "On the scheduled date, the system pre-fills the cart and sends a notification.",
+          "Customer receives a 'Confirm & Pay' link to finalize the transaction.",
+          "If the customer does not confirm, the scheduled order is cancelled."
+        ],
+        "required_by_actors": [
+          "Customer",
+          "System (Automated)"
+        ],
+        "related_business_objects": [
+          "Order Request",
+          "Customer Profile",
+          "Financial Transaction Record"
+        ],
+        "related_information_requirements": [
+          "Product history, purchase frequency, preferred delivery slot."
+        ],
+        "business_rules": [
+          "Scheduled orders cannot be placed for items with a shelf life shorter than 24 hours.",
+          "Scheduled orders must be cancelled by the customer at least 2 hours before the delivery slot.",
+          "Payment must be authorized (tokenized) in advance for scheduled orders."
+        ],
+        "acceptance_criteria": [
+          {
+            "given": "A customer has purchased 'Milk' twice in the last week.",
+            "when": "The system suggests 'Create Repeat Order' for Milk.",
+            "then": "The system pre-fills the cart with the exact quantity and previous store allocation, setting a default delivery time for tomorrow at 8 AM."
+          },
+          {
+            "given": "The scheduled delivery time arrives, and the customer has not confirmed the order.",
+            "when": "The system checks the 'Confirmed' flag.",
+            "then": "The system cancels the Order Request, releases the stock, and notifies the customer that the auto-reorder was cancelled."
+          }
+        ]
+      },
+      {
+        "requirement_id": "FR-007",
+        "requirement": "The system shall handle 'Partial Handover' exceptions where the customer accepts only some items.",
+        "business_need": "Customers may arrive late and accept only non-perishable items, or find specific items damaged upon arrival.",
+        "functional_behaviour": [
+          "Delivery Partner app allows marking specific line items as 'Delivered' and others as 'Pending'.",
+          "System triggers a notification to the customer for the 'Pending' items.",
+          "System initiates a 'Partial Payment' for delivered items (if COD) or holds the full payment pending resolution.",
+          "System generates a dispute ticket for the 'Pending' items requiring resolution before the Financial Transaction Record is closed."
+        ],
+        "required_by_actors": [
+          "Delivery Partner",
+          "Customer",
+          "Customer Support"
+        ],
+        "related_business_objects": [
+          "Delivery Proof",
+          "Financial Transaction Record",
+          "Order Request"
+        ],
+        "related_information_requirements": [
+          "Line item status, partial payment amount, dispute reason code."
+        ],
+        "business_rules": [
+          "Partial handover is only allowed for non-perishable goods; perishables must be returned or refused entirely.",
+          "If a dispute is not resolved within 24 hours, the order status reverts to 'In Transit' and a replacement is initiated.",
+          "Financial settlement for the order is blocked until the Partial Handover dispute is resolved."
+        ],
+        "acceptance_criteria": [
+          {
+            "given": "The delivery agent arrives with a mixed order of perishable and non-perishable goods.",
+            "when": "The agent marks the perishables as 'Refused' and the non-perishables as 'Delivered'.",
+            "then": "The system updates the Order Request to 'Partial Delivery', holds the payment for the refused items, and notifies the customer to collect the rest tomorrow."
+          }
+        ]
+      }
+    ],
+    "unresolved_questions": [
+      {
+        "question": "Is there a specific policy regarding 'Dark Store' labor contracts (gig-economy vs. employee) that impacts the delivery partner's ability to reject orders due to safety concerns?",
+        "affected_requirement": "FR-004"
+      },
+      {
+        "question": "What is the maximum allowable 'Surge Fee' percentage before the customer is legally required to be refunded if the delivery is delayed?",
+        "affected_requirement": "FR-005"
+      }
+    ]
+  }
+}
+
