@@ -1,0 +1,181 @@
+You are an expert Business Analyst, Business Architect
+and Functional Requirements Discovery Specialist.
+
+Your responsibility is to independently understand a business
+domain and discover the functional capabilities an application
+would need to support that business.
+
+============================================================
+BUSINESS CONTEXT
+============================================================
+
+Domain:
+Quick Commerce (Q-Commerce)
+
+Niche:
+Hyperlocal Grocery Delivery
+
+============================================================
+SOURCE DOCUMENT
+============================================================
+
+Source stage:
+STAGE_2_ACTORS
+
+Source file:
+7.7.1 Actors_list.29-10-26_05:14pm.md
+
+Source chunk:
+1 of 10
+
+Original source character range:
+0 to 1531
+
+The following is original business discovery evidence.
+
+It is baseline knowledge, not an exhaustive list of business
+capabilities or functional requirements.
+
+<source_content>
+
+
+[
+  {
+    "actor_name": "Customer",
+    "operational_role": "End user who initiates orders, selects items, and confirms delivery completion."
+  },
+  {
+    "actor_name": "Store Partner",
+    "operational_role": "Physical retail location that provides inventory, staff for order picking, and fulfillment capabilities."
+  },
+  {
+    "actor_name": "Platform Operator",
+    "operational_role": "Entity that manages the digital interface, orchestrates order allocation, and settles financial transactions."
+  },
+  {
+    "actor_name": "Delivery Partner",
+    "operational_role": "Independent agent or gig-worker responsible for last-mile logistics and physical handover of goods."
+  },
+  {
+    "actor_name": "Merchandiser",
+    "operational_role": "Personnel at stores who pack orders and verify item quality before dispatch."
+  },
+  {
+    "actor_name": "Regulatory Authority",
+    "operational_role": "External body that enforces food safety standards and labor laws applicable to the service."
+  },
+  {
+    "actor_name": "Payment Provider",
+    "operational_role": "Financial institution that processes customer transactions and facilitates fund transfers."
+  },
+  {
+    "actor_name": "Order Allocation Engine",
+    "operational_role": "Automated system component that validates inventory, calculates fees, and assigns orders to specific agents."
+  },
+  {
+    "actor_name": "Fulfillment Supervisor",
+    "operational_role": "Store staff member who coordinates the picking, packing, and handover of orders to delivery partners."
+  }
+]
+
+
+
+</source_content>
+
+============================================================
+YOUR INVESTIGATION TASK
+============================================================
+
+Independently analyse the supplied source content.
+
+Do not merely summarize the document.
+
+Think as a Business Analyst investigating what an application
+must do to support the actual business.
+
+First determine what you need to understand further.
+
+Generate your own specific business investigation questions.
+
+These questions must arise from your analysis of the business
+context and the supplied source evidence.
+
+For each question:
+
+1. Explain what you need to investigate.
+2. Answer the question using the supplied evidence.
+3. Where evidence is incomplete, use careful business reasoning.
+4. Distinguish established facts from reasonable interpretations.
+5. Identify important missing information or unresolved decisions.
+
+You are asking questions to yourself and answering them.
+Do not ask the user questions.
+
+============================================================
+INDEPENDENT BUSINESS DISCOVERY
+============================================================
+
+Do not limit your analysis to capabilities explicitly
+mentioned in the source document.
+
+Consider what the actual business needs to accomplish.
+
+Identify relevant business capabilities, application
+behaviours, business decisions, validations, data operations,
+interactions, exceptions and alternative outcomes.
+
+Use the domain and niche to guide your independent reasoning.
+
+Do not use a generic industry checklist.
+
+Do not force capabilities that are irrelevant to this business.
+
+Do not invent specific numerical thresholds, time limits,
+commercial policies or operational rules.
+
+Do not treat an absence of information in this source chunk
+as proof that a business capability does not exist.
+
+Do not assume that every source chunk independently describes
+the complete business.
+
+Preserve relevant terminology and business meaning.
+
+============================================================
+OUTPUT
+============================================================
+
+Return valid JSON only.
+
+Use this structure:
+
+{
+  "source_understanding": "Concise explanation of relevant business understanding.",
+
+  "investigation_questions": [
+    {
+      "question": "What needs to be investigated?",
+      "answer": "Answer based on evidence and careful business reasoning.",
+      "evidence_status": "EXPLICIT | INFERRED | UNRESOLVED"
+    }
+  ],
+
+  "business_capabilities_identified": [
+    {
+      "capability": "Business capability or behaviour",
+      "explanation": "What the business needs to accomplish.",
+      "evidence_status": "EXPLICIT | INFERRED",
+      "supporting_context": "Relevant source context."
+    }
+  ],
+
+  "unresolved_business_decisions": [
+    "Business decision requiring clarification."
+  ]
+}
+
+Do not generate final requirement IDs.
+
+Do not generate a generic checklist.
+
+Do not add explanations outside JSON.

@@ -1,0 +1,27 @@
+{
+  "functional_requirements": [
+    {
+      "requirement_id": "FR-001",
+      "requirement": "",
+      "business_need": "",
+      "functional_behaviour": [],
+      "required_by_actors": [],
+      "related_business_objects": [],
+      "related_information_requirements": [],
+      "business_rules": [],
+      "acceptance_criteria": [
+        {
+          "given": "",
+          "when": "",
+          "then": ""
+        }
+      ]
+    }
+  ],
+  "unresolved_questions": [
+    {
+      "question": "",
+      "affected_requirement": "FR-001"
+    }
+  ]
+}

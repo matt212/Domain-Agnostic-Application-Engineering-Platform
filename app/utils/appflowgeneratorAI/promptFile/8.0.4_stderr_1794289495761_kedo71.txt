@@ -1,0 +1,4 @@
+warning: no usable GPU found, --gpu-layers option will be ignored
+warning: one possible reason is that llama.cpp was compiled without GPU support
+warning: consult docs/build.md for compilation instructions
+0.10.862.509 E srv    send_error: task id = 0, error: request (38076 tokens) exceeds the available context size (31744 tokens), try increasing it

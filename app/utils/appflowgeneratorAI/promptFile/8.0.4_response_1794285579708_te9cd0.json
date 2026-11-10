@@ -179,3 +179,259 @@ FINAL REQUIREMENT RULES
 
 Return JSON only. Do not use Markdown fences or commentary.
 
+Assistant:
+{
+  "action": "FINAL",
+  "result": {
+    "functional_requirements": [
+      {
+        "requirement_id": "FR-001",
+        "requirement": "The system shall enable customers to browse and search for grocery items within the defined hyperlocal delivery zone.",
+        "business_need": "Customers need immediate access to available products without manual location verification to reduce cart abandonment.",
+        "functional_behaviour": [
+          "System shall display a geofenced product catalog based on the user's current or selected delivery address.",
+          "Search interface shall support text-based queries, category filtering, and brand filtering.",
+          "Item cards shall display real-time stock availability and estimated delivery time.",
+          "System shall auto-calculate delivery fees based on the distance between warehouse and customer."
+        ],
+        "required_by_actors": [
+          "Customer",
+          "Merchant Admin"
+        ],
+        "related_business_objects": [
+          "Customer Address",
+          "Product Catalog",
+          "Delivery Zone",
+          "Shopping Cart"
+        ],
+        "related_information_requirements": [
+          "Customer GPS coordinates or manually entered address",
+          "Warehouse coordinates",
+          "Real-time inventory levels per SKU"
+        ],
+        "business_rules": [
+          "A product must be displayed only if its inventory is greater than zero at the assigned warehouse.",
+          "A product must be displayed only if the assigned warehouse is within the maximum delivery radius for the customer's address."
+        ],
+        "acceptance_criteria": [
+          {
+            "given": "The customer is located at coordinates (Lat: 1.3521, Long: 103.8198) and the warehouse is at (Lat: 1.3500, Long: 103.8200) with a 2km radius rule.",
+            "when": "The customer searches for a product assigned to that warehouse.",
+            "then": "The product is displayed in the catalog with an estimated delivery time."
+          },
+          {
+            "given": "The warehouse has 5 units of Product X in stock.",
+            "when": "The customer adds Product X to the cart and attempts to proceed to checkout.",
+            "then": "The checkout process allows payment, and the cart reflects 5 units."
+          },
+          {
+            "given": "The warehouse has 0 units of Product Y in stock.",
+            "when": "The customer searches for Product Y.",
+            "then": "Product Y is either not displayed or marked as 'Out of Stock' with a 'Notify Me' option."
+          }
+        ]
+      },
+      {
+        "requirement_id": "FR-002",
+        "requirement": "The system shall process orders and assign them to delivery personnel dynamically based on proximity and capacity.",
+        "business_need": "To maintain the 'Quick Commerce' promise of <15-30 minute delivery, the system must automate the dispatch logic to minimize handover time.",
+        "functional_behaviour": [
+          "System shall calculate the optimal delivery route by considering the warehouse location and the customer's address.",
+          "System shall match available riders to orders based on the shortest estimated travel time and rider capacity.",
+          "System shall update the customer's order status (e.g., 'Picking', 'Out for Delivery', 'Arrived') in real-time.",
+          "System shall provide live tracking visualization on the customer's mobile app."
+        ],
+        "required_by_actors": [
+          "System",
+          "Delivery Rider",
+          "Customer"
+        ],
+        "related_business_objects": [
+          "Order",
+          "Rider Profile",
+          "Route",
+          "Order Status"
+        ],
+        "related_information_requirements": [
+          "Rider current GPS location",
+          "Rider current load status",
+          "Warehouse packing time estimates",
+          "Customer address accuracy"
+        ],
+        "business_rules": [
+          "An order cannot be assigned to a rider who is currently assigned to another active delivery exceeding maximum load capacity.",
+          "The system must prioritize orders with shorter estimated delivery windows first.",
+          "If no rider is available within the acceptance window, the order shall be queued for the next available slot and the customer notified."
+        ],
+        "acceptance_criteria": [
+          {
+            "given": "Three orders are pending assignment within a 1km radius of a single warehouse.",
+            "when": "The system runs the assignment algorithm and a rider located 500m from the warehouse becomes available.",
+            "then": "The rider is assigned the closest order first, and subsequent orders are assigned in order of priority."
+          },
+          {
+            "given": "A rider is en route to a customer's address.",
+            "when": "The customer opens the app to track the order.",
+            "then": "The app displays the rider's live location and an ETA that updates every 30 seconds."
+          },
+          {
+            "given": "All riders within a 5km radius are at maximum capacity.",
+            "when": "A new high-priority order is placed.",
+            "then": "The system queues the order and sends a notification to the customer that the delivery will be delayed until the next rider shift."
+          }
+        ]
+      },
+      {
+        "requirement_id": "FR-003",
+        "requirement": "The system shall manage inventory synchronization between the warehouse management system (WMS) and the customer-facing platform.",
+        "business_need": "Inaccurate stock levels are critical in Q-Commerce as they directly impact customer satisfaction and order fulfillment failure rates.",
+        "functional_behaviour": [
+          "System shall deduct inventory immediately upon successful order confirmation.",
+          "System shall trigger a restock alert when a SKU reaches the minimum threshold.",
+          "System shall handle inventory adjustments for returns and cancellations instantly.",
+          "System shall prevent the sale of items if the warehouse stock goes below zero during the checkout process."
+        ],
+        "required_by_actors": [
+          "Warehouse Staff",
+          "System",
+          "Customer"
+        ],
+        "related_business_objects": [
+          "Inventory Level",
+          "Product SKU",
+          "Order",
+          "Restock Request"
+        ],
+        "related_information_requirements": [
+          "Current physical stock count per SKU per warehouse",
+          "Pending orders count per SKU",
+          "Historical sales velocity for forecasting"
+        ],
+        "business_rules": [
+          "Inventory count = Physical Stock - Pending Orders + Returns.",
+          "If physical stock is updated by warehouse staff, the customer-facing count must update within 60 seconds.",
+          "Orders for out-of-stock items must be cancelled automatically before payment finalization."
+        ],
+        "acceptance_criteria": [
+          {
+            "given": "A warehouse staff member adjusts the stock of Item Z from 10 to 5 units.",
+            "when": "The system syncs with the database after the adjustment is saved.",
+            "then": "The customer-facing catalog updates to show 5 units available for Item Z within 60 seconds."
+          },
+          {
+            "given": "The customer adds Item Z (5 units left) to the cart and attempts to add 6 units.",
+            "when": "The customer proceeds to checkout.",
+            "then": "The system limits the quantity to 5 units and prevents checkout with 6 units."
+          },
+          {
+            "given": "An order for Item Z (5 units) is confirmed and being picked up.",
+            "when": "The customer cancels the order before the rider picks it up.",
+            "then": "The system immediately adds 5 units back to the available inventory."
+          }
+        ]
+      },
+      {
+        "requirement_id": "FR-004",
+        "requirement": "The system shall handle order anomalies including missed pickups, failed deliveries, and customer refunds.",
+        "business_need": "Robust exception handling is required to ensure revenue protection and maintain trust when the 'quick' delivery fails.",
+        "functional_behaviour": [
+          "System shall allow riders to report a 'Missed Delivery' or 'Customer Not Home' via the app.",
+          "System shall automatically trigger a rescheduling workflow for failed deliveries.",
+          "System shall process partial refunds if only some items in the order are missing.",
+          "System shall generate a refund request ticket for the customer service team."
+        ],
+        "required_by_actors": [
+          "Delivery Rider",
+          "Customer",
+          "Customer Support Agent",
+          "Finance Team"
+        ],
+        "related_business_objects": [
+          "Order",
+          "Refund Request",
+          "Delivery Attempt Log",
+          "Customer Ticket"
+        ],
+        "related_information_requirements": [
+          "Reason for delivery failure",
+          "Photos of delivery attempt (if applicable)",
+          "Refund amount calculation",
+          "Customer contact information"
+        ],
+        "business_rules": [
+          "A delivery is considered 'Failed' only after 2 or 3 unsuccessful attempts.",
+          "Refunds for missing items shall be processed within 24 hours of verification.",
+          "The rider is not penalized financially for a missed delivery caused by incorrect address data provided by the customer."
+        ],
+        "acceptance_criteria": [
+          {
+            "given": "A rider attempts to deliver an order but the customer is not home.",
+            "when": "The rider marks the delivery as 'Failed' and uploads a photo of the location.",
+            "then": "The system updates the order status to 'Rescheduling Required' and sends a push notification to the customer."
+          },
+          {
+            "given": "An order contains 5 items, but 2 items are missing upon rider arrival.",
+            "when": "The rider reports the issue and the system verifies the warehouse stock.",
+            "then": "The system calculates the cost of the 2 missing items and initiates a partial refund to the customer."
+          },
+          {
+            "given": "The customer provides an incorrect address leading to a failed delivery.",
+            "when": "The rider reports the issue and the customer confirms the address error.",
+            "then": "The system waives the late delivery fee from the rider and does not apply a penalty to the rider's performance score."
+          }
+        ]
+      },
+      {
+        "requirement_id": "FR-005",
+        "requirement": "The system shall provide a merchant dashboard for warehouse staff to manage picking and packing efficiency.",
+        "business_need": "Warehouse efficiency is the bottleneck in Q-Commerce; the system must optimize the picking process to reduce order fulfillment time.",
+        "functional_behaviour": [
+          "System shall generate optimized picking lists based on item proximity within the warehouse.",
+          "System shall provide real-time visibility of pending orders vs. completed orders.",
+          "System shall allow staff to scan barcodes/QR codes to confirm item picking.",
+          "System shall alert staff when a high-priority rush order is placed."
+        ],
+        "required_by_actors": [
+          "Warehouse Picker",
+          "Warehouse Packager",
+          "Warehouse Manager"
+        ],
+        "related_business_objects": [
+          "Picking List",
+          "Order",
+          "Warehouse Bin Location",
+          "Product SKU"
+        ],
+        "related_information_requirements": [
+          "Current warehouse layout and bin locations",
+          "Order priority level (e.g., Rush, Standard)",
+          "Picker identity and current workload"
+        ],
+        "business_rules": [
+          "Rush orders must be flagged in the picking list and prioritized in the queue.",
+          "A picker must confirm the picking of an item before moving to the next item in the list.",
+          "An order cannot be marked as 'Ready for Dispatch' until all items in the picking list are confirmed."
+        ],
+        "acceptance_criteria": [
+          {
+            "given": "A rush order is placed containing Item A and Item B.",
+            "when": "The picker opens the picking list on the handheld device.",
+            "then": "The system highlights Item A and Item B with a 'Rush' tag and places them at the top of the list."
+          },
+          {
+            "given": "The picker scans the barcode of Item C which is located in Bin 12.",
+            "when": "The system validates the scan against the order.",
+            "then": "The system confirms the scan, updates the inventory deduction, and allows the picker to proceed to the next item."
+          },
+          {
+            "given": "The picker attempts to mark an order as 'Ready' after picking only 2 out of 3 items.",
+            "when": "The picker clicks the 'Complete Order' button.",
+            "then": "The system blocks the action and displays an error message: 'Missing 1 item from order #12345'."
+          }
+        ]
+      }
+    ],
+    "unresolved_questions": []
+  }
+}
+
