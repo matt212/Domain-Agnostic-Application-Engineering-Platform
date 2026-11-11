@@ -1,0 +1,54 @@
+{
+  "result": {
+    "requirement": "The system shall maintain an immutable chronological history of all status transitions for every Delivery Assignment from creation to final closure.",
+    "business_need": "The business needs this to provide full auditability of the delivery lifecycle, enabling root cause analysis for delays and verifying compliance with service level agreements.",
+    "functional_behaviour": [
+      "The system shall automatically generate a new status entry whenever a Delivery Assignment state changes.",
+      "The system shall record the exact timestamp and the actor responsible for initiating each status transition.",
+      "The system shall preserve the previous status value alongside the new status to show the direction of the change.",
+      "The system shall allow authorized users to query the complete history of a specific Delivery Assignment by its unique identifier.",
+      "The system shall prevent the deletion or alteration of historical status records once they are committed to the database.",
+      "The system shall display the sequence of statuses in chronological order to reconstruct the assignment's journey."
+    ],
+    "required_by_actors": [
+      "Delivery Partner",
+      "Fulfillment Supervisor",
+      "Platform Operator"
+    ],
+    "related_business_objects": [
+      "Delivery Assignment",
+      "Delivery Proof",
+      "Customer Profile",
+      "Order Request"
+    ],
+    "related_information_requirements": [
+      "The specific status label (e.g., Assigned, In-Transit, Delivered) at any point in time.",
+      "The precise moment in time when a status change occurred.",
+      "The identity of the user or system process that triggered the status change.",
+      "The prior status held by the assignment immediately before the current change."
+    ],
+    "business_rules": [
+      "A status transition is only valid if the new status logically follows the previous status in the defined lifecycle.",
+      "The system must record a status entry for every state change, regardless of whether the change was manual or automated.",
+      "Historical status records must remain read-only and cannot be modified after creation.",
+      "The history log must include the timestamp in the system's standard time zone."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A Delivery Assignment is created and subsequently moves from 'Pending' to 'Assigned' and then to 'In-Transit'",
+        "when": "The system processes these state changes",
+        "then": "The history log must contain three entries showing the sequence: Pending -> Assigned -> In-Transit with correct timestamps."
+      },
+      {
+        "given": "An authorized user attempts to delete a historical status entry for a completed Delivery Assignment",
+        "when": "The system processes the deletion request",
+        "then": "The system must reject the request and preserve the original status record in the history log."
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

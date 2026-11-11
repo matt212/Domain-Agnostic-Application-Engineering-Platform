@@ -1,0 +1,51 @@
+{
+  "result": {
+    "requirement": "The system shall validate customer identity and contact details during the onboarding process to ensure compliance and secure account creation.",
+    "business_need": "The business needs to verify customer identity to prevent fraud, ensure accurate delivery routing, and maintain regulatory compliance before allowing order placement.",
+    "functional_behaviour": [
+      "The system shall collect unique identifiers, delivery addresses, and primary contact methods from the Customer during onboarding.",
+      "The system shall verify the authenticity of the provided identity documents against a trusted data source.",
+      "The system shall validate that the contact details match the provided identity information.",
+      "The system shall block account activation if identity verification fails or contact details are inconsistent.",
+      "The system shall generate a Verified Customer Profile upon successful validation.",
+      "The system shall log all verification attempts and outcomes for audit purposes."
+    ],
+    "required_by_actors": [
+      "Customer",
+      "Platform Operator"
+    ],
+    "related_business_objects": [
+      "Customer Profile",
+      "Dispute Ticket"
+    ],
+    "related_information_requirements": [
+      "Unique identifiers for the ordering individual",
+      "Delivery addresses and primary contact methods",
+      "Verifiable evidence of identity documents",
+      "Indicators of fraudulent transaction likelihood"
+    ],
+    "business_rules": [
+      "A Customer Profile cannot be activated until identity verification is successful.",
+      "Contact details must match the name and address on the verified identity document.",
+      "Any failed verification attempt must generate a Dispute Ticket for manual review.",
+      "The system must flag accounts with inconsistent contact details for further investigation."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A Customer submits valid identity documents and matching contact details",
+        "when": "The system processes the onboarding request",
+        "then": "The system activates the Customer Profile and allows order placement"
+      },
+      {
+        "given": "A Customer submits mismatched contact details or invalid identity documents",
+        "when": "The system processes the onboarding request",
+        "then": "The system rejects the request and creates a Dispute Ticket for review"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

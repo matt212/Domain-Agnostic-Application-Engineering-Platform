@@ -1,0 +1,51 @@
+{
+  "result": {
+    "requirement": "The system shall enable the Platform Operator to create, modify, and version geospatial service area definitions and travel time matrices to ensure accurate delivery feasibility and pricing.",
+    "business_need": "The business needs this to dynamically restrict order acceptance to feasible areas and calculate accurate delivery fees based on real-time traffic and route constraints.",
+    "functional_behaviour": [
+      "The system shall allow the Platform Operator to define service areas using precise geographic coordinates, radii, or polygon boundaries.",
+      "The system shall calculate and store travel duration and distance estimates between store locations and potential customer addresses.",
+      "The system shall maintain a version history of all changes made to service area definitions and travel time matrices.",
+      "The system shall automatically invalidate existing Delivery Zone Maps when a new version is published.",
+      "The system shall expose the active service area definitions to the Order Allocation Engine for real-time order validation."
+    ],
+    "required_by_actors": [
+      "Platform Operator"
+    ],
+    "related_business_objects": [
+      "Service Area Definition",
+      "Delivery Zone Map",
+      "Order Request",
+      "Delivery Assignment"
+    ],
+    "related_information_requirements": [
+      "Precise geographic coordinates, radii, or polygon boundaries defining service zones",
+      "Calculated estimates of travel duration and distance accounting for traffic patterns",
+      "Version history of service area changes including timestamps and change descriptions",
+      "Active linkage between service zones and specific store locations"
+    ],
+    "business_rules": [
+      "A new version of a Service Area Definition must supersede the previous active version immediately upon publication.",
+      "Orders originating from addresses outside the active Service Area Definition must be rejected by the Order Allocation Engine.",
+      "Travel time matrices must be recalculated whenever a Service Area Definition is modified to reflect updated route constraints.",
+      "All modifications to Service Area Definitions must be logged with a timestamp and the identity of the Platform Operator."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "The Platform Operator has access to the zone management module",
+        "when": "The operator creates a new polygon boundary for a delivery zone and publishes it",
+        "then": "The system stores the new definition as the active version and invalidates the previous zone map"
+      },
+      {
+        "given": "An Order Request is submitted for an address outside the defined service area",
+        "when": "The Order Allocation Engine attempts to validate the order against the active Service Area Definition",
+        "then": "The system rejects the order and logs the rejection reason as 'outside service zone'"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

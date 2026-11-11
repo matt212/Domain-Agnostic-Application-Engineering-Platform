@@ -1,0 +1,54 @@
+{
+  "result": {
+    "requirement": "The system shall enable the secure creation, retention, and long-term archival of detailed financial ledgers and settlement records for all monetary exchanges.",
+    "business_need": "The business needs immutable financial records to ensure accurate revenue sharing, support regulatory audits, and provide verifiable evidence for dispute resolution.",
+    "functional_behaviour": [
+      "The system shall capture the complete record of monetary exchange including item costs, delivery fees, taxes, platform commissions, and net settlement amounts.",
+      "The system shall store indicators and historical data used to assess the likelihood of fraudulent transactions such as unusual order patterns or payment anomalies.",
+      "The system shall link the financial transaction record to verifiable evidence that physical goods have reached the customer.",
+      "The system shall archive the legally binding contractual details between the platform and store partners including commission rates and payout schedules.",
+      "The system shall maintain a structured record of any deviation from the standard process including missing items or failed deliveries with current resolution status."
+    ],
+    "required_by_actors": [
+      "Payment Provider",
+      "Platform Operator",
+      "Store Partner"
+    ],
+    "related_business_objects": [
+      "Financial Transaction Record",
+      "Delivery Proof",
+      "Dispute Ticket",
+      "Store Partner Agreement"
+    ],
+    "related_information_requirements": [
+      "Complete record of monetary exchange detailing item costs, delivery fees, taxes, platform commissions, and net settlement amounts.",
+      "Indicators and historical data used to assess the likelihood of fraudulent transactions.",
+      "Verifiable evidence that physical goods have reached the customer.",
+      "Legally binding contractual details including commission rates and payout schedules.",
+      "Structured record of deviations from the standard process including nature of issue and resolution status."
+    ],
+    "business_rules": [
+      "A financial transaction record must include item costs, delivery fees, taxes, platform commissions, and net settlement amounts to be considered complete.",
+      "The system must link a financial transaction record to verifiable evidence of delivery before finalizing the settlement status.",
+      "Any deviation from the standard process must be recorded with the nature of the issue and the current resolution status.",
+      "Contractual details including commission rates and payout schedules must be archived alongside the financial transaction record."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A payment is processed between a customer and a store partner",
+        "when": "The system generates a financial transaction record",
+        "then": "The record must include item costs, delivery fees, taxes, platform commissions, and net settlement amounts."
+      },
+      {
+        "given": "A delivery proof is missing for a completed order",
+        "when": "The system attempts to archive the financial transaction record",
+        "then": "The system must flag the record as incomplete and prevent final settlement until delivery proof is provided."
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

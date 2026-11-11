@@ -1,0 +1,54 @@
+{
+  "result": {
+    "requirement": "The system shall enforce role-based access control by granting or denying system actions based on the specific permissions assigned to each actor.",
+    "business_need": "The business needs to restrict system access to ensure data security, operational integrity, and compliance with internal governance policies.",
+    "functional_behaviour": [
+      "The system shall validate the current user's role against the required permission for every requested action.",
+      "The system shall deny access and log the attempt if the actor lacks the necessary permission.",
+      "The system shall allow access only if the actor possesses the specific permission required for the action.",
+      "The system shall update the actor's permission set upon successful role assignment or revocation.",
+      "The system shall prevent actors from accessing business objects outside their authorized scope."
+    ],
+    "required_by_actors": [
+      "Customer",
+      "Delivery Partner",
+      "Store Partner",
+      "Fulfillment Supervisor",
+      "Platform Operator"
+    ],
+    "related_business_objects": [
+      "Customer Profile",
+      "Delivery Assignment",
+      "Order Request",
+      "Feedback Record"
+    ],
+    "related_information_requirements": [
+      "Actor role and assigned permissions",
+      "Action type requested by the actor",
+      "Access attempt timestamp and outcome"
+    ],
+    "business_rules": [
+      "An actor may only perform an action if their assigned role includes the specific permission for that action.",
+      "Access attempts by actors without the required permission must be denied and recorded in an audit log.",
+      "Permission changes must take effect immediately for all subsequent access requests.",
+      "Actors cannot bypass role-based restrictions through direct data manipulation."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A Delivery Partner attempts to view the Financial Transaction Record",
+        "when": "The system checks the Delivery Partner's permissions",
+        "then": "The system denies access and logs the failed attempt"
+      },
+      {
+        "given": "A Platform Operator attempts to modify the Product Catalog",
+        "when": "The system verifies the Platform Operator's permissions",
+        "then": "The system grants access to perform the modification"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

@@ -1,0 +1,49 @@
+{
+  "result": {
+    "requirement": "The system shall enable the Merchandiser to create, update, and archive product catalog entries while enforcing data validation and version control.",
+    "business_need": "The business needs a structured way to manage product lifecycle data to ensure accurate inventory representation and prevent overselling.",
+    "functional_behaviour": [
+      "The system shall allow the Merchandiser to add new items to the Product Catalog with required attributes.",
+      "The system shall allow the Merchandiser to modify existing item details and automatically archive the previous version.",
+      "The system shall validate input data against defined business rules before saving any catalog changes.",
+      "The system shall maintain a history of all product changes for audit and rollback purposes.",
+      "The system shall prevent the modification of archived product versions to ensure data integrity."
+    ],
+    "required_by_actors": [
+      "Merchandiser"
+    ],
+    "related_business_objects": [
+      "Product Catalog"
+    ],
+    "related_information_requirements": [
+      "Product descriptions and images",
+      "Standardized pricing data",
+      "Category classifications",
+      "Version history of catalog entries",
+      "Validation status of product data"
+    ],
+    "business_rules": [
+      "A product entry cannot be updated if it is in an archived state.",
+      "All product updates must include a timestamp and the identifier of the user making the change.",
+      "Required fields such as product name and price must be populated before a new entry is created.",
+      "Previous versions of a product must be retained and marked as archived when a new version is published."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "The Merchandiser is logged in and views the Product Catalog",
+        "when": "The Merchandiser submits a new product entry with all required fields filled",
+        "then": "The system creates the new entry, assigns it as the current version, and displays a success message"
+      },
+      {
+        "given": "The Merchandiser attempts to update a product entry with a missing required field",
+        "when": "The Merchandiser submits the update request",
+        "then": "The system rejects the request and displays an error message indicating the missing field"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

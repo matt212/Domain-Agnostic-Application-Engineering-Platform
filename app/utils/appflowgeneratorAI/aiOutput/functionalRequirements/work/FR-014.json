@@ -1,0 +1,50 @@
+{
+  "result": {
+    "requirement": "The system shall manage the full lifecycle of Service Area Definitions, enabling the creation, activation, deactivation, and historical tracking of geographically delimited delivery zones.",
+    "business_need": "The business requires precise control over operational boundaries to ensure orders are only accepted and fulfilled within feasible geographic limits.",
+    "functional_behaviour": [
+      "The system shall allow authorized users to create new Service Area Definitions by specifying geographic boundaries or radii.",
+      "The system shall enable the activation and deactivation of Service Area Definitions to control service availability in real time.",
+      "The system shall maintain a complete historical audit trail of all changes made to Service Area Definitions including timestamps and user details.",
+      "The system shall validate that new Service Area Definitions do not conflict with existing operational constraints.",
+      "The system shall expose the current status and boundary details of Service Area Definitions to dependent modules for order validation."
+    ],
+    "required_by_actors": [
+      "Platform Operator",
+      "Store Partner"
+    ],
+    "related_business_objects": [
+      "Service Area Definition",
+      "Delivery Zone Map",
+      "Store Partner Agreement"
+    ],
+    "related_information_requirements": [
+      "Precise geographic coordinates, radii, or polygon boundaries defining specific zones.",
+      "Timestamps and user identifiers for all lifecycle state changes.",
+      "Current operational status of each defined service area."
+    ],
+    "business_rules": [
+      "A Service Area Definition must be in an active state before it can be used to validate new Order Requests.",
+      "Any modification to an active Service Area Definition must be logged with the reason for change and the identity of the operator.",
+      "Deactivation of a Service Area Definition must immediately prevent the acceptance of new orders originating from that zone.",
+      "A Service Area Definition cannot be created if its geographic boundaries overlap with a restricted zone defined by the Regulatory Authority."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A Platform Operator initiates the creation of a new delivery zone with valid geographic coordinates",
+        "when": "The system processes the request and the zone is successfully created",
+        "then": "The new Service Area Definition is saved with an 'Inactive' status until explicitly activated by an authorized user"
+      },
+      {
+        "given": "A Store Partner attempts to place an order from a location within a Service Area Definition that has been deactivated",
+        "when": "The system validates the customer's address against the current Service Area Definitions",
+        "then": "The system rejects the Order Request and displays a message indicating that delivery is not available in that zone"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

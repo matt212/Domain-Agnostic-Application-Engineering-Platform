@@ -1,0 +1,49 @@
+{
+  "result": {
+    "requirement": "The system shall enable Store Partner personnel to validate item quality against the order request before marking the fulfillment task as complete.",
+    "business_need": "The business needs this to prevent shipping defective or incorrect items, thereby reducing returns and maintaining customer trust.",
+    "functional_behaviour": [
+      "The system shall allow Store Partner personnel to view the specific list of items, quantities, and special handling notes from the Order Request.",
+      "The system shall allow Store Partner personnel to inspect the Real-Time Inventory Snapshot to confirm physical stock matches the digital record.",
+      "The system shall allow Store Partner personnel to record a quality verification status for each item in the Fulfillment Task.",
+      "The system shall prevent the Fulfillment Task from being marked as ready for dispatch if quality verification is not recorded.",
+      "The system shall allow Store Partner personnel to attach a Delivery Proof image confirming the item condition before finalizing the task."
+    ],
+    "required_by_actors": [
+      "Store Partner"
+    ],
+    "related_business_objects": [
+      "Order Request",
+      "Fulfillment Task",
+      "Real-Time Inventory Snapshot",
+      "Delivery Proof"
+    ],
+    "related_information_requirements": [
+      "The specific list of items selected by the customer, their quantities, unit prices, and any special handling notes or delivery preferences provided by the customer.",
+      "The current, validated quantity of each sellable item (SKU) at a specific store location, including status flags for availability, partial stock, or temporary unavailability.",
+      "The internal record confirming that the store has successfully picked, verified, and packed the order, and has formally transferred possession to a delivery agent."
+    ],
+    "business_rules": [
+      "A Fulfillment Task cannot transition to a 'Ready for Dispatch' status unless a quality verification record exists for every item.",
+      "If a quality check fails for any item, the system must flag the Fulfillment Task as 'Requires Correction' and block dispatch.",
+      "The system must display the Real-Time Inventory Snapshot alongside the Order Request to facilitate accurate physical verification."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A Store Partner is preparing an order with multiple items",
+        "when": "The Store Partner completes the quality check for all items and confirms the order is correct",
+        "then": "The system updates the Fulfillment Task status to 'Ready for Dispatch' and allows the task to be transferred to a Delivery Partner"
+      },
+      {
+        "given": "A Store Partner discovers a damaged item during the quality check",
+        "when": "The Store Partner attempts to mark the Fulfillment Task as complete without resolving the issue",
+        "then": "The system rejects the completion action and displays an error message indicating that quality verification is incomplete"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

@@ -1,0 +1,53 @@
+{
+  "result": {
+    "requirement": "The system shall enforce multi-factor authentication for all Delivery Partners accessing the delivery agent mobile application to verify identity before granting access to operational tools.",
+    "business_need": "The business requires secure verification to prevent unauthorized access to sensitive customer data and delivery instructions by malicious actors impersonating gig-workers.",
+    "functional_behaviour": [
+      "The system shall require a primary credential, such as a unique agent ID or biometric scan, before allowing any login attempt.",
+      "The system shall issue a one-time verification code via a secondary channel, such as SMS or email, upon successful entry of the primary credential.",
+      "The system shall deny access and lock the session if the primary and secondary credentials do not match within the defined time window.",
+      "The system shall log every authentication attempt, including success, failure, and the specific method used, for security auditing purposes.",
+      "The system shall automatically invalidate the session and require re-authentication if the agent's device is detected in an unauthorized geographic zone."
+    ],
+    "required_by_actors": [
+      "Delivery Partner",
+      "Platform Operator"
+    ],
+    "related_business_objects": [
+      "Delivery Partner",
+      "Customer Profile"
+    ],
+    "related_information_requirements": [
+      "Unique agent identifier",
+      "Biometric data hash",
+      "Secondary channel verification code",
+      "Authentication timestamp",
+      "Device location coordinates"
+    ],
+    "business_rules": [
+      "Access is granted only when both the primary credential and the secondary verification code are valid and match.",
+      "A failed authentication attempt triggers an immediate lockout if the total number of consecutive failures exceeds the system threshold.",
+      "The secondary verification code expires after a short duration to prevent reuse.",
+      "Authentication logs must be immutable and retained for the duration of the regulatory compliance period."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A Delivery Partner attempts to log in with valid credentials",
+        "when": "The system prompts for a secondary verification code",
+        "then": "Access is granted immediately upon entering the correct code within the time limit"
+      },
+      {
+        "given": "A Delivery Partner attempts to log in with an incorrect primary credential",
+        "when": "The system requests a secondary verification code",
+        "then": "Access is denied and the session is terminated without issuing a code"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": [
+      "Delivery Partner"
+    ]
+  },
+  "evidence_count": 8
+}

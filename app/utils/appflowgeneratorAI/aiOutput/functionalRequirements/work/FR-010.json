@@ -1,0 +1,52 @@
+{
+  "result": {
+    "requirement": "The system shall manage the full lifecycle of Store Partner Agreements, enabling the creation, amendment, and historical tracking of commercial terms while controlling access to these documents.",
+    "business_need": "The business needs to maintain legally binding, auditable records of commercial terms to ensure operational compliance and accurate financial settlements with store partners.",
+    "functional_behaviour": [
+      "The system shall allow the Platform Operator to create new agreements or amend existing ones with updated commercial terms.",
+      "The system shall automatically generate a new version of the agreement upon any amendment and retain the previous version in the history.",
+      "The system shall enforce access provisioning so that only authorized actors can view or edit specific agreement versions.",
+      "The system shall prevent the execution of orders against a Store Partner Agreement that is marked as inactive or superseded.",
+      "The system shall provide a version history view allowing the Platform Operator to compare changes between agreement versions.",
+      "The system shall notify the Store Partner of any changes to their active agreement terms."
+    ],
+    "required_by_actors": [
+      "Platform Operator",
+      "Store Partner"
+    ],
+    "related_business_objects": [
+      "Store Partner Agreement",
+      "Financial Transaction Record",
+      "Order Request"
+    ],
+    "related_information_requirements": [
+      "Commission rates and payout schedules",
+      "Liability clauses and performance guarantees",
+      "Agreement status and version history",
+      "Authorized user access lists"
+    ],
+    "business_rules": [
+      "An amendment to an active agreement must immediately create a new version number while marking the previous version as historical.",
+      "A Store Partner Agreement must be marked as 'Active' before any associated Order Requests can be allocated to that partner.",
+      "Access to edit an agreement version is restricted to the Platform Operator and the Store Partner associated with that agreement.",
+      "The system must prevent the deletion of any agreement version once it has been created."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "The Platform Operator initiates an amendment to an active Store Partner Agreement",
+        "when": "The system processes the amendment request",
+        "then": "A new version of the agreement is created with updated terms, and the previous version is archived as historical data."
+      },
+      {
+        "given": "A Store Partner attempts to allocate an Order Request to a partner with an inactive agreement",
+        "when": "The Order Allocation Engine validates the partner status",
+        "then": "The system rejects the allocation and prevents the creation of the Delivery Assignment."
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}
