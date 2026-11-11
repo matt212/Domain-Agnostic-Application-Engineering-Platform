@@ -1,0 +1,53 @@
+{
+  "result": {
+    "requirement": "The system shall enable Delivery Partners to view, accept, and manage their assigned delivery slots while ensuring dynamic agent assignment and capacity verification.",
+    "business_need": "The business needs to optimize last-mile logistics by ensuring the right agent receives orders based on real-time capacity and workload status.",
+    "functional_behaviour": [
+      "The system shall allow Delivery Partners to view available delivery slots within their defined service area.",
+      "The system shall enable the Order Allocation Engine to dynamically assign delivery tasks to agents based on current workload and proximity.",
+      "The system shall verify agent capacity before confirming a delivery slot assignment to prevent overloading.",
+      "The system shall update the agent's workload status in real-time as they accept or reject delivery tasks.",
+      "The system shall display the estimated arrival time and route details for each assigned delivery slot."
+    ],
+    "required_by_actors": [
+      "Delivery Partner",
+      "Order Allocation Engine"
+    ],
+    "related_business_objects": [
+      "Delivery Assignment",
+      "Assigned Delivery Slot",
+      "Real-Time Inventory Snapshot",
+      "Customer Profile",
+      "Delivery Zone Map"
+    ],
+    "related_information_requirements": [
+      "The active linkage between a ready order and a specific delivery agent, including the assigned route, estimated arrival time, and the agent's current workload status.",
+      "Live visibility into the location, speed, and status of all active delivery agents and the aggregate capacity of the fleet within the service zone.",
+      "The specific list of items selected by the customer, their quantities, unit prices, and any special handling notes or delivery preferences provided by the customer.",
+      "Calculated estimates of travel duration and distance between the store location and potential customer addresses, accounting for traffic patterns and route constraints."
+    ],
+    "business_rules": [
+      "A delivery slot cannot be assigned to an agent if their current workload exceeds the maximum capacity defined for their service zone.",
+      "An agent must explicitly accept a delivery assignment before the system confirms the slot as active.",
+      "Dynamic reassignment of a delivery task is only permitted if the original agent rejects the task or exceeds capacity limits.",
+      "The system must recalculate estimated arrival times if traffic patterns change significantly after the initial assignment."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A Delivery Partner is logged in and viewing their dashboard",
+        "when": "The Order Allocation Engine assigns a new delivery task within their service zone",
+        "then": "The system displays the delivery slot details including route, estimated arrival time, and item list for the partner to accept or reject"
+      },
+      {
+        "given": "A Delivery Partner has reached their maximum workload capacity",
+        "when": "The Order Allocation Engine attempts to assign a new delivery task to that partner",
+        "then": "The system rejects the assignment and routes the task to another available agent within the same service zone"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

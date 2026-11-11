@@ -1,0 +1,53 @@
+{
+  "result": {
+    "requirement": "The system shall capture and verify digital proof of delivery via direct input or external API retrieval before releasing funds.",
+    "business_need": "The business needs irrefutable evidence of physical handover to close the logistics loop and trigger financial settlement securely.",
+    "functional_behaviour": [
+      "The system shall allow the Delivery Partner to capture a digital signature, timestamped photo, or automated confirmation code upon handover.",
+      "The system shall retrieve delivery proof automatically from an external courier API when the Delivery Partner does not generate local evidence.",
+      "The system shall validate the authenticity and completeness of the received delivery proof before updating the order status.",
+      "The system shall release funds to the Store Partner only after the delivery proof is successfully verified and stored.",
+      "The system shall generate a Dispute Ticket if the provided proof fails validation or is missing required elements."
+    ],
+    "required_by_actors": [
+      "Delivery Partner",
+      "Store Partner",
+      "Payment Provider"
+    ],
+    "related_business_objects": [
+      "Delivery Proof",
+      "Delivery Assignment",
+      "Financial Transaction Record",
+      "Dispute Ticket"
+    ],
+    "related_information_requirements": [
+      "Digital signature or timestamped photo confirming physical handover",
+      "Automated confirmation code from external courier systems",
+      "Verification status of the delivery evidence",
+      "Timestamp and location data associated with the proof"
+    ],
+    "business_rules": [
+      "Funds shall not be released until a valid delivery proof is recorded in the system.",
+      "Proof retrieved via external API shall be treated with the same verification standards as locally captured proof.",
+      "A Dispute Ticket shall be created if the delivery proof lacks a timestamp or valid signature.",
+      "The system shall reject delivery proof if the associated Delivery Assignment is marked as cancelled."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A Delivery Partner completes a physical handover and captures a digital signature",
+        "when": "The system processes the submission",
+        "then": "The system validates the proof and releases funds to the Store Partner"
+      },
+      {
+        "given": "The external courier API returns an invalid or missing delivery confirmation",
+        "when": "The system attempts to retrieve proof for a completed delivery",
+        "then": "The system creates a Dispute Ticket and blocks fund release"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

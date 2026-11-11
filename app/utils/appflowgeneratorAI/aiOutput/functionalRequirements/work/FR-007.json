@@ -1,0 +1,54 @@
+{
+  "result": {
+    "requirement": "The system shall automatically generate and track a Dispute Ticket when a Delivery Proof indicates a missing item, damage, or failed delivery.",
+    "business_need": "The business needs an automated mechanism to capture exceptions early, ensuring fair resolution and accurate financial adjustments without manual intervention.",
+    "functional_behaviour": [
+      "The system shall create a Dispute Ticket linked to the specific Order Request upon detection of a delivery exception.",
+      "The system shall record the nature of the issue, such as missing items, damages, or failed deliveries, within the ticket.",
+      "The system shall update the Dispute Ticket status to reflect current resolution progress throughout the lifecycle.",
+      "The system shall associate the relevant Delivery Proof and Financial Transaction Record with the ticket for verification.",
+      "The system shall notify the Customer and Delivery Partner of the dispute creation and required actions."
+    ],
+    "required_by_actors": [
+      "Customer",
+      "Delivery Partner",
+      "Platform Operator"
+    ],
+    "related_business_objects": [
+      "Dispute Ticket",
+      "Delivery Proof",
+      "Order Request",
+      "Financial Transaction Record",
+      "Feedback Record"
+    ],
+    "related_information_requirements": [
+      "Nature of the deviation from standard process",
+      "Current resolution status of the exception",
+      "Verifiable evidence of physical goods handover failure",
+      "Specific list of items affected by the dispute"
+    ],
+    "business_rules": [
+      "A Dispute Ticket must be created immediately upon receipt of a Delivery Proof indicating a delivery exception.",
+      "The Dispute Ticket status must transition from 'Open' to 'Resolved' only after a final decision is recorded.",
+      "A Dispute Ticket must remain linked to the original Order Request for the duration of the resolution process.",
+      "Financial adjustments cannot be finalized until the Dispute Ticket is marked as Resolved."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A Delivery Partner submits a Delivery Proof showing a package was damaged during transit",
+        "when": "The system processes the delivery proof",
+        "then": "A Dispute Ticket is automatically generated with status 'Open' and linked to the Order Request"
+      },
+      {
+        "given": "A Customer reports a missing item and the system attempts to generate a Dispute Ticket",
+        "when": "The system detects the delivery proof is missing or incomplete",
+        "then": "The system creates a Dispute Ticket with status 'Pending Investigation' and notifies the Customer"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

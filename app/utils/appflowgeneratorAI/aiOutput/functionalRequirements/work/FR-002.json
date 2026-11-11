@@ -1,0 +1,52 @@
+{
+  "result": {
+    "requirement": "The system shall automatically assign incoming orders to the nearest Store Partner that has sufficient Real-Time Inventory Snapshot and available capacity.",
+    "business_need": "The business requires instant, optimal allocation of orders to physical nodes to minimize delivery time and prevent inventory overselling.",
+    "functional_behaviour": [
+      "The system shall calculate the distance between the customer location and all eligible Store Partners.",
+      "The system shall validate that the selected Store Partner has sufficient stock for every item in the Order Request.",
+      "The system shall create a Fulfillment Task linked to the assigned Store Partner and Delivery Assignment.",
+      "The system shall update the Real-Time Inventory Snapshot to reflect the reserved quantities immediately.",
+      "The system shall notify the Store Partner of the new Fulfillment Task via the assigned Delivery Slot."
+    ],
+    "required_by_actors": [
+      "Order Allocation Engine",
+      "Store Partner"
+    ],
+    "related_business_objects": [
+      "Order Request",
+      "Real-Time Inventory Snapshot",
+      "Fulfillment Task",
+      "Delivery Assignment",
+      "Assigned Delivery Slot"
+    ],
+    "related_information_requirements": [
+      "The specific list of items selected by the customer, their quantities, unit prices, and any special handling notes or delivery preferences provided by the customer.",
+      "The current, validated quantity of each sellable item (SKU) at a specific store location, including status flags for availability, partial stock, or temporary unavailability.",
+      "The system-generated assignment linking a specific order to a designated store partner and a specific time window for preparation and dispatch."
+    ],
+    "business_rules": [
+      "An order must only be assigned to a store if the Real-Time Inventory Snapshot shows available quantity greater than or equal to the requested quantity for all items.",
+      "If no store has sufficient inventory for the complete order, the system must not assign the order and must flag it for manual review.",
+      "The system must prioritize the nearest store based on the shortest estimated preparation and dispatch time.",
+      "Inventory quantities reserved by an automatic assignment must be immediately deducted from the Real-Time Inventory Snapshot to prevent overselling."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A customer places an Order Request with items available at multiple Store Partners",
+        "when": "The Order Allocation Engine processes the request",
+        "then": "The system assigns the order to the nearest Store Partner with sufficient stock and creates a Fulfillment Task"
+      },
+      {
+        "given": "A customer places an Order Request where no Store Partner has sufficient stock for all items",
+        "when": "The Order Allocation Engine processes the request",
+        "then": "The system does not assign the order and flags it for manual review without creating a Fulfillment Task"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

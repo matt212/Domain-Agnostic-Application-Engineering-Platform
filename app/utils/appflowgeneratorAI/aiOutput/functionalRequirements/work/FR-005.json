@@ -1,0 +1,56 @@
+{
+  "result": {
+    "requirement": "The system shall automatically calculate and distribute transaction revenue to the Platform Operator, Store Partner, and Payment Provider immediately upon delivery confirmation.",
+    "business_need": "The business needs to ensure accurate, transparent, and timely financial settlement for all parties involved in a transaction to maintain trust and operational efficiency.",
+    "functional_behaviour": [
+      "The system shall validate the Delivery Proof associated with the Order Request before initiating any financial distribution.",
+      "The system shall retrieve the commission rates and payout terms defined in the Store Partner Agreement.",
+      "The system shall calculate the net settlement amount for each party based on the Financial Transaction Record.",
+      "The system shall generate a Financial Transaction Record detailing the split of revenue between the Platform Operator, Store Partner, and Payment Provider.",
+      "The system shall update the status of the Order Request to 'Settled' once the distribution logic is executed.",
+      "The system shall flag the transaction for manual review if the calculated amounts deviate from expected thresholds based on historical data."
+    ],
+    "required_by_actors": [
+      "Platform Operator",
+      "Store Partner",
+      "Payment Provider"
+    ],
+    "related_business_objects": [
+      "Financial Transaction Record",
+      "Delivery Proof",
+      "Order Request",
+      "Store Partner Agreement"
+    ],
+    "related_information_requirements": [
+      "Complete record of monetary exchange including item costs, fees, taxes, and commissions",
+      "Verifiable evidence of physical goods handover to the customer",
+      "Contractual details regarding commission rates and payout schedules",
+      "Verified details of the ordering individual and delivery address",
+      "Qualitative ratings regarding product quality and delivery speed"
+    ],
+    "business_rules": [
+      "Financial distribution shall only occur after a valid Delivery Proof is recorded.",
+      "The sum of all distributed amounts must equal the total value of the Financial Transaction Record.",
+      "Transactions involving high-risk indicators must be paused for manual verification before settlement.",
+      "Settlement calculations must strictly adhere to the terms defined in the Store Partner Agreement.",
+      "A Financial Transaction Record must be generated for every completed delivery regardless of outcome."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A Delivery Proof is successfully recorded for an Order Request",
+        "when": "The system processes the settlement event",
+        "then": "The system generates a Financial Transaction Record with correct split amounts for all parties"
+      },
+      {
+        "given": "The Delivery Proof is missing or invalid for an Order Request",
+        "when": "The system attempts to process the settlement event",
+        "then": "The system prevents financial distribution and flags the Order Request for manual review"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

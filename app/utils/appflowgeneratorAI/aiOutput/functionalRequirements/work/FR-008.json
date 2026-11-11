@@ -1,0 +1,51 @@
+{
+  "result": {
+    "requirement": "The system shall retrieve, validate, and store external regulatory licenses and food safety certifications for Store Partners to ensure legal operation.",
+    "business_need": "The business needs to mitigate legal risks and maintain trust by ensuring all Store Partners operate within required regulatory boundaries.",
+    "functional_behaviour": [
+      "The system shall automatically ingest license data from external regulatory sources or uploaded documents by Store Partners.",
+      "The system shall validate the authenticity of received licenses against known regulatory authority databases.",
+      "The system shall track the current compliance status of each Store Partner and flag any expired or invalid documents.",
+      "The system shall prevent order processing for Store Partners whose critical regulatory licenses are expired or invalid.",
+      "The system shall generate a compliance report detailing the status of all active regulatory documents for Store Partners."
+    ],
+    "required_by_actors": [
+      "Regulatory Authority",
+      "Store Partner",
+      "Fulfillment Supervisor"
+    ],
+    "related_business_objects": [
+      "Store Partner Agreement",
+      "Dispute Ticket",
+      "Customer Profile"
+    ],
+    "related_information_requirements": [
+      "Current records of licenses, permits, and regulatory adherence regarding food safety and labor laws.",
+      "Expiration dates and validity status of regulatory documents.",
+      "Geographic zones where the platform is authorized to operate based on regulatory permissions."
+    ],
+    "business_rules": [
+      "A Store Partner must have a valid and non-expired food safety certificate to accept new orders.",
+      "The system must block order allocation to a Store Partner if their primary operating license is flagged as invalid.",
+      "Regulatory compliance status must be updated within 24 hours of receiving new data from external sources.",
+      "A Store Partner must be notified immediately if their license expiration date is within 30 days."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A Store Partner uploads a valid food safety certificate with a future expiration date.",
+        "when": "The system ingests and validates the document against the Regulatory Authority database.",
+        "then": "The system updates the Store Partner's compliance status to 'Active' and allows order allocation."
+      },
+      {
+        "given": "A Store Partner's food safety certificate has expired in the external database.",
+        "when": "The system performs a scheduled validation check on the Store Partner's records.",
+        "then": "The system updates the compliance status to 'Non-Compliant' and blocks all new order requests for that Store Partner."
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}
