@@ -1,0 +1,36 @@
+{
+  "requirements": [
+    {
+      "name": "Minimum order value validation",
+      "summary": "System must enforce a minimum cart total before allowing order submission to ensure economic viability."
+    },
+    {
+      "name": "Geofenced service area enforcement",
+      "summary": "System must block order placement if the delivery address falls outside defined hyperlocal zones."
+    },
+    {
+      "name": "Real-time stock availability locking",
+      "summary": "System must reserve inventory quantities immediately upon order confirmation to prevent overselling."
+    },
+    {
+      "name": "Product expiry date validation",
+      "summary": "System must prevent ordering of items that have passed their shelf-life or are flagged as expired."
+    },
+    {
+      "name": "Delivery slot capacity verification",
+      "summary": "System must verify that a delivery agent has available capacity before assigning a specific time window."
+    },
+    {
+      "name": "Partner commission rate application",
+      "summary": "System must automatically apply the correct revenue share percentage based on the active store agreement."
+    },
+    {
+      "name": "Regulatory license status check",
+      "summary": "System must block operations in a zone if the store partner lacks a valid food safety or business license."
+    },
+    {
+      "name": "Fraud risk score assessment",
+      "summary": "System must evaluate transaction patterns and flag high-risk orders for manual review before processing."
+    }
+  ]
+}

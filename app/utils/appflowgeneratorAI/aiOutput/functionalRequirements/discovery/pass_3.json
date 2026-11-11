@@ -1,0 +1,36 @@
+{
+  "requirements": [
+    {
+      "name": "Role-based access control enforcement",
+      "summary": "The system must restrict system access based on the specific permissions of each actor."
+    },
+    {
+      "name": "Multi-factor authentication for agents",
+      "summary": "The system must require secure verification for gig-workers accessing delivery tools."
+    },
+    {
+      "name": "Store staff order verification rights",
+      "summary": "The system must enable store personnel to validate item quality before dispatch."
+    },
+    {
+      "name": "Delivery agent capacity management",
+      "summary": "The system must allow agents to view and manage their assigned delivery slots."
+    },
+    {
+      "name": "Customer identity verification workflow",
+      "summary": "The system must validate customer identity and contact details during onboarding."
+    },
+    {
+      "name": "Partner agreement access provisioning",
+      "summary": "The system must grant store partners access only to their specific commercial terms."
+    },
+    {
+      "name": "Regulatory compliance audit logging",
+      "summary": "The system must record all actions taken by actors for external regulatory audits."
+    },
+    {
+      "name": "Dispute resolution authority assignment",
+      "summary": "The system must define which actors have the right to approve or reject disputes."
+    }
+  ]
+}

@@ -1,0 +1,892 @@
+[
+  {
+    "requirement_id": "FR-001",
+    "requirement_name": "Real-time inventory synchronization",
+    "summary": "System must maintain live stock levels across all micro-fulfillment centers to prevent overselling of perishables.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "activity: Inventory Synchronization and Validation",
+      "activity: Order Fulfillment and Preparation",
+      "business object: Order Request",
+      "business object: Fulfillment Task",
+      "business object: Real-Time Inventory Snapshot",
+      "information need: Real-Time Stock Availability and Status",
+      "information need: Order Preparation and Handover Confirmation",
+      "information need: Inventory Synchronization Health Metrics"
+    ],
+    "lens": "End-to-end business workflows from first trigger to final outcome",
+    "merged_from": [
+      "FR-001 Real-time inventory synchronization",
+      "FR-027 Real-time stock availability locking"
+    ]
+  },
+  {
+    "requirement_id": "FR-002",
+    "requirement_name": "Automated order-to-store allocation",
+    "summary": "System must instantly assign incoming orders to the nearest store with available inventory and capacity.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "activity: Order Validation and Resource Allocation",
+      "business object: Order Request"
+    ],
+    "lens": "End-to-end business workflows from first trigger to final outcome",
+    "merged_from": [
+      "FR-002 Automated order-to-store allocation"
+    ]
+  },
+  {
+    "requirement_id": "FR-003",
+    "requirement_name": "Delivery agent capacity management",
+    "summary": "The system must allow agents to view and manage their assigned delivery slots.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Delivery Assignment",
+      "business object: Assigned Delivery Slot",
+      "information need: Delivery Assignment and Agent Capacity"
+    ],
+    "lens": "End-to-end business workflows from first trigger to final outcome",
+    "merged_from": [
+      "FR-003 Dynamic delivery agent assignment",
+      "FR-020 Delivery agent capacity management",
+      "FR-029 Delivery slot capacity verification"
+    ]
+  },
+  {
+    "requirement_id": "FR-004",
+    "requirement_name": "Digital proof of delivery capture",
+    "summary": "System must record and verify physical handover via digital evidence before releasing funds.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "activity: Delivery Handover and Proof Generation",
+      "business object: Feedback Record",
+      "business object: Delivery Proof",
+      "information need: Proof of Delivery (POD) Evidence"
+    ],
+    "lens": "End-to-end business workflows from first trigger to final outcome",
+    "merged_from": [
+      "FR-004 Digital proof of delivery capture",
+      "FR-039 External courier API delivery proof retrieval"
+    ]
+  },
+  {
+    "requirement_id": "FR-005",
+    "requirement_name": "Automated financial settlement processing",
+    "summary": "System must split transaction revenue between platform, store, and payment provider upon delivery confirmation.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "activity: Payment Processing and Financial Settlement",
+      "business object: Financial Transaction Record",
+      "information need: Financial Transaction Ledger"
+    ],
+    "lens": "End-to-end business workflows from first trigger to final outcome",
+    "merged_from": [
+      "FR-005 Automated financial settlement processing"
+    ]
+  },
+  {
+    "requirement_id": "FR-006",
+    "requirement_name": "Real-time expiry and quality alerts",
+    "summary": "System must flag items nearing shelf-life limits to prioritize fulfillment or trigger removal.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Fulfillment Task",
+      "business object: Real-Time Inventory Snapshot",
+      "information need: Product Expiry and Shelf-Life Data"
+    ],
+    "lens": "End-to-end business workflows from first trigger to final outcome",
+    "merged_from": [
+      "FR-006 Real-time expiry and quality alerts"
+    ]
+  },
+  {
+    "requirement_id": "FR-007",
+    "requirement_name": "Automated dispute ticket generation",
+    "summary": "System must create and track exception records for missing items, damages, or failed deliveries.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "activity: Dispute Resolution and Exception Handling",
+      "business object: Dispute Ticket",
+      "information need: Exception and Dispute Ticket Registry"
+    ],
+    "lens": "End-to-end business workflows from first trigger to final outcome",
+    "merged_from": [
+      "FR-007 Automated dispute ticket generation",
+      "FR-013 Dispute ticket status tracking"
+    ]
+  },
+  {
+    "requirement_id": "FR-008",
+    "requirement_name": "Regulatory authority compliance data ingestion",
+    "summary": "The system must retrieve and validate external regulatory licenses and food safety certifications for store partners.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Store Partner Agreement",
+      "business object: Delivery Zone Map",
+      "information need: Compliance and Regulatory Status"
+    ],
+    "lens": "End-to-end business workflows from first trigger to final outcome",
+    "merged_from": [
+      "FR-008 Regulatory compliance status tracking",
+      "FR-036 Regulatory authority compliance data ingestion",
+      "FR-031 Regulatory license status check"
+    ]
+  },
+  {
+    "requirement_id": "FR-009",
+    "requirement_name": "Customer profile lifecycle management",
+    "summary": "The system must enable the creation, modification, and archival of customer identity and preference records throughout their engagement.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Customer Profile",
+      "information need: Customer Identity and Contact Information"
+    ],
+    "lens": "Business object creation, change, status lifecycle, cancellation and archival",
+    "merged_from": [
+      "FR-009 Customer profile lifecycle management"
+    ]
+  },
+  {
+    "requirement_id": "FR-010",
+    "requirement_name": "Store partner agreement versioning",
+    "summary": "The system must support the creation, amendment, and historical tracking of commercial terms between the platform and store partners.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Store Partner Agreement",
+      "information need: Commercial Partnership Terms and Service Level Agreements"
+    ],
+    "lens": "Business object creation, change, status lifecycle, cancellation and archival",
+    "merged_from": [
+      "FR-010 Store partner agreement versioning",
+      "FR-070 Commercial agreement management",
+      "FR-022 Partner agreement access provisioning"
+    ]
+  },
+  {
+    "requirement_id": "FR-011",
+    "requirement_name": "Product catalog change management",
+    "summary": "The system must allow the structured creation, update, and archival of product descriptions, pricing, and availability data.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "activity: Product Catalog Curation and Strategy",
+      "business object: Product Catalog",
+      "information need: Aggregated Product Catalog and Pricing"
+    ],
+    "lens": "Business object creation, change, status lifecycle, cancellation and archival",
+    "merged_from": [
+      "FR-011 Product catalog change management"
+    ]
+  },
+  {
+    "requirement_id": "FR-012",
+    "requirement_name": "Delivery zone boundary updates",
+    "summary": "The system must facilitate the creation, modification, and versioning of geospatial service area definitions and travel time matrices.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Delivery Zone Map",
+      "business object: Service Area Definition",
+      "information need: Delivery Zone Travel Time and Distance Matrix",
+      "information need: Geospatial Service Boundary Definition"
+    ],
+    "lens": "Business object creation, change, status lifecycle, cancellation and archival",
+    "merged_from": [
+      "FR-012 Delivery zone boundary updates"
+    ]
+  },
+  {
+    "requirement_id": "FR-013",
+    "requirement_name": "Financial transaction record archiving",
+    "summary": "The system must enable the secure creation, retention, and long-term archival of detailed financial ledgers and settlement records.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "activity: Payment Processing and Financial Settlement",
+      "business object: Feedback Record",
+      "business object: Financial Transaction Record",
+      "information need: Financial Transaction Ledger"
+    ],
+    "lens": "Business object creation, change, status lifecycle, cancellation and archival",
+    "merged_from": [
+      "FR-014 Financial transaction record archiving"
+    ]
+  },
+  {
+    "requirement_id": "FR-014",
+    "requirement_name": "Service area definition lifecycle",
+    "summary": "The system must handle the creation, activation, deactivation, and historical tracking of geographically delimited delivery zones.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Service Area Definition",
+      "information need: Geospatial Service Boundary Definition"
+    ],
+    "lens": "Business object creation, change, status lifecycle, cancellation and archival",
+    "merged_from": [
+      "FR-015 Service area definition lifecycle"
+    ]
+  },
+  {
+    "requirement_id": "FR-015",
+    "requirement_name": "Delivery assignment status history",
+    "summary": "The system must record the complete lifecycle of delivery assignments, including creation, allocation changes, and final closure states.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Delivery Assignment",
+      "business object: Feedback Record"
+    ],
+    "lens": "Business object creation, change, status lifecycle, cancellation and archival",
+    "merged_from": [
+      "FR-016 Delivery assignment status history"
+    ]
+  },
+  {
+    "requirement_id": "FR-016",
+    "requirement_name": "Role-based access control enforcement",
+    "summary": "The system must restrict system access based on the specific permissions of each actor.",
+    "origin": "ai_extension",
+    "covers_baseline": [],
+    "lens": "What each actor needs to do their job, including authorization and access control",
+    "merged_from": [
+      "FR-017 Role-based access control enforcement"
+    ]
+  },
+  {
+    "requirement_id": "FR-017",
+    "requirement_name": "Multi-factor authentication for agents",
+    "summary": "The system must require secure verification for gig-workers accessing delivery tools.",
+    "origin": "ai_extension",
+    "covers_baseline": [],
+    "lens": "What each actor needs to do their job, including authorization and access control",
+    "merged_from": [
+      "FR-018 Multi-factor authentication for agents"
+    ]
+  },
+  {
+    "requirement_id": "FR-018",
+    "requirement_name": "Store staff order verification rights",
+    "summary": "The system must enable store personnel to validate item quality before dispatch.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Order Request"
+    ],
+    "lens": "What each actor needs to do their job, including authorization and access control",
+    "merged_from": [
+      "FR-019 Store staff order verification rights"
+    ]
+  },
+  {
+    "requirement_id": "FR-019",
+    "requirement_name": "Customer identity verification workflow",
+    "summary": "The system must validate customer identity and contact details during onboarding.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Customer Profile",
+      "information need: Customer Identity and Contact Information"
+    ],
+    "lens": "What each actor needs to do their job, including authorization and access control",
+    "merged_from": [
+      "FR-021 Customer identity verification workflow"
+    ]
+  },
+  {
+    "requirement_id": "FR-020",
+    "requirement_name": "Regulatory compliance audit logging",
+    "summary": "The system must record all actions taken by actors for external regulatory audits.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Feedback Record",
+      "information need: Compliance and Regulatory Status"
+    ],
+    "lens": "What each actor needs to do their job, including authorization and access control",
+    "merged_from": [
+      "FR-023 Regulatory compliance audit logging"
+    ]
+  },
+  {
+    "requirement_id": "FR-021",
+    "requirement_name": "Dispute resolution authority assignment",
+    "summary": "The system must define which actors have the right to approve or reject disputes.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "activity: Dispute Resolution and Exception Handling",
+      "business object: Delivery Assignment",
+      "business object: Dispute Ticket"
+    ],
+    "lens": "What each actor needs to do their job, including authorization and access control",
+    "merged_from": [
+      "FR-024 Dispute resolution authority assignment"
+    ]
+  },
+  {
+    "requirement_id": "FR-022",
+    "requirement_name": "Minimum order value validation",
+    "summary": "System must enforce a minimum cart total before allowing order submission to ensure economic viability.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "activity: Order Validation and Resource Allocation",
+      "business object: Order Request"
+    ],
+    "lens": "Business rules, validations, eligibility checks and regulatory compliance",
+    "merged_from": [
+      "FR-025 Minimum order value validation"
+    ]
+  },
+  {
+    "requirement_id": "FR-023",
+    "requirement_name": "Geofenced service area enforcement",
+    "summary": "System must block order placement if the delivery address falls outside defined hyperlocal zones.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Order Request",
+      "business object: Service Area Definition"
+    ],
+    "lens": "Business rules, validations, eligibility checks and regulatory compliance",
+    "merged_from": [
+      "FR-026 Geofenced service area enforcement"
+    ]
+  },
+  {
+    "requirement_id": "FR-024",
+    "requirement_name": "Product expiry date validation",
+    "summary": "System must prevent ordering of items that have passed their shelf-life or are flagged as expired.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Product Catalog",
+      "information need: Product Expiry and Shelf-Life Data"
+    ],
+    "lens": "Business rules, validations, eligibility checks and regulatory compliance",
+    "merged_from": [
+      "FR-028 Product expiry date validation"
+    ]
+  },
+  {
+    "requirement_id": "FR-025",
+    "requirement_name": "Partner commission rate application",
+    "summary": "System must automatically apply the correct revenue share percentage based on the active store agreement.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Store Partner Agreement",
+      "business object: Order Request"
+    ],
+    "lens": "Business rules, validations, eligibility checks and regulatory compliance",
+    "merged_from": [
+      "FR-030 Partner commission rate application",
+      "FR-049 Dynamic commission rate calculation"
+    ]
+  },
+  {
+    "requirement_id": "FR-026",
+    "requirement_name": "Fraud risk score assessment",
+    "summary": "System must evaluate transaction patterns and flag high-risk orders for manual review before processing.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Customer Profile",
+      "information need: Fraud Detection and Risk Signals"
+    ],
+    "lens": "Business rules, validations, eligibility checks and regulatory compliance",
+    "merged_from": [
+      "FR-032 Fraud risk score assessment",
+      "FR-035 Third-party fraud detection service consumption"
+    ]
+  },
+  {
+    "requirement_id": "FR-027",
+    "requirement_name": "Payment provider transaction gateway integration",
+    "summary": "The system must securely connect with external financial institutions to process customer payments and initiate fund transfers.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "activity: Payment Processing and Financial Settlement",
+      "business object: Customer Profile",
+      "business object: Financial Transaction Record",
+      "information need: Financial Transaction Ledger"
+    ],
+    "lens": "Integrations and information exchange with external parties and systems",
+    "merged_from": [
+      "FR-033 Payment provider transaction gateway integration",
+      "FR-038 Payment provider refund and reversal interface"
+    ]
+  },
+  {
+    "requirement_id": "FR-028",
+    "requirement_name": "External logistics network status synchronization",
+    "summary": "The system must ingest real-time data from third-party logistics providers to monitor fleet availability and route constraints.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Real-Time Inventory Snapshot",
+      "information need: Real-Time Stock Availability and Status",
+      "information need: Real-Time Logistics Network Status"
+    ],
+    "lens": "Integrations and information exchange with external parties and systems",
+    "merged_from": [
+      "FR-034 External logistics network status synchronization"
+    ]
+  },
+  {
+    "requirement_id": "FR-029",
+    "requirement_name": "External mapping service geospatial integration",
+    "summary": "The system must consume live traffic and road network data from external mapping vendors to calculate accurate delivery times.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "information need: Geospatial Service Boundary Definition"
+    ],
+    "lens": "Integrations and information exchange with external parties and systems",
+    "merged_from": [
+      "FR-037 External mapping service geospatial integration"
+    ]
+  },
+  {
+    "requirement_id": "FR-030",
+    "requirement_name": "Third-party tax calculation service connection",
+    "summary": "The system must interface with external tax authorities or services to dynamically compute and remit applicable sales taxes.",
+    "origin": "ai_extension",
+    "covers_baseline": [],
+    "lens": "Integrations and information exchange with external parties and systems",
+    "merged_from": [
+      "FR-040 Third-party tax calculation service connection"
+    ]
+  },
+  {
+    "requirement_id": "FR-031",
+    "requirement_name": "Automated refund initiation workflow",
+    "summary": "The system must automatically trigger refund processes when a dispute is validated or a delivery fails.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Dispute Ticket"
+    ],
+    "lens": "Exception handling, failure recovery, retry, rollback, disputes and refunds",
+    "merged_from": [
+      "FR-041 Automated refund initiation workflow"
+    ]
+  },
+  {
+    "requirement_id": "FR-032",
+    "requirement_name": "Partial refund calculation engine",
+    "summary": "The system must calculate and apply partial refunds based on specific missing or damaged items in an order.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Order Request"
+    ],
+    "lens": "Exception handling, failure recovery, retry, rollback, disputes and refunds",
+    "merged_from": [
+      "FR-042 Partial refund calculation engine"
+    ]
+  },
+  {
+    "requirement_id": "FR-033",
+    "requirement_name": "Failed delivery retry scheduling",
+    "summary": "The system must automatically reassign failed deliveries to available agents based on proximity and capacity.",
+    "origin": "ai_extension",
+    "covers_baseline": [],
+    "lens": "Exception handling, failure recovery, retry, rollback, disputes and refunds",
+    "merged_from": [
+      "FR-043 Failed delivery retry scheduling"
+    ]
+  },
+  {
+    "requirement_id": "FR-034",
+    "requirement_name": "Order cancellation rollback mechanism",
+    "summary": "The system must reverse inventory locks and financial reservations when an order is cancelled before dispatch.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Order Request"
+    ],
+    "lens": "Exception handling, failure recovery, retry, rollback, disputes and refunds",
+    "merged_from": [
+      "FR-044 Order cancellation rollback mechanism"
+    ]
+  },
+  {
+    "requirement_id": "FR-035",
+    "requirement_name": "Dispute evidence collection portal",
+    "summary": "The system must allow agents and customers to upload photos and documents to support dispute claims.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Dispute Ticket",
+      "information need: Proof of Delivery (POD) Evidence"
+    ],
+    "lens": "Exception handling, failure recovery, retry, rollback, disputes and refunds",
+    "merged_from": [
+      "FR-045 Dispute evidence collection portal"
+    ]
+  },
+  {
+    "requirement_id": "FR-036",
+    "requirement_name": "Escalation routing for complex disputes",
+    "summary": "The system must route unresolved disputes to senior support tiers based on severity and financial impact.",
+    "origin": "ai_extension",
+    "covers_baseline": [],
+    "lens": "Exception handling, failure recovery, retry, rollback, disputes and refunds",
+    "merged_from": [
+      "FR-046 Escalation routing for complex disputes"
+    ]
+  },
+  {
+    "requirement_id": "FR-037",
+    "requirement_name": "Refund status notification service",
+    "summary": "The system must send real-time updates to customers regarding the status of their refund requests.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Real-Time Inventory Snapshot",
+      "information need: Real-Time Stock Availability and Status",
+      "information need: Real-Time Logistics Network Status"
+    ],
+    "lens": "Exception handling, failure recovery, retry, rollback, disputes and refunds",
+    "merged_from": [
+      "FR-047 Refund status notification service"
+    ]
+  },
+  {
+    "requirement_id": "FR-038",
+    "requirement_name": "Chargeback prevention alert system",
+    "summary": "The system must flag high-risk transactions to prevent unauthorized chargebacks before settlement occurs.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "activity: Payment Processing and Financial Settlement"
+    ],
+    "lens": "Exception handling, failure recovery, retry, rollback, disputes and refunds",
+    "merged_from": [
+      "FR-048 Chargeback prevention alert system",
+      "FR-056 Refund and chargeback impact analysis"
+    ]
+  },
+  {
+    "requirement_id": "FR-039",
+    "requirement_name": "Real-time revenue share reconciliation",
+    "summary": "System must continuously reconcile platform revenue shares against store partner settlements in real-time.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Store Partner Agreement",
+      "business object: Real-Time Inventory Snapshot"
+    ],
+    "lens": "Financial controls, settlement, pricing, reporting, monitoring and auditability",
+    "merged_from": [
+      "FR-050 Real-time revenue share reconciliation"
+    ]
+  },
+  {
+    "requirement_id": "FR-040",
+    "requirement_name": "Automated tax calculation and collection",
+    "summary": "System must automatically compute and collect applicable taxes based on jurisdiction and product type.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Product Catalog"
+    ],
+    "lens": "Financial controls, settlement, pricing, reporting, monitoring and auditability",
+    "merged_from": [
+      "FR-051 Automated tax calculation and collection"
+    ]
+  },
+  {
+    "requirement_id": "FR-041",
+    "requirement_name": "Multi-currency transaction conversion",
+    "summary": "System must handle currency conversion and settlement for cross-border or multi-currency transactions.",
+    "origin": "ai_extension",
+    "covers_baseline": [],
+    "lens": "Financial controls, settlement, pricing, reporting, monitoring and auditability",
+    "merged_from": [
+      "FR-052 Multi-currency transaction conversion"
+    ]
+  },
+  {
+    "requirement_id": "FR-042",
+    "requirement_name": "Financial audit trail generation",
+    "summary": "System must generate immutable audit logs for all financial transactions and settlement events.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "activity: Payment Processing and Financial Settlement"
+    ],
+    "lens": "Financial controls, settlement, pricing, reporting, monitoring and auditability",
+    "merged_from": [
+      "FR-053 Financial audit trail generation"
+    ]
+  },
+  {
+    "requirement_id": "FR-043",
+    "requirement_name": "Scheduled settlement batch processing",
+    "summary": "System must execute periodic batch processing to finalize and distribute funds to partners and providers.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "activity: Payment Processing and Financial Settlement"
+    ],
+    "lens": "Financial controls, settlement, pricing, reporting, monitoring and auditability",
+    "merged_from": [
+      "FR-054 Scheduled settlement batch processing"
+    ]
+  },
+  {
+    "requirement_id": "FR-044",
+    "requirement_name": "Fraudulent transaction flagging",
+    "summary": "System must identify and flag suspicious financial patterns requiring manual review before settlement.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "activity: Payment Processing and Financial Settlement",
+      "business object: Financial Transaction Record",
+      "information need: Financial Transaction Ledger"
+    ],
+    "lens": "Financial controls, settlement, pricing, reporting, monitoring and auditability",
+    "merged_from": [
+      "FR-055 Fraudulent transaction flagging"
+    ]
+  },
+  {
+    "requirement_id": "FR-045",
+    "requirement_name": "Automated peak demand surge pricing",
+    "summary": "System must dynamically adjust delivery fees and commissions based on real-time network congestion and predicted demand spikes.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Real-Time Inventory Snapshot",
+      "information need: Real-Time Logistics Network Status"
+    ],
+    "lens": "Important capabilities this business would need that are NOT mentioned in the context at all",
+    "merged_from": [
+      "FR-057 Automated peak demand surge pricing"
+    ]
+  },
+  {
+    "requirement_id": "FR-046",
+    "requirement_name": "Predictive inventory replenishment alerts",
+    "summary": "System must notify store partners of low stock levels for high-velocity items before they impact order fulfillment capacity.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "activity: Order Fulfillment and Preparation",
+      "business object: Order Request",
+      "business object: Fulfillment Task"
+    ],
+    "lens": "Important capabilities this business would need that are NOT mentioned in the context at all",
+    "merged_from": [
+      "FR-058 Predictive inventory replenishment alerts"
+    ]
+  },
+  {
+    "requirement_id": "FR-047",
+    "requirement_name": "Dynamic delivery route optimization",
+    "summary": "System must continuously recalculate optimal delivery paths for agents based on live traffic and new order insertions.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Order Request"
+    ],
+    "lens": "Important capabilities this business would need that are NOT mentioned in the context at all",
+    "merged_from": [
+      "FR-059 Dynamic delivery route optimization"
+    ]
+  },
+  {
+    "requirement_id": "FR-048",
+    "requirement_name": "Automated customer loyalty integration",
+    "summary": "System must apply and track loyalty points or subscription benefits during the checkout and settlement process.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Customer Profile"
+    ],
+    "lens": "Important capabilities this business would need that are NOT mentioned in the context at all",
+    "merged_from": [
+      "FR-060 Automated customer loyalty integration"
+    ]
+  },
+  {
+    "requirement_id": "FR-049",
+    "requirement_name": "Real-time agent performance analytics",
+    "summary": "System must provide live dashboards tracking delivery speed, accuracy, and customer satisfaction scores per agent.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Feedback Record",
+      "business object: Customer Profile",
+      "business object: Real-Time Inventory Snapshot",
+      "information need: Customer Satisfaction and Quality Feedback"
+    ],
+    "lens": "Important capabilities this business would need that are NOT mentioned in the context at all",
+    "merged_from": [
+      "FR-061 Real-time agent performance analytics",
+      "FR-073 Delivery agent performance analytics"
+    ]
+  },
+  {
+    "requirement_id": "FR-050",
+    "requirement_name": "Automated service level agreement monitoring",
+    "summary": "System must track and alert on SLA breaches regarding delivery times and order accuracy for store partners.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Store Partner Agreement",
+      "business object: Order Request"
+    ],
+    "lens": "Important capabilities this business would need that are NOT mentioned in the context at all",
+    "merged_from": [
+      "FR-062 Automated service level agreement monitoring"
+    ]
+  },
+  {
+    "requirement_id": "FR-051",
+    "requirement_name": "Automated customer retention incentives",
+    "summary": "System must trigger automated offers or credits to customers based on churn risk indicators or negative feedback.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Feedback Record",
+      "business object: Customer Profile",
+      "information need: Customer Satisfaction and Quality Feedback"
+    ],
+    "lens": "Important capabilities this business would need that are NOT mentioned in the context at all",
+    "merged_from": [
+      "FR-063 Automated customer retention incentives"
+    ]
+  },
+  {
+    "requirement_id": "FR-052",
+    "requirement_name": "Automated multi-channel notification orchestration",
+    "summary": "System must coordinate timely delivery updates across SMS, email, and app push notifications based on order status changes.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Order Request"
+    ],
+    "lens": "Important capabilities this business would need that are NOT mentioned in the context at all",
+    "merged_from": [
+      "FR-064 Automated multi-channel notification orchestration"
+    ]
+  },
+  {
+    "requirement_id": "FR-053",
+    "requirement_name": "Partner onboarding and authorization",
+    "summary": "Enable the platform to verify and activate new store partners and regulatory compliance.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "activity: Market Entry and Partner Onboarding",
+      "business object: Store Partner Agreement",
+      "information need: Compliance and Regulatory Status"
+    ],
+    "lens": "baseline coverage",
+    "merged_from": [
+      "FR-065 Partner onboarding and authorization"
+    ]
+  },
+  {
+    "requirement_id": "FR-054",
+    "requirement_name": "Customer order creation and validation",
+    "summary": "Allow customers to submit and validate item selections with delivery instructions.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "activity: Order Validation and Resource Allocation",
+      "business object: Order Request",
+      "business object: Customer Profile",
+      "information need: Order Composition and Delivery Instructions"
+    ],
+    "lens": "baseline coverage",
+    "merged_from": [
+      "FR-066 Customer order creation and validation"
+    ]
+  },
+  {
+    "requirement_id": "FR-055",
+    "requirement_name": "Fulfillment task routing and dispatch",
+    "summary": "Direct specific orders to the optimal store node for preparation and packing.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "activity: Order Fulfillment and Preparation",
+      "business object: Fulfillment Task",
+      "information need: Fulfillment Task Allocation and Routing"
+    ],
+    "lens": "baseline coverage",
+    "merged_from": [
+      "FR-067 Fulfillment task routing and dispatch"
+    ]
+  },
+  {
+    "requirement_id": "FR-056",
+    "requirement_name": "Last-mile delivery execution tracking",
+    "summary": "Monitor the physical movement of goods from the store to the customer's location.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "activity: Last-Mile Logistics Execution",
+      "business object: Customer Profile"
+    ],
+    "lens": "baseline coverage",
+    "merged_from": [
+      "FR-068 Last-mile delivery execution tracking"
+    ]
+  },
+  {
+    "requirement_id": "FR-057",
+    "requirement_name": "Customer feedback and rating submission",
+    "summary": "Capture post-delivery satisfaction data and textual comments for quality analysis.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Feedback Record",
+      "business object: Customer Profile",
+      "information need: Customer Satisfaction and Quality Feedback"
+    ],
+    "lens": "baseline coverage",
+    "merged_from": [
+      "FR-069 Customer feedback and rating submission",
+      "FR-072 Customer satisfaction rating submission"
+    ]
+  },
+  {
+    "requirement_id": "FR-058",
+    "requirement_name": "Demand forecasting and resource planning",
+    "summary": "Predict future order volumes to optimize agent positioning and store inventory levels.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "activity: Order Validation and Resource Allocation",
+      "activity: Order Initiation and Demand Capture",
+      "business object: Order Request",
+      "information need: Dynamic Demand Forecasting"
+    ],
+    "lens": "baseline coverage",
+    "merged_from": [
+      "FR-071 Demand forecasting and resource planning"
+    ]
+  },
+  {
+    "requirement_id": "FR-059",
+    "requirement_name": "Store fulfillment quality scoring",
+    "summary": "Calculate quality scores for store partners based on order preparation accuracy and feedback.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "activity: Order Fulfillment and Preparation",
+      "business object: Feedback Record",
+      "business object: Order Request",
+      "business object: Fulfillment Task",
+      "information need: Order Preparation and Handover Confirmation",
+      "information need: Customer Satisfaction and Quality Feedback"
+    ],
+    "lens": "baseline coverage",
+    "merged_from": [
+      "FR-074 Store fulfillment quality scoring"
+    ]
+  },
+  {
+    "requirement_id": "FR-060",
+    "requirement_name": "Feedback-driven quality improvement alerts",
+    "summary": "Generate actionable alerts for operations teams when feedback indicates systemic quality issues.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Feedback Record",
+      "information need: Customer Satisfaction and Quality Feedback"
+    ],
+    "lens": "baseline coverage",
+    "merged_from": [
+      "FR-075 Feedback-driven quality improvement alerts"
+    ]
+  },
+  {
+    "requirement_id": "FR-061",
+    "requirement_name": "Negative feedback review workflow",
+    "summary": "Route low-rated feedback to supervisors for investigation and resolution actions.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Feedback Record"
+    ],
+    "lens": "baseline coverage",
+    "merged_from": [
+      "FR-076 Negative feedback review workflow"
+    ]
+  },
+  {
+    "requirement_id": "FR-062",
+    "requirement_name": "Feedback data aggregation for insights",
+    "summary": "Consolidate feedback records to provide data-driven insights for business strategy.",
+    "origin": "baseline_covered",
+    "covers_baseline": [
+      "business object: Feedback Record"
+    ],
+    "lens": "baseline coverage",
+    "merged_from": [
+      "FR-077 Feedback data aggregation for insights"
+    ]
+  }
+]

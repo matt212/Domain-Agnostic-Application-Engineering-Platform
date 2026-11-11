@@ -1,0 +1,36 @@
+{
+  "requirements": [
+    {
+      "name": "Customer profile lifecycle management",
+      "summary": "The system must enable the creation, modification, and archival of customer identity and preference records throughout their engagement."
+    },
+    {
+      "name": "Store partner agreement versioning",
+      "summary": "The system must support the creation, amendment, and historical tracking of commercial terms between the platform and store partners."
+    },
+    {
+      "name": "Product catalog change management",
+      "summary": "The system must allow the structured creation, update, and archival of product descriptions, pricing, and availability data."
+    },
+    {
+      "name": "Delivery zone boundary updates",
+      "summary": "The system must facilitate the creation, modification, and versioning of geospatial service area definitions and travel time matrices."
+    },
+    {
+      "name": "Dispute ticket status tracking",
+      "summary": "The system must manage the creation, state transitions, and archival of records for unresolved issues like missing or damaged goods."
+    },
+    {
+      "name": "Financial transaction record archiving",
+      "summary": "The system must enable the secure creation, retention, and long-term archival of detailed financial ledgers and settlement records."
+    },
+    {
+      "name": "Service area definition lifecycle",
+      "summary": "The system must handle the creation, activation, deactivation, and historical tracking of geographically delimited delivery zones."
+    },
+    {
+      "name": "Delivery assignment status history",
+      "summary": "The system must record the complete lifecycle of delivery assignments, including creation, allocation changes, and final closure states."
+    }
+  ]
+}

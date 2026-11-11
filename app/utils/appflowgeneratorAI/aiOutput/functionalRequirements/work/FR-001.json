@@ -1,0 +1,52 @@
+{
+  "result": {
+    "requirement": "The system shall maintain synchronized, real-time inventory levels across all Store/Fulfillment Centers to prevent overselling of perishable goods and ensure accurate stock visibility.",
+    "business_need": "The business requires immediate stock accuracy to prevent selling items that are out of stock or expired, thereby protecting revenue and maintaining customer trust.",
+    "functional_behaviour": [
+      "The system shall receive and validate Real-Time Inventory Snapshots from Store Partners to update the central Product Catalog.",
+      "The system shall lock available stock quantities for an Order Request immediately upon allocation to prevent concurrent overselling.",
+      "The system shall monitor the integrity of the data link between the Store Partner and the platform to detect synchronization discrepancies.",
+      "The system shall prioritize the sale of perishable inventory based on freshness status and expiration dates.",
+      "The system shall release locked stock quantities if an Order Request is cancelled or times out within the defined window."
+    ],
+    "required_by_actors": [
+      "Store Partner",
+      "Order Allocation Engine",
+      "Platform Operator"
+    ],
+    "related_business_objects": [
+      "Real-Time Inventory Snapshot",
+      "Product Catalog",
+      "Order Request",
+      "Fulfillment Task"
+    ],
+    "related_information_requirements": [
+      "The current, validated quantity of each sellable item (SKU) at a specific store location, including status flags for availability, partial stock, or temporary unavailability.",
+      "Data indicating the status of the data link between the store's Point of Sale and the platform, including latency, last sync time, and detected discrepancies.",
+      "Information regarding the expiration dates and freshness status of perishable goods."
+    ],
+    "business_rules": [
+      "Stock quantities must be locked exclusively to a single Order Request until the fulfillment task is completed or the order is cancelled.",
+      "Perishable items must be prioritized for allocation to orders based on their proximity to the expiration date.",
+      "The system must flag a synchronization discrepancy if the data link latency exceeds the defined threshold or if a sync failure is detected.",
+      "Locked stock must be automatically released if the Order Request is not confirmed within the allocated time window."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A Store Partner updates the quantity of a perishable SKU in their Real-Time Inventory Snapshot",
+        "when": "The Order Allocation Engine attempts to allocate an Order Request for that SKU",
+        "then": "The system shall reflect the updated quantity immediately and allow allocation only if stock is sufficient"
+      },
+      {
+        "given": "An Order Request has successfully locked stock for a perishable item",
+        "when": "The customer cancels the Order Request before the fulfillment task begins",
+        "then": "The system shall release the locked stock quantity back to the Real-Time Inventory Snapshot for other orders"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

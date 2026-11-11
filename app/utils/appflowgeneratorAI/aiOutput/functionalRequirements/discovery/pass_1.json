@@ -1,0 +1,36 @@
+{
+  "requirements": [
+    {
+      "name": "Real-time inventory synchronization",
+      "summary": "System must maintain live stock levels across all micro-fulfillment centers to prevent overselling of perishables."
+    },
+    {
+      "name": "Automated order-to-store allocation",
+      "summary": "System must instantly assign incoming orders to the nearest store with available inventory and capacity."
+    },
+    {
+      "name": "Dynamic delivery agent assignment",
+      "summary": "System must match orders with gig-workers based on proximity, capacity, and assigned time slots."
+    },
+    {
+      "name": "Digital proof of delivery capture",
+      "summary": "System must record and verify physical handover via digital evidence before releasing funds."
+    },
+    {
+      "name": "Automated financial settlement processing",
+      "summary": "System must split transaction revenue between platform, store, and payment provider upon delivery confirmation."
+    },
+    {
+      "name": "Real-time expiry and quality alerts",
+      "summary": "System must flag items nearing shelf-life limits to prioritize fulfillment or trigger removal."
+    },
+    {
+      "name": "Automated dispute ticket generation",
+      "summary": "System must create and track exception records for missing items, damages, or failed deliveries."
+    },
+    {
+      "name": "Regulatory compliance status tracking",
+      "summary": "System must monitor and enforce food safety and labor law adherence for all partners and agents."
+    }
+  ]
+}

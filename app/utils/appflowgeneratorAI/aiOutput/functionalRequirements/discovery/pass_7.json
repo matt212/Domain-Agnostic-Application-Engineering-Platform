@@ -1,0 +1,36 @@
+{
+  "requirements": [
+    {
+      "name": "Dynamic commission rate calculation",
+      "summary": "System must calculate and apply variable commission percentages based on store agreements and order value."
+    },
+    {
+      "name": "Real-time revenue share reconciliation",
+      "summary": "System must continuously reconcile platform revenue shares against store partner settlements in real-time."
+    },
+    {
+      "name": "Automated tax calculation and collection",
+      "summary": "System must automatically compute and collect applicable taxes based on jurisdiction and product type."
+    },
+    {
+      "name": "Multi-currency transaction conversion",
+      "summary": "System must handle currency conversion and settlement for cross-border or multi-currency transactions."
+    },
+    {
+      "name": "Financial audit trail generation",
+      "summary": "System must generate immutable audit logs for all financial transactions and settlement events."
+    },
+    {
+      "name": "Scheduled settlement batch processing",
+      "summary": "System must execute periodic batch processing to finalize and distribute funds to partners and providers."
+    },
+    {
+      "name": "Fraudulent transaction flagging",
+      "summary": "System must identify and flag suspicious financial patterns requiring manual review before settlement."
+    },
+    {
+      "name": "Refund and chargeback impact analysis",
+      "summary": "System must calculate and adjust financial records when refunds or chargebacks occur post-settlement."
+    }
+  ]
+}

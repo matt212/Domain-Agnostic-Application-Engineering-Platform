@@ -1,0 +1,36 @@
+{
+  "requirements": [
+    {
+      "name": "Payment provider transaction gateway integration",
+      "summary": "The system must securely connect with external financial institutions to process customer payments and initiate fund transfers."
+    },
+    {
+      "name": "External logistics network status synchronization",
+      "summary": "The system must ingest real-time data from third-party logistics providers to monitor fleet availability and route constraints."
+    },
+    {
+      "name": "Third-party fraud detection service consumption",
+      "summary": "The system must query external risk engines to validate customer identities and assess transaction fraud likelihood."
+    },
+    {
+      "name": "Regulatory authority compliance data ingestion",
+      "summary": "The system must retrieve and validate external regulatory licenses and food safety certifications for store partners."
+    },
+    {
+      "name": "External mapping service geospatial integration",
+      "summary": "The system must consume live traffic and road network data from external mapping vendors to calculate accurate delivery times."
+    },
+    {
+      "name": "Payment provider refund and reversal interface",
+      "summary": "The system must enable seamless communication with external payment gateways to process refunds and handle failed transactions."
+    },
+    {
+      "name": "External courier API delivery proof retrieval",
+      "summary": "The system must integrate with third-party courier APIs to automatically fetch digital proof of delivery evidence."
+    },
+    {
+      "name": "Third-party tax calculation service connection",
+      "summary": "The system must interface with external tax authorities or services to dynamically compute and remit applicable sales taxes."
+    }
+  ]
+}

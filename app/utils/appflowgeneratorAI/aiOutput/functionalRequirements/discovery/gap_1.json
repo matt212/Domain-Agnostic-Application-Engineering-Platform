@@ -1,0 +1,32 @@
+{
+  "requirements": [
+    {
+      "name": "Partner onboarding and authorization",
+      "summary": "Enable the platform to verify and activate new store partners and regulatory compliance."
+    },
+    {
+      "name": "Customer order creation and validation",
+      "summary": "Allow customers to submit and validate item selections with delivery instructions."
+    },
+    {
+      "name": "Fulfillment task routing and dispatch",
+      "summary": "Direct specific orders to the optimal store node for preparation and packing."
+    },
+    {
+      "name": "Last-mile delivery execution tracking",
+      "summary": "Monitor the physical movement of goods from the store to the customer's location."
+    },
+    {
+      "name": "Customer feedback and rating submission",
+      "summary": "Capture post-delivery satisfaction data and textual comments for quality analysis."
+    },
+    {
+      "name": "Commercial agreement management",
+      "summary": "Store and enforce commercial terms and service level agreements between platform and partners."
+    },
+    {
+      "name": "Demand forecasting and resource planning",
+      "summary": "Predict future order volumes to optimize agent positioning and store inventory levels."
+    }
+  ]
+}

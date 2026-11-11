@@ -1,0 +1,566 @@
+{
+  "requirements": [
+    {
+      "name": "Capability name",
+      "summary": "",
+      "merges": [
+        "FR-001",
+        "FR-005",
+        "FR-009"
+      ]
+    },
+    {
+      "name": "Real-time Inventory and Stock Management",
+      "summary": "",
+      "merges": [
+        "FR-001",
+        "FR-027",
+        "FR-058",
+        "FR-068"
+      ]
+    },
+    {
+      "name": "Order Fulfillment and Allocation",
+      "summary": "",
+      "merges": [
+        "FR-002",
+        "FR-066",
+        "FR-067"
+      ]
+    },
+    {
+      "name": "Dynamic Delivery Routing and Assignment",
+      "summary": "",
+      "merges": [
+        "FR-003",
+        "FR-029",
+        "FR-059"
+      ]
+    },
+    {
+      "name": "Delivery Proof and Execution Tracking",
+      "summary": "",
+      "merges": [
+        "FR-004",
+        "FR-039",
+        "FR-068"
+      ]
+    },
+    {
+      "name": "Automated Financial Settlement and Reconciliation",
+      "summary": "",
+      "merges": [
+        "FR-005",
+        "FR-050",
+        "FR-054"
+      ]
+    },
+    {
+      "name": "Real-time Quality and Expiry Monitoring",
+      "summary": "",
+      "merges": [
+        "FR-006",
+        "FR-028"
+      ]
+    },
+    {
+      "name": "Automated Dispute Ticket Generation",
+      "summary": "",
+      "merges": [
+        "FR-007"
+      ]
+    },
+    {
+      "name": "Regulatory Compliance Status and Audit",
+      "summary": "",
+      "merges": [
+        "FR-008",
+        "FR-023",
+        "FR-031",
+        "FR-036"
+      ]
+    },
+    {
+      "name": "Customer Profile and Identity Management",
+      "summary": "",
+      "merges": [
+        "FR-009",
+        "FR-021"
+      ]
+    },
+    {
+      "name": "Partner Agreement and Contract Management",
+      "summary": "",
+      "merges": [
+        "FR-010",
+        "FR-070"
+      ]
+    },
+    {
+      "name": "Product Catalog and Change Management",
+      "summary": "",
+      "merges": [
+        "FR-011"
+      ]
+    },
+    {
+      "name": "Delivery Zone and Service Area Definition",
+      "summary": "",
+      "merges": [
+        "FR-012",
+        "FR-016",
+        "FR-026"
+      ]
+    },
+    {
+      "name": "Dispute Ticket Status and Tracking",
+      "summary": "",
+      "merges": [
+        "FR-013"
+      ]
+    },
+    {
+      "name": "Financial Transaction Record Archiving",
+      "summary": "",
+      "merges": [
+        "FR-014"
+      ]
+    },
+    {
+      "name": "Service Area Lifecycle Management",
+      "summary": "",
+      "merges": [
+        "FR-015"
+      ]
+    },
+    {
+      "name": "Delivery Assignment Status History",
+      "summary": "",
+      "merges": [
+        "FR-016"
+      ]
+    },
+    {
+      "name": "Role-Based Access Control Enforcement",
+      "summary": "",
+      "merges": [
+        "FR-017"
+      ]
+    },
+    {
+      "name": "Multi-Factor Authentication for Agents",
+      "summary": "",
+      "merges": [
+        "FR-018"
+      ]
+    },
+    {
+      "name": "Store Staff Order Verification Rights",
+      "summary": "",
+      "merges": [
+        "FR-019"
+      ]
+    },
+    {
+      "name": "Delivery Agent Capacity Management",
+      "summary": "",
+      "merges": [
+        "FR-020"
+      ]
+    },
+    {
+      "name": "Customer Identity Verification Workflow",
+      "summary": "",
+      "merges": [
+        "FR-021"
+      ]
+    },
+    {
+      "name": "Partner Agreement Access Provisioning",
+      "summary": "",
+      "merges": [
+        "FR-022"
+      ]
+    },
+    {
+      "name": "Regulatory Compliance Audit Logging",
+      "summary": "",
+      "merges": [
+        "FR-023"
+      ]
+    },
+    {
+      "name": "Dispute Resolution Authority Assignment",
+      "summary": "",
+      "merges": [
+        "FR-024"
+      ]
+    },
+    {
+      "name": "Minimum Order Value Validation",
+      "summary": "",
+      "merges": [
+        "FR-025"
+      ]
+    },
+    {
+      "name": "Geofenced Service Area Enforcement",
+      "summary": "",
+      "merges": [
+        "FR-026"
+      ]
+    },
+    {
+      "name": "Real-Time Stock Availability Locking",
+      "summary": "",
+      "merges": [
+        "FR-027"
+      ]
+    },
+    {
+      "name": "Product Expiry Date Validation",
+      "summary": "",
+      "merges": [
+        "FR-028"
+      ]
+    },
+    {
+      "name": "Delivery Slot Capacity Verification",
+      "summary": "",
+      "merges": [
+        "FR-029"
+      ]
+    },
+    {
+      "name": "Partner Commission Rate Application",
+      "summary": "",
+      "merges": [
+        "FR-030"
+      ]
+    },
+    {
+      "name": "Regulatory License Status Check",
+      "summary": "",
+      "merges": [
+        "FR-031"
+      ]
+    },
+    {
+      "name": "Fraud Risk Score Assessment",
+      "summary": "",
+      "merges": [
+        "FR-032"
+      ]
+    },
+    {
+      "name": "Payment Provider Transaction Gateway Integration",
+      "summary": "",
+      "merges": [
+        "FR-033"
+      ]
+    },
+    {
+      "name": "External Logistics Network Status Synchronization",
+      "summary": "",
+      "merges": [
+        "FR-034"
+      ]
+    },
+    {
+      "name": "Third-Party Fraud Detection Service Consumption",
+      "summary": "",
+      "merges": [
+        "FR-035"
+      ]
+    },
+    {
+      "name": "Regulatory Authority Compliance Data Ingestion",
+      "summary": "",
+      "merges": [
+        "FR-036"
+      ]
+    },
+    {
+      "name": "External Mapping Service Geospatial Integration",
+      "summary": "",
+      "merges": [
+        "FR-037"
+      ]
+    },
+    {
+      "name": "Payment Provider Refund and Reversal Interface",
+      "summary": "",
+      "merges": [
+        "FR-038"
+      ]
+    },
+    {
+      "name": "External Courier API Delivery Proof Retrieval",
+      "summary": "",
+      "merges": [
+        "FR-039"
+      ]
+    },
+    {
+      "name": "Third-Party Tax Calculation Service Connection",
+      "summary": "",
+      "merges": [
+        "FR-040"
+      ]
+    },
+    {
+      "name": "Automated Refund Initiation Workflow",
+      "summary": "",
+      "merges": [
+        "FR-041"
+      ]
+    },
+    {
+      "name": "Partial Refund Calculation Engine",
+      "summary": "",
+      "merges": [
+        "FR-042"
+      ]
+    },
+    {
+      "name": "Failed Delivery Retry Scheduling",
+      "summary": "",
+      "merges": [
+        "FR-043"
+      ]
+    },
+    {
+      "name": "Order Cancellation Rollback Mechanism",
+      "summary": "",
+      "merges": [
+        "FR-044"
+      ]
+    },
+    {
+      "name": "Dispute Evidence Collection Portal",
+      "summary": "",
+      "merges": [
+        "FR-045"
+      ]
+    },
+    {
+      "name": "Escalation Routing for Complex Disputes",
+      "summary": "",
+      "merges": [
+        "FR-046"
+      ]
+    },
+    {
+      "name": "Refund Status Notification Service",
+      "summary": "",
+      "merges": [
+        "FR-047"
+      ]
+    },
+    {
+      "name": "Chargeback Prevention Alert System",
+      "summary": "",
+      "merges": [
+        "FR-048"
+      ]
+    },
+    {
+      "name": "Dynamic Commission Rate Calculation",
+      "summary": "",
+      "merges": [
+        "FR-049"
+      ]
+    },
+    {
+      "name": "Real-Time Revenue Share Reconciliation",
+      "summary": "",
+      "merges": [
+        "FR-050"
+      ]
+    },
+    {
+      "name": "Automated Tax Calculation and Collection",
+      "summary": "",
+      "merges": [
+        "FR-051"
+      ]
+    },
+    {
+      "name": "Multi-Currency Transaction Conversion",
+      "summary": "",
+      "merges": [
+        "FR-052"
+      ]
+    },
+    {
+      "name": "Financial Audit Trail Generation",
+      "summary": "",
+      "merges": [
+        "FR-053"
+      ]
+    },
+    {
+      "name": "Scheduled Settlement Batch Processing",
+      "summary": "",
+      "merges": [
+        "FR-054"
+      ]
+    },
+    {
+      "name": "Fraudulent Transaction Flagging",
+      "summary": "",
+      "merges": [
+        "FR-055"
+      ]
+    },
+    {
+      "name": "Refund and Chargeback Impact Analysis",
+      "summary": "",
+      "merges": [
+        "FR-056"
+      ]
+    },
+    {
+      "name": "Automated Peak Demand Surge Pricing",
+      "summary": "",
+      "merges": [
+        "FR-057"
+      ]
+    },
+    {
+      "name": "Predictive Inventory Replenishment Alerts",
+      "summary": "",
+      "merges": [
+        "FR-058"
+      ]
+    },
+    {
+      "name": "Dynamic Delivery Route Optimization",
+      "summary": "",
+      "merges": [
+        "FR-059"
+      ]
+    },
+    {
+      "name": "Automated Customer Loyalty Integration",
+      "summary": "",
+      "merges": [
+        "FR-060"
+      ]
+    },
+    {
+      "name": "Real-Time Agent Performance Analytics",
+      "summary": "",
+      "merges": [
+        "FR-061",
+        "FR-073"
+      ]
+    },
+    {
+      "name": "Automated Service Level Agreement Monitoring",
+      "summary": "",
+      "merges": [
+        "FR-062"
+      ]
+    },
+    {
+      "name": "Automated Customer Retention Incentives",
+      "summary": "",
+      "merges": [
+        "FR-063"
+      ]
+    },
+    {
+      "name": "Automated Multi-Channel Notification Orchestration",
+      "summary": "",
+      "merges": [
+        "FR-064"
+      ]
+    },
+    {
+      "name": "Partner Onboarding and Authorization",
+      "summary": "",
+      "merges": [
+        "FR-065"
+      ]
+    },
+    {
+      "name": "Customer Order Creation and Validation",
+      "summary": "",
+      "merges": [
+        "FR-066"
+      ]
+    },
+    {
+      "name": "Fulfillment Task Routing and Dispatch",
+      "summary": "",
+      "merges": [
+        "FR-067"
+      ]
+    },
+    {
+      "name": "Last-Mile Delivery Execution Tracking",
+      "summary": "",
+      "merges": [
+        "FR-068"
+      ]
+    },
+    {
+      "name": "Customer Feedback and Rating Submission",
+      "summary": "",
+      "merges": [
+        "FR-069",
+        "FR-072"
+      ]
+    },
+    {
+      "name": "Commercial Agreement Management",
+      "summary": "",
+      "merges": [
+        "FR-070"
+      ]
+    },
+    {
+      "name": "Demand Forecasting and Resource Planning",
+      "summary": "",
+      "merges": [
+        "FR-071"
+      ]
+    },
+    {
+      "name": "Customer Satisfaction Rating Submission",
+      "summary": "",
+      "merges": [
+        "FR-072"
+      ]
+    },
+    {
+      "name": "Store Fulfillment Quality Scoring",
+      "summary": "",
+      "merges": [
+        "FR-074"
+      ]
+    },
+    {
+      "name": "Feedback-Driven Quality Improvement Alerts",
+      "summary": "",
+      "merges": [
+        "FR-075"
+      ]
+    },
+    {
+      "name": "Negative Feedback Review Workflow",
+      "summary": "",
+      "merges": [
+        "FR-076"
+      ]
+    },
+    {
+      "name": "Feedback Data Aggregation for Insights",
+      "summary": "",
+      "merges": [
+        "FR-077"
+      ]
+    }
+  ]
+}

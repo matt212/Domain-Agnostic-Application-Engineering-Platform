@@ -1,7 +1,0 @@
-Execution failed: No JSON object was found in the model response.
-
-STDOUT:
-
-
-STDERR:
-
