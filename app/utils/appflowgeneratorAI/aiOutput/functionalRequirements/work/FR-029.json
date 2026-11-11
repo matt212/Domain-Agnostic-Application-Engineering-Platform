@@ -1,0 +1,51 @@
+{
+  "result": {
+    "requirement": "The system shall integrate with external mapping services to consume live traffic and road network data for calculating accurate delivery times.",
+    "business_need": "Accurate delivery time estimates are critical for setting realistic fees, managing customer expectations, and optimizing fleet capacity.",
+    "functional_behaviour": [
+      "The system shall retrieve real-time traffic conditions and road network constraints from the external mapping service.",
+      "The system shall calculate dynamic travel duration and distance between the Store Partner and the customer address.",
+      "The system shall update the estimated arrival time for the Delivery Assignment based on current traffic patterns.",
+      "The system shall validate that the calculated route remains within the active Service Area Definition.",
+      "The system shall refresh delivery time estimates whenever significant traffic changes occur during the active delivery window."
+    ],
+    "required_by_actors": [
+      "Order Allocation Engine",
+      "Delivery Partner",
+      "Customer"
+    ],
+    "related_business_objects": [
+      "Delivery Assignment",
+      "Service Area Definition",
+      "Customer Profile"
+    ],
+    "related_information_requirements": [
+      "Calculated estimates of travel duration and distance accounting for traffic patterns",
+      "Precise geographic coordinates defining the service zone boundaries",
+      "Verified delivery addresses and contact details for the ordering individual"
+    ],
+    "business_rules": [
+      "The system shall use live traffic data to adjust estimated arrival times whenever congestion exceeds a predefined threshold.",
+      "The system shall reject any calculated route that falls outside the authorized Service Area Definition.",
+      "The system shall recalculate delivery times immediately upon receiving an update from the external mapping service.",
+      "The system shall display the estimated arrival time to the Delivery Partner and Customer within five minutes of the last data refresh."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A Delivery Assignment is created with a Store Partner and a valid customer address",
+        "when": "The system queries the external mapping service for current traffic conditions",
+        "then": "The system calculates and displays an estimated arrival time that reflects current road congestion"
+      },
+      {
+        "given": "A Delivery Assignment is active and traffic conditions change significantly on the route",
+        "when": "The external mapping service pushes an update regarding road closures or heavy traffic",
+        "then": "The system updates the estimated arrival time and notifies the Delivery Partner of the delay"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

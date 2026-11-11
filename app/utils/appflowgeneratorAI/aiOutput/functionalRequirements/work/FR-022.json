@@ -1,0 +1,52 @@
+{
+  "result": {
+    "requirement": "The system shall prevent the submission of an Order Request if the calculated cart total is below the minimum order value defined in the Store Partner Agreement.",
+    "business_need": "The business needs this to ensure economic viability by preventing the processing of orders that cannot cover operational costs or meet delivery thresholds.",
+    "functional_behaviour": [
+      "The system shall calculate the total monetary value of all items in the Order Request before submission.",
+      "The system shall retrieve the minimum order value threshold associated with the specific Store Partner Agreement.",
+      "The system shall block the Order Request submission and display an error message if the cart total is less than the threshold.",
+      "The system shall allow the Order Request submission only if the cart total meets or exceeds the minimum order value.",
+      "The system shall update the Customer Profile to reflect the minimum order value constraint for future sessions.",
+      "The system shall log the validation attempt and the resulting decision in the Financial Transaction Record."
+    ],
+    "required_by_actors": [
+      "Customer",
+      "Store Partner"
+    ],
+    "related_business_objects": [
+      "Order Request",
+      "Store Partner Agreement",
+      "Customer Profile",
+      "Financial Transaction Record"
+    ],
+    "related_information_requirements": [
+      "The specific list of items selected by the customer, their quantities, unit prices, and any special handling notes or delivery preferences provided by the customer.",
+      "Verified details about the ordering individual, including unique identifiers, delivery addresses, and primary contact methods (phone, email).",
+      "The active linkage between a ready order and a specific delivery agent, including the assigned route, estimated arrival time, and the agent's current workload status."
+    ],
+    "business_rules": [
+      "An Order Request cannot be submitted if the sum of item prices is strictly less than the minimum order value defined in the Store Partner Agreement.",
+      "An Order Request can be submitted if the sum of item prices is equal to or greater than the minimum order value defined in the Store Partner Agreement.",
+      "The minimum order value must be dynamically retrieved from the Store Partner Agreement at the time of validation.",
+      "The system must display a clear error message to the Customer when the minimum order value is not met."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A customer adds items to their cart totaling $150 and the Store Partner Agreement requires a minimum of $100.",
+        "when": "The customer attempts to submit the Order Request.",
+        "then": "The system allows the submission and proceeds to the next step."
+      },
+      {
+        "given": "A customer adds items to their cart totaling $80 and the Store Partner Agreement requires a minimum of $100.",
+        "when": "The customer attempts to submit the Order Request.",
+        "then": "The system blocks the submission and displays an error message indicating the minimum order value is not met."
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

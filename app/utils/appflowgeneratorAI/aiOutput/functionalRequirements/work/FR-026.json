@@ -1,0 +1,52 @@
+{
+  "result": {
+    "requirement": "The system shall evaluate transaction patterns and consume third-party fraud detection services to assess risk scores for orders before processing.",
+    "business_need": "The business needs this to prevent financial loss from fraudulent transactions and ensure secure payment processing.",
+    "functional_behaviour": [
+      "The system shall ingest real-time transaction data and customer profile details to identify unusual order patterns.",
+      "The system shall consume external signals from a third-party fraud detection service to calculate a dynamic risk score.",
+      "The system shall automatically flag high-risk orders for manual review by the Payment Provider.",
+      "The system shall block or hold processing for orders exceeding the defined high-risk threshold until cleared.",
+      "The system shall log the risk assessment results and third-party response details for audit trails."
+    ],
+    "required_by_actors": [
+      "Payment Provider",
+      "Platform Operator"
+    ],
+    "related_business_objects": [
+      "Financial Transaction Record",
+      "Customer Profile",
+      "Order Request",
+      "Dispute Ticket"
+    ],
+    "related_information_requirements": [
+      "Indicators and historical data used to assess the likelihood of fraudulent transactions",
+      "Verified details about the ordering individual, including unique identifiers and delivery addresses",
+      "Complete record of monetary exchange detailing item costs and fees",
+      "Qualitative ratings and comments provided by the customer regarding service performance"
+    ],
+    "business_rules": [
+      "An order must be flagged for manual review if the calculated risk score exceeds the high-risk threshold.",
+      "The system must consume the third-party fraud detection service response before allowing any financial transaction to proceed.",
+      "High-risk orders must remain in a pending state until a Payment Provider explicitly approves or rejects them.",
+      "All risk assessment events must be recorded with a timestamp and the specific indicators that triggered the score."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "An order request is submitted with valid customer profile and payment details",
+        "when": "The system evaluates the transaction against third-party fraud indicators",
+        "then": "The system calculates a risk score and processes the order if the score is below the high-risk threshold"
+      },
+      {
+        "given": "An order request exhibits unusual patterns such as rapid address changes or mismatched billing data",
+        "when": "The system evaluates the transaction and receives a high-risk score from the third-party service",
+        "then": "The system flags the order for manual review and prevents the Financial Transaction Record from being finalized"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

@@ -1,0 +1,48 @@
+{
+  "result": {
+    "requirement": "The system shall prevent the creation of an Order Request if the customer's delivery address falls outside the active boundaries of any defined Service Area Definition.",
+    "business_need": "The business needs to enforce strict geofencing to ensure operational feasibility and prevent accepting orders that cannot be physically fulfilled within the hyperlocal zones.",
+    "functional_behaviour": [
+      "The system shall retrieve the precise geographic coordinates or polygon boundaries for all active Service Area Definitions associated with the Store Partner.",
+      "The system shall calculate the spatial relationship between the customer's delivery address and the defined Service Area boundaries.",
+      "The system shall block the Order Request submission and display a specific error message if the address is not contained within any valid zone.",
+      "The system shall allow the Order Request creation only if the delivery address is confirmed to be inside at least one active Service Area Definition.",
+      "The system shall validate the Service Area Definition status in real-time to ensure the zone is currently active for order acceptance."
+    ],
+    "required_by_actors": [
+      "Customer",
+      "Platform Operator"
+    ],
+    "related_business_objects": [
+      "Service Area Definition",
+      "Order Request",
+      "Customer Profile"
+    ],
+    "related_information_requirements": [
+      "The precise geographic coordinates, radii, or polygon boundaries defining the specific zones where the platform is authorized to operate.",
+      "Verified details about the ordering individual, including unique identifiers and delivery addresses."
+    ],
+    "business_rules": [
+      "An order must not be created if the delivery address is geographically outside all active Service Area Definitions.",
+      "A Service Area Definition must be marked as active to allow order placement within its boundaries.",
+      "The system must validate the delivery address against the Service Area Definition at the moment of order submission."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A customer attempts to place an order with a delivery address inside an active Service Area Definition",
+        "when": "The system processes the Order Request",
+        "then": "The system allows the order creation and proceeds to the next step"
+      },
+      {
+        "given": "A customer attempts to place an order with a delivery address outside all defined Service Area Definitions",
+        "when": "The system processes the Order Request",
+        "then": "The system blocks the order creation and displays a message indicating the address is outside the service area"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

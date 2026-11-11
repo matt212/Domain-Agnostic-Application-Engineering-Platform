@@ -1,0 +1,48 @@
+{
+  "result": {
+    "requirement": "The system shall automatically calculate and apply the correct revenue share percentage to a Financial Transaction Record based on the active commission rate defined in the Store Partner Agreement.",
+    "business_need": "The business needs to ensure accurate and compliant revenue distribution between the platform and store partners by dynamically applying contractual commission rates to every financial settlement.",
+    "functional_behaviour": [
+      "The system shall retrieve the active commission rate from the Store Partner Agreement associated with the specific Store Partner.",
+      "The system shall calculate the revenue share amount by applying the retrieved commission rate to the gross revenue of the Financial Transaction Record.",
+      "The system shall record the calculated commission amount and the net settlement amount in the Financial Transaction Record.",
+      "The system shall validate that the Store Partner Agreement is currently active before finalizing the commission calculation.",
+      "The system shall flag the Financial Transaction Record for manual review if the applicable Store Partner Agreement is missing or inactive."
+    ],
+    "required_by_actors": [
+      "Store Partner",
+      "Platform Operator"
+    ],
+    "related_business_objects": [
+      "Financial Transaction Record",
+      "Store Partner Agreement"
+    ],
+    "related_information_requirements": [
+      "The complete record of monetary exchange, detailing item costs, delivery fees, taxes, platform commissions, and the net settlement amounts due to each party.",
+      "The legally binding contractual details between the platform and physical stores, including commission rates, payout schedules, liability clauses, and specific performance guarantees."
+    ],
+    "business_rules": [
+      "The system shall use the commission rate from the most recently active Store Partner Agreement for any given transaction.",
+      "The system shall prevent the finalization of a Financial Transaction Record if no valid Store Partner Agreement exists for the involved Store Partner.",
+      "The system shall calculate the net settlement amount by subtracting the calculated commission from the gross revenue.",
+      "The system shall treat a Store Partner Agreement as inactive if its effective end date has passed or if it is explicitly marked as terminated."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A valid Store Partner Agreement with a defined commission rate exists for the Store Partner involved in a transaction.",
+        "when": "The system processes a new Financial Transaction Record for that Store Partner.",
+        "then": "The system applies the agreement's commission rate to calculate the revenue share and generates the correct net settlement amount."
+      },
+      {
+        "given": "No active Store Partner Agreement exists for the Store Partner involved in a transaction.",
+        "when": "The system attempts to process a new Financial Transaction Record for that Store Partner.",
+        "then": "The system flags the Financial Transaction Record for manual review and does not finalize the commission calculation."
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

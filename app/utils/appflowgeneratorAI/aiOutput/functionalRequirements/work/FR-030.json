@@ -1,0 +1,53 @@
+{
+  "result": {
+    "requirement": "The system shall integrate with external tax services to dynamically calculate and remit applicable sales taxes for transactions within authorized service zones.",
+    "business_need": "The business needs this to ensure full regulatory compliance and accurate financial reporting across varying jurisdictions.",
+    "functional_behaviour": [
+      "The system shall retrieve the current tax rate for the specific delivery zone associated with the Order Request.",
+      "The system shall apply the retrieved tax rate to the item costs and delivery fees to generate a Financial Transaction Record.",
+      "The system shall validate the tax calculation against the latest Regulatory Authority requirements before finalizing the order.",
+      "The system shall generate a Dispute Ticket if the calculated tax exceeds the maximum allowable threshold defined by the Regulatory Authority.",
+      "The system shall update the Real-Time Inventory Snapshot to reflect tax-inclusive pricing for the Customer Profile."
+    ],
+    "required_by_actors": [
+      "Platform Operator",
+      "Regulatory Authority",
+      "Store Partner"
+    ],
+    "related_business_objects": [
+      "Order Request",
+      "Financial Transaction Record",
+      "Service Area Definition",
+      "Dispute Ticket",
+      "Customer Profile"
+    ],
+    "related_information_requirements": [
+      "Current records of licenses, permits, and regulatory adherence regarding data privacy for the specific operating zone.",
+      "The complete record of monetary exchange, detailing item costs, delivery fees, taxes, platform commissions, and the net settlement amounts due to each party.",
+      "The precise geographic coordinates, radii, or polygon boundaries defining the specific zones where the platform is authorized to operate."
+    ],
+    "business_rules": [
+      "The system shall not finalize an Order Request if the calculated tax rate exceeds the maximum threshold defined by the Regulatory Authority.",
+      "The system shall automatically generate a Dispute Ticket whenever a tax calculation error is detected during the Financial Transaction Record generation.",
+      "The system shall only apply tax rates from jurisdictions where the Service Area Definition confirms operational authorization.",
+      "The system shall update the Financial Transaction Record immediately upon receiving a new tax rate update from the external service."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "An Order Request is created for a customer in an authorized zone with a valid tax rate available.",
+        "when": "The system processes the order and calculates the total cost.",
+        "then": "The Financial Transaction Record includes the correct tax amount based on the current Service Area Definition."
+      },
+      {
+        "given": "An Order Request is created for a customer in a zone where the external tax service returns an error or missing rate.",
+        "when": "The system attempts to calculate the total cost for the Order Request.",
+        "then": "The system generates a Dispute Ticket and prevents the order from being finalized until the tax issue is resolved."
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

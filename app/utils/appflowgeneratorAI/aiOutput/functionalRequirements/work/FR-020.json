@@ -1,0 +1,57 @@
+{
+  "result": {
+    "requirement": "The system shall generate an immutable audit log for every action performed by authorized actors to satisfy external regulatory compliance requirements.",
+    "business_need": "The business needs this to provide verifiable proof of operational adherence to labor, data privacy, and safety laws during regulatory inspections.",
+    "functional_behaviour": [
+      "The system shall automatically capture the actor identity, timestamp, action type, and relevant context for every system interaction.",
+      "The system shall append a cryptographic hash to each log entry to ensure the record cannot be altered or deleted.",
+      "The system shall store the complete audit trail in a secure, read-only repository accessible only to the Regulatory Authority.",
+      "The system shall exclude internal system-generated events from the compliance log to focus on human-initiated actions.",
+      "The system shall retain the audit records for a duration defined by the applicable local jurisdiction's data retention laws."
+    ],
+    "required_by_actors": [
+      "Regulatory Authority",
+      "Platform Operator",
+      "Delivery Partner",
+      "Store Partner",
+      "Customer"
+    ],
+    "related_business_objects": [
+      "Customer Profile",
+      "Delivery Assignment",
+      "Financial Transaction Record",
+      "Feedback Record",
+      "Order Request"
+    ],
+    "related_information_requirements": [
+      "Actor identity and role",
+      "Precise timestamp of the action",
+      "Type of action performed",
+      "Contextual data related to the action",
+      "Cryptographic hash of the record"
+    ],
+    "business_rules": [
+      "Every log entry must be immutable and tamper-evident.",
+      "Audit logs must be retained for a period not shorter than the minimum legal requirement for the operating zone.",
+      "Only actions initiated by human actors or their direct digital representations shall be logged for compliance.",
+      "The audit log must be accessible to the Regulatory Authority upon request without delay."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A Delivery Partner updates the status of a Delivery Assignment to 'Delivered',",
+        "when": "the system records this event in the audit log,",
+        "then": "the log entry contains the partner's ID, the exact timestamp, and the action type, and the record is cryptographically sealed."
+      },
+      {
+        "given": "An attempt is made to modify a stored audit log entry after it has been created,",
+        "when": "the system processes the modification request,",
+        "then": "the modification is rejected and the original entry remains unchanged with its original hash intact."
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

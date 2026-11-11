@@ -1,0 +1,56 @@
+{
+  "result": {
+    "requirement": "The system shall ingest real-time operational data from external logistics providers to monitor fleet availability and route constraints.",
+    "business_need": "The business needs this to dynamically adjust delivery capacity and fees based on live network status, preventing service degradation during congestion.",
+    "functional_behaviour": [
+      "The system shall establish secure, bi-directional data links with registered Payment Providers and Delivery Partners.",
+      "The system shall ingest live telemetry regarding agent location, speed, and current workload status.",
+      "The system shall update the Real-Time Inventory Snapshot to reflect temporary unavailability caused by network disruptions.",
+      "The system shall recalculate estimated travel duration and distance based on current traffic patterns and route constraints.",
+      "The system shall flag Delivery Assignment records when external network status prevents meeting the assigned Delivery Slot.",
+      "The system shall expose network congestion metrics to the Fulfillment Supervisor for workload balancing."
+    ],
+    "required_by_actors": [
+      "Platform Operator",
+      "Fulfillment Supervisor",
+      "Delivery Partner",
+      "Payment Provider"
+    ],
+    "related_business_objects": [
+      "Delivery Assignment",
+      "Delivery Zone Map",
+      "Delivery Proof",
+      "Real-Time Inventory Snapshot",
+      "Assigned Delivery Slot"
+    ],
+    "related_information_requirements": [
+      "Live visibility into the location, speed, and status of all active delivery agents",
+      "Calculated estimates of travel duration and distance accounting for traffic patterns",
+      "Status of the data link between the store and the platform including latency",
+      "Aggregate capacity of the fleet within the service zone"
+    ],
+    "business_rules": [
+      "The system shall treat a data link latency exceeding the defined threshold as a network disruption.",
+      "The system shall invalidate an Assigned Delivery Slot if the external network status indicates a route constraint.",
+      "The system shall update the Real-Time Inventory Snapshot to mark items as unavailable if the logistics link is down.",
+      "The system shall prioritize agents with lower workload status when assigning tasks during network congestion."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "The external logistics provider reports a route constraint due to traffic",
+        "when": "The system ingests this real-time data",
+        "then": "The system updates the travel duration estimate and flags the affected Delivery Assignment"
+      },
+      {
+        "given": "The data link between the store and the platform experiences high latency",
+        "when": "The system detects this status exceeds the defined threshold",
+        "then": "The system marks the Real-Time Inventory Snapshot as unreliable and alerts the Fulfillment Supervisor"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

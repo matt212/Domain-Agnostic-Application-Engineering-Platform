@@ -1,0 +1,52 @@
+{
+  "result": {
+    "requirement": "The system shall prevent the creation of an Order Request containing any Product Catalog item where the current date exceeds the item's expiry date or freshness threshold.",
+    "business_need": "The business needs to prevent the sale of expired or unsafe perishable goods to protect customer health and maintain regulatory compliance.",
+    "functional_behaviour": [
+      "The system shall retrieve the Real-Time Inventory Snapshot for each item in the cart to verify current stock status.",
+      "The system shall compare the current date against the expiry date stored in the Product Catalog for every selected item.",
+      "The system shall block the Order Request submission and display an error message if any item is flagged as expired.",
+      "The system shall allow the Order Request submission only if all items pass the expiry date validation check.",
+      "The system shall update the Real-Time Inventory Snapshot to reflect the removal of expired items from available stock.",
+      "The system shall log the validation attempt and the specific items rejected due to expiry status."
+    ],
+    "required_by_actors": [
+      "Customer",
+      "Store Partner"
+    ],
+    "related_business_objects": [
+      "Product Catalog",
+      "Order Request",
+      "Real-Time Inventory Snapshot"
+    ],
+    "related_information_requirements": [
+      "The current date and time at the moment of order submission.",
+      "The specific expiry date or freshness threshold for each sellable item.",
+      "The list of items selected by the customer with their quantities.",
+      "The current availability status of each item in the store."
+    ],
+    "business_rules": [
+      "An item is considered expired if the current date is later than the item's defined expiry date.",
+      "An Order Request must contain zero expired items to be successfully created.",
+      "Items flagged as expired must be immediately excluded from the available inventory snapshot.",
+      "The system must validate expiry status for all items in the cart before finalizing the order."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A customer adds a product with a valid expiry date to the cart and proceeds to checkout.",
+        "when": "The system validates the order contents against the current date.",
+        "then": "The Order Request is successfully created and processed."
+      },
+      {
+        "given": "A customer attempts to add a product that has passed its expiry date to the cart.",
+        "when": "The system validates the order contents against the current date.",
+        "then": "The Order Request creation is blocked and an error message indicating the item is expired is displayed."
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

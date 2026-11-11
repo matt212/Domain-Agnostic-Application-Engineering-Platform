@@ -1,0 +1,58 @@
+{
+  "result": {
+    "requirement": "The system shall assign the authority to approve or reject a Dispute Ticket to a specific actor based on the ticket's origin, severity, and the involved partners.",
+    "business_need": "The business needs a clear, automated assignment of dispute resolution authority to ensure fair, timely, and legally compliant handling of customer claims.",
+    "functional_behaviour": [
+      "The system shall automatically assign the Platform Operator as the approver for disputes involving financial adjustments or regulatory violations.",
+      "The system shall automatically assign the Store Partner as the approver for disputes related to missing items or product quality originating from their inventory.",
+      "The system shall automatically assign the Delivery Partner as the approver for disputes related to delivery proof or late arrival caused by their performance.",
+      "The system shall prevent an actor from approving a Dispute Ticket where they are listed as the accused party in the incident.",
+      "The system shall escalate the Dispute Ticket to a Fulfillment Supervisor if the assigned actor does not respond within the defined timeframe.",
+      "The system shall record the assigned approver and their decision timestamp on the Dispute Ticket for audit purposes."
+    ],
+    "required_by_actors": [
+      "Platform Operator",
+      "Store Partner",
+      "Delivery Partner",
+      "Fulfillment Supervisor"
+    ],
+    "related_business_objects": [
+      "Dispute Ticket",
+      "Customer Profile",
+      "Store Partner Agreement",
+      "Delivery Proof",
+      "Feedback Record"
+    ],
+    "related_information_requirements": [
+      "The nature of the dispute issue (e.g., missing item, damage, late delivery)",
+      "The origin of the order (Store Partner or Delivery Partner)",
+      "The severity level of the dispute",
+      "The current resolution status of the ticket",
+      "The identity of the accused party in the dispute"
+    ],
+    "business_rules": [
+      "An actor cannot approve a Dispute Ticket where they are the accused party.",
+      "Disputes involving financial refunds must be approved by the Platform Operator.",
+      "Disputes regarding product quality must be approved by the Store Partner.",
+      "Disputes regarding delivery performance must be approved by the Delivery Partner.",
+      "Unresolved Dispute Tickets must be escalated to a Fulfillment Supervisor after the initial assignment deadline."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A Dispute Ticket is created for a missing item originating from a Store Partner",
+        "when": "The system processes the ticket for authority assignment",
+        "then": "The Store Partner is assigned as the approver and the Platform Operator is excluded."
+      },
+      {
+        "given": "A Dispute Ticket is created for a damaged package where the Delivery Partner is the accused party",
+        "when": "The system processes the ticket for authority assignment",
+        "then": "The Delivery Partner is excluded from approval and the Platform Operator is assigned as the approver."
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}
