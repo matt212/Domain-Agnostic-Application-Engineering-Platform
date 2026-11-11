@@ -1,0 +1,54 @@
+{
+  "result": {
+    "requirement": "The system shall automatically reassign failed delivery tasks to available Delivery Partners based on proximity to the delivery address and current agent capacity.",
+    "business_need": "The business needs to minimize customer wait times and operational costs by ensuring failed deliveries are quickly re-allocated to the most suitable available agent.",
+    "functional_behaviour": [
+      "The system shall identify all active Delivery Tasks marked with a failed status.",
+      "The system shall calculate the proximity and estimated travel time between the failed delivery address and all available Delivery Partners.",
+      "The system shall filter available Delivery Partners based on their current workload capacity and service area constraints.",
+      "The system shall select the optimal Delivery Partner for reassignment based on the lowest estimated travel time and highest capacity.",
+      "The system shall update the Delivery Assignment record to reflect the new agent and generate a notification for the selected Delivery Partner."
+    ],
+    "required_by_actors": [
+      "Delivery Partner",
+      "Order Allocation Engine"
+    ],
+    "related_business_objects": [
+      "Delivery Assignment",
+      "Delivery Partner",
+      "Delivery Zone Map",
+      "Fulfillment Task",
+      "Real-Time Inventory Snapshot"
+    ],
+    "related_information_requirements": [
+      "Live visibility into the location, speed, and status of all active delivery agents and the aggregate capacity of the fleet within the service zone.",
+      "Calculated estimates of travel duration and distance between the store location and potential customer addresses, accounting for traffic patterns and route constraints.",
+      "The active linkage between a ready order and a specific delivery agent, including the assigned route, estimated arrival time, and the agent's current workload status."
+    ],
+    "business_rules": [
+      "A failed delivery task must be reassigned only if at least one Delivery Partner is available within the defined service area.",
+      "The system must prioritize the Delivery Partner with the shortest estimated travel time to the delivery address.",
+      "Reassignment is prohibited if the selected Delivery Partner has exceeded their maximum capacity threshold for the current shift.",
+      "The original Delivery Partner must be notified of the task cancellation before the new assignment is finalized."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A Delivery Task has failed and no new delivery slot is immediately requested by the customer.",
+        "when": "The Order Allocation Engine scans for failed tasks and available agents.",
+        "then": "The system reassigns the task to the nearest available Delivery Partner who has remaining capacity."
+      },
+      {
+        "given": "All Delivery Partners within the service area are at maximum capacity or outside the delivery radius.",
+        "when": "The system attempts to reassign a failed Delivery Task.",
+        "then": "The system marks the task as 'Pending Reassignment' and notifies the Fulfillment Supervisor instead of auto-assigning."
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": [
+      "Delivery Partner"
+    ]
+  },
+  "evidence_count": 8
+}

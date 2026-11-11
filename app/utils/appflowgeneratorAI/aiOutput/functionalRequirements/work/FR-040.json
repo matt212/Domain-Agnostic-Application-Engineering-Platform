@@ -1,0 +1,55 @@
+{
+  "result": {
+    "requirement": "The system shall automatically compute and collect applicable taxes based on jurisdiction and product type during the order processing workflow.",
+    "business_need": "The business needs to ensure legal compliance and accurate revenue collection by dynamically applying the correct tax rates to every transaction.",
+    "functional_behaviour": [
+      "The system shall determine the applicable tax jurisdiction based on the delivery address and product origin.",
+      "The system shall retrieve the current tax rate for the specific product category within the determined jurisdiction.",
+      "The system shall calculate the tax amount by applying the rate to the taxable subtotal of the Order Request.",
+      "The system shall add the calculated tax to the Financial Transaction Record before finalizing the payment.",
+      "The system shall generate a breakdown of tax components visible to the Customer Profile.",
+      "The system shall validate that the total tax collected matches the liability required by the Regulatory Authority."
+    ],
+    "required_by_actors": [
+      "Customer",
+      "Store Partner",
+      "Platform Operator",
+      "Regulatory Authority"
+    ],
+    "related_business_objects": [
+      "Order Request",
+      "Financial Transaction Record",
+      "Customer Profile",
+      "Product Catalog",
+      "Delivery Zone Map"
+    ],
+    "related_information_requirements": [
+      "The complete record of monetary exchange, detailing item costs, delivery fees, taxes, platform commissions, and the net settlement amounts due to each party.",
+      "The unified digital representation of all sellable items, including descriptions, images, categories, and standardized pricing derived from the store partners' offerings.",
+      "A structured record of any deviation from the standard process, such as missing items, damaged goods, or failed deliveries, including the nature of the issue and current resolution status."
+    ],
+    "business_rules": [
+      "Tax must be calculated only on the subtotal of taxable items, excluding delivery fees and platform commissions.",
+      "The system must use the most current tax rate available for the specific jurisdiction at the time of order placement.",
+      "If a product is non-taxable in the delivery zone, the tax amount recorded must be zero.",
+      "The tax calculation must be reproducible using the same Order Request, Product Catalog, and Delivery Zone Map data."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "An Order Request is created for a taxable item delivered to a specific zone",
+        "when": "The system processes the payment",
+        "then": "The Financial Transaction Record includes the exact tax amount calculated from the current rate for that zone and product category"
+      },
+      {
+        "given": "An Order Request is created for a non-taxable item or a zone with zero tax rate",
+        "when": "The system processes the payment",
+        "then": "The Financial Transaction Record shows a tax amount of zero and no tax line item is generated"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

@@ -1,0 +1,50 @@
+{
+  "result": {
+    "requirement": "The system shall send real-time notifications to customers regarding the status updates of their refund requests.",
+    "business_need": "The business needs to maintain customer trust and reduce support volume by providing immediate transparency on refund processing stages.",
+    "functional_behaviour": [
+      "The system shall automatically generate a notification when a refund request transitions from pending to approved or rejected.",
+      "The system shall include the updated refund status and the expected timeline for funds to appear in the customer's account within the notification.",
+      "The system shall deliver the notification via the communication channel previously selected by the customer in their profile.",
+      "The system shall log the timestamp and content of every status notification sent to the customer for audit purposes.",
+      "The system shall suppress duplicate notifications if the refund status has not changed since the last message."
+    ],
+    "required_by_actors": [
+      "Customer",
+      "Platform Operator"
+    ],
+    "related_business_objects": [
+      "Customer Profile",
+      "Financial Transaction Record",
+      "Feedback Record"
+    ],
+    "related_information_requirements": [
+      "Current status of the refund request",
+      "Expected timeline for fund availability",
+      "Preferred communication channel of the customer"
+    ],
+    "business_rules": [
+      "A notification must be sent immediately upon any change in the refund request status.",
+      "Notifications must only be sent if the new status differs from the status of the most recent notification.",
+      "The notification content must accurately reflect the current state of the Financial Transaction Record.",
+      "The system must verify the active communication channel exists before attempting to send a notification."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A customer has submitted a refund request that is currently pending",
+        "when": "The system updates the request status to approved",
+        "then": "The system sends a notification to the customer confirming the approval and the expected fund arrival date"
+      },
+      {
+        "given": "A customer has received a notification about a pending refund request",
+        "when": "The system updates the request status to rejected without changing the status again",
+        "then": "The system does not send another notification to the customer"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

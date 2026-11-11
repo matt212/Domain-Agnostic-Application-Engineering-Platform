@@ -1,0 +1,52 @@
+{
+  "result": {
+    "requirement": "The system shall reverse inventory locks and financial reservations for an Order Request when a cancellation is confirmed before the Fulfillment Task reaches the 'Ready for Dispatch' status.",
+    "business_need": "The business needs to ensure that cancelled orders do not permanently reduce available stock or hold customer funds, maintaining accurate inventory levels and financial integrity.",
+    "functional_behaviour": [
+      "The system shall identify all inventory units locked by the Order Request and release them back to the Real-Time Inventory Snapshot.",
+      "The system shall reverse any financial reservations associated with the Order Request and update the Financial Transaction Record.",
+      "The system shall update the Order Request status to 'Cancelled' and log the reversal details in the system audit trail.",
+      "The system shall prevent the release of inventory or funds if the Order Request has already transitioned to a 'Ready for Dispatch' state.",
+      "The system shall notify the Store Partner of the inventory release to confirm the rollback was successful."
+    ],
+    "required_by_actors": [
+      "Customer",
+      "Store Partner",
+      "Order Allocation Engine"
+    ],
+    "related_business_objects": [
+      "Order Request",
+      "Real-Time Inventory Snapshot",
+      "Financial Transaction Record",
+      "Fulfillment Task"
+    ],
+    "related_information_requirements": [
+      "The current, validated quantity of each sellable item at a specific store location.",
+      "The active linkage between a ready order and a specific delivery agent.",
+      "The specific list of items selected by the customer and their quantities."
+    ],
+    "business_rules": [
+      "Inventory locks must be released immediately upon confirmation of cancellation before the Fulfillment Task status changes to 'Ready for Dispatch'.",
+      "Financial reservations must be reversed only if the Order Request has not yet been handed over to a Delivery Partner.",
+      "A cancellation rollback cannot be initiated if the order has already been physically picked and verified by the Store Partner.",
+      "The system must validate that the Order Request ID matches the inventory lock ID before releasing stock."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "An Order Request is in 'Processing' status with locked inventory and a financial reservation.",
+        "when": "The Customer initiates a cancellation and the system confirms it before dispatch.",
+        "then": "The inventory is released back to the Real-Time Inventory Snapshot and the financial reservation is reversed."
+      },
+      {
+        "given": "An Order Request has already transitioned to 'Ready for Dispatch' status.",
+        "when": "The Customer attempts to cancel the order.",
+        "then": "The system rejects the cancellation request and does not release any inventory or funds."
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

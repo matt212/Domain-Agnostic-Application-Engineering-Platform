@@ -1,0 +1,55 @@
+{
+  "result": {
+    "requirement": "The system shall automatically initiate a refund process when a dispute ticket is validated by the Regulatory Authority or when a delivery failure is confirmed by the Delivery Partner.",
+    "business_need": "The business needs to automate financial reversals to ensure customer trust and operational efficiency when service failures or validated disputes occur.",
+    "functional_behaviour": [
+      "The system shall automatically generate a refund transaction record upon receiving a validated dispute ticket or a confirmed delivery failure notification.",
+      "The system shall retrieve the original financial transaction record associated with the Order Request to calculate the exact refund amount.",
+      "The system shall update the Dispute Ticket status to 'Refund Initiated' and notify the Customer via their primary contact method.",
+      "The system shall prevent the Delivery Assignment from being re-allocated to a new Delivery Partner while the refund process is active.",
+      "The system shall log the refund initiation event with a timestamp and the specific reason code derived from the dispute or failure record."
+    ],
+    "required_by_actors": [
+      "Regulatory Authority",
+      "Delivery Partner",
+      "Customer"
+    ],
+    "related_business_objects": [
+      "Dispute Ticket",
+      "Financial Transaction Record",
+      "Order Request",
+      "Delivery Assignment",
+      "Feedback Record"
+    ],
+    "related_information_requirements": [
+      "Validated dispute details including nature of issue and resolution status",
+      "Original order line items, quantities, and unit prices",
+      "Original payment amount and transaction reference",
+      "Confirmation of delivery failure or successful handover status",
+      "Customer contact details for notification"
+    ],
+    "business_rules": [
+      "A refund must be initiated only after a dispute ticket is marked as validated or a delivery failure is explicitly confirmed.",
+      "The refund amount must match the total value of the items in the original Order Request.",
+      "No new Delivery Assignment can be created for the same Order Request while a refund is in progress.",
+      "The system must capture the specific reason code for the refund initiation to support financial auditing."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A Dispute Ticket is created and subsequently validated by the Regulatory Authority",
+        "when": "The system processes the validation status update",
+        "then": "The system automatically initiates a refund and updates the ticket status to 'Refund Initiated'"
+      },
+      {
+        "given": "A Delivery Partner reports a failed delivery attempt",
+        "when": "The system receives the confirmed failure notification",
+        "then": "The system automatically initiates a refund and prevents any new Delivery Assignment for that Order Request"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

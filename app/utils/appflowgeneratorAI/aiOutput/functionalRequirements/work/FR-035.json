@@ -1,0 +1,52 @@
+{
+  "result": {
+    "requirement": "The system shall enable authorized agents and customers to upload photos and documents to substantiate dispute claims regarding delivery exceptions.",
+    "business_need": "The business needs a centralized mechanism to collect verifiable evidence to resolve disputes fairly and accurately.",
+    "functional_behaviour": [
+      "The system shall allow the Customer and Delivery Partner to attach media files to an existing Dispute Ticket.",
+      "The system shall validate that uploaded files meet minimum quality standards before storing them.",
+      "The system shall associate the uploaded evidence directly with the specific Dispute Ticket and linked Order Request.",
+      "The system shall restrict upload permissions to only the actors involved in the specific dispute case.",
+      "The system shall generate a timestamped record of every file upload for audit purposes."
+    ],
+    "required_by_actors": [
+      "Customer",
+      "Delivery Partner",
+      "Fulfillment Supervisor"
+    ],
+    "related_business_objects": [
+      "Dispute Ticket",
+      "Order Request",
+      "Delivery Proof",
+      "Feedback Record"
+    ],
+    "related_information_requirements": [
+      "The complete record of monetary exchange",
+      "Verifiable evidence that the physical goods have reached the customer",
+      "A structured record of any deviation from the standard process"
+    ],
+    "business_rules": [
+      "Only actors explicitly assigned to a Dispute Ticket may upload evidence for that specific ticket.",
+      "Uploaded evidence must be linked to the Order Request associated with the Dispute Ticket.",
+      "The system must prevent duplicate uploads of the same file for the same Dispute Ticket.",
+      "All uploaded evidence must be retained indefinitely for potential Regulatory Authority review."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A Customer has an open Dispute Ticket for a damaged item",
+        "when": "The Customer uploads a photo of the damage via the portal",
+        "then": "The system associates the photo with the Dispute Ticket and marks the evidence as 'Submitted'"
+      },
+      {
+        "given": "A Delivery Partner attempts to upload a Delivery Proof photo for a closed ticket",
+        "when": "The system detects the ticket status is 'Resolved' and the actor is not the original claimant",
+        "then": "The system rejects the upload and displays an error message stating the ticket is no longer active for evidence submission"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

@@ -1,0 +1,56 @@
+{
+  "result": {
+    "requirement": "The system shall calculate and apply partial refunds for specific missing or damaged items within a valid Order Request based on verified inventory or delivery proof discrepancies.",
+    "business_need": "The business needs to automatically adjust financial obligations for customers when specific items in an order are unavailable or damaged, ensuring accurate billing and maintaining trust without requiring manual intervention for every discrepancy.",
+    "functional_behaviour": [
+      "The system shall identify the specific items in an Order Request that are flagged as missing or damaged based on Delivery Proof or Real-Time Inventory Snapshot data.",
+      "The system shall calculate the refund amount by multiplying the quantity of the affected items by their unit price as defined in the Product Catalog.",
+      "The system shall generate a Financial Transaction Record reflecting the deduction from the original payment and the issuance of the partial refund.",
+      "The system shall update the Customer Profile to reflect the refund status and notify the Customer via their primary contact method.",
+      "The system shall adjust the Financial Transaction Record associated with the Order Request to show the net payable amount after the partial refund is applied."
+    ],
+    "required_by_actors": [
+      "Customer",
+      "Store Partner",
+      "Delivery Partner",
+      "Platform Operator"
+    ],
+    "related_business_objects": [
+      "Order Request",
+      "Financial Transaction Record",
+      "Customer Profile",
+      "Delivery Proof",
+      "Real-Time Inventory Snapshot",
+      "Product Catalog"
+    ],
+    "related_information_requirements": [
+      "The specific list of items selected by the customer, their quantities, and unit prices.",
+      "Verified details about the ordering individual, including unique identifiers and contact methods.",
+      "The current, validated quantity of each sellable item at a specific store location.",
+      "Information confirming that the store has successfully picked, verified, and packed the order."
+    ],
+    "business_rules": [
+      "A partial refund shall only be triggered if the discrepancy is confirmed by a Delivery Proof or a Real-Time Inventory Snapshot indicating unavailability.",
+      "The refund amount shall strictly equal the sum of the unit prices for the specific missing or damaged items, excluding any taxes or delivery fees.",
+      "A partial refund shall not be processed if the Order Request has already been fully refunded or cancelled.",
+      "The system shall prevent a partial refund calculation if the item in question is marked as permanently discontinued in the Product Catalog."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "An Order Request contains three items where one is confirmed missing via Delivery Proof.",
+        "when": "The system processes the discrepancy for a partial refund.",
+        "then": "The system calculates the refund based only on the missing item's unit price and updates the Financial Transaction Record accordingly."
+      },
+      {
+        "given": "An Order Request contains items where the inventory shows partial stock but the Delivery Proof confirms full delivery.",
+        "when": "The system attempts to calculate a partial refund for missing items.",
+        "then": "The system does not generate a refund because the discrepancy is not confirmed as missing or damaged."
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

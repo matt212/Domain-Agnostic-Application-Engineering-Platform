@@ -1,0 +1,53 @@
+{
+  "result": {
+    "requirement": "The system shall generate high-risk transaction alerts and perform refund/chargeback impact analysis to prevent financial loss before settlement.",
+    "business_need": "The business needs to proactively identify fraudulent patterns and quantify potential financial exposure to stop unauthorized chargebacks before funds are settled.",
+    "functional_behaviour": [
+      "The system shall analyze transaction indicators such as unusual order patterns, high-risk addresses, and payment anomalies to calculate fraud likelihood.",
+      "The system shall project the financial impact of potential refunds and chargebacks on net settlement amounts for the involved parties.",
+      "The system shall flag transactions exceeding the calculated risk threshold for immediate review by the Payment Provider.",
+      "The system shall update the Financial Transaction Record with the risk assessment status and projected liability.",
+      "The system shall notify the Payment Provider and Store Partner of the flagged transaction and the estimated financial impact."
+    ],
+    "required_by_actors": [
+      "Payment Provider",
+      "Store Partner",
+      "Platform Operator"
+    ],
+    "related_business_objects": [
+      "Financial Transaction Record",
+      "Customer Profile",
+      "Delivery Proof",
+      "Order Request"
+    ],
+    "related_information_requirements": [
+      "Indicators and historical data used to assess the likelihood of fraudulent transactions",
+      "The complete record of monetary exchange detailing item costs, delivery fees, taxes, and net settlement amounts",
+      "Verifiable evidence that the physical goods have reached the customer",
+      "Verified details about the ordering individual including unique identifiers and delivery addresses"
+    ],
+    "business_rules": [
+      "A transaction must be flagged if the calculated fraud likelihood score exceeds the configured risk threshold.",
+      "The projected financial impact must include the sum of item costs, delivery fees, taxes, and platform commissions.",
+      "A transaction must remain flagged until the Payment Provider confirms the outcome or the settlement period expires.",
+      "The impact analysis must be recalculated if new delivery proof or customer verification data becomes available."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A new Order Request contains indicators of unusual order patterns and a high-risk address",
+        "when": "The system processes the transaction for settlement",
+        "then": "The system shall generate a high-risk alert and update the Financial Transaction Record with the projected chargeback liability"
+      },
+      {
+        "given": "A transaction is flagged as high-risk but lacks sufficient delivery proof",
+        "when": "The system attempts to finalize the settlement calculation",
+        "then": "The system shall withhold the net settlement amount and notify the Payment Provider of the pending dispute review"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

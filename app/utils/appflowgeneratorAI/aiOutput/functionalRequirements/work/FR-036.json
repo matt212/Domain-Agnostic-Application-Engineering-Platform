@@ -1,0 +1,51 @@
+{
+  "result": {
+    "requirement": "The system shall route unresolved disputes to senior support tiers based on calculated severity and financial impact thresholds.",
+    "business_need": "The business needs to ensure high-risk disputes receive immediate expert attention to minimize financial loss and maintain platform trust.",
+    "functional_behaviour": [
+      "The system shall calculate dispute severity by analyzing financial impact and fraud indicators.",
+      "The system shall automatically assign the dispute to a senior tier if severity exceeds defined thresholds.",
+      "The system shall notify the appropriate senior support agent upon successful escalation.",
+      "The system shall update the dispute ticket status to reflect the new handling tier.",
+      "The system shall log the escalation reason and timestamp for audit purposes."
+    ],
+    "required_by_actors": [
+      "Regulatory Authority",
+      "Fulfillment Supervisor",
+      "Platform Operator"
+    ],
+    "related_business_objects": [
+      "Dispute Ticket",
+      "Financial Transaction Record",
+      "Feedback Record"
+    ],
+    "related_information_requirements": [
+      "Monetary exchange details including costs and commissions",
+      "Fraud indicators and historical data",
+      "Current resolution status of the deviation"
+    ],
+    "business_rules": [
+      "A dispute must be escalated if the financial impact exceeds the standard liability limit.",
+      "A dispute must be escalated if fraud indicators suggest a high probability of fraudulent transaction.",
+      "Escalation must occur only after the initial support tier fails to resolve the issue within the standard timeframe.",
+      "The escalation path must strictly follow the hierarchy defined in the Store Partner Agreement."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A dispute ticket exists with high financial impact and confirmed fraud indicators",
+        "when": "The initial support tier fails to resolve the issue",
+        "then": "The system automatically routes the ticket to a senior support tier"
+      },
+      {
+        "given": "A dispute ticket has low financial impact and no fraud indicators",
+        "when": "The initial support tier fails to resolve the issue",
+        "then": "The system does not escalate the ticket to a senior support tier"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}
