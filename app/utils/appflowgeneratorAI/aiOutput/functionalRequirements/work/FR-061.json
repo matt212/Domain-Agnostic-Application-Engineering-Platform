@@ -1,0 +1,53 @@
+{
+  "result": {
+    "requirement": "The system shall route low-rated feedback records to a Fulfillment Supervisor for investigation and resolution actions.",
+    "business_need": "The business needs to proactively identify service failures to maintain customer trust and ensure fair resolution of disputes.",
+    "functional_behaviour": [
+      "The system shall automatically flag a Feedback Record for supervisor review when the customer rating falls below the acceptable threshold.",
+      "The system shall notify the Fulfillment Supervisor and create a Dispute Ticket linked to the flagged Feedback Record.",
+      "The system shall allow the Fulfillment Supervisor to update the resolution status and attach a Delivery Proof to the Dispute Ticket.",
+      "The system shall prevent the Feedback Record from being archived until the Dispute Ticket is marked as resolved.",
+      "The system shall generate a summary report for the Platform Operator containing all unresolved low-rated feedback."
+    ],
+    "required_by_actors": [
+      "Customer",
+      "Fulfillment Supervisor",
+      "Platform Operator"
+    ],
+    "related_business_objects": [
+      "Feedback Record",
+      "Dispute Ticket",
+      "Delivery Proof",
+      "Customer Profile"
+    ],
+    "related_information_requirements": [
+      "Customer rating score and qualitative comments",
+      "Current resolution status of the dispute",
+      "Evidence of delivery completion or failure",
+      "Supervisor investigation notes"
+    ],
+    "business_rules": [
+      "A Feedback Record must be routed to a Fulfillment Supervisor if the rating is below the defined acceptable level.",
+      "A Dispute Ticket must remain open until a resolution status is recorded by the Fulfillment Supervisor.",
+      "The system must prevent the closure of a Feedback Record if the associated Dispute Ticket is still active.",
+      "Low-rated feedback must be included in the Platform Operator's quality assurance reports."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A Customer submits a Feedback Record with a rating below the acceptable threshold",
+        "when": "The system processes the post-transaction review",
+        "then": "The system routes the record to a Fulfillment Supervisor and creates an open Dispute Ticket"
+      },
+      {
+        "given": "A Fulfillment Supervisor investigates a low-rated Feedback Record",
+        "when": "The supervisor marks the Dispute Ticket as resolved without attaching a Delivery Proof",
+        "then": "The system prevents the Feedback Record from being archived and flags the ticket for re-review"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

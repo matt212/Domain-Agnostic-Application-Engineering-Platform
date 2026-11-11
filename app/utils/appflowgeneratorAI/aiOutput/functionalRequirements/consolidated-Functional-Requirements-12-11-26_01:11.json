@@ -2,8 +2,8 @@
   "bundle_metadata": {
     "bundle_name": "consolidated-Functional-base",
     "bundle_version": "1.0",
-    "total_sources": 44,
-    "created_at": "2026-11-11T16:29:20.683Z"
+    "total_sources": 62,
+    "created_at": "2026-11-11T19:41:30.057Z"
   },
   "sources": [
     {
@@ -2680,6 +2680,1114 @@
         "evidence_count": 8
       },
       "character_count": 3072
+    },
+    {
+      "source_file": "FR-045.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "3511cffa6cc5afb24f77b1fa32dcc37986138ae4f0def0f874b448ccd9034948",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall dynamically adjust delivery fees and commissions based on real-time network congestion and predicted demand spikes.",
+          "business_need": "The business needs to balance network capacity with revenue optimization during high-demand periods to prevent service degradation.",
+          "functional_behaviour": [
+            "The system shall calculate a surge multiplier by analyzing current fleet utilization and predicted order volume for specific zones.",
+            "The system shall apply the calculated multiplier to standard delivery fees and platform commissions for orders within the affected zone.",
+            "The system shall display the adjusted pricing to the Customer before the Order Request is confirmed.",
+            "The system shall automatically revert pricing to standard rates once congestion metrics fall below the defined threshold.",
+            "The system shall log all surge pricing events with the specific time window and calculated multiplier for audit purposes."
+          ],
+          "required_by_actors": [
+            "Customer",
+            "Delivery Partner",
+            "Store Partner",
+            "Platform Operator"
+          ],
+          "related_business_objects": [
+            "Order Request",
+            "Delivery Assignment",
+            "Financial Transaction Record",
+            "Delivery Zone Map",
+            "Real-Time Inventory Snapshot"
+          ],
+          "related_information_requirements": [
+            "Live visibility into the location, speed, and status of all active delivery agents and the aggregate capacity of the fleet within the service zone.",
+            "Predictive data regarding anticipated order volumes and item popularity for specific zones and time windows based on historical patterns and current trends.",
+            "Calculated estimates of travel duration and distance between the store location and potential customer addresses, accounting for traffic patterns and route constraints.",
+            "The complete record of monetary exchange, detailing item costs, delivery fees, taxes, platform commissions, and the net settlement amounts due to each party."
+          ],
+          "business_rules": [
+            "Surge pricing must only be applied when the ratio of active orders to available delivery agents exceeds the configured capacity threshold.",
+            "The system must not apply surge pricing if the predicted wait time for the customer exceeds the maximum acceptable delay defined in the Service Area Definition.",
+            "Adjusted fees must be calculated using the highest multiplier observed within the specific time window to ensure consistency.",
+            "Pricing adjustments must be communicated to the Customer Profile before the Order Request is finalized."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "The system detects a predicted demand spike in a specific Delivery Zone Map area due to high order volume.",
+              "when": "The Order Allocation Engine calculates the surge multiplier and updates the pricing engine.",
+              "then": "The delivery fee and commission displayed to the Customer are increased by the calculated multiplier before the Order Request is confirmed."
+            },
+            {
+              "given": "The system detects that network congestion has returned to normal levels in the affected zone.",
+              "when": "The pricing engine recalculates the surge multiplier based on current fleet capacity.",
+              "then": "The delivery fee and commission are automatically reverted to the standard base rate for subsequent Order Requests."
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3561
+    },
+    {
+      "source_file": "FR-046.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "3817ddea0170be172867703ae9065ecd1cc41adc07e39f2f4cece4ffa03116d3",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall generate predictive inventory replenishment alerts for high-velocity items when projected demand exceeds current stock levels within a defined time window.",
+          "business_need": "The business needs to notify store partners of impending stockouts for fast-moving items to prevent order fulfillment failures and maintain customer satisfaction.",
+          "functional_behaviour": [
+            "The system shall analyze historical sales patterns and current trends to forecast future demand for specific items at each Store Partner.",
+            "The system shall compare the forecasted demand against the Real-Time Inventory Snapshot to identify potential shortages for high-velocity items.",
+            "The system shall automatically generate and transmit a replenishment alert to the Store Partner when a projected shortage is detected.",
+            "The system shall allow the Store Partner to acknowledge the alert and update the expected restock date within the Customer Profile context.",
+            "The system shall suppress alerts for items that have been flagged as temporarily unavailable or excluded from the high-velocity category.",
+            "The system shall log the alert generation and resolution status in the Feedback Record for future model refinement."
+          ],
+          "required_by_actors": [
+            "Store Partner",
+            "Order Allocation Engine"
+          ],
+          "related_business_objects": [
+            "Real-Time Inventory Snapshot",
+            "Fulfillment Task",
+            "Customer Profile",
+            "Feedback Record",
+            "Product Catalog"
+          ],
+          "related_information_requirements": [
+            "Current validated quantity of each sellable item at a specific store location",
+            "Predictive data regarding anticipated order volumes and item popularity for specific zones",
+            "List of items selected by the customer and their quantities",
+            "Status flags for availability, partial stock, or temporary unavailability"
+          ],
+          "business_rules": [
+            "An alert must only be generated for items classified as high-velocity in the Product Catalog.",
+            "An alert is triggered only when the projected demand exceeds the current inventory by a defined safety margin.",
+            "Alerts must not be generated for items marked as temporarily unavailable in the Real-Time Inventory Snapshot.",
+            "The system must recalculate forecasts daily based on the latest Real-Time Inventory Snapshot."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A high-velocity item has a current stock of 10 units and the forecast predicts 15 units sold in the next 48 hours.",
+              "when": "The system processes the daily inventory check.",
+              "then": "The system generates a replenishment alert for the Store Partner."
+            },
+            {
+              "given": "A high-velocity item has a current stock of 10 units but is flagged as temporarily unavailable.",
+              "when": "The system processes the daily inventory check.",
+              "then": "The system does not generate a replenishment alert for that item."
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3139
+    },
+    {
+      "source_file": "FR-047.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "9b895f4328924d256c6cca8c209b25bf6aa6c660ad3b2ca69c564818baed3ba1",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall continuously recalculate optimal delivery paths for Delivery Partners by integrating live traffic data and new Order Request insertions.",
+          "business_need": "The business needs to minimize delivery times and fuel costs while ensuring timely order fulfillment in a dynamic logistics environment.",
+          "functional_behaviour": [
+            "The system shall ingest real-time traffic updates and new Order Requests to trigger immediate route re-optimization.",
+            "The system shall reassign Delivery Assignment tasks to the most suitable Delivery Partner based on current proximity and capacity.",
+            "The system shall update the estimated arrival time and travel distance for all affected Fulfillment Tasks.",
+            "The system shall notify the Delivery Partner of the revised route and new delivery slot via the mobile interface.",
+            "The system shall maintain a Real-Time Inventory Snapshot to ensure assigned routes only include orderable items."
+          ],
+          "required_by_actors": [
+            "Delivery Partner",
+            "Order Allocation Engine",
+            "Fulfillment Supervisor"
+          ],
+          "related_business_objects": [
+            "Delivery Assignment",
+            "Order Request",
+            "Fulfillment Task",
+            "Delivery Proof",
+            "Assigned Delivery Slot",
+            "Real-Time Inventory Snapshot"
+          ],
+          "related_information_requirements": [
+            "Live traffic patterns and road constraints",
+            "Current location and speed of active Delivery Partners",
+            "Real-time status of Order Requests (pending, ready, dispatched)",
+            "Customer delivery address and contact details",
+            "Aggregate fleet capacity within the service zone"
+          ],
+          "business_rules": [
+            "A route must be recalculated whenever a new Order Request is inserted into an active zone.",
+            "Route optimization must prioritize the earliest Estimated Arrival Time for high-priority orders.",
+            "A Delivery Partner cannot be assigned a new task if their current workload exceeds the defined capacity threshold.",
+            "Reassigned routes must be communicated to the Delivery Partner within the maximum allowable notification latency."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A new Order Request is inserted into a zone with active Delivery Partners",
+              "when": "The system processes the new request against live traffic data",
+              "then": "The system recalculates the optimal route and updates the Assigned Delivery Slot for the affected Delivery Partner within the defined latency window"
+            },
+            {
+              "given": "Live traffic data indicates a major road closure on the current optimal path",
+              "when": "The system detects the traffic anomaly during route calculation",
+              "then": "The system generates an alternative route that avoids the closure and notifies the Delivery Partner of the change"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 2995
+    },
+    {
+      "source_file": "FR-048.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "5c7e2f09f89255db8950fe60681a4d5a42020ce196d8ffb37b327c0e94af0938",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall automatically apply and track customer loyalty points or subscription benefits during the checkout and settlement process.",
+          "business_need": "The business needs to incentivize repeat purchases and retain customers by seamlessly integrating loyalty rewards into the transaction flow without manual intervention.",
+          "functional_behaviour": [
+            "The system shall validate the Customer Profile to determine eligibility for loyalty programs or subscription tiers before finalizing the Order Request.",
+            "The system shall calculate the applicable discount or benefit value based on the current loyalty rules and the total monetary value of the Order Request.",
+            "The system shall deduct the calculated loyalty value from the Financial Transaction Record to generate the net settlement amount due to the Store Partner.",
+            "The system shall update the Customer Profile to reflect the remaining loyalty balance or subscription status after the transaction is settled.",
+            "The system shall generate a Feedback Record entry indicating the specific loyalty benefit applied to the transaction for audit and reporting purposes."
+          ],
+          "required_by_actors": [
+            "Customer",
+            "Platform Operator",
+            "Store Partner"
+          ],
+          "related_business_objects": [
+            "Customer Profile",
+            "Order Request",
+            "Financial Transaction Record",
+            "Feedback Record"
+          ],
+          "related_information_requirements": [
+            "Verified details about the ordering individual, including unique identifiers, delivery addresses, and primary contact methods",
+            "The complete record of monetary exchange, detailing item costs, delivery fees, taxes, platform commissions, and the net settlement amounts due to each party",
+            "The specific list of items selected by the customer, their quantities, unit prices, and any special handling notes or delivery preferences provided by the customer"
+          ],
+          "business_rules": [
+            "A loyalty benefit cannot be applied if the Customer Profile indicates the account is suspended or flagged for fraud.",
+            "The net settlement amount must be recalculated immediately if the applied loyalty benefit exceeds the total order value, resulting in a zero or negative charge.",
+            "The system must prevent the application of loyalty benefits if the Order Request contains items restricted by the Store Partner Agreement.",
+            "The Customer Profile must be updated within the same transaction session to ensure the deducted balance is immediately reflected."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A customer with an active loyalty account places an Order Request with a total value greater than their available points.",
+              "when": "The checkout process is initiated and the system processes the payment.",
+              "then": "The system applies the maximum available points as a discount, deducts the value from the Financial Transaction Record, and updates the Customer Profile with the remaining balance."
+            },
+            {
+              "given": "A customer attempts to use loyalty points on an Order Request containing items explicitly excluded by the Store Partner Agreement.",
+              "when": "The checkout process attempts to apply the loyalty benefit.",
+              "then": "The system rejects the application of the loyalty benefit, displays an error message explaining the restriction, and proceeds with the full monetary charge without updating the Customer Profile balance."
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3633
+    },
+    {
+      "source_file": "FR-049.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "1bb27dd760d7dda93e2cc4e85cba7b4cc424d36c3d698b3b782e1711d4916160",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall provide real-time dashboards tracking delivery speed, accuracy, and customer satisfaction scores for each Delivery Partner.",
+          "business_need": "The business needs live visibility into agent performance to optimize workforce allocation, identify training gaps, and ensure consistent service quality across the network.",
+          "functional_behaviour": [
+            "The system shall aggregate live metrics including average delivery time, order accuracy rate, and customer feedback scores for each active Delivery Partner.",
+            "The system shall update performance indicators in real-time as new Delivery Proof records and Feedback Records are submitted.",
+            "The system shall display a visual dashboard accessible to the Fulfillment Supervisor and the Delivery Partner showing current status and historical trends.",
+            "The system shall calculate performance scores by correlating Delivery Assignment completion times with the Real-Time Inventory Snapshot and Service Area Definition constraints.",
+            "The system shall flag agents whose performance metrics fall below the defined service level thresholds for immediate review."
+          ],
+          "required_by_actors": [
+            "Fulfillment Supervisor",
+            "Delivery Partner",
+            "Platform Operator"
+          ],
+          "related_business_objects": [
+            "Delivery Assignment",
+            "Feedback Record",
+            "Delivery Proof",
+            "Delivery Partner",
+            "Real-Time Inventory Snapshot"
+          ],
+          "related_information_requirements": [
+            "Timestamped delivery completion events",
+            "Customer qualitative ratings and comments",
+            "Physical handover verification evidence",
+            "Assigned route and estimated arrival time",
+            "Current workload status of the agent"
+          ],
+          "business_rules": [
+            "A Delivery Partner's performance score must be updated immediately upon the submission of a Delivery Proof record.",
+            "Customer satisfaction scores must be weighted equally with delivery speed metrics in the overall performance calculation.",
+            "Performance data must be retained for a minimum period sufficient to generate weekly trend reports.",
+            "An agent's status must be flagged as 'Underperforming' if their average delivery time exceeds the zone standard for three consecutive shifts."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A Delivery Partner has completed five Delivery Assignments with associated Feedback Records and Delivery Proof",
+              "when": "The Fulfillment Supervisor opens the real-time analytics dashboard",
+              "then": "The dashboard displays the aggregated speed, accuracy, and satisfaction scores for that specific agent"
+            },
+            {
+              "given": "A Delivery Partner submits a Delivery Proof with a late timestamp",
+              "when": "The system calculates the performance metrics for the current reporting period",
+              "then": "The agent's delivery speed score is adjusted downward to reflect the delay, and the dashboard updates automatically"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": [
+            "Delivery Partner"
+          ]
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3178
+    },
+    {
+      "source_file": "FR-050.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "b90f5be00a86ed12ec1521f749db908357cdc07549b07d96d712660588239a36",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall automatically monitor Service Level Agreement (SLA) compliance for delivery times and order accuracy regarding Store Partners and alert the Fulfillment Supervisor upon breach.",
+          "business_need": "The business needs to proactively identify performance gaps to maintain contractual obligations and ensure customer satisfaction with delivery reliability.",
+          "functional_behaviour": [
+            "The system shall calculate the actual elapsed time between the Order Request creation and the Delivery Proof submission for each Delivery Assignment.",
+            "The system shall compare the actual elapsed time against the time window defined in the Store Partner Agreement to determine if a delivery time breach has occurred.",
+            "The system shall verify the accuracy of the Order Request against the Delivery Proof to identify any discrepancies in item quantities or special handling notes.",
+            "The system shall generate a Dispute Ticket and notify the Fulfillment Supervisor when a breach is detected.",
+            "The system shall record the breach details in a Feedback Record for future performance analysis."
+          ],
+          "required_by_actors": [
+            "Fulfillment Supervisor",
+            "Store Partner"
+          ],
+          "related_business_objects": [
+            "Store Partner Agreement",
+            "Delivery Assignment",
+            "Delivery Proof",
+            "Order Request",
+            "Feedback Record",
+            "Dispute Ticket"
+          ],
+          "related_information_requirements": [
+            "The specific time window for order preparation and dispatch defined in the contract.",
+            "The verified details of items selected by the customer and their quantities.",
+            "The timestamp confirming the formal transfer of possession to a delivery agent.",
+            "The calculated estimates of travel duration and distance for the specific route."
+          ],
+          "business_rules": [
+            "A delivery time breach occurs if the time between Order Request creation and Delivery Proof submission exceeds the agreed time window.",
+            "An order accuracy breach occurs if the items in the Delivery Proof do not match the Order Request specifications.",
+            "A breach notification must be generated immediately upon detection of any SLA violation.",
+            "The system must exclude force majeure events defined in the Store Partner Agreement from breach calculations."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A Delivery Assignment is created with a 2-hour preparation window in the Store Partner Agreement.",
+              "when": "The Delivery Proof is submitted 2 hours and 15 minutes after the Order Request creation.",
+              "then": "The system shall flag a delivery time breach and notify the Fulfillment Supervisor."
+            },
+            {
+              "given": "A Delivery Assignment is created with a 2-hour preparation window in the Store Partner Agreement.",
+              "when": "The Delivery Proof is submitted within 2 hours but contains an extra item not in the Order Request.",
+              "then": "The system shall flag an order accuracy breach and notify the Fulfillment Supervisor."
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3204
+    },
+    {
+      "source_file": "FR-051.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "5546540d65dfe5a68d53747aff69368f6894c45281dc83a30f3a8b6878e82f67",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall automatically generate and present retention incentives to customers identified as high-risk for churn based on negative feedback or service deviations.",
+          "business_need": "The business needs to proactively reduce customer attrition by offering targeted credits or offers immediately after detecting dissatisfaction signals.",
+          "functional_behaviour": [
+            "The system shall analyze Feedback Records and Dispute Tickets to identify customers with negative sentiment or unresolved issues.",
+            "The system shall calculate a churn risk score for each identified customer based on the severity and frequency of their negative interactions.",
+            "The system shall automatically generate a retention offer containing a credit or discount code for customers exceeding the high-risk threshold.",
+            "The system shall deliver the generated retention offer to the Customer via their registered contact channels.",
+            "The system shall log the delivery and acceptance status of the retention offer in the Customer Profile.",
+            "The system shall prevent the generation of new retention offers for the same customer until the current offer is redeemed or expires."
+          ],
+          "required_by_actors": [
+            "Customer",
+            "Platform Operator"
+          ],
+          "related_business_objects": [
+            "Feedback Record",
+            "Dispute Ticket",
+            "Customer Profile",
+            "Financial Transaction Record"
+          ],
+          "related_information_requirements": [
+            "Qualitative ratings and comments regarding product quality and agent behavior",
+            "Structured records of deviations such as damaged goods or failed deliveries",
+            "Customer contact details including email and phone number",
+            "Historical interaction data to assess churn risk trends"
+          ],
+          "business_rules": [
+            "A retention offer must only be generated if the customer has at least one negative Feedback Record or an open Dispute Ticket.",
+            "The system must not generate a new retention offer for a customer if a valid offer is already active or pending redemption.",
+            "Retention offers must be automatically invalidated if the associated Dispute Ticket is resolved without a negative outcome.",
+            "The system must capture the specific reason code from the Feedback Record to determine the type of incentive offered."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A customer submits a Feedback Record with a rating of 1 star and a comment about damaged goods.",
+              "when": "The system processes this feedback and identifies the customer as high-risk for churn.",
+              "then": "The system automatically generates and sends a retention offer with a credit to the customer's registered email."
+            },
+            {
+              "given": "A customer has an active retention offer pending redemption in their profile.",
+              "when": "The customer submits a new Feedback Record indicating dissatisfaction with a recent order.",
+              "then": "The system does not generate a new retention offer and logs the event as 'Offer Active' in the Customer Profile."
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3227
+    },
+    {
+      "source_file": "FR-052.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "3221bb5f509f9e43f27dc76b0ca0f1cb8bf608e4cb676998560b00092da58d4f",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall orchestrate multi-channel notifications (SMS, email, app push) by automatically triggering messages when an Order Request status changes to Ready for Delivery or Assigned to a Delivery Partner.",
+          "business_need": "The business needs to ensure customers receive timely, consistent updates across all preferred channels to reduce support inquiries and improve the delivery experience.",
+          "functional_behaviour": [
+            "The system shall detect a status change on an Order Request from 'Packed' to 'Ready for Delivery' and trigger a notification.",
+            "The system shall detect a status change on an Order Request from 'Ready for Delivery' to 'Assigned' and trigger a notification.",
+            "The system shall retrieve the Customer Profile to determine the primary contact method and preferred notification channel.",
+            "The system shall send the notification via the selected channel using the contact details found in the Customer Profile.",
+            "The system shall log the notification attempt and the delivery status of the message in a Feedback Record.",
+            "The system shall suppress duplicate notifications if a message for the same event has already been sent within a defined cooldown period."
+          ],
+          "required_by_actors": [
+            "Customer",
+            "Platform Operator"
+          ],
+          "related_business_objects": [
+            "Order Request",
+            "Customer Profile",
+            "Delivery Assignment",
+            "Feedback Record"
+          ],
+          "related_information_requirements": [
+            "Customer contact preferences and primary channel",
+            "Current Order Request status and event history",
+            "Assigned Delivery Partner details",
+            "Notification delivery confirmation status"
+          ],
+          "business_rules": [
+            "A notification must only be triggered once per specific status transition event.",
+            "The notification channel must match the primary contact method defined in the Customer Profile.",
+            "If the primary contact method is unavailable, the system must attempt the secondary contact method.",
+            "Notifications must be sent within a maximum threshold of the status change timestamp."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "An Order Request status changes to 'Ready for Delivery' and the Customer Profile has a valid phone number",
+              "when": "The system processes the status update",
+              "then": "The system shall send an SMS notification to the customer within the defined threshold"
+            },
+            {
+              "given": "An Order Request status changes to 'Assigned' but the Customer Profile has no valid phone number or email",
+              "when": "The system attempts to send the notification",
+              "then": "The system shall log a failed delivery in the Feedback Record and notify the Platform Operator"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 2928
+    },
+    {
+      "source_file": "FR-053.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "f5b10277b6e19348da780a0e820c3d8322baae0e0b972b0b60a3b88c5a63846a",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall validate regulatory compliance and contractual terms to authorize new Store Partners for platform operations.",
+          "business_need": "The business needs this to ensure all partners operate legally within defined zones and adhere to agreed financial and service standards before accepting orders.",
+          "functional_behaviour": [
+            "The system shall collect and verify regulatory licenses, permits, and zone-specific compliance data submitted by the Store Partner.",
+            "The system shall validate the Store Partner Agreement details, including commission rates, liability clauses, and performance guarantees.",
+            "The system shall confirm the Store Partner is located within an active Service Area Definition before granting operational access.",
+            "The system shall generate a unique identifier and activate the partner status only after all validation checks pass successfully.",
+            "The system shall log all verification results and approval decisions for audit and regulatory reporting purposes."
+          ],
+          "required_by_actors": [
+            "Store Partner",
+            "Platform Operator",
+            "Regulatory Authority"
+          ],
+          "related_business_objects": [
+            "Store Partner Agreement",
+            "Service Area Definition",
+            "Customer Profile",
+            "Dispute Ticket"
+          ],
+          "related_information_requirements": [
+            "Current records of licenses, permits, and regulatory adherence regarding food safety, labor laws, and data privacy.",
+            "Precise geographic coordinates or polygon boundaries defining authorized operating zones.",
+            "Legally binding contractual details including commission rates, payout schedules, and liability clauses.",
+            "Status of the data link between the store's Point of Sale and the platform."
+          ],
+          "business_rules": [
+            "A Store Partner cannot be activated until valid regulatory licenses are verified for the specific operating zone.",
+            "Operational access is restricted to partners whose locations fall strictly within an active Service Area Definition.",
+            "The system must reject onboarding requests where the Store Partner Agreement lacks defined performance guarantees or liability clauses.",
+            "Regulatory Authority must have the ability to override or suspend partner status based on compliance violations."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A new Store Partner submits a complete application with valid licenses and a signed agreement.",
+              "when": "The Platform Operator initiates the validation process.",
+              "then": "The system verifies all documents, confirms the location is within a Service Area Definition, and activates the partner status."
+            },
+            {
+              "given": "A Store Partner submits an application missing a required food safety permit for the target zone.",
+              "when": "The system runs the compliance validation check.",
+              "then": "The system rejects the onboarding request and generates a Dispute Ticket detailing the missing regulatory requirement."
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3177
+    },
+    {
+      "source_file": "FR-054.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "0a1438052f5547b1ecec66adf06a4ad0f18c1301d3833dd0bffaf59cc4ae0802",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall enable customers to create, validate, and submit order requests containing selected items, quantities, and delivery instructions.",
+          "business_need": "This requirement ensures customers can accurately define their purchase needs and delivery preferences to initiate the fulfillment process.",
+          "functional_behaviour": [
+            "The system shall allow the Customer to select items from the Product Catalog and specify quantities.",
+            "The system shall capture delivery instructions and contact details provided by the Customer.",
+            "The system shall validate item availability and calculate delivery fees based on the Delivery Zone Map.",
+            "The system shall display a summary of the Order Request for Customer confirmation before submission.",
+            "The system shall generate a unique Order Request record upon successful validation and submission.",
+            "The system shall notify the Customer of the order status and estimated delivery window."
+          ],
+          "required_by_actors": [
+            "Customer"
+          ],
+          "related_business_objects": [
+            "Order Request",
+            "Product Catalog",
+            "Customer Profile",
+            "Delivery Zone Map"
+          ],
+          "related_information_requirements": [
+            "The specific list of items selected by the customer, their quantities, unit prices, and any special handling notes or delivery preferences provided by the customer.",
+            "Verified details about the ordering individual, including unique identifiers, delivery addresses, and primary contact methods (phone, email).",
+            "Calculated estimates of travel duration and distance between the store location and potential customer addresses, accounting for traffic patterns and route constraints."
+          ],
+          "business_rules": [
+            "An Order Request cannot be submitted if any selected item is out of stock in the Real-Time Inventory Snapshot.",
+            "Delivery fees must be calculated based on the distance between the Store Partner and the delivery address within the Delivery Zone Map.",
+            "An Order Request is considered invalid if required customer contact information is missing or incomplete.",
+            "Special handling notes provided by the Customer must be stored and visible to the Fulfillment Supervisor during task assignment."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A customer selects valid items with available stock and enters a complete delivery address",
+              "when": "The customer submits the order request",
+              "then": "The system creates a valid Order Request and displays a success confirmation with an estimated delivery window"
+            },
+            {
+              "given": "A customer attempts to add an item that is currently out of stock",
+              "when": "The customer submits the order request",
+              "then": "The system rejects the submission and displays an error message indicating the item is unavailable"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3030
+    },
+    {
+      "source_file": "FR-055.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "5bea8695122349bbf580f0d046411948610c91c96e53a9d2f9f9dbb1fdfc6de7",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall route incoming order requests to the optimal Store Partner node and generate a corresponding Fulfillment Task for physical preparation and packing.",
+          "business_need": "The business needs to direct demand to the most efficient physical node to ensure timely order preparation and accurate inventory utilization.",
+          "functional_behaviour": [
+            "The system shall evaluate real-time inventory snapshots and store capacity to select the optimal Store Partner for each Order Request.",
+            "The system shall generate a Fulfillment Task containing item details, quantities, and special handling notes for the selected Store Partner.",
+            "The system shall assign a specific time window for order preparation and dispatch within the Fulfillment Task.",
+            "The system shall update the Real-Time Inventory Snapshot to reflect reserved stock once the Fulfillment Task is created.",
+            "The system shall notify the Store Partner via the Fulfillment Task interface to initiate picking and packing operations."
+          ],
+          "required_by_actors": [
+            "Order Allocation Engine",
+            "Store Partner",
+            "Platform Operator"
+          ],
+          "related_business_objects": [
+            "Order Request",
+            "Fulfillment Task",
+            "Real-Time Inventory Snapshot",
+            "Store Partner Agreement"
+          ],
+          "related_information_requirements": [
+            "Optimal store node selection criteria based on inventory and capacity",
+            "Specific list of items, quantities, and special handling notes",
+            "Assigned time window for preparation and dispatch",
+            "Current stock levels and availability status"
+          ],
+          "business_rules": [
+            "A Fulfillment Task must only be generated if the selected Store Partner has sufficient inventory for all items in the Order Request.",
+            "The assigned time window must allow the Store Partner to complete preparation before the delivery slot begins.",
+            "Stock reserved for a Fulfillment Task must be immediately reflected in the Real-Time Inventory Snapshot to prevent overselling.",
+            "If no Store Partner meets the optimal criteria, the system shall flag the Order Request for manual review by the Platform Operator."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "An Order Request is received with valid items and quantities",
+              "when": "The system evaluates available Store Partners and their inventory",
+              "then": "The system generates a Fulfillment Task assigned to the optimal Store Partner with a valid time window"
+            },
+            {
+              "given": "No Store Partner has sufficient inventory for all items in an Order Request",
+              "when": "The system attempts to route the Order Request automatically",
+              "then": "The system flags the Order Request for manual review instead of generating a Fulfillment Task"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 2968
+    },
+    {
+      "source_file": "FR-056.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "8077339e0250bc00f93a8c37cb2c7c18f36372129f363febdfa653d5e1763ab2",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall enable the Delivery Partner to execute the physical movement of goods from the Store Partner to the Customer and generate verifiable proof of delivery.",
+          "business_need": "The business needs to conclusively close the logistics loop by verifying successful handover and triggering financial settlement.",
+          "functional_behaviour": [
+            "The system shall assign a specific Delivery Assignment to a Delivery Partner based on the active linkage between a ready Order Request and the agent's current workload status.",
+            "The system shall allow the Delivery Partner to navigate the assigned route and access the specific list of items selected by the customer along with any special handling notes.",
+            "The system shall enable the Delivery Partner to capture verifiable evidence of physical goods reaching the customer, such as a digital signature, timestamped photo, or automated confirmation code.",
+            "The system shall update the status of the Fulfillment Task to 'Completed' only after the Delivery Partner submits valid Delivery Proof.",
+            "The system shall notify the Customer Profile of the successful handover and the generated proof details.",
+            "The system shall trigger the finalization of the Financial Transaction Record upon validation of the Delivery Proof."
+          ],
+          "required_by_actors": [
+            "Delivery Partner",
+            "Customer",
+            "Store Partner"
+          ],
+          "related_business_objects": [
+            "Delivery Assignment",
+            "Order Request",
+            "Fulfillment Task",
+            "Delivery Proof",
+            "Customer Profile",
+            "Financial Transaction Record"
+          ],
+          "related_information_requirements": [
+            "The specific list of items selected by the customer, their quantities, unit prices, and any special handling notes or delivery preferences provided by the customer.",
+            "The active linkage between a ready order and a specific delivery agent, including the assigned route, estimated arrival time, and the agent's current workload status.",
+            "The internal record confirming that the store has successfully picked, verified, and packed the order, and has formally transferred possession to a delivery agent.",
+            "Verifiable evidence that the physical goods have reached the customer, such as a digital signature, timestamped photo, or automated confirmation code."
+          ],
+          "business_rules": [
+            "A Fulfillment Task cannot be marked as completed without a valid Delivery Proof record.",
+            "The system must capture a timestamp and geolocation for every piece of Delivery Proof submitted.",
+            "The Delivery Partner must verify the specific list of items against the Order Request before generating proof.",
+            "Financial settlement is triggered only after the Delivery Proof is validated by the system."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A Delivery Partner has picked up an Order Request and is at the customer's location",
+              "when": "The Delivery Partner submits a timestamped photo and digital signature via the system",
+              "then": "The system updates the Fulfillment Task status to completed and triggers the Financial Transaction Record"
+            },
+            {
+              "given": "A Delivery Partner attempts to submit proof for an Order Request where the items do not match the Order Request",
+              "when": "The Delivery Partner tries to finalize the Delivery Assignment",
+              "then": "The system rejects the submission and prevents the Fulfillment Task from being marked as completed"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3669
+    },
+    {
+      "source_file": "FR-057.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "95cd97ac19386bbaccb4d6ad204f4f2865f19186f23bb669919bb1c79c604ecd",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall enable a Customer to submit a Feedback Record containing a satisfaction rating and textual comments after a Delivery Proof has been verified for a completed Order Request.",
+          "business_need": "The business needs this capability to collect qualitative data on product quality and service performance to drive operational improvements and evaluate partner effectiveness.",
+          "functional_behaviour": [
+            "The system shall allow the Customer to view their completed Order Request history and select a specific delivery to provide feedback.",
+            "The system shall capture a satisfaction rating and free-text comments regarding product quality, packaging, delivery speed, and agent behavior.",
+            "The system shall associate the submitted Feedback Record with the corresponding Delivery Proof to ensure the review applies to a verified handover.",
+            "The system shall prevent the submission of feedback if the associated Delivery Proof has not been recorded or if the order is in a dispute state.",
+            "The system shall store the Feedback Record as a permanent artifact for the Platform Operator to analyze service quality metrics."
+          ],
+          "required_by_actors": [
+            "Customer",
+            "Platform Operator"
+          ],
+          "related_business_objects": [
+            "Feedback Record",
+            "Delivery Proof",
+            "Order Request",
+            "Customer Profile"
+          ],
+          "related_information_requirements": [
+            "Qualitative ratings and comments regarding product quality, packaging, delivery speed, and agent behavior",
+            "Verified details about the ordering individual including unique identifiers and delivery addresses",
+            "Evidence that physical goods have reached the customer such as a digital signature or timestamped photo"
+          ],
+          "business_rules": [
+            "A Feedback Record can only be created after a Delivery Proof exists for the associated Order Request.",
+            "The system must link the Feedback Record to the specific Delivery Proof to validate the context of the review.",
+            "Feedback submissions must include both a numerical rating and optional textual comments to be considered valid.",
+            "The system shall not allow duplicate feedback submissions for the same Order Request by the same Customer."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A Customer has completed an order and the Delivery Proof is verified in the system",
+              "when": "The Customer navigates to the order details and selects 'Submit Feedback'",
+              "then": "The system displays a form allowing the Customer to enter a rating and comments, which are saved as a Feedback Record upon submission"
+            },
+            {
+              "given": "A Customer attempts to submit feedback for an Order Request where the Delivery Proof is missing or invalid",
+              "when": "The Customer clicks the 'Submit Feedback' button",
+              "then": "The system rejects the submission and displays an error message stating that delivery verification is required first"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3140
+    },
+    {
+      "source_file": "FR-058.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "e105dc185c5dbb31cf9c54efe5ce75d59dac997813d854f7ca83907134a8b3c7",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall generate demand forecasts and resource plans to optimize agent positioning and store inventory levels based on predicted order volumes.",
+          "business_need": "The business needs this to proactively allocate agents and stock before peak demand occurs, preventing service failures and reducing operational waste.",
+          "functional_behaviour": [
+            "The system shall analyze historical patterns and current trends to predict future order volumes for specific zones and time windows.",
+            "The system shall recommend optimal positioning for Delivery Partners based on the predicted demand density.",
+            "The system shall suggest inventory replenishment levels for Store Partners based on anticipated item popularity.",
+            "The system shall update the Real-Time Inventory Snapshot to reflect planned stock adjustments derived from the forecast.",
+            "The system shall validate that the predicted demand does not exceed the maximum capacity of the assigned Store Partner.",
+            "The system shall generate a resource plan document detailing the required agent count and stock levels for the forecasted period."
+          ],
+          "required_by_actors": [
+            "Platform Operator",
+            "Fulfillment Supervisor",
+            "Store Partner",
+            "Delivery Partner"
+          ],
+          "related_business_objects": [
+            "Order Request",
+            "Real-Time Inventory Snapshot",
+            "Delivery Assignment",
+            "Service Area Definition",
+            "Customer Profile"
+          ],
+          "related_information_requirements": [
+            "Predictive data regarding anticipated order volumes and item popularity for specific zones and time windows.",
+            "The current, validated quantity of each sellable item at a specific store location.",
+            "The active linkage between a ready order and a specific delivery agent.",
+            "Data indicating the status of the data link between the store's Point of Sale and the platform."
+          ],
+          "business_rules": [
+            "The system shall only generate a resource plan if the predicted order volume exceeds the baseline threshold for the specific time window.",
+            "The system shall flag a Store Partner for immediate attention if the predicted demand exceeds 80% of their historical maximum capacity.",
+            "The system shall prioritize agent positioning recommendations for zones where predicted demand is rising faster than the average trend.",
+            "The system shall exclude Store Partners with a data link status indicating high latency or detected discrepancies from the resource plan."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "Historical order data and current trend indicators are available for a specific zone.",
+              "when": "The system runs the demand forecasting module for the upcoming time window.",
+              "then": "The system generates a resource plan recommending specific agent positioning and inventory levels that align with the predicted volume."
+            },
+            {
+              "given": "The predicted order volume for a specific Store Partner exceeds their maximum historical capacity.",
+              "when": "The system processes the demand forecast for that partner.",
+              "then": "The system flags the partner for immediate attention and adjusts the resource plan to suggest external support or order deferral."
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3426
+    },
+    {
+      "source_file": "FR-059.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "ec148ac51e67a52052fc27083a7faea78cf9f262b2dd138c8691201102c9160d",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall calculate a quality score for each Store Partner based on order preparation accuracy and customer feedback records.",
+          "business_need": "The business needs to objectively measure store performance to incentivize high-quality order preparation and identify partners requiring operational support.",
+          "functional_behaviour": [
+            "The system shall aggregate order preparation accuracy metrics derived from Order Request fulfillment against the assigned Fulfillment Task.",
+            "The system shall incorporate qualitative ratings from Feedback Records associated with completed deliveries.",
+            "The system shall normalize individual scores into a unified quality metric for each Store Partner.",
+            "The system shall expose the calculated quality score to the Fulfillment Supervisor for review and action.",
+            "The system shall update the Store Partner Agreement status if the score falls below a defined threshold."
+          ],
+          "required_by_actors": [
+            "Fulfillment Supervisor",
+            "Store Partner"
+          ],
+          "related_business_objects": [
+            "Order Request",
+            "Fulfillment Task",
+            "Feedback Record",
+            "Store Partner Agreement"
+          ],
+          "related_information_requirements": [
+            "Order preparation accuracy rate per Store Partner",
+            "Customer satisfaction ratings per delivery",
+            "Historical quality score trends",
+            "Current Store Partner Agreement terms"
+          ],
+          "business_rules": [
+            "A Store Partner's quality score must be calculated only after at least three completed Fulfillment Tasks.",
+            "Negative feedback records regarding product quality must reduce the overall quality score.",
+            "The quality score must be recalculated whenever a new Feedback Record is submitted for a completed task.",
+            "Store Partners with scores below the minimum threshold must be flagged for review by the Fulfillment Supervisor."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A Store Partner has completed three or more Fulfillment Tasks with associated Feedback Records.",
+              "when": "The system processes the latest Feedback Record for that partner.",
+              "then": "The system calculates and displays an updated quality score reflecting the latest performance data."
+            },
+            {
+              "given": "A Store Partner has fewer than three completed Fulfillment Tasks or no Feedback Records.",
+              "when": "The system attempts to calculate the quality score.",
+              "then": "The system displays a 'Data Insufficient' status instead of a numeric score."
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 2706
+    },
+    {
+      "source_file": "FR-060.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "f4e86725084365e4a48390080ba0ffa921cdfda010360fa1d7715640c7f89261",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall generate actionable quality improvement alerts when aggregated feedback data indicates systemic operational weaknesses.",
+          "business_need": "The business needs to proactively identify and address recurring service failures to maintain partner trust and operational efficiency.",
+          "functional_behaviour": [
+            "The system shall analyze qualitative ratings and comments from Feedback Records to detect recurring negative patterns.",
+            "The system shall automatically generate an alert when a specific issue type exceeds a defined frequency threshold within a set time window.",
+            "The system shall categorize the generated alert by operational domain such as product quality, packaging, or agent behavior.",
+            "The system shall route the alert to the Fulfillment Supervisor for immediate review and action planning.",
+            "The system shall update the Feedback Record status to indicate that the issue has been flagged for systemic review."
+          ],
+          "required_by_actors": [
+            "Platform Operator",
+            "Fulfillment Supervisor"
+          ],
+          "related_business_objects": [
+            "Feedback Record",
+            "Customer Profile",
+            "Delivery Assignment"
+          ],
+          "related_information_requirements": [
+            "Aggregated frequency of specific negative feedback keywords",
+            "Time window for pattern detection",
+            "Operational domain classification of the issue",
+            "Current resolution status of the feedback record"
+          ],
+          "business_rules": [
+            "An alert is generated only if the same issue type appears in multiple Feedback Records within the defined time window.",
+            "Alerts must be categorized based on the primary sentiment of the associated textual comments.",
+            "A Feedback Record must be linked to a specific Delivery Assignment to validate the context of the quality issue.",
+            "Alerts for systemic issues must be prioritized higher than isolated single-instance feedback."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "Multiple Feedback Records report damaged goods for deliveries in the same zone within a week",
+              "when": "The system processes the aggregated data",
+              "then": "A high-priority alert is generated and routed to the Fulfillment Supervisor"
+            },
+            {
+              "given": "A single Feedback Record reports a damaged item with no other similar reports",
+              "when": "The system processes the isolated data",
+              "then": "No systemic quality improvement alert is generated"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 2640
+    },
+    {
+      "source_file": "FR-061.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "19221714c9e45f43f713e6e853442137c0b4c51a3f0e9f96115711f51d93aa24",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall route low-rated feedback records to a Fulfillment Supervisor for investigation and resolution actions.",
+          "business_need": "The business needs to proactively identify service failures to maintain customer trust and ensure fair resolution of disputes.",
+          "functional_behaviour": [
+            "The system shall automatically flag a Feedback Record for supervisor review when the customer rating falls below the acceptable threshold.",
+            "The system shall notify the Fulfillment Supervisor and create a Dispute Ticket linked to the flagged Feedback Record.",
+            "The system shall allow the Fulfillment Supervisor to update the resolution status and attach a Delivery Proof to the Dispute Ticket.",
+            "The system shall prevent the Feedback Record from being archived until the Dispute Ticket is marked as resolved.",
+            "The system shall generate a summary report for the Platform Operator containing all unresolved low-rated feedback."
+          ],
+          "required_by_actors": [
+            "Customer",
+            "Fulfillment Supervisor",
+            "Platform Operator"
+          ],
+          "related_business_objects": [
+            "Feedback Record",
+            "Dispute Ticket",
+            "Delivery Proof",
+            "Customer Profile"
+          ],
+          "related_information_requirements": [
+            "Customer rating score and qualitative comments",
+            "Current resolution status of the dispute",
+            "Evidence of delivery completion or failure",
+            "Supervisor investigation notes"
+          ],
+          "business_rules": [
+            "A Feedback Record must be routed to a Fulfillment Supervisor if the rating is below the defined acceptable level.",
+            "A Dispute Ticket must remain open until a resolution status is recorded by the Fulfillment Supervisor.",
+            "The system must prevent the closure of a Feedback Record if the associated Dispute Ticket is still active.",
+            "Low-rated feedback must be included in the Platform Operator's quality assurance reports."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A Customer submits a Feedback Record with a rating below the acceptable threshold",
+              "when": "The system processes the post-transaction review",
+              "then": "The system routes the record to a Fulfillment Supervisor and creates an open Dispute Ticket"
+            },
+            {
+              "given": "A Fulfillment Supervisor investigates a low-rated Feedback Record",
+              "when": "The supervisor marks the Dispute Ticket as resolved without attaching a Delivery Proof",
+              "then": "The system prevents the Feedback Record from being archived and flags the ticket for re-review"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 2723
+    },
+    {
+      "source_file": "FR-062.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "feee61774a72be23bb1cb15a456af8351f598abbe4564e2956527c153b00f3c4",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall aggregate feedback records to generate actionable insights for business strategy and operational improvement.",
+          "business_need": "The business needs to consolidate customer feedback to identify service weaknesses, evaluate partner performance, and drive quality improvements.",
+          "functional_behaviour": [
+            "The system shall collect qualitative ratings and comments from customers regarding product quality, packaging, delivery speed, and agent behavior.",
+            "The system shall categorize feedback records by service dimension to enable targeted analysis of operational performance.",
+            "The system shall calculate aggregate performance metrics for Delivery Partners and Store Partners based on submitted feedback.",
+            "The system shall expose trend analysis reports to the Platform Operator for strategic decision-making.",
+            "The system shall flag feedback records that indicate critical service failures for immediate review by the Fulfillment Supervisor."
+          ],
+          "required_by_actors": [
+            "Customer",
+            "Platform Operator",
+            "Fulfillment Supervisor"
+          ],
+          "related_business_objects": [
+            "Feedback Record",
+            "Customer Profile",
+            "Delivery Partner",
+            "Store Partner Agreement"
+          ],
+          "related_information_requirements": [
+            "Qualitative ratings and comments regarding product quality, packaging, delivery speed, and agent behavior.",
+            "Aggregated performance metrics derived from feedback for specific partners.",
+            "Trend analysis data showing service quality changes over time."
+          ],
+          "business_rules": [
+            "A feedback record must contain both a quantitative rating and a qualitative comment to be included in aggregate reports.",
+            "Feedback records must be linked to a specific Delivery Assignment to attribute performance to the correct partner.",
+            "The system must categorize feedback into predefined service dimensions before aggregation.",
+            "Critical failure feedback must be prioritized and flagged for immediate supervisor review."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A customer submits a rating and comment for a completed delivery.",
+              "when": "The system processes the submission.",
+              "then": "The Feedback Record is created, categorized by service dimension, and included in the Partner performance metrics."
+            },
+            {
+              "given": "A feedback record contains a rating indicating a critical service failure.",
+              "when": "The system aggregates the data for the Fulfillment Supervisor.",
+              "then": "The record is flagged as a critical issue and highlighted in the performance report for immediate review."
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": [
+            "Delivery Partner"
+          ]
+        },
+        "evidence_count": 8
+      },
+      "character_count": 2872
     }
   ]
 }

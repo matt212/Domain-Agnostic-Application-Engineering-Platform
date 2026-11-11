@@ -18,6 +18,7 @@
  */
 
 const fs = require("fs/promises");
+const fs1 = require('fs');
 const path = require("path");
 const crypto = require("crypto");
 const { Client } = require("pg");
@@ -31,6 +32,39 @@ const OUTPUT_DIR = path.join(
     'app/utils/appflowgeneratorAI/aiOutput/functionalRequirements'
 );
 const WORK_DIR = path.join(OUTPUT_DIR, 'work');
+const CONFIG_PATH = path.resolve(
+    __dirname,
+    '../../../config/config.json'
+);
+const ENVIRONMENT = process.env.NODE_ENV || 'development';
+
+function loadDatabaseConfig() {
+    if (!fs1.existsSync(CONFIG_PATH)) {
+        throw new Error(`Database config not found: ${CONFIG_PATH}`);
+    }
+
+    const config = JSON.parse(
+        fs1.readFileSync(CONFIG_PATH, 'utf8')
+    );
+
+    const db = config[ENVIRONMENT];
+
+    if (!db) {
+        throw new Error(
+            `Environment "${ENVIRONMENT}" not found in config.json`
+        );
+    }
+    let user = encodeURIComponent(db.username);
+let password = encodeURIComponent(db.password);
+let port = Number(db.port || 5432);
+
+const CONFIG = {
+  databaseUrl: `postgresql://${user}:${password}@${db.host}:${port}/${db.database}`
+};
+
+    return CONFIG
+}
+
 
 const CONFIG = {
     inputDirectory: WORK_DIR,
@@ -40,7 +74,7 @@ const CONFIG = {
     ),
 
 
-    databaseUrl: process.env.DATABASE_URL,
+    databaseUrl: loadDatabaseConfig().databaseUrl,
 
     sourceStage: process.env.KB_SOURCE_STAGE || "JSON_IMPORT",
 
@@ -957,30 +991,29 @@ async function main() {
     log(
         `Consolidated characters: ${consolidated.outputCharacters}`
     );
-console.log(consolidated.bundle)
-    // log("STEP 2: Starting PostgreSQL ingestion.");
+    log("STEP 2: Starting PostgreSQL ingestion.");
 
-    // const stats = await ingestBundle(
-    //     consolidated.bundle,
-    //     consolidated.bundleHash
-    // );
+    const stats = await ingestBundle(
+        consolidated.bundle,
+        consolidated.bundleHash
+    );
 
-    // log("========================================");
-    // log("KNOWLEDGE BASE INGESTION COMPLETED");
-    // log("========================================");
+    log("========================================");
+    log("KNOWLEDGE BASE INGESTION COMPLETED");
+    log("========================================");
 
-    // console.log(
-    //     JSON.stringify(
-    //         {
-    //             status: "COMPLETED",
-    //             database: "demodb",
-    //             consolidated_file: CONFIG.consolidatedFile,
-    //             ...stats
-    //         },
-    //         null,
-    //         2
-    //     )
-    // );
+    console.log(
+        JSON.stringify(
+            {
+                status: "COMPLETED",
+                database: "demodb",
+                consolidated_file: CONFIG.consolidatedFile,
+                ...stats
+            },
+            null,
+            2
+        )
+    );
 }
 
 // ============================================================

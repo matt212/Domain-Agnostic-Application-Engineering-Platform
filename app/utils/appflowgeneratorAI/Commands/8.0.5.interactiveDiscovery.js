@@ -12,7 +12,7 @@
  *   node 8_2_0_aiFunctionalRequirements.js generate   Step 2: AI writes the full structure per requirement (resumable)
  *   node 8_2_0_aiFunctionalRequirements.js merge      Step 3: assemble final JSON
  *   node 8_2_0_aiFunctionalRequirements.js all
- *
+ *ONLY=FR-061,FR-062,FR-063,FR-064,FR-065,FR-066,FR-067,FR-068,FR-069,FR-070 caffeinate -i node app/utils/appflowgeneratorAI/commands/8.0.5.interactiveDiscovery.js generate
  * Between step 1 and 2 you can edit requirement_index.json (rename / delete / add).
  */
 
