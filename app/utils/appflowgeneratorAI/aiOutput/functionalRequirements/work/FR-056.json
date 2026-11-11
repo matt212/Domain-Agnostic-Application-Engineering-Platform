@@ -1,0 +1,56 @@
+{
+  "result": {
+    "requirement": "The system shall enable the Delivery Partner to execute the physical movement of goods from the Store Partner to the Customer and generate verifiable proof of delivery.",
+    "business_need": "The business needs to conclusively close the logistics loop by verifying successful handover and triggering financial settlement.",
+    "functional_behaviour": [
+      "The system shall assign a specific Delivery Assignment to a Delivery Partner based on the active linkage between a ready Order Request and the agent's current workload status.",
+      "The system shall allow the Delivery Partner to navigate the assigned route and access the specific list of items selected by the customer along with any special handling notes.",
+      "The system shall enable the Delivery Partner to capture verifiable evidence of physical goods reaching the customer, such as a digital signature, timestamped photo, or automated confirmation code.",
+      "The system shall update the status of the Fulfillment Task to 'Completed' only after the Delivery Partner submits valid Delivery Proof.",
+      "The system shall notify the Customer Profile of the successful handover and the generated proof details.",
+      "The system shall trigger the finalization of the Financial Transaction Record upon validation of the Delivery Proof."
+    ],
+    "required_by_actors": [
+      "Delivery Partner",
+      "Customer",
+      "Store Partner"
+    ],
+    "related_business_objects": [
+      "Delivery Assignment",
+      "Order Request",
+      "Fulfillment Task",
+      "Delivery Proof",
+      "Customer Profile",
+      "Financial Transaction Record"
+    ],
+    "related_information_requirements": [
+      "The specific list of items selected by the customer, their quantities, unit prices, and any special handling notes or delivery preferences provided by the customer.",
+      "The active linkage between a ready order and a specific delivery agent, including the assigned route, estimated arrival time, and the agent's current workload status.",
+      "The internal record confirming that the store has successfully picked, verified, and packed the order, and has formally transferred possession to a delivery agent.",
+      "Verifiable evidence that the physical goods have reached the customer, such as a digital signature, timestamped photo, or automated confirmation code."
+    ],
+    "business_rules": [
+      "A Fulfillment Task cannot be marked as completed without a valid Delivery Proof record.",
+      "The system must capture a timestamp and geolocation for every piece of Delivery Proof submitted.",
+      "The Delivery Partner must verify the specific list of items against the Order Request before generating proof.",
+      "Financial settlement is triggered only after the Delivery Proof is validated by the system."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A Delivery Partner has picked up an Order Request and is at the customer's location",
+        "when": "The Delivery Partner submits a timestamped photo and digital signature via the system",
+        "then": "The system updates the Fulfillment Task status to completed and triggers the Financial Transaction Record"
+      },
+      {
+        "given": "A Delivery Partner attempts to submit proof for an Order Request where the items do not match the Order Request",
+        "when": "The Delivery Partner tries to finalize the Delivery Assignment",
+        "then": "The system rejects the submission and prevents the Fulfillment Task from being marked as completed"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

@@ -1,0 +1,51 @@
+{
+  "result": {
+    "requirement": "The system shall enable customers to create, validate, and submit order requests containing selected items, quantities, and delivery instructions.",
+    "business_need": "This requirement ensures customers can accurately define their purchase needs and delivery preferences to initiate the fulfillment process.",
+    "functional_behaviour": [
+      "The system shall allow the Customer to select items from the Product Catalog and specify quantities.",
+      "The system shall capture delivery instructions and contact details provided by the Customer.",
+      "The system shall validate item availability and calculate delivery fees based on the Delivery Zone Map.",
+      "The system shall display a summary of the Order Request for Customer confirmation before submission.",
+      "The system shall generate a unique Order Request record upon successful validation and submission.",
+      "The system shall notify the Customer of the order status and estimated delivery window."
+    ],
+    "required_by_actors": [
+      "Customer"
+    ],
+    "related_business_objects": [
+      "Order Request",
+      "Product Catalog",
+      "Customer Profile",
+      "Delivery Zone Map"
+    ],
+    "related_information_requirements": [
+      "The specific list of items selected by the customer, their quantities, unit prices, and any special handling notes or delivery preferences provided by the customer.",
+      "Verified details about the ordering individual, including unique identifiers, delivery addresses, and primary contact methods (phone, email).",
+      "Calculated estimates of travel duration and distance between the store location and potential customer addresses, accounting for traffic patterns and route constraints."
+    ],
+    "business_rules": [
+      "An Order Request cannot be submitted if any selected item is out of stock in the Real-Time Inventory Snapshot.",
+      "Delivery fees must be calculated based on the distance between the Store Partner and the delivery address within the Delivery Zone Map.",
+      "An Order Request is considered invalid if required customer contact information is missing or incomplete.",
+      "Special handling notes provided by the Customer must be stored and visible to the Fulfillment Supervisor during task assignment."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A customer selects valid items with available stock and enters a complete delivery address",
+        "when": "The customer submits the order request",
+        "then": "The system creates a valid Order Request and displays a success confirmation with an estimated delivery window"
+      },
+      {
+        "given": "A customer attempts to add an item that is currently out of stock",
+        "when": "The customer submits the order request",
+        "then": "The system rejects the submission and displays an error message indicating the item is unavailable"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

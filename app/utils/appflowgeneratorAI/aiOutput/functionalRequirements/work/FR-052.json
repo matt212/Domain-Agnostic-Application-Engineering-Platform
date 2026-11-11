@@ -1,0 +1,53 @@
+{
+  "result": {
+    "requirement": "The system shall orchestrate multi-channel notifications (SMS, email, app push) by automatically triggering messages when an Order Request status changes to Ready for Delivery or Assigned to a Delivery Partner.",
+    "business_need": "The business needs to ensure customers receive timely, consistent updates across all preferred channels to reduce support inquiries and improve the delivery experience.",
+    "functional_behaviour": [
+      "The system shall detect a status change on an Order Request from 'Packed' to 'Ready for Delivery' and trigger a notification.",
+      "The system shall detect a status change on an Order Request from 'Ready for Delivery' to 'Assigned' and trigger a notification.",
+      "The system shall retrieve the Customer Profile to determine the primary contact method and preferred notification channel.",
+      "The system shall send the notification via the selected channel using the contact details found in the Customer Profile.",
+      "The system shall log the notification attempt and the delivery status of the message in a Feedback Record.",
+      "The system shall suppress duplicate notifications if a message for the same event has already been sent within a defined cooldown period."
+    ],
+    "required_by_actors": [
+      "Customer",
+      "Platform Operator"
+    ],
+    "related_business_objects": [
+      "Order Request",
+      "Customer Profile",
+      "Delivery Assignment",
+      "Feedback Record"
+    ],
+    "related_information_requirements": [
+      "Customer contact preferences and primary channel",
+      "Current Order Request status and event history",
+      "Assigned Delivery Partner details",
+      "Notification delivery confirmation status"
+    ],
+    "business_rules": [
+      "A notification must only be triggered once per specific status transition event.",
+      "The notification channel must match the primary contact method defined in the Customer Profile.",
+      "If the primary contact method is unavailable, the system must attempt the secondary contact method.",
+      "Notifications must be sent within a maximum threshold of the status change timestamp."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "An Order Request status changes to 'Ready for Delivery' and the Customer Profile has a valid phone number",
+        "when": "The system processes the status update",
+        "then": "The system shall send an SMS notification to the customer within the defined threshold"
+      },
+      {
+        "given": "An Order Request status changes to 'Assigned' but the Customer Profile has no valid phone number or email",
+        "when": "The system attempts to send the notification",
+        "then": "The system shall log a failed delivery in the Feedback Record and notify the Platform Operator"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

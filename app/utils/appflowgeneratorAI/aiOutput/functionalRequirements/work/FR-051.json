@@ -1,0 +1,53 @@
+{
+  "result": {
+    "requirement": "The system shall automatically generate and present retention incentives to customers identified as high-risk for churn based on negative feedback or service deviations.",
+    "business_need": "The business needs to proactively reduce customer attrition by offering targeted credits or offers immediately after detecting dissatisfaction signals.",
+    "functional_behaviour": [
+      "The system shall analyze Feedback Records and Dispute Tickets to identify customers with negative sentiment or unresolved issues.",
+      "The system shall calculate a churn risk score for each identified customer based on the severity and frequency of their negative interactions.",
+      "The system shall automatically generate a retention offer containing a credit or discount code for customers exceeding the high-risk threshold.",
+      "The system shall deliver the generated retention offer to the Customer via their registered contact channels.",
+      "The system shall log the delivery and acceptance status of the retention offer in the Customer Profile.",
+      "The system shall prevent the generation of new retention offers for the same customer until the current offer is redeemed or expires."
+    ],
+    "required_by_actors": [
+      "Customer",
+      "Platform Operator"
+    ],
+    "related_business_objects": [
+      "Feedback Record",
+      "Dispute Ticket",
+      "Customer Profile",
+      "Financial Transaction Record"
+    ],
+    "related_information_requirements": [
+      "Qualitative ratings and comments regarding product quality and agent behavior",
+      "Structured records of deviations such as damaged goods or failed deliveries",
+      "Customer contact details including email and phone number",
+      "Historical interaction data to assess churn risk trends"
+    ],
+    "business_rules": [
+      "A retention offer must only be generated if the customer has at least one negative Feedback Record or an open Dispute Ticket.",
+      "The system must not generate a new retention offer for a customer if a valid offer is already active or pending redemption.",
+      "Retention offers must be automatically invalidated if the associated Dispute Ticket is resolved without a negative outcome.",
+      "The system must capture the specific reason code from the Feedback Record to determine the type of incentive offered."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A customer submits a Feedback Record with a rating of 1 star and a comment about damaged goods.",
+        "when": "The system processes this feedback and identifies the customer as high-risk for churn.",
+        "then": "The system automatically generates and sends a retention offer with a credit to the customer's registered email."
+      },
+      {
+        "given": "A customer has an active retention offer pending redemption in their profile.",
+        "when": "The customer submits a new Feedback Record indicating dissatisfaction with a recent order.",
+        "then": "The system does not generate a new retention offer and logs the event as 'Offer Active' in the Customer Profile."
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

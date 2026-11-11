@@ -1,0 +1,53 @@
+{
+  "result": {
+    "requirement": "The system shall route incoming order requests to the optimal Store Partner node and generate a corresponding Fulfillment Task for physical preparation and packing.",
+    "business_need": "The business needs to direct demand to the most efficient physical node to ensure timely order preparation and accurate inventory utilization.",
+    "functional_behaviour": [
+      "The system shall evaluate real-time inventory snapshots and store capacity to select the optimal Store Partner for each Order Request.",
+      "The system shall generate a Fulfillment Task containing item details, quantities, and special handling notes for the selected Store Partner.",
+      "The system shall assign a specific time window for order preparation and dispatch within the Fulfillment Task.",
+      "The system shall update the Real-Time Inventory Snapshot to reflect reserved stock once the Fulfillment Task is created.",
+      "The system shall notify the Store Partner via the Fulfillment Task interface to initiate picking and packing operations."
+    ],
+    "required_by_actors": [
+      "Order Allocation Engine",
+      "Store Partner",
+      "Platform Operator"
+    ],
+    "related_business_objects": [
+      "Order Request",
+      "Fulfillment Task",
+      "Real-Time Inventory Snapshot",
+      "Store Partner Agreement"
+    ],
+    "related_information_requirements": [
+      "Optimal store node selection criteria based on inventory and capacity",
+      "Specific list of items, quantities, and special handling notes",
+      "Assigned time window for preparation and dispatch",
+      "Current stock levels and availability status"
+    ],
+    "business_rules": [
+      "A Fulfillment Task must only be generated if the selected Store Partner has sufficient inventory for all items in the Order Request.",
+      "The assigned time window must allow the Store Partner to complete preparation before the delivery slot begins.",
+      "Stock reserved for a Fulfillment Task must be immediately reflected in the Real-Time Inventory Snapshot to prevent overselling.",
+      "If no Store Partner meets the optimal criteria, the system shall flag the Order Request for manual review by the Platform Operator."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "An Order Request is received with valid items and quantities",
+        "when": "The system evaluates available Store Partners and their inventory",
+        "then": "The system generates a Fulfillment Task assigned to the optimal Store Partner with a valid time window"
+      },
+      {
+        "given": "No Store Partner has sufficient inventory for all items in an Order Request",
+        "when": "The system attempts to route the Order Request automatically",
+        "then": "The system flags the Order Request for manual review instead of generating a Fulfillment Task"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

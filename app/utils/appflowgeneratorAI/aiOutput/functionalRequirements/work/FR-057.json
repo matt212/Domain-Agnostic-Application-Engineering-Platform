@@ -1,0 +1,51 @@
+{
+  "result": {
+    "requirement": "The system shall enable a Customer to submit a Feedback Record containing a satisfaction rating and textual comments after a Delivery Proof has been verified for a completed Order Request.",
+    "business_need": "The business needs this capability to collect qualitative data on product quality and service performance to drive operational improvements and evaluate partner effectiveness.",
+    "functional_behaviour": [
+      "The system shall allow the Customer to view their completed Order Request history and select a specific delivery to provide feedback.",
+      "The system shall capture a satisfaction rating and free-text comments regarding product quality, packaging, delivery speed, and agent behavior.",
+      "The system shall associate the submitted Feedback Record with the corresponding Delivery Proof to ensure the review applies to a verified handover.",
+      "The system shall prevent the submission of feedback if the associated Delivery Proof has not been recorded or if the order is in a dispute state.",
+      "The system shall store the Feedback Record as a permanent artifact for the Platform Operator to analyze service quality metrics."
+    ],
+    "required_by_actors": [
+      "Customer",
+      "Platform Operator"
+    ],
+    "related_business_objects": [
+      "Feedback Record",
+      "Delivery Proof",
+      "Order Request",
+      "Customer Profile"
+    ],
+    "related_information_requirements": [
+      "Qualitative ratings and comments regarding product quality, packaging, delivery speed, and agent behavior",
+      "Verified details about the ordering individual including unique identifiers and delivery addresses",
+      "Evidence that physical goods have reached the customer such as a digital signature or timestamped photo"
+    ],
+    "business_rules": [
+      "A Feedback Record can only be created after a Delivery Proof exists for the associated Order Request.",
+      "The system must link the Feedback Record to the specific Delivery Proof to validate the context of the review.",
+      "Feedback submissions must include both a numerical rating and optional textual comments to be considered valid.",
+      "The system shall not allow duplicate feedback submissions for the same Order Request by the same Customer."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A Customer has completed an order and the Delivery Proof is verified in the system",
+        "when": "The Customer navigates to the order details and selects 'Submit Feedback'",
+        "then": "The system displays a form allowing the Customer to enter a rating and comments, which are saved as a Feedback Record upon submission"
+      },
+      {
+        "given": "A Customer attempts to submit feedback for an Order Request where the Delivery Proof is missing or invalid",
+        "when": "The Customer clicks the 'Submit Feedback' button",
+        "then": "The system rejects the submission and displays an error message stating that delivery verification is required first"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}
