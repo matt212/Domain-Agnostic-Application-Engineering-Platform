@@ -1,0 +1,54 @@
+{
+  "result": {
+    "requirement": "The system shall automatically monitor Service Level Agreement (SLA) compliance for delivery times and order accuracy regarding Store Partners and alert the Fulfillment Supervisor upon breach.",
+    "business_need": "The business needs to proactively identify performance gaps to maintain contractual obligations and ensure customer satisfaction with delivery reliability.",
+    "functional_behaviour": [
+      "The system shall calculate the actual elapsed time between the Order Request creation and the Delivery Proof submission for each Delivery Assignment.",
+      "The system shall compare the actual elapsed time against the time window defined in the Store Partner Agreement to determine if a delivery time breach has occurred.",
+      "The system shall verify the accuracy of the Order Request against the Delivery Proof to identify any discrepancies in item quantities or special handling notes.",
+      "The system shall generate a Dispute Ticket and notify the Fulfillment Supervisor when a breach is detected.",
+      "The system shall record the breach details in a Feedback Record for future performance analysis."
+    ],
+    "required_by_actors": [
+      "Fulfillment Supervisor",
+      "Store Partner"
+    ],
+    "related_business_objects": [
+      "Store Partner Agreement",
+      "Delivery Assignment",
+      "Delivery Proof",
+      "Order Request",
+      "Feedback Record",
+      "Dispute Ticket"
+    ],
+    "related_information_requirements": [
+      "The specific time window for order preparation and dispatch defined in the contract.",
+      "The verified details of items selected by the customer and their quantities.",
+      "The timestamp confirming the formal transfer of possession to a delivery agent.",
+      "The calculated estimates of travel duration and distance for the specific route."
+    ],
+    "business_rules": [
+      "A delivery time breach occurs if the time between Order Request creation and Delivery Proof submission exceeds the agreed time window.",
+      "An order accuracy breach occurs if the items in the Delivery Proof do not match the Order Request specifications.",
+      "A breach notification must be generated immediately upon detection of any SLA violation.",
+      "The system must exclude force majeure events defined in the Store Partner Agreement from breach calculations."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A Delivery Assignment is created with a 2-hour preparation window in the Store Partner Agreement.",
+        "when": "The Delivery Proof is submitted 2 hours and 15 minutes after the Order Request creation.",
+        "then": "The system shall flag a delivery time breach and notify the Fulfillment Supervisor."
+      },
+      {
+        "given": "A Delivery Assignment is created with a 2-hour preparation window in the Store Partner Agreement.",
+        "when": "The Delivery Proof is submitted within 2 hours but contains an extra item not in the Order Request.",
+        "then": "The system shall flag an order accuracy breach and notify the Fulfillment Supervisor."
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

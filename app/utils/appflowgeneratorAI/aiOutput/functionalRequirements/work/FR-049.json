@@ -1,0 +1,57 @@
+{
+  "result": {
+    "requirement": "The system shall provide real-time dashboards tracking delivery speed, accuracy, and customer satisfaction scores for each Delivery Partner.",
+    "business_need": "The business needs live visibility into agent performance to optimize workforce allocation, identify training gaps, and ensure consistent service quality across the network.",
+    "functional_behaviour": [
+      "The system shall aggregate live metrics including average delivery time, order accuracy rate, and customer feedback scores for each active Delivery Partner.",
+      "The system shall update performance indicators in real-time as new Delivery Proof records and Feedback Records are submitted.",
+      "The system shall display a visual dashboard accessible to the Fulfillment Supervisor and the Delivery Partner showing current status and historical trends.",
+      "The system shall calculate performance scores by correlating Delivery Assignment completion times with the Real-Time Inventory Snapshot and Service Area Definition constraints.",
+      "The system shall flag agents whose performance metrics fall below the defined service level thresholds for immediate review."
+    ],
+    "required_by_actors": [
+      "Fulfillment Supervisor",
+      "Delivery Partner",
+      "Platform Operator"
+    ],
+    "related_business_objects": [
+      "Delivery Assignment",
+      "Feedback Record",
+      "Delivery Proof",
+      "Delivery Partner",
+      "Real-Time Inventory Snapshot"
+    ],
+    "related_information_requirements": [
+      "Timestamped delivery completion events",
+      "Customer qualitative ratings and comments",
+      "Physical handover verification evidence",
+      "Assigned route and estimated arrival time",
+      "Current workload status of the agent"
+    ],
+    "business_rules": [
+      "A Delivery Partner's performance score must be updated immediately upon the submission of a Delivery Proof record.",
+      "Customer satisfaction scores must be weighted equally with delivery speed metrics in the overall performance calculation.",
+      "Performance data must be retained for a minimum period sufficient to generate weekly trend reports.",
+      "An agent's status must be flagged as 'Underperforming' if their average delivery time exceeds the zone standard for three consecutive shifts."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A Delivery Partner has completed five Delivery Assignments with associated Feedback Records and Delivery Proof",
+        "when": "The Fulfillment Supervisor opens the real-time analytics dashboard",
+        "then": "The dashboard displays the aggregated speed, accuracy, and satisfaction scores for that specific agent"
+      },
+      {
+        "given": "A Delivery Partner submits a Delivery Proof with a late timestamp",
+        "when": "The system calculates the performance metrics for the current reporting period",
+        "then": "The agent's delivery speed score is adjusted downward to reflect the delay, and the dashboard updates automatically"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": [
+      "Delivery Partner"
+    ]
+  },
+  "evidence_count": 8
+}

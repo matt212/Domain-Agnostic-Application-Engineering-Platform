@@ -1,0 +1,58 @@
+{
+  "result": {
+    "requirement": "The system shall execute a scheduled batch process to calculate, validate, and distribute financial settlements to Store Partners and Delivery Partners based on finalized transaction data.",
+    "business_need": "The business needs this to automate accurate fund distribution, ensuring partners receive correct payments while maintaining financial integrity and compliance with contractual agreements.",
+    "functional_behaviour": [
+      "The system shall aggregate all Order Requests with confirmed Delivery Proof and valid Financial Transaction Records within the defined settlement window.",
+      "The system shall apply commission rates and fee structures defined in the Store Partner Agreement to calculate net settlement amounts for each party.",
+      "The system shall validate that the total settlement amount for a transaction does not exceed the available funds in the corresponding Financial Transaction Record.",
+      "The system shall generate a Financial Transaction Record for each successful settlement and update the Customer Profile to reflect the completed payment status.",
+      "The system shall flag any settlement batch items where the Delivery Proof is missing or the Store Partner Agreement is expired for manual review.",
+      "The system shall generate a summary report of the batch processing results available to the Platform Operator for audit and reconciliation purposes."
+    ],
+    "required_by_actors": [
+      "Platform Operator",
+      "Store Partner",
+      "Delivery Partner",
+      "Payment Provider"
+    ],
+    "related_business_objects": [
+      "Financial Transaction Record",
+      "Store Partner Agreement",
+      "Order Request",
+      "Delivery Proof",
+      "Customer Profile"
+    ],
+    "related_information_requirements": [
+      "Complete record of monetary exchange including item costs, fees, taxes, and net amounts",
+      "Verifiable evidence of physical goods handover to the customer",
+      "Legally binding contractual details including commission rates and payout schedules",
+      "Unified digital representation of sellable items and pricing",
+      "Verified details about the ordering individual including unique identifiers and addresses"
+    ],
+    "business_rules": [
+      "A settlement batch must only include Order Requests where the Delivery Proof status is verified as successful.",
+      "The net settlement amount must be calculated strictly according to the active commission rates in the Store Partner Agreement.",
+      "Settlements cannot be processed if the associated Store Partner Agreement is expired or terminated.",
+      "Any discrepancy between the calculated settlement amount and the available Financial Transaction Record must trigger a batch halt for that specific item.",
+      "The system must exclude any Order Request flagged with high-risk indicators from the automated settlement batch."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "All Order Requests in the batch have valid Delivery Proof and active Store Partner Agreements",
+        "when": "The scheduled batch processing job runs at the defined time",
+        "then": "The system generates Financial Transaction Records with correct net amounts and updates partner balances"
+      },
+      {
+        "given": "An Order Request in the batch has an expired Store Partner Agreement or missing Delivery Proof",
+        "when": "The scheduled batch processing job runs at the defined time",
+        "then": "The system excludes the item from the batch and logs it as a failed settlement for manual review"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

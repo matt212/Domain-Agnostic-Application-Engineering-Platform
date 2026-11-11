@@ -1,0 +1,55 @@
+{
+  "result": {
+    "requirement": "The system shall dynamically adjust delivery fees and commissions based on real-time network congestion and predicted demand spikes.",
+    "business_need": "The business needs to balance network capacity with revenue optimization during high-demand periods to prevent service degradation.",
+    "functional_behaviour": [
+      "The system shall calculate a surge multiplier by analyzing current fleet utilization and predicted order volume for specific zones.",
+      "The system shall apply the calculated multiplier to standard delivery fees and platform commissions for orders within the affected zone.",
+      "The system shall display the adjusted pricing to the Customer before the Order Request is confirmed.",
+      "The system shall automatically revert pricing to standard rates once congestion metrics fall below the defined threshold.",
+      "The system shall log all surge pricing events with the specific time window and calculated multiplier for audit purposes."
+    ],
+    "required_by_actors": [
+      "Customer",
+      "Delivery Partner",
+      "Store Partner",
+      "Platform Operator"
+    ],
+    "related_business_objects": [
+      "Order Request",
+      "Delivery Assignment",
+      "Financial Transaction Record",
+      "Delivery Zone Map",
+      "Real-Time Inventory Snapshot"
+    ],
+    "related_information_requirements": [
+      "Live visibility into the location, speed, and status of all active delivery agents and the aggregate capacity of the fleet within the service zone.",
+      "Predictive data regarding anticipated order volumes and item popularity for specific zones and time windows based on historical patterns and current trends.",
+      "Calculated estimates of travel duration and distance between the store location and potential customer addresses, accounting for traffic patterns and route constraints.",
+      "The complete record of monetary exchange, detailing item costs, delivery fees, taxes, platform commissions, and the net settlement amounts due to each party."
+    ],
+    "business_rules": [
+      "Surge pricing must only be applied when the ratio of active orders to available delivery agents exceeds the configured capacity threshold.",
+      "The system must not apply surge pricing if the predicted wait time for the customer exceeds the maximum acceptable delay defined in the Service Area Definition.",
+      "Adjusted fees must be calculated using the highest multiplier observed within the specific time window to ensure consistency.",
+      "Pricing adjustments must be communicated to the Customer Profile before the Order Request is finalized."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "The system detects a predicted demand spike in a specific Delivery Zone Map area due to high order volume.",
+        "when": "The Order Allocation Engine calculates the surge multiplier and updates the pricing engine.",
+        "then": "The delivery fee and commission displayed to the Customer are increased by the calculated multiplier before the Order Request is confirmed."
+      },
+      {
+        "given": "The system detects that network congestion has returned to normal levels in the affected zone.",
+        "when": "The pricing engine recalculates the surge multiplier based on current fleet capacity.",
+        "then": "The delivery fee and commission are automatically reverted to the standard base rate for subsequent Order Requests."
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

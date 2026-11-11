@@ -1,0 +1,53 @@
+{
+  "result": {
+    "requirement": "The system shall calculate and settle multi-currency transactions by converting amounts using real-time exchange rates and recording all financial details in the base currency of the Platform Operator.",
+    "business_need": "The business needs this to ensure accurate revenue collection and fair settlement for Store Partners and Delivery Partners regardless of the transaction's original currency.",
+    "functional_behaviour": [
+      "The system shall capture the transaction amount, currency, and applicable exchange rate for every Order Request.",
+      "The system shall convert all monetary values to the Platform Operator's base currency for settlement calculations.",
+      "The system shall record the gross amount, platform commission, and net settlement amount for each party involved.",
+      "The system shall generate a Financial Transaction Record that includes the original currency, converted amount, and exchange rate used.",
+      "The system shall validate that the Store Partner Agreement allows transactions in the selected currency before processing.",
+      "The system shall flag any transaction where the exchange rate fluctuation exceeds a predefined tolerance threshold for review."
+    ],
+    "required_by_actors": [
+      "Payment Provider",
+      "Platform Operator",
+      "Store Partner",
+      "Delivery Partner"
+    ],
+    "related_business_objects": [
+      "Financial Transaction Record",
+      "Store Partner Agreement",
+      "Order Request",
+      "Customer Profile"
+    ],
+    "related_information_requirements": [
+      "The complete record of monetary exchange, detailing item costs, delivery fees, taxes, platform commissions, and the net settlement amounts due to each party.",
+      "The legally binding contractual details between the platform and physical stores, including commission rates, payout schedules, liability clauses, and specific performance guarantees."
+    ],
+    "business_rules": [
+      "The system shall only allow currency conversion if the Store Partner Agreement explicitly permits transactions in the selected currency.",
+      "The system shall record the exchange rate used at the exact moment the Financial Transaction Record is created.",
+      "The system shall calculate the net settlement amount by subtracting the platform commission from the converted gross amount.",
+      "The system shall reject the transaction if the exchange rate source is unavailable or invalid."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A customer places an Order Request with a Store Partner in a foreign currency",
+        "when": "The Payment Provider processes the payment and the system calculates the settlement",
+        "then": "The system generates a Financial Transaction Record showing the original amount, the converted base currency amount, and the correct net settlement for the Store Partner"
+      },
+      {
+        "given": "A Store Partner Agreement does not allow transactions in the currency selected by the customer",
+        "when": "The system attempts to process the multi-currency transaction",
+        "then": "The system rejects the Order Request and notifies the Payment Provider that the currency is not supported under the current agreement"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

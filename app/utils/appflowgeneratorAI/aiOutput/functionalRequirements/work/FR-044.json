@@ -1,0 +1,50 @@
+{
+  "result": {
+    "requirement": "The system shall identify and flag suspicious financial patterns in financial transactions requiring manual review before settlement.",
+    "business_need": "The business needs this to prevent financial loss from fraud, reduce chargeback liabilities, and ensure accurate revenue settlement.",
+    "functional_behaviour": [
+      "The system shall analyze Financial Transaction Records against historical data and risk indicators to detect anomalies.",
+      "The system shall automatically flag transactions meeting suspicious pattern criteria for manual review by the Payment Provider.",
+      "The system shall prevent automatic settlement for flagged transactions until a Payment Provider resolves the review.",
+      "The system shall log the specific risk indicators and transaction details associated with each flagged event.",
+      "The system shall notify the Payment Provider of the flagged transaction and the reasons for the flag."
+    ],
+    "required_by_actors": [
+      "Payment Provider",
+      "Platform Operator"
+    ],
+    "related_business_objects": [
+      "Financial Transaction Record",
+      "Customer Profile"
+    ],
+    "related_information_requirements": [
+      "Indicators and historical data used to assess the likelihood of fraudulent transactions",
+      "The complete record of monetary exchange detailing item costs, delivery fees, taxes, and net settlement amounts",
+      "Verifiable evidence that the physical goods have reached the customer",
+      "Qualitative ratings and comments provided by the customer regarding the product quality and agent behavior"
+    ],
+    "business_rules": [
+      "A transaction is flagged if it exhibits unusual order patterns compared to the customer's historical behavior.",
+      "A transaction is flagged if it originates from a high-risk address or location not associated with the customer's profile.",
+      "A transaction is flagged if the payment method or amount deviates significantly from the customer's typical transaction profile.",
+      "Flagged transactions must remain in a pending state and cannot be settled until a Payment Provider manually approves or rejects them."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A new financial transaction is initiated by a customer with a history of small purchases",
+        "when": "The transaction amount is significantly higher than the customer's average and the address is flagged as high-risk",
+        "then": "The system flags the Financial Transaction Record for manual review and prevents automatic settlement"
+      },
+      {
+        "given": "A financial transaction is processed for a new customer with no historical data",
+        "when": "The transaction amount exceeds the platform's standard threshold for new accounts without additional verification",
+        "then": "The system flags the Financial Transaction Record for manual review and prevents automatic settlement"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

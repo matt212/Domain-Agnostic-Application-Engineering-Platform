@@ -1,0 +1,56 @@
+{
+  "result": {
+    "requirement": "The system shall continuously recalculate optimal delivery paths for Delivery Partners by integrating live traffic data and new Order Request insertions.",
+    "business_need": "The business needs to minimize delivery times and fuel costs while ensuring timely order fulfillment in a dynamic logistics environment.",
+    "functional_behaviour": [
+      "The system shall ingest real-time traffic updates and new Order Requests to trigger immediate route re-optimization.",
+      "The system shall reassign Delivery Assignment tasks to the most suitable Delivery Partner based on current proximity and capacity.",
+      "The system shall update the estimated arrival time and travel distance for all affected Fulfillment Tasks.",
+      "The system shall notify the Delivery Partner of the revised route and new delivery slot via the mobile interface.",
+      "The system shall maintain a Real-Time Inventory Snapshot to ensure assigned routes only include orderable items."
+    ],
+    "required_by_actors": [
+      "Delivery Partner",
+      "Order Allocation Engine",
+      "Fulfillment Supervisor"
+    ],
+    "related_business_objects": [
+      "Delivery Assignment",
+      "Order Request",
+      "Fulfillment Task",
+      "Delivery Proof",
+      "Assigned Delivery Slot",
+      "Real-Time Inventory Snapshot"
+    ],
+    "related_information_requirements": [
+      "Live traffic patterns and road constraints",
+      "Current location and speed of active Delivery Partners",
+      "Real-time status of Order Requests (pending, ready, dispatched)",
+      "Customer delivery address and contact details",
+      "Aggregate fleet capacity within the service zone"
+    ],
+    "business_rules": [
+      "A route must be recalculated whenever a new Order Request is inserted into an active zone.",
+      "Route optimization must prioritize the earliest Estimated Arrival Time for high-priority orders.",
+      "A Delivery Partner cannot be assigned a new task if their current workload exceeds the defined capacity threshold.",
+      "Reassigned routes must be communicated to the Delivery Partner within the maximum allowable notification latency."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A new Order Request is inserted into a zone with active Delivery Partners",
+        "when": "The system processes the new request against live traffic data",
+        "then": "The system recalculates the optimal route and updates the Assigned Delivery Slot for the affected Delivery Partner within the defined latency window"
+      },
+      {
+        "given": "Live traffic data indicates a major road closure on the current optimal path",
+        "when": "The system detects the traffic anomaly during route calculation",
+        "then": "The system generates an alternative route that avoids the closure and notifies the Delivery Partner of the change"
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

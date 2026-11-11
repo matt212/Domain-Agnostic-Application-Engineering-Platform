@@ -1,0 +1,52 @@
+{
+  "result": {
+    "requirement": "The system shall automatically apply and track customer loyalty points or subscription benefits during the checkout and settlement process.",
+    "business_need": "The business needs to incentivize repeat purchases and retain customers by seamlessly integrating loyalty rewards into the transaction flow without manual intervention.",
+    "functional_behaviour": [
+      "The system shall validate the Customer Profile to determine eligibility for loyalty programs or subscription tiers before finalizing the Order Request.",
+      "The system shall calculate the applicable discount or benefit value based on the current loyalty rules and the total monetary value of the Order Request.",
+      "The system shall deduct the calculated loyalty value from the Financial Transaction Record to generate the net settlement amount due to the Store Partner.",
+      "The system shall update the Customer Profile to reflect the remaining loyalty balance or subscription status after the transaction is settled.",
+      "The system shall generate a Feedback Record entry indicating the specific loyalty benefit applied to the transaction for audit and reporting purposes."
+    ],
+    "required_by_actors": [
+      "Customer",
+      "Platform Operator",
+      "Store Partner"
+    ],
+    "related_business_objects": [
+      "Customer Profile",
+      "Order Request",
+      "Financial Transaction Record",
+      "Feedback Record"
+    ],
+    "related_information_requirements": [
+      "Verified details about the ordering individual, including unique identifiers, delivery addresses, and primary contact methods",
+      "The complete record of monetary exchange, detailing item costs, delivery fees, taxes, platform commissions, and the net settlement amounts due to each party",
+      "The specific list of items selected by the customer, their quantities, unit prices, and any special handling notes or delivery preferences provided by the customer"
+    ],
+    "business_rules": [
+      "A loyalty benefit cannot be applied if the Customer Profile indicates the account is suspended or flagged for fraud.",
+      "The net settlement amount must be recalculated immediately if the applied loyalty benefit exceeds the total order value, resulting in a zero or negative charge.",
+      "The system must prevent the application of loyalty benefits if the Order Request contains items restricted by the Store Partner Agreement.",
+      "The Customer Profile must be updated within the same transaction session to ensure the deducted balance is immediately reflected."
+    ],
+    "acceptance_criteria": [
+      {
+        "given": "A customer with an active loyalty account places an Order Request with a total value greater than their available points.",
+        "when": "The checkout process is initiated and the system processes the payment.",
+        "then": "The system applies the maximum available points as a discount, deducts the value from the Financial Transaction Record, and updates the Customer Profile with the remaining balance."
+      },
+      {
+        "given": "A customer attempts to use loyalty points on an Order Request containing items explicitly excluded by the Store Partner Agreement.",
+        "when": "The checkout process attempts to apply the loyalty benefit.",
+        "then": "The system rejects the application of the loyalty benefit, displays an error message explaining the restriction, and proceeds with the full monetary charge without updating the Customer Profile balance."
+      }
+    ]
+  },
+  "unmatched": {
+    "actors": [],
+    "objects": []
+  },
+  "evidence_count": 8
+}

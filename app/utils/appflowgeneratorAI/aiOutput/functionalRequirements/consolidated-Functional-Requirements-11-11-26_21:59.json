@@ -1,0 +1,2685 @@
+{
+  "bundle_metadata": {
+    "bundle_name": "consolidated-Functional-base",
+    "bundle_version": "1.0",
+    "total_sources": 44,
+    "created_at": "2026-11-11T16:29:20.683Z"
+  },
+  "sources": [
+    {
+      "source_file": "FR-001.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "b63d4606de4ca09a5d4a80a4d76536c747884c6b60ba4ea1fe537438dd1f04cc",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall maintain synchronized, real-time inventory levels across all Store/Fulfillment Centers to prevent overselling of perishable goods and ensure accurate stock visibility.",
+          "business_need": "The business requires immediate stock accuracy to prevent selling items that are out of stock or expired, thereby protecting revenue and maintaining customer trust.",
+          "functional_behaviour": [
+            "The system shall receive and validate Real-Time Inventory Snapshots from Store Partners to update the central Product Catalog.",
+            "The system shall lock available stock quantities for an Order Request immediately upon allocation to prevent concurrent overselling.",
+            "The system shall monitor the integrity of the data link between the Store Partner and the platform to detect synchronization discrepancies.",
+            "The system shall prioritize the sale of perishable inventory based on freshness status and expiration dates.",
+            "The system shall release locked stock quantities if an Order Request is cancelled or times out within the defined window."
+          ],
+          "required_by_actors": [
+            "Store Partner",
+            "Order Allocation Engine",
+            "Platform Operator"
+          ],
+          "related_business_objects": [
+            "Real-Time Inventory Snapshot",
+            "Product Catalog",
+            "Order Request",
+            "Fulfillment Task"
+          ],
+          "related_information_requirements": [
+            "The current, validated quantity of each sellable item (SKU) at a specific store location, including status flags for availability, partial stock, or temporary unavailability.",
+            "Data indicating the status of the data link between the store's Point of Sale and the platform, including latency, last sync time, and detected discrepancies.",
+            "Information regarding the expiration dates and freshness status of perishable goods."
+          ],
+          "business_rules": [
+            "Stock quantities must be locked exclusively to a single Order Request until the fulfillment task is completed or the order is cancelled.",
+            "Perishable items must be prioritized for allocation to orders based on their proximity to the expiration date.",
+            "The system must flag a synchronization discrepancy if the data link latency exceeds the defined threshold or if a sync failure is detected.",
+            "Locked stock must be automatically released if the Order Request is not confirmed within the allocated time window."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A Store Partner updates the quantity of a perishable SKU in their Real-Time Inventory Snapshot",
+              "when": "The Order Allocation Engine attempts to allocate an Order Request for that SKU",
+              "then": "The system shall reflect the updated quantity immediately and allow allocation only if stock is sufficient"
+            },
+            {
+              "given": "An Order Request has successfully locked stock for a perishable item",
+              "when": "The customer cancels the Order Request before the fulfillment task begins",
+              "then": "The system shall release the locked stock quantity back to the Real-Time Inventory Snapshot for other orders"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3258
+    },
+    {
+      "source_file": "FR-002.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "67938f598a878699ed69056ba9bc3075ce9170da491aee5140f2a37fdea46ad5",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall automatically assign incoming orders to the nearest Store Partner that has sufficient Real-Time Inventory Snapshot and available capacity.",
+          "business_need": "The business requires instant, optimal allocation of orders to physical nodes to minimize delivery time and prevent inventory overselling.",
+          "functional_behaviour": [
+            "The system shall calculate the distance between the customer location and all eligible Store Partners.",
+            "The system shall validate that the selected Store Partner has sufficient stock for every item in the Order Request.",
+            "The system shall create a Fulfillment Task linked to the assigned Store Partner and Delivery Assignment.",
+            "The system shall update the Real-Time Inventory Snapshot to reflect the reserved quantities immediately.",
+            "The system shall notify the Store Partner of the new Fulfillment Task via the assigned Delivery Slot."
+          ],
+          "required_by_actors": [
+            "Order Allocation Engine",
+            "Store Partner"
+          ],
+          "related_business_objects": [
+            "Order Request",
+            "Real-Time Inventory Snapshot",
+            "Fulfillment Task",
+            "Delivery Assignment",
+            "Assigned Delivery Slot"
+          ],
+          "related_information_requirements": [
+            "The specific list of items selected by the customer, their quantities, unit prices, and any special handling notes or delivery preferences provided by the customer.",
+            "The current, validated quantity of each sellable item (SKU) at a specific store location, including status flags for availability, partial stock, or temporary unavailability.",
+            "The system-generated assignment linking a specific order to a designated store partner and a specific time window for preparation and dispatch."
+          ],
+          "business_rules": [
+            "An order must only be assigned to a store if the Real-Time Inventory Snapshot shows available quantity greater than or equal to the requested quantity for all items.",
+            "If no store has sufficient inventory for the complete order, the system must not assign the order and must flag it for manual review.",
+            "The system must prioritize the nearest store based on the shortest estimated preparation and dispatch time.",
+            "Inventory quantities reserved by an automatic assignment must be immediately deducted from the Real-Time Inventory Snapshot to prevent overselling."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A customer places an Order Request with items available at multiple Store Partners",
+              "when": "The Order Allocation Engine processes the request",
+              "then": "The system assigns the order to the nearest Store Partner with sufficient stock and creates a Fulfillment Task"
+            },
+            {
+              "given": "A customer places an Order Request where no Store Partner has sufficient stock for all items",
+              "when": "The Order Allocation Engine processes the request",
+              "then": "The system does not assign the order and flags it for manual review without creating a Fulfillment Task"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3187
+    },
+    {
+      "source_file": "FR-003.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "5dbb9f4d45747d17db9e435bd67384f376515ebe9bff962c2596df9251006b40",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall enable Delivery Partners to view, accept, and manage their assigned delivery slots while ensuring dynamic agent assignment and capacity verification.",
+          "business_need": "The business needs to optimize last-mile logistics by ensuring the right agent receives orders based on real-time capacity and workload status.",
+          "functional_behaviour": [
+            "The system shall allow Delivery Partners to view available delivery slots within their defined service area.",
+            "The system shall enable the Order Allocation Engine to dynamically assign delivery tasks to agents based on current workload and proximity.",
+            "The system shall verify agent capacity before confirming a delivery slot assignment to prevent overloading.",
+            "The system shall update the agent's workload status in real-time as they accept or reject delivery tasks.",
+            "The system shall display the estimated arrival time and route details for each assigned delivery slot."
+          ],
+          "required_by_actors": [
+            "Delivery Partner",
+            "Order Allocation Engine"
+          ],
+          "related_business_objects": [
+            "Delivery Assignment",
+            "Assigned Delivery Slot",
+            "Real-Time Inventory Snapshot",
+            "Customer Profile",
+            "Delivery Zone Map"
+          ],
+          "related_information_requirements": [
+            "The active linkage between a ready order and a specific delivery agent, including the assigned route, estimated arrival time, and the agent's current workload status.",
+            "Live visibility into the location, speed, and status of all active delivery agents and the aggregate capacity of the fleet within the service zone.",
+            "The specific list of items selected by the customer, their quantities, unit prices, and any special handling notes or delivery preferences provided by the customer.",
+            "Calculated estimates of travel duration and distance between the store location and potential customer addresses, accounting for traffic patterns and route constraints."
+          ],
+          "business_rules": [
+            "A delivery slot cannot be assigned to an agent if their current workload exceeds the maximum capacity defined for their service zone.",
+            "An agent must explicitly accept a delivery assignment before the system confirms the slot as active.",
+            "Dynamic reassignment of a delivery task is only permitted if the original agent rejects the task or exceeds capacity limits.",
+            "The system must recalculate estimated arrival times if traffic patterns change significantly after the initial assignment."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A Delivery Partner is logged in and viewing their dashboard",
+              "when": "The Order Allocation Engine assigns a new delivery task within their service zone",
+              "then": "The system displays the delivery slot details including route, estimated arrival time, and item list for the partner to accept or reject"
+            },
+            {
+              "given": "A Delivery Partner has reached their maximum workload capacity",
+              "when": "The Order Allocation Engine attempts to assign a new delivery task to that partner",
+              "then": "The system rejects the assignment and routes the task to another available agent within the same service zone"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3390
+    },
+    {
+      "source_file": "FR-004.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "fe59daf6c4ad5c0beb7397f335a9208ac73869f506e55a28bd61866ca82aad90",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall capture and verify digital proof of delivery via direct input or external API retrieval before releasing funds.",
+          "business_need": "The business needs irrefutable evidence of physical handover to close the logistics loop and trigger financial settlement securely.",
+          "functional_behaviour": [
+            "The system shall allow the Delivery Partner to capture a digital signature, timestamped photo, or automated confirmation code upon handover.",
+            "The system shall retrieve delivery proof automatically from an external courier API when the Delivery Partner does not generate local evidence.",
+            "The system shall validate the authenticity and completeness of the received delivery proof before updating the order status.",
+            "The system shall release funds to the Store Partner only after the delivery proof is successfully verified and stored.",
+            "The system shall generate a Dispute Ticket if the provided proof fails validation or is missing required elements."
+          ],
+          "required_by_actors": [
+            "Delivery Partner",
+            "Store Partner",
+            "Payment Provider"
+          ],
+          "related_business_objects": [
+            "Delivery Proof",
+            "Delivery Assignment",
+            "Financial Transaction Record",
+            "Dispute Ticket"
+          ],
+          "related_information_requirements": [
+            "Digital signature or timestamped photo confirming physical handover",
+            "Automated confirmation code from external courier systems",
+            "Verification status of the delivery evidence",
+            "Timestamp and location data associated with the proof"
+          ],
+          "business_rules": [
+            "Funds shall not be released until a valid delivery proof is recorded in the system.",
+            "Proof retrieved via external API shall be treated with the same verification standards as locally captured proof.",
+            "A Dispute Ticket shall be created if the delivery proof lacks a timestamp or valid signature.",
+            "The system shall reject delivery proof if the associated Delivery Assignment is marked as cancelled."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A Delivery Partner completes a physical handover and captures a digital signature",
+              "when": "The system processes the submission",
+              "then": "The system validates the proof and releases funds to the Store Partner"
+            },
+            {
+              "given": "The external courier API returns an invalid or missing delivery confirmation",
+              "when": "The system attempts to retrieve proof for a completed delivery",
+              "then": "The system creates a Dispute Ticket and blocks fund release"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 2737
+    },
+    {
+      "source_file": "FR-005.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "a1a389811784d0d2ca7ed9bb826a3e65d14998aec8df5e24a844d920648ce8ed",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall automatically calculate and distribute transaction revenue to the Platform Operator, Store Partner, and Payment Provider immediately upon delivery confirmation.",
+          "business_need": "The business needs to ensure accurate, transparent, and timely financial settlement for all parties involved in a transaction to maintain trust and operational efficiency.",
+          "functional_behaviour": [
+            "The system shall validate the Delivery Proof associated with the Order Request before initiating any financial distribution.",
+            "The system shall retrieve the commission rates and payout terms defined in the Store Partner Agreement.",
+            "The system shall calculate the net settlement amount for each party based on the Financial Transaction Record.",
+            "The system shall generate a Financial Transaction Record detailing the split of revenue between the Platform Operator, Store Partner, and Payment Provider.",
+            "The system shall update the status of the Order Request to 'Settled' once the distribution logic is executed.",
+            "The system shall flag the transaction for manual review if the calculated amounts deviate from expected thresholds based on historical data."
+          ],
+          "required_by_actors": [
+            "Platform Operator",
+            "Store Partner",
+            "Payment Provider"
+          ],
+          "related_business_objects": [
+            "Financial Transaction Record",
+            "Delivery Proof",
+            "Order Request",
+            "Store Partner Agreement"
+          ],
+          "related_information_requirements": [
+            "Complete record of monetary exchange including item costs, fees, taxes, and commissions",
+            "Verifiable evidence of physical goods handover to the customer",
+            "Contractual details regarding commission rates and payout schedules",
+            "Verified details of the ordering individual and delivery address",
+            "Qualitative ratings regarding product quality and delivery speed"
+          ],
+          "business_rules": [
+            "Financial distribution shall only occur after a valid Delivery Proof is recorded.",
+            "The sum of all distributed amounts must equal the total value of the Financial Transaction Record.",
+            "Transactions involving high-risk indicators must be paused for manual verification before settlement.",
+            "Settlement calculations must strictly adhere to the terms defined in the Store Partner Agreement.",
+            "A Financial Transaction Record must be generated for every completed delivery regardless of outcome."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A Delivery Proof is successfully recorded for an Order Request",
+              "when": "The system processes the settlement event",
+              "then": "The system generates a Financial Transaction Record with correct split amounts for all parties"
+            },
+            {
+              "given": "The Delivery Proof is missing or invalid for an Order Request",
+              "when": "The system attempts to process the settlement event",
+              "then": "The system prevents financial distribution and flags the Order Request for manual review"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3187
+    },
+    {
+      "source_file": "FR-006.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "1cd3bc37200397a126f9ce775fb680eb127302a14e84a6681351a3a58a779e41",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall generate real-time alerts for inventory items approaching their shelf-life limits to prioritize fulfillment or trigger removal.",
+          "business_need": "The business needs to minimize waste and maintain product quality by proactively managing perishable stock before it becomes unsellable.",
+          "functional_behaviour": [
+            "The system shall continuously monitor the Real-Time Inventory Snapshot for items where the remaining shelf life falls below a defined threshold.",
+            "The system shall automatically flag these items within the Product Catalog to indicate they are nearing expiry.",
+            "The system shall notify the Store Partner and the Order Allocation Engine to prioritize the sale or removal of flagged items.",
+            "The system shall update the status of affected items to prevent new Order Requests from being created for them.",
+            "The system shall log all expiry alerts and subsequent actions in a Feedback Record for performance analysis."
+          ],
+          "required_by_actors": [
+            "Store Partner",
+            "Order Allocation Engine",
+            "Platform Operator"
+          ],
+          "related_business_objects": [
+            "Real-Time Inventory Snapshot",
+            "Product Catalog",
+            "Order Request",
+            "Feedback Record"
+          ],
+          "related_information_requirements": [
+            "Expiration dates and freshness status of perishable goods",
+            "Current stock levels and location of items",
+            "Thresholds for defining 'nearing expiry' status",
+            "Action history for flagged inventory items"
+          ],
+          "business_rules": [
+            "An item is considered 'nearing expiry' if its remaining shelf life is less than the configured safety margin.",
+            "New Order Requests must be rejected if the primary fulfillment source contains items flagged as 'nearing expiry'.",
+            "The system must update the Product Catalog status immediately upon detecting an expiry alert.",
+            "All expiry alerts must be logged with a timestamp and the specific item identifier."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "The Real-Time Inventory Snapshot shows an item with 2 days remaining until its sell-by date, and the configured threshold is 3 days.",
+              "when": "The system performs its scheduled inventory quality check.",
+              "then": "The system flags the item in the Product Catalog and sends an alert to the Store Partner."
+            },
+            {
+              "given": "A customer attempts to place an Order Request containing an item flagged as 'nearing expiry'.",
+              "when": "The Order Allocation Engine processes the request.",
+              "then": "The system rejects the Order Request and notifies the customer that the item is unavailable due to quality constraints."
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 2856
+    },
+    {
+      "source_file": "FR-007.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "f15979c795b3a2e3ffa3efb9ac04ed259ca15cbd215a4266af1fbd9cf68a3359",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall automatically generate and track a Dispute Ticket when a Delivery Proof indicates a missing item, damage, or failed delivery.",
+          "business_need": "The business needs an automated mechanism to capture exceptions early, ensuring fair resolution and accurate financial adjustments without manual intervention.",
+          "functional_behaviour": [
+            "The system shall create a Dispute Ticket linked to the specific Order Request upon detection of a delivery exception.",
+            "The system shall record the nature of the issue, such as missing items, damages, or failed deliveries, within the ticket.",
+            "The system shall update the Dispute Ticket status to reflect current resolution progress throughout the lifecycle.",
+            "The system shall associate the relevant Delivery Proof and Financial Transaction Record with the ticket for verification.",
+            "The system shall notify the Customer and Delivery Partner of the dispute creation and required actions."
+          ],
+          "required_by_actors": [
+            "Customer",
+            "Delivery Partner",
+            "Platform Operator"
+          ],
+          "related_business_objects": [
+            "Dispute Ticket",
+            "Delivery Proof",
+            "Order Request",
+            "Financial Transaction Record",
+            "Feedback Record"
+          ],
+          "related_information_requirements": [
+            "Nature of the deviation from standard process",
+            "Current resolution status of the exception",
+            "Verifiable evidence of physical goods handover failure",
+            "Specific list of items affected by the dispute"
+          ],
+          "business_rules": [
+            "A Dispute Ticket must be created immediately upon receipt of a Delivery Proof indicating a delivery exception.",
+            "The Dispute Ticket status must transition from 'Open' to 'Resolved' only after a final decision is recorded.",
+            "A Dispute Ticket must remain linked to the original Order Request for the duration of the resolution process.",
+            "Financial adjustments cannot be finalized until the Dispute Ticket is marked as Resolved."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A Delivery Partner submits a Delivery Proof showing a package was damaged during transit",
+              "when": "The system processes the delivery proof",
+              "then": "A Dispute Ticket is automatically generated with status 'Open' and linked to the Order Request"
+            },
+            {
+              "given": "A Customer reports a missing item and the system attempts to generate a Dispute Ticket",
+              "when": "The system detects the delivery proof is missing or incomplete",
+              "then": "The system creates a Dispute Ticket with status 'Pending Investigation' and notifies the Customer"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 2807
+    },
+    {
+      "source_file": "FR-008.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "3806e9ddcca11610b0989239b1a7ea55b668f1e4e62383b43849e11855af31f8",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall retrieve, validate, and store external regulatory licenses and food safety certifications for Store Partners to ensure legal operation.",
+          "business_need": "The business needs to mitigate legal risks and maintain trust by ensuring all Store Partners operate within required regulatory boundaries.",
+          "functional_behaviour": [
+            "The system shall automatically ingest license data from external regulatory sources or uploaded documents by Store Partners.",
+            "The system shall validate the authenticity of received licenses against known regulatory authority databases.",
+            "The system shall track the current compliance status of each Store Partner and flag any expired or invalid documents.",
+            "The system shall prevent order processing for Store Partners whose critical regulatory licenses are expired or invalid.",
+            "The system shall generate a compliance report detailing the status of all active regulatory documents for Store Partners."
+          ],
+          "required_by_actors": [
+            "Regulatory Authority",
+            "Store Partner",
+            "Fulfillment Supervisor"
+          ],
+          "related_business_objects": [
+            "Store Partner Agreement",
+            "Dispute Ticket",
+            "Customer Profile"
+          ],
+          "related_information_requirements": [
+            "Current records of licenses, permits, and regulatory adherence regarding food safety and labor laws.",
+            "Expiration dates and validity status of regulatory documents.",
+            "Geographic zones where the platform is authorized to operate based on regulatory permissions."
+          ],
+          "business_rules": [
+            "A Store Partner must have a valid and non-expired food safety certificate to accept new orders.",
+            "The system must block order allocation to a Store Partner if their primary operating license is flagged as invalid.",
+            "Regulatory compliance status must be updated within 24 hours of receiving new data from external sources.",
+            "A Store Partner must be notified immediately if their license expiration date is within 30 days."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A Store Partner uploads a valid food safety certificate with a future expiration date.",
+              "when": "The system ingests and validates the document against the Regulatory Authority database.",
+              "then": "The system updates the Store Partner's compliance status to 'Active' and allows order allocation."
+            },
+            {
+              "given": "A Store Partner's food safety certificate has expired in the external database.",
+              "when": "The system performs a scheduled validation check on the Store Partner's records.",
+              "then": "The system updates the compliance status to 'Non-Compliant' and blocks all new order requests for that Store Partner."
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 2907
+    },
+    {
+      "source_file": "FR-009.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "c8a52a34b5d977470a16541d277eba3c71a47f8f894cb06c1632d4984c506ce4",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall manage the full lifecycle of the Customer Profile, enabling the creation, modification, and archival of identity and preference records throughout the customer's engagement.",
+          "business_need": "The business needs a centralized, accurate record of customer identity and preferences to ensure secure order routing, accurate financial settlement, and personalized service delivery.",
+          "functional_behaviour": [
+            "The system shall allow authorized actors to create a new Customer Profile with unique identifiers and verified contact details.",
+            "The system shall enable authorized actors to update existing Customer Profile information, including address changes and preference updates.",
+            "The system shall archive Customer Profile data upon account closure or significant status changes while retaining historical records.",
+            "The system shall enforce data validation rules to ensure all stored identity and contact information meets regulatory and operational standards.",
+            "The system shall link the Customer Profile to associated Order Requests and Financial Transaction Records for a complete audit trail."
+          ],
+          "required_by_actors": [
+            "Customer",
+            "Store Partner",
+            "Fulfillment Supervisor",
+            "Platform Operator"
+          ],
+          "related_business_objects": [
+            "Customer Profile",
+            "Order Request",
+            "Financial Transaction Record"
+          ],
+          "related_information_requirements": [
+            "Unique customer identifiers and verified delivery addresses",
+            "Primary contact methods including phone and email",
+            "Customer preference history and special handling notes",
+            "Fraud risk indicators and transaction patterns",
+            "Account status and archival timestamps"
+          ],
+          "business_rules": [
+            "A Customer Profile must contain a unique identifier before any Order Request can be associated with it.",
+            "Contact details within a Customer Profile must be verified before the profile status is set to active.",
+            "Archived Customer Profiles must retain all historical data and cannot be modified after the archival action is confirmed.",
+            "Any modification to a Customer Profile must be timestamped and attributed to the actor performing the change."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "An actor initiates the creation of a new customer account",
+              "when": "The actor enters valid unique identifiers and contact details",
+              "then": "The system creates a new Customer Profile with an active status and links it to the actor's session"
+            },
+            {
+              "given": "An actor attempts to modify a Customer Profile with invalid data",
+              "when": "The data fails validation rules for required fields or format",
+              "then": "The system rejects the update and displays a specific error message indicating the validation failure"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3028
+    },
+    {
+      "source_file": "FR-010.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "b5aa39a8b2058db2f41cf094842391616374986d30a7aa084cfb33dbb07c32e0",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall manage the full lifecycle of Store Partner Agreements, enabling the creation, amendment, and historical tracking of commercial terms while controlling access to these documents.",
+          "business_need": "The business needs to maintain legally binding, auditable records of commercial terms to ensure operational compliance and accurate financial settlements with store partners.",
+          "functional_behaviour": [
+            "The system shall allow the Platform Operator to create new agreements or amend existing ones with updated commercial terms.",
+            "The system shall automatically generate a new version of the agreement upon any amendment and retain the previous version in the history.",
+            "The system shall enforce access provisioning so that only authorized actors can view or edit specific agreement versions.",
+            "The system shall prevent the execution of orders against a Store Partner Agreement that is marked as inactive or superseded.",
+            "The system shall provide a version history view allowing the Platform Operator to compare changes between agreement versions.",
+            "The system shall notify the Store Partner of any changes to their active agreement terms."
+          ],
+          "required_by_actors": [
+            "Platform Operator",
+            "Store Partner"
+          ],
+          "related_business_objects": [
+            "Store Partner Agreement",
+            "Financial Transaction Record",
+            "Order Request"
+          ],
+          "related_information_requirements": [
+            "Commission rates and payout schedules",
+            "Liability clauses and performance guarantees",
+            "Agreement status and version history",
+            "Authorized user access lists"
+          ],
+          "business_rules": [
+            "An amendment to an active agreement must immediately create a new version number while marking the previous version as historical.",
+            "A Store Partner Agreement must be marked as 'Active' before any associated Order Requests can be allocated to that partner.",
+            "Access to edit an agreement version is restricted to the Platform Operator and the Store Partner associated with that agreement.",
+            "The system must prevent the deletion of any agreement version once it has been created."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "The Platform Operator initiates an amendment to an active Store Partner Agreement",
+              "when": "The system processes the amendment request",
+              "then": "A new version of the agreement is created with updated terms, and the previous version is archived as historical data."
+            },
+            {
+              "given": "A Store Partner attempts to allocate an Order Request to a partner with an inactive agreement",
+              "when": "The Order Allocation Engine validates the partner status",
+              "then": "The system rejects the allocation and prevents the creation of the Delivery Assignment."
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 2987
+    },
+    {
+      "source_file": "FR-011.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "7bd472596acd1eb4e5a48c9ce2d0de8e85eff1e94b7b33d2aa21593d245e1ec8",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall enable the Merchandiser to create, update, and archive product catalog entries while enforcing data validation and version control.",
+          "business_need": "The business needs a structured way to manage product lifecycle data to ensure accurate inventory representation and prevent overselling.",
+          "functional_behaviour": [
+            "The system shall allow the Merchandiser to add new items to the Product Catalog with required attributes.",
+            "The system shall allow the Merchandiser to modify existing item details and automatically archive the previous version.",
+            "The system shall validate input data against defined business rules before saving any catalog changes.",
+            "The system shall maintain a history of all product changes for audit and rollback purposes.",
+            "The system shall prevent the modification of archived product versions to ensure data integrity."
+          ],
+          "required_by_actors": [
+            "Merchandiser"
+          ],
+          "related_business_objects": [
+            "Product Catalog"
+          ],
+          "related_information_requirements": [
+            "Product descriptions and images",
+            "Standardized pricing data",
+            "Category classifications",
+            "Version history of catalog entries",
+            "Validation status of product data"
+          ],
+          "business_rules": [
+            "A product entry cannot be updated if it is in an archived state.",
+            "All product updates must include a timestamp and the identifier of the user making the change.",
+            "Required fields such as product name and price must be populated before a new entry is created.",
+            "Previous versions of a product must be retained and marked as archived when a new version is published."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "The Merchandiser is logged in and views the Product Catalog",
+              "when": "The Merchandiser submits a new product entry with all required fields filled",
+              "then": "The system creates the new entry, assigns it as the current version, and displays a success message"
+            },
+            {
+              "given": "The Merchandiser attempts to update a product entry with a missing required field",
+              "when": "The Merchandiser submits the update request",
+              "then": "The system rejects the request and displays an error message indicating the missing field"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 2461
+    },
+    {
+      "source_file": "FR-012.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "35b68ed039e1f7b13f3ce109ae9eeb363bc6c273fb7d503ddbbd59b54de9a921",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall enable the Platform Operator to create, modify, and version geospatial service area definitions and travel time matrices to ensure accurate delivery feasibility and pricing.",
+          "business_need": "The business needs this to dynamically restrict order acceptance to feasible areas and calculate accurate delivery fees based on real-time traffic and route constraints.",
+          "functional_behaviour": [
+            "The system shall allow the Platform Operator to define service areas using precise geographic coordinates, radii, or polygon boundaries.",
+            "The system shall calculate and store travel duration and distance estimates between store locations and potential customer addresses.",
+            "The system shall maintain a version history of all changes made to service area definitions and travel time matrices.",
+            "The system shall automatically invalidate existing Delivery Zone Maps when a new version is published.",
+            "The system shall expose the active service area definitions to the Order Allocation Engine for real-time order validation."
+          ],
+          "required_by_actors": [
+            "Platform Operator"
+          ],
+          "related_business_objects": [
+            "Service Area Definition",
+            "Delivery Zone Map",
+            "Order Request",
+            "Delivery Assignment"
+          ],
+          "related_information_requirements": [
+            "Precise geographic coordinates, radii, or polygon boundaries defining service zones",
+            "Calculated estimates of travel duration and distance accounting for traffic patterns",
+            "Version history of service area changes including timestamps and change descriptions",
+            "Active linkage between service zones and specific store locations"
+          ],
+          "business_rules": [
+            "A new version of a Service Area Definition must supersede the previous active version immediately upon publication.",
+            "Orders originating from addresses outside the active Service Area Definition must be rejected by the Order Allocation Engine.",
+            "Travel time matrices must be recalculated whenever a Service Area Definition is modified to reflect updated route constraints.",
+            "All modifications to Service Area Definitions must be logged with a timestamp and the identity of the Platform Operator."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "The Platform Operator has access to the zone management module",
+              "when": "The operator creates a new polygon boundary for a delivery zone and publishes it",
+              "then": "The system stores the new definition as the active version and invalidates the previous zone map"
+            },
+            {
+              "given": "An Order Request is submitted for an address outside the defined service area",
+              "when": "The Order Allocation Engine attempts to validate the order against the active Service Area Definition",
+              "then": "The system rejects the order and logs the rejection reason as 'outside service zone'"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3066
+    },
+    {
+      "source_file": "FR-013.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "50374229e968a95280d7df8d10d54edb94a40c785a8bfeef54fc72643d55cd5c",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall enable the secure creation, retention, and long-term archival of detailed financial ledgers and settlement records for all monetary exchanges.",
+          "business_need": "The business needs immutable financial records to ensure accurate revenue sharing, support regulatory audits, and provide verifiable evidence for dispute resolution.",
+          "functional_behaviour": [
+            "The system shall capture the complete record of monetary exchange including item costs, delivery fees, taxes, platform commissions, and net settlement amounts.",
+            "The system shall store indicators and historical data used to assess the likelihood of fraudulent transactions such as unusual order patterns or payment anomalies.",
+            "The system shall link the financial transaction record to verifiable evidence that physical goods have reached the customer.",
+            "The system shall archive the legally binding contractual details between the platform and store partners including commission rates and payout schedules.",
+            "The system shall maintain a structured record of any deviation from the standard process including missing items or failed deliveries with current resolution status."
+          ],
+          "required_by_actors": [
+            "Payment Provider",
+            "Platform Operator",
+            "Store Partner"
+          ],
+          "related_business_objects": [
+            "Financial Transaction Record",
+            "Delivery Proof",
+            "Dispute Ticket",
+            "Store Partner Agreement"
+          ],
+          "related_information_requirements": [
+            "Complete record of monetary exchange detailing item costs, delivery fees, taxes, platform commissions, and net settlement amounts.",
+            "Indicators and historical data used to assess the likelihood of fraudulent transactions.",
+            "Verifiable evidence that physical goods have reached the customer.",
+            "Legally binding contractual details including commission rates and payout schedules.",
+            "Structured record of deviations from the standard process including nature of issue and resolution status."
+          ],
+          "business_rules": [
+            "A financial transaction record must include item costs, delivery fees, taxes, platform commissions, and net settlement amounts to be considered complete.",
+            "The system must link a financial transaction record to verifiable evidence of delivery before finalizing the settlement status.",
+            "Any deviation from the standard process must be recorded with the nature of the issue and the current resolution status.",
+            "Contractual details including commission rates and payout schedules must be archived alongside the financial transaction record."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A payment is processed between a customer and a store partner",
+              "when": "The system generates a financial transaction record",
+              "then": "The record must include item costs, delivery fees, taxes, platform commissions, and net settlement amounts."
+            },
+            {
+              "given": "A delivery proof is missing for a completed order",
+              "when": "The system attempts to archive the financial transaction record",
+              "then": "The system must flag the record as incomplete and prevent final settlement until delivery proof is provided."
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3390
+    },
+    {
+      "source_file": "FR-014.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "39388e8467fe2cc0ed8d2985b64795fa6b3dc8eb4ecd39263884d7e403eafcf4",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall manage the full lifecycle of Service Area Definitions, enabling the creation, activation, deactivation, and historical tracking of geographically delimited delivery zones.",
+          "business_need": "The business requires precise control over operational boundaries to ensure orders are only accepted and fulfilled within feasible geographic limits.",
+          "functional_behaviour": [
+            "The system shall allow authorized users to create new Service Area Definitions by specifying geographic boundaries or radii.",
+            "The system shall enable the activation and deactivation of Service Area Definitions to control service availability in real time.",
+            "The system shall maintain a complete historical audit trail of all changes made to Service Area Definitions including timestamps and user details.",
+            "The system shall validate that new Service Area Definitions do not conflict with existing operational constraints.",
+            "The system shall expose the current status and boundary details of Service Area Definitions to dependent modules for order validation."
+          ],
+          "required_by_actors": [
+            "Platform Operator",
+            "Store Partner"
+          ],
+          "related_business_objects": [
+            "Service Area Definition",
+            "Delivery Zone Map",
+            "Store Partner Agreement"
+          ],
+          "related_information_requirements": [
+            "Precise geographic coordinates, radii, or polygon boundaries defining specific zones.",
+            "Timestamps and user identifiers for all lifecycle state changes.",
+            "Current operational status of each defined service area."
+          ],
+          "business_rules": [
+            "A Service Area Definition must be in an active state before it can be used to validate new Order Requests.",
+            "Any modification to an active Service Area Definition must be logged with the reason for change and the identity of the operator.",
+            "Deactivation of a Service Area Definition must immediately prevent the acceptance of new orders originating from that zone.",
+            "A Service Area Definition cannot be created if its geographic boundaries overlap with a restricted zone defined by the Regulatory Authority."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A Platform Operator initiates the creation of a new delivery zone with valid geographic coordinates",
+              "when": "The system processes the request and the zone is successfully created",
+              "then": "The new Service Area Definition is saved with an 'Inactive' status until explicitly activated by an authorized user"
+            },
+            {
+              "given": "A Store Partner attempts to place an order from a location within a Service Area Definition that has been deactivated",
+              "when": "The system validates the customer's address against the current Service Area Definitions",
+              "then": "The system rejects the Order Request and displays a message indicating that delivery is not available in that zone"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3078
+    },
+    {
+      "source_file": "FR-015.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "55f8f88356d6f0712926c9ee0aeecc0475ed80faa1a2a6156935f265dc336d13",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall maintain an immutable chronological history of all status transitions for every Delivery Assignment from creation to final closure.",
+          "business_need": "The business needs this to provide full auditability of the delivery lifecycle, enabling root cause analysis for delays and verifying compliance with service level agreements.",
+          "functional_behaviour": [
+            "The system shall automatically generate a new status entry whenever a Delivery Assignment state changes.",
+            "The system shall record the exact timestamp and the actor responsible for initiating each status transition.",
+            "The system shall preserve the previous status value alongside the new status to show the direction of the change.",
+            "The system shall allow authorized users to query the complete history of a specific Delivery Assignment by its unique identifier.",
+            "The system shall prevent the deletion or alteration of historical status records once they are committed to the database.",
+            "The system shall display the sequence of statuses in chronological order to reconstruct the assignment's journey."
+          ],
+          "required_by_actors": [
+            "Delivery Partner",
+            "Fulfillment Supervisor",
+            "Platform Operator"
+          ],
+          "related_business_objects": [
+            "Delivery Assignment",
+            "Delivery Proof",
+            "Customer Profile",
+            "Order Request"
+          ],
+          "related_information_requirements": [
+            "The specific status label (e.g., Assigned, In-Transit, Delivered) at any point in time.",
+            "The precise moment in time when a status change occurred.",
+            "The identity of the user or system process that triggered the status change.",
+            "The prior status held by the assignment immediately before the current change."
+          ],
+          "business_rules": [
+            "A status transition is only valid if the new status logically follows the previous status in the defined lifecycle.",
+            "The system must record a status entry for every state change, regardless of whether the change was manual or automated.",
+            "Historical status records must remain read-only and cannot be modified after creation.",
+            "The history log must include the timestamp in the system's standard time zone."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A Delivery Assignment is created and subsequently moves from 'Pending' to 'Assigned' and then to 'In-Transit'",
+              "when": "The system processes these state changes",
+              "then": "The history log must contain three entries showing the sequence: Pending -> Assigned -> In-Transit with correct timestamps."
+            },
+            {
+              "given": "An authorized user attempts to delete a historical status entry for a completed Delivery Assignment",
+              "when": "The system processes the deletion request",
+              "then": "The system must reject the request and preserve the original status record in the history log."
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3066
+    },
+    {
+      "source_file": "FR-016.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "3d2788fac2d49157cc449ae8db8e3226c6aecc147ecb4983e91f21d17333bd8b",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall enforce role-based access control by granting or denying system actions based on the specific permissions assigned to each actor.",
+          "business_need": "The business needs to restrict system access to ensure data security, operational integrity, and compliance with internal governance policies.",
+          "functional_behaviour": [
+            "The system shall validate the current user's role against the required permission for every requested action.",
+            "The system shall deny access and log the attempt if the actor lacks the necessary permission.",
+            "The system shall allow access only if the actor possesses the specific permission required for the action.",
+            "The system shall update the actor's permission set upon successful role assignment or revocation.",
+            "The system shall prevent actors from accessing business objects outside their authorized scope."
+          ],
+          "required_by_actors": [
+            "Customer",
+            "Delivery Partner",
+            "Store Partner",
+            "Fulfillment Supervisor",
+            "Platform Operator"
+          ],
+          "related_business_objects": [
+            "Customer Profile",
+            "Delivery Assignment",
+            "Order Request",
+            "Feedback Record"
+          ],
+          "related_information_requirements": [
+            "Actor role and assigned permissions",
+            "Action type requested by the actor",
+            "Access attempt timestamp and outcome"
+          ],
+          "business_rules": [
+            "An actor may only perform an action if their assigned role includes the specific permission for that action.",
+            "Access attempts by actors without the required permission must be denied and recorded in an audit log.",
+            "Permission changes must take effect immediately for all subsequent access requests.",
+            "Actors cannot bypass role-based restrictions through direct data manipulation."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A Delivery Partner attempts to view the Financial Transaction Record",
+              "when": "The system checks the Delivery Partner's permissions",
+              "then": "The system denies access and logs the failed attempt"
+            },
+            {
+              "given": "A Platform Operator attempts to modify the Product Catalog",
+              "when": "The system verifies the Platform Operator's permissions",
+              "then": "The system grants access to perform the modification"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 2476
+    },
+    {
+      "source_file": "FR-017.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "d598b98c2942bb83c3f7876208bb25f514edce9cb8a6e2ca131026d73def5d06",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall enforce multi-factor authentication for all Delivery Partners accessing the delivery agent mobile application to verify identity before granting access to operational tools.",
+          "business_need": "The business requires secure verification to prevent unauthorized access to sensitive customer data and delivery instructions by malicious actors impersonating gig-workers.",
+          "functional_behaviour": [
+            "The system shall require a primary credential, such as a unique agent ID or biometric scan, before allowing any login attempt.",
+            "The system shall issue a one-time verification code via a secondary channel, such as SMS or email, upon successful entry of the primary credential.",
+            "The system shall deny access and lock the session if the primary and secondary credentials do not match within the defined time window.",
+            "The system shall log every authentication attempt, including success, failure, and the specific method used, for security auditing purposes.",
+            "The system shall automatically invalidate the session and require re-authentication if the agent's device is detected in an unauthorized geographic zone."
+          ],
+          "required_by_actors": [
+            "Delivery Partner",
+            "Platform Operator"
+          ],
+          "related_business_objects": [
+            "Delivery Partner",
+            "Customer Profile"
+          ],
+          "related_information_requirements": [
+            "Unique agent identifier",
+            "Biometric data hash",
+            "Secondary channel verification code",
+            "Authentication timestamp",
+            "Device location coordinates"
+          ],
+          "business_rules": [
+            "Access is granted only when both the primary credential and the secondary verification code are valid and match.",
+            "A failed authentication attempt triggers an immediate lockout if the total number of consecutive failures exceeds the system threshold.",
+            "The secondary verification code expires after a short duration to prevent reuse.",
+            "Authentication logs must be immutable and retained for the duration of the regulatory compliance period."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A Delivery Partner attempts to log in with valid credentials",
+              "when": "The system prompts for a secondary verification code",
+              "then": "Access is granted immediately upon entering the correct code within the time limit"
+            },
+            {
+              "given": "A Delivery Partner attempts to log in with an incorrect primary credential",
+              "when": "The system requests a secondary verification code",
+              "then": "Access is denied and the session is terminated without issuing a code"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": [
+            "Delivery Partner"
+          ]
+        },
+        "evidence_count": 8
+      },
+      "character_count": 2809
+    },
+    {
+      "source_file": "FR-018.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "c916d5ca0906bf57411ac974d483ee47bc95e14d805938f5fffee68a95b38ec9",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall enable Store Partner personnel to validate item quality against the order request before marking the fulfillment task as complete.",
+          "business_need": "The business needs this to prevent shipping defective or incorrect items, thereby reducing returns and maintaining customer trust.",
+          "functional_behaviour": [
+            "The system shall allow Store Partner personnel to view the specific list of items, quantities, and special handling notes from the Order Request.",
+            "The system shall allow Store Partner personnel to inspect the Real-Time Inventory Snapshot to confirm physical stock matches the digital record.",
+            "The system shall allow Store Partner personnel to record a quality verification status for each item in the Fulfillment Task.",
+            "The system shall prevent the Fulfillment Task from being marked as ready for dispatch if quality verification is not recorded.",
+            "The system shall allow Store Partner personnel to attach a Delivery Proof image confirming the item condition before finalizing the task."
+          ],
+          "required_by_actors": [
+            "Store Partner"
+          ],
+          "related_business_objects": [
+            "Order Request",
+            "Fulfillment Task",
+            "Real-Time Inventory Snapshot",
+            "Delivery Proof"
+          ],
+          "related_information_requirements": [
+            "The specific list of items selected by the customer, their quantities, unit prices, and any special handling notes or delivery preferences provided by the customer.",
+            "The current, validated quantity of each sellable item (SKU) at a specific store location, including status flags for availability, partial stock, or temporary unavailability.",
+            "The internal record confirming that the store has successfully picked, verified, and packed the order, and has formally transferred possession to a delivery agent."
+          ],
+          "business_rules": [
+            "A Fulfillment Task cannot transition to a 'Ready for Dispatch' status unless a quality verification record exists for every item.",
+            "If a quality check fails for any item, the system must flag the Fulfillment Task as 'Requires Correction' and block dispatch.",
+            "The system must display the Real-Time Inventory Snapshot alongside the Order Request to facilitate accurate physical verification."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A Store Partner is preparing an order with multiple items",
+              "when": "The Store Partner completes the quality check for all items and confirms the order is correct",
+              "then": "The system updates the Fulfillment Task status to 'Ready for Dispatch' and allows the task to be transferred to a Delivery Partner"
+            },
+            {
+              "given": "A Store Partner discovers a damaged item during the quality check",
+              "when": "The Store Partner attempts to mark the Fulfillment Task as complete without resolving the issue",
+              "then": "The system rejects the completion action and displays an error message indicating that quality verification is incomplete"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3170
+    },
+    {
+      "source_file": "FR-019.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "3c70b7a95c4d2512e8894f1923c6fc9a77fb7fb5cc08c08800f37748f32b0a76",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall validate customer identity and contact details during the onboarding process to ensure compliance and secure account creation.",
+          "business_need": "The business needs to verify customer identity to prevent fraud, ensure accurate delivery routing, and maintain regulatory compliance before allowing order placement.",
+          "functional_behaviour": [
+            "The system shall collect unique identifiers, delivery addresses, and primary contact methods from the Customer during onboarding.",
+            "The system shall verify the authenticity of the provided identity documents against a trusted data source.",
+            "The system shall validate that the contact details match the provided identity information.",
+            "The system shall block account activation if identity verification fails or contact details are inconsistent.",
+            "The system shall generate a Verified Customer Profile upon successful validation.",
+            "The system shall log all verification attempts and outcomes for audit purposes."
+          ],
+          "required_by_actors": [
+            "Customer",
+            "Platform Operator"
+          ],
+          "related_business_objects": [
+            "Customer Profile",
+            "Dispute Ticket"
+          ],
+          "related_information_requirements": [
+            "Unique identifiers for the ordering individual",
+            "Delivery addresses and primary contact methods",
+            "Verifiable evidence of identity documents",
+            "Indicators of fraudulent transaction likelihood"
+          ],
+          "business_rules": [
+            "A Customer Profile cannot be activated until identity verification is successful.",
+            "Contact details must match the name and address on the verified identity document.",
+            "Any failed verification attempt must generate a Dispute Ticket for manual review.",
+            "The system must flag accounts with inconsistent contact details for further investigation."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A Customer submits valid identity documents and matching contact details",
+              "when": "The system processes the onboarding request",
+              "then": "The system activates the Customer Profile and allows order placement"
+            },
+            {
+              "given": "A Customer submits mismatched contact details or invalid identity documents",
+              "when": "The system processes the onboarding request",
+              "then": "The system rejects the request and creates a Dispute Ticket for review"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 2550
+    },
+    {
+      "source_file": "FR-020.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "3bd3da6166c24e8c9d7efba96fad0ee9087914951cd23a4c70cd0f88c2e6b0a5",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall generate an immutable audit log for every action performed by authorized actors to satisfy external regulatory compliance requirements.",
+          "business_need": "The business needs this to provide verifiable proof of operational adherence to labor, data privacy, and safety laws during regulatory inspections.",
+          "functional_behaviour": [
+            "The system shall automatically capture the actor identity, timestamp, action type, and relevant context for every system interaction.",
+            "The system shall append a cryptographic hash to each log entry to ensure the record cannot be altered or deleted.",
+            "The system shall store the complete audit trail in a secure, read-only repository accessible only to the Regulatory Authority.",
+            "The system shall exclude internal system-generated events from the compliance log to focus on human-initiated actions.",
+            "The system shall retain the audit records for a duration defined by the applicable local jurisdiction's data retention laws."
+          ],
+          "required_by_actors": [
+            "Regulatory Authority",
+            "Platform Operator",
+            "Delivery Partner",
+            "Store Partner",
+            "Customer"
+          ],
+          "related_business_objects": [
+            "Customer Profile",
+            "Delivery Assignment",
+            "Financial Transaction Record",
+            "Feedback Record",
+            "Order Request"
+          ],
+          "related_information_requirements": [
+            "Actor identity and role",
+            "Precise timestamp of the action",
+            "Type of action performed",
+            "Contextual data related to the action",
+            "Cryptographic hash of the record"
+          ],
+          "business_rules": [
+            "Every log entry must be immutable and tamper-evident.",
+            "Audit logs must be retained for a period not shorter than the minimum legal requirement for the operating zone.",
+            "Only actions initiated by human actors or their direct digital representations shall be logged for compliance.",
+            "The audit log must be accessible to the Regulatory Authority upon request without delay."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A Delivery Partner updates the status of a Delivery Assignment to 'Delivered',",
+              "when": "the system records this event in the audit log,",
+              "then": "the log entry contains the partner's ID, the exact timestamp, and the action type, and the record is cryptographically sealed."
+            },
+            {
+              "given": "An attempt is made to modify a stored audit log entry after it has been created,",
+              "when": "the system processes the modification request,",
+              "then": "the modification is rejected and the original entry remains unchanged with its original hash intact."
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 2830
+    },
+    {
+      "source_file": "FR-021.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "7296def972c3d986d8d2e5e5cc477c948349eed8e53ba1cf9d7b5e274e0f38bc",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall assign the authority to approve or reject a Dispute Ticket to a specific actor based on the ticket's origin, severity, and the involved partners.",
+          "business_need": "The business needs a clear, automated assignment of dispute resolution authority to ensure fair, timely, and legally compliant handling of customer claims.",
+          "functional_behaviour": [
+            "The system shall automatically assign the Platform Operator as the approver for disputes involving financial adjustments or regulatory violations.",
+            "The system shall automatically assign the Store Partner as the approver for disputes related to missing items or product quality originating from their inventory.",
+            "The system shall automatically assign the Delivery Partner as the approver for disputes related to delivery proof or late arrival caused by their performance.",
+            "The system shall prevent an actor from approving a Dispute Ticket where they are listed as the accused party in the incident.",
+            "The system shall escalate the Dispute Ticket to a Fulfillment Supervisor if the assigned actor does not respond within the defined timeframe.",
+            "The system shall record the assigned approver and their decision timestamp on the Dispute Ticket for audit purposes."
+          ],
+          "required_by_actors": [
+            "Platform Operator",
+            "Store Partner",
+            "Delivery Partner",
+            "Fulfillment Supervisor"
+          ],
+          "related_business_objects": [
+            "Dispute Ticket",
+            "Customer Profile",
+            "Store Partner Agreement",
+            "Delivery Proof",
+            "Feedback Record"
+          ],
+          "related_information_requirements": [
+            "The nature of the dispute issue (e.g., missing item, damage, late delivery)",
+            "The origin of the order (Store Partner or Delivery Partner)",
+            "The severity level of the dispute",
+            "The current resolution status of the ticket",
+            "The identity of the accused party in the dispute"
+          ],
+          "business_rules": [
+            "An actor cannot approve a Dispute Ticket where they are the accused party.",
+            "Disputes involving financial refunds must be approved by the Platform Operator.",
+            "Disputes regarding product quality must be approved by the Store Partner.",
+            "Disputes regarding delivery performance must be approved by the Delivery Partner.",
+            "Unresolved Dispute Tickets must be escalated to a Fulfillment Supervisor after the initial assignment deadline."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A Dispute Ticket is created for a missing item originating from a Store Partner",
+              "when": "The system processes the ticket for authority assignment",
+              "then": "The Store Partner is assigned as the approver and the Platform Operator is excluded."
+            },
+            {
+              "given": "A Dispute Ticket is created for a damaged package where the Delivery Partner is the accused party",
+              "when": "The system processes the ticket for authority assignment",
+              "then": "The Delivery Partner is excluded from approval and the Platform Operator is assigned as the approver."
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3240
+    },
+    {
+      "source_file": "FR-022.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "8a07208a4e784cbdb40e15b2ac511fc157ff4c4941e2eafb8c28de114a4a9b67",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall prevent the submission of an Order Request if the calculated cart total is below the minimum order value defined in the Store Partner Agreement.",
+          "business_need": "The business needs this to ensure economic viability by preventing the processing of orders that cannot cover operational costs or meet delivery thresholds.",
+          "functional_behaviour": [
+            "The system shall calculate the total monetary value of all items in the Order Request before submission.",
+            "The system shall retrieve the minimum order value threshold associated with the specific Store Partner Agreement.",
+            "The system shall block the Order Request submission and display an error message if the cart total is less than the threshold.",
+            "The system shall allow the Order Request submission only if the cart total meets or exceeds the minimum order value.",
+            "The system shall update the Customer Profile to reflect the minimum order value constraint for future sessions.",
+            "The system shall log the validation attempt and the resulting decision in the Financial Transaction Record."
+          ],
+          "required_by_actors": [
+            "Customer",
+            "Store Partner"
+          ],
+          "related_business_objects": [
+            "Order Request",
+            "Store Partner Agreement",
+            "Customer Profile",
+            "Financial Transaction Record"
+          ],
+          "related_information_requirements": [
+            "The specific list of items selected by the customer, their quantities, unit prices, and any special handling notes or delivery preferences provided by the customer.",
+            "Verified details about the ordering individual, including unique identifiers, delivery addresses, and primary contact methods (phone, email).",
+            "The active linkage between a ready order and a specific delivery agent, including the assigned route, estimated arrival time, and the agent's current workload status."
+          ],
+          "business_rules": [
+            "An Order Request cannot be submitted if the sum of item prices is strictly less than the minimum order value defined in the Store Partner Agreement.",
+            "An Order Request can be submitted if the sum of item prices is equal to or greater than the minimum order value defined in the Store Partner Agreement.",
+            "The minimum order value must be dynamically retrieved from the Store Partner Agreement at the time of validation.",
+            "The system must display a clear error message to the Customer when the minimum order value is not met."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A customer adds items to their cart totaling $150 and the Store Partner Agreement requires a minimum of $100.",
+              "when": "The customer attempts to submit the Order Request.",
+              "then": "The system allows the submission and proceeds to the next step."
+            },
+            {
+              "given": "A customer adds items to their cart totaling $80 and the Store Partner Agreement requires a minimum of $100.",
+              "when": "The customer attempts to submit the Order Request.",
+              "then": "The system blocks the submission and displays an error message indicating the minimum order value is not met."
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3285
+    },
+    {
+      "source_file": "FR-023.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "77ab57adf62b1832b3e72ae2374d334e5e5f15962fa194df6278ece26d4cd633",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall prevent the creation of an Order Request if the customer's delivery address falls outside the active boundaries of any defined Service Area Definition.",
+          "business_need": "The business needs to enforce strict geofencing to ensure operational feasibility and prevent accepting orders that cannot be physically fulfilled within the hyperlocal zones.",
+          "functional_behaviour": [
+            "The system shall retrieve the precise geographic coordinates or polygon boundaries for all active Service Area Definitions associated with the Store Partner.",
+            "The system shall calculate the spatial relationship between the customer's delivery address and the defined Service Area boundaries.",
+            "The system shall block the Order Request submission and display a specific error message if the address is not contained within any valid zone.",
+            "The system shall allow the Order Request creation only if the delivery address is confirmed to be inside at least one active Service Area Definition.",
+            "The system shall validate the Service Area Definition status in real-time to ensure the zone is currently active for order acceptance."
+          ],
+          "required_by_actors": [
+            "Customer",
+            "Platform Operator"
+          ],
+          "related_business_objects": [
+            "Service Area Definition",
+            "Order Request",
+            "Customer Profile"
+          ],
+          "related_information_requirements": [
+            "The precise geographic coordinates, radii, or polygon boundaries defining the specific zones where the platform is authorized to operate.",
+            "Verified details about the ordering individual, including unique identifiers and delivery addresses."
+          ],
+          "business_rules": [
+            "An order must not be created if the delivery address is geographically outside all active Service Area Definitions.",
+            "A Service Area Definition must be marked as active to allow order placement within its boundaries.",
+            "The system must validate the delivery address against the Service Area Definition at the moment of order submission."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A customer attempts to place an order with a delivery address inside an active Service Area Definition",
+              "when": "The system processes the Order Request",
+              "then": "The system allows the order creation and proceeds to the next step"
+            },
+            {
+              "given": "A customer attempts to place an order with a delivery address outside all defined Service Area Definitions",
+              "when": "The system processes the Order Request",
+              "then": "The system blocks the order creation and displays a message indicating the address is outside the service area"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 2837
+    },
+    {
+      "source_file": "FR-024.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "c6ceae2d8168685fa3d89066b9196486635bfb94045b7d4e3d4a285551df61df",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall prevent the creation of an Order Request containing any Product Catalog item where the current date exceeds the item's expiry date or freshness threshold.",
+          "business_need": "The business needs to prevent the sale of expired or unsafe perishable goods to protect customer health and maintain regulatory compliance.",
+          "functional_behaviour": [
+            "The system shall retrieve the Real-Time Inventory Snapshot for each item in the cart to verify current stock status.",
+            "The system shall compare the current date against the expiry date stored in the Product Catalog for every selected item.",
+            "The system shall block the Order Request submission and display an error message if any item is flagged as expired.",
+            "The system shall allow the Order Request submission only if all items pass the expiry date validation check.",
+            "The system shall update the Real-Time Inventory Snapshot to reflect the removal of expired items from available stock.",
+            "The system shall log the validation attempt and the specific items rejected due to expiry status."
+          ],
+          "required_by_actors": [
+            "Customer",
+            "Store Partner"
+          ],
+          "related_business_objects": [
+            "Product Catalog",
+            "Order Request",
+            "Real-Time Inventory Snapshot"
+          ],
+          "related_information_requirements": [
+            "The current date and time at the moment of order submission.",
+            "The specific expiry date or freshness threshold for each sellable item.",
+            "The list of items selected by the customer with their quantities.",
+            "The current availability status of each item in the store."
+          ],
+          "business_rules": [
+            "An item is considered expired if the current date is later than the item's defined expiry date.",
+            "An Order Request must contain zero expired items to be successfully created.",
+            "Items flagged as expired must be immediately excluded from the available inventory snapshot.",
+            "The system must validate expiry status for all items in the cart before finalizing the order."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A customer adds a product with a valid expiry date to the cart and proceeds to checkout.",
+              "when": "The system validates the order contents against the current date.",
+              "then": "The Order Request is successfully created and processed."
+            },
+            {
+              "given": "A customer attempts to add a product that has passed its expiry date to the cart.",
+              "when": "The system validates the order contents against the current date.",
+              "then": "The Order Request creation is blocked and an error message indicating the item is expired is displayed."
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 2845
+    },
+    {
+      "source_file": "FR-025.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "7d287f783345005b2f6c1bc757f05868e71e6497709ebc649397ab233e00d0b3",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall automatically calculate and apply the correct revenue share percentage to a Financial Transaction Record based on the active commission rate defined in the Store Partner Agreement.",
+          "business_need": "The business needs to ensure accurate and compliant revenue distribution between the platform and store partners by dynamically applying contractual commission rates to every financial settlement.",
+          "functional_behaviour": [
+            "The system shall retrieve the active commission rate from the Store Partner Agreement associated with the specific Store Partner.",
+            "The system shall calculate the revenue share amount by applying the retrieved commission rate to the gross revenue of the Financial Transaction Record.",
+            "The system shall record the calculated commission amount and the net settlement amount in the Financial Transaction Record.",
+            "The system shall validate that the Store Partner Agreement is currently active before finalizing the commission calculation.",
+            "The system shall flag the Financial Transaction Record for manual review if the applicable Store Partner Agreement is missing or inactive."
+          ],
+          "required_by_actors": [
+            "Store Partner",
+            "Platform Operator"
+          ],
+          "related_business_objects": [
+            "Financial Transaction Record",
+            "Store Partner Agreement"
+          ],
+          "related_information_requirements": [
+            "The complete record of monetary exchange, detailing item costs, delivery fees, taxes, platform commissions, and the net settlement amounts due to each party.",
+            "The legally binding contractual details between the platform and physical stores, including commission rates, payout schedules, liability clauses, and specific performance guarantees."
+          ],
+          "business_rules": [
+            "The system shall use the commission rate from the most recently active Store Partner Agreement for any given transaction.",
+            "The system shall prevent the finalization of a Financial Transaction Record if no valid Store Partner Agreement exists for the involved Store Partner.",
+            "The system shall calculate the net settlement amount by subtracting the calculated commission from the gross revenue.",
+            "The system shall treat a Store Partner Agreement as inactive if its effective end date has passed or if it is explicitly marked as terminated."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A valid Store Partner Agreement with a defined commission rate exists for the Store Partner involved in a transaction.",
+              "when": "The system processes a new Financial Transaction Record for that Store Partner.",
+              "then": "The system applies the agreement's commission rate to calculate the revenue share and generates the correct net settlement amount."
+            },
+            {
+              "given": "No active Store Partner Agreement exists for the Store Partner involved in a transaction.",
+              "when": "The system attempts to process a new Financial Transaction Record for that Store Partner.",
+              "then": "The system flags the Financial Transaction Record for manual review and does not finalize the commission calculation."
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3307
+    },
+    {
+      "source_file": "FR-026.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "a48fa4f7c557bd7a891fe9bf07fb1f5931ab61065f77ecc8b8f919ff5e964d66",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall evaluate transaction patterns and consume third-party fraud detection services to assess risk scores for orders before processing.",
+          "business_need": "The business needs this to prevent financial loss from fraudulent transactions and ensure secure payment processing.",
+          "functional_behaviour": [
+            "The system shall ingest real-time transaction data and customer profile details to identify unusual order patterns.",
+            "The system shall consume external signals from a third-party fraud detection service to calculate a dynamic risk score.",
+            "The system shall automatically flag high-risk orders for manual review by the Payment Provider.",
+            "The system shall block or hold processing for orders exceeding the defined high-risk threshold until cleared.",
+            "The system shall log the risk assessment results and third-party response details for audit trails."
+          ],
+          "required_by_actors": [
+            "Payment Provider",
+            "Platform Operator"
+          ],
+          "related_business_objects": [
+            "Financial Transaction Record",
+            "Customer Profile",
+            "Order Request",
+            "Dispute Ticket"
+          ],
+          "related_information_requirements": [
+            "Indicators and historical data used to assess the likelihood of fraudulent transactions",
+            "Verified details about the ordering individual, including unique identifiers and delivery addresses",
+            "Complete record of monetary exchange detailing item costs and fees",
+            "Qualitative ratings and comments provided by the customer regarding service performance"
+          ],
+          "business_rules": [
+            "An order must be flagged for manual review if the calculated risk score exceeds the high-risk threshold.",
+            "The system must consume the third-party fraud detection service response before allowing any financial transaction to proceed.",
+            "High-risk orders must remain in a pending state until a Payment Provider explicitly approves or rejects them.",
+            "All risk assessment events must be recorded with a timestamp and the specific indicators that triggered the score."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "An order request is submitted with valid customer profile and payment details",
+              "when": "The system evaluates the transaction against third-party fraud indicators",
+              "then": "The system calculates a risk score and processes the order if the score is below the high-risk threshold"
+            },
+            {
+              "given": "An order request exhibits unusual patterns such as rapid address changes or mismatched billing data",
+              "when": "The system evaluates the transaction and receives a high-risk score from the third-party service",
+              "then": "The system flags the order for manual review and prevents the Financial Transaction Record from being finalized"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 2972
+    },
+    {
+      "source_file": "FR-027.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "1c29a6a908f244e67bbb59e88f4ff49ee372d224713302ba5545374a06166710",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall securely connect with the Payment Provider to process customer payments, initiate fund transfers, and manage refunds or reversals for financial transactions.",
+          "business_need": "The business requires a secure financial integration to accurately monetize transactions, settle funds between parties, and protect against financial loss through fraud detection and reversal capabilities.",
+          "functional_behaviour": [
+            "The system shall validate the solvency of the payer and verify the security of the payment request before authorizing any fund transfer.",
+            "The system shall generate a complete Financial Transaction Record capturing item costs, delivery fees, taxes, commissions, and net settlement amounts.",
+            "The system shall initiate a refund or reversal process upon receiving a valid request from the Payment Provider or Store Partner.",
+            "The system shall cross-reference customer profile data and order details to assess the likelihood of fraudulent transactions.",
+            "The system shall expose real-time status indicators of the financial transaction to the Platform Operator and Store Partner.",
+            "The system shall link the financial transaction record with the Delivery Proof to confirm successful handover before final settlement."
+          ],
+          "required_by_actors": [
+            "Payment Provider",
+            "Platform Operator",
+            "Store Partner",
+            "Customer"
+          ],
+          "related_business_objects": [
+            "Financial Transaction Record",
+            "Customer Profile",
+            "Delivery Proof",
+            "Order Request"
+          ],
+          "related_information_requirements": [
+            "Complete record of monetary exchange including costs, fees, taxes, and net settlement amounts.",
+            "Indicators and historical data used to assess the likelihood of fraudulent transactions.",
+            "Verified details about the ordering individual including unique identifiers and contact methods.",
+            "Evidence that physical goods have reached the customer to trigger final financial settlement."
+          ],
+          "business_rules": [
+            "A financial transaction cannot be finalized until the Payment Provider validates the payer's solvency.",
+            "Refunds or reversals must be initiated only after a valid request is received from an authorized actor.",
+            "The system must capture all monetary components (costs, fees, taxes, commissions) in the transaction record.",
+            "Final settlement amounts are contingent upon the verification of the Delivery Proof."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A customer places an order with valid payment details",
+              "when": "The system processes the payment request via the Payment Provider",
+              "then": "The system generates a Financial Transaction Record with accurate net settlement amounts and confirms fund transfer."
+            },
+            {
+              "given": "A dispute arises regarding a delivered order",
+              "when": "The Store Partner requests a refund through the Payment Provider interface",
+              "then": "The system initiates the reversal process and updates the Financial Transaction Record to reflect the refund status."
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3284
+    },
+    {
+      "source_file": "FR-028.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "2dff1427dd382ab2b40ef09f6953ed6d3d19d68d4f0e4140d6304680e2406df2",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall ingest real-time operational data from external logistics providers to monitor fleet availability and route constraints.",
+          "business_need": "The business needs this to dynamically adjust delivery capacity and fees based on live network status, preventing service degradation during congestion.",
+          "functional_behaviour": [
+            "The system shall establish secure, bi-directional data links with registered Payment Providers and Delivery Partners.",
+            "The system shall ingest live telemetry regarding agent location, speed, and current workload status.",
+            "The system shall update the Real-Time Inventory Snapshot to reflect temporary unavailability caused by network disruptions.",
+            "The system shall recalculate estimated travel duration and distance based on current traffic patterns and route constraints.",
+            "The system shall flag Delivery Assignment records when external network status prevents meeting the assigned Delivery Slot.",
+            "The system shall expose network congestion metrics to the Fulfillment Supervisor for workload balancing."
+          ],
+          "required_by_actors": [
+            "Platform Operator",
+            "Fulfillment Supervisor",
+            "Delivery Partner",
+            "Payment Provider"
+          ],
+          "related_business_objects": [
+            "Delivery Assignment",
+            "Delivery Zone Map",
+            "Delivery Proof",
+            "Real-Time Inventory Snapshot",
+            "Assigned Delivery Slot"
+          ],
+          "related_information_requirements": [
+            "Live visibility into the location, speed, and status of all active delivery agents",
+            "Calculated estimates of travel duration and distance accounting for traffic patterns",
+            "Status of the data link between the store and the platform including latency",
+            "Aggregate capacity of the fleet within the service zone"
+          ],
+          "business_rules": [
+            "The system shall treat a data link latency exceeding the defined threshold as a network disruption.",
+            "The system shall invalidate an Assigned Delivery Slot if the external network status indicates a route constraint.",
+            "The system shall update the Real-Time Inventory Snapshot to mark items as unavailable if the logistics link is down.",
+            "The system shall prioritize agents with lower workload status when assigning tasks during network congestion."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "The external logistics provider reports a route constraint due to traffic",
+              "when": "The system ingests this real-time data",
+              "then": "The system updates the travel duration estimate and flags the affected Delivery Assignment"
+            },
+            {
+              "given": "The data link between the store and the platform experiences high latency",
+              "when": "The system detects this status exceeds the defined threshold",
+              "then": "The system marks the Real-Time Inventory Snapshot as unreliable and alerts the Fulfillment Supervisor"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3077
+    },
+    {
+      "source_file": "FR-029.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "a3c443019e90aa3825f69bda27782148a05b1d59fa7a46eb67901a22446b219e",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall integrate with external mapping services to consume live traffic and road network data for calculating accurate delivery times.",
+          "business_need": "Accurate delivery time estimates are critical for setting realistic fees, managing customer expectations, and optimizing fleet capacity.",
+          "functional_behaviour": [
+            "The system shall retrieve real-time traffic conditions and road network constraints from the external mapping service.",
+            "The system shall calculate dynamic travel duration and distance between the Store Partner and the customer address.",
+            "The system shall update the estimated arrival time for the Delivery Assignment based on current traffic patterns.",
+            "The system shall validate that the calculated route remains within the active Service Area Definition.",
+            "The system shall refresh delivery time estimates whenever significant traffic changes occur during the active delivery window."
+          ],
+          "required_by_actors": [
+            "Order Allocation Engine",
+            "Delivery Partner",
+            "Customer"
+          ],
+          "related_business_objects": [
+            "Delivery Assignment",
+            "Service Area Definition",
+            "Customer Profile"
+          ],
+          "related_information_requirements": [
+            "Calculated estimates of travel duration and distance accounting for traffic patterns",
+            "Precise geographic coordinates defining the service zone boundaries",
+            "Verified delivery addresses and contact details for the ordering individual"
+          ],
+          "business_rules": [
+            "The system shall use live traffic data to adjust estimated arrival times whenever congestion exceeds a predefined threshold.",
+            "The system shall reject any calculated route that falls outside the authorized Service Area Definition.",
+            "The system shall recalculate delivery times immediately upon receiving an update from the external mapping service.",
+            "The system shall display the estimated arrival time to the Delivery Partner and Customer within five minutes of the last data refresh."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A Delivery Assignment is created with a Store Partner and a valid customer address",
+              "when": "The system queries the external mapping service for current traffic conditions",
+              "then": "The system calculates and displays an estimated arrival time that reflects current road congestion"
+            },
+            {
+              "given": "A Delivery Assignment is active and traffic conditions change significantly on the route",
+              "when": "The external mapping service pushes an update regarding road closures or heavy traffic",
+              "then": "The system updates the estimated arrival time and notifies the Delivery Partner of the delay"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 2891
+    },
+    {
+      "source_file": "FR-030.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "cfbf4c519a8ee7a33a97f130144e5f01e1602d8f2c94b2b2be3e491a43f85c17",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall integrate with external tax services to dynamically calculate and remit applicable sales taxes for transactions within authorized service zones.",
+          "business_need": "The business needs this to ensure full regulatory compliance and accurate financial reporting across varying jurisdictions.",
+          "functional_behaviour": [
+            "The system shall retrieve the current tax rate for the specific delivery zone associated with the Order Request.",
+            "The system shall apply the retrieved tax rate to the item costs and delivery fees to generate a Financial Transaction Record.",
+            "The system shall validate the tax calculation against the latest Regulatory Authority requirements before finalizing the order.",
+            "The system shall generate a Dispute Ticket if the calculated tax exceeds the maximum allowable threshold defined by the Regulatory Authority.",
+            "The system shall update the Real-Time Inventory Snapshot to reflect tax-inclusive pricing for the Customer Profile."
+          ],
+          "required_by_actors": [
+            "Platform Operator",
+            "Regulatory Authority",
+            "Store Partner"
+          ],
+          "related_business_objects": [
+            "Order Request",
+            "Financial Transaction Record",
+            "Service Area Definition",
+            "Dispute Ticket",
+            "Customer Profile"
+          ],
+          "related_information_requirements": [
+            "Current records of licenses, permits, and regulatory adherence regarding data privacy for the specific operating zone.",
+            "The complete record of monetary exchange, detailing item costs, delivery fees, taxes, platform commissions, and the net settlement amounts due to each party.",
+            "The precise geographic coordinates, radii, or polygon boundaries defining the specific zones where the platform is authorized to operate."
+          ],
+          "business_rules": [
+            "The system shall not finalize an Order Request if the calculated tax rate exceeds the maximum threshold defined by the Regulatory Authority.",
+            "The system shall automatically generate a Dispute Ticket whenever a tax calculation error is detected during the Financial Transaction Record generation.",
+            "The system shall only apply tax rates from jurisdictions where the Service Area Definition confirms operational authorization.",
+            "The system shall update the Financial Transaction Record immediately upon receiving a new tax rate update from the external service."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "An Order Request is created for a customer in an authorized zone with a valid tax rate available.",
+              "when": "The system processes the order and calculates the total cost.",
+              "then": "The Financial Transaction Record includes the correct tax amount based on the current Service Area Definition."
+            },
+            {
+              "given": "An Order Request is created for a customer in a zone where the external tax service returns an error or missing rate.",
+              "when": "The system attempts to calculate the total cost for the Order Request.",
+              "then": "The system generates a Dispute Ticket and prevents the order from being finalized until the tax issue is resolved."
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3306
+    },
+    {
+      "source_file": "FR-031.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "0700b3f627075582129348bc658512af76b1728acb9a6df3ecb6044cf38d7f5a",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall automatically initiate a refund process when a dispute ticket is validated by the Regulatory Authority or when a delivery failure is confirmed by the Delivery Partner.",
+          "business_need": "The business needs to automate financial reversals to ensure customer trust and operational efficiency when service failures or validated disputes occur.",
+          "functional_behaviour": [
+            "The system shall automatically generate a refund transaction record upon receiving a validated dispute ticket or a confirmed delivery failure notification.",
+            "The system shall retrieve the original financial transaction record associated with the Order Request to calculate the exact refund amount.",
+            "The system shall update the Dispute Ticket status to 'Refund Initiated' and notify the Customer via their primary contact method.",
+            "The system shall prevent the Delivery Assignment from being re-allocated to a new Delivery Partner while the refund process is active.",
+            "The system shall log the refund initiation event with a timestamp and the specific reason code derived from the dispute or failure record."
+          ],
+          "required_by_actors": [
+            "Regulatory Authority",
+            "Delivery Partner",
+            "Customer"
+          ],
+          "related_business_objects": [
+            "Dispute Ticket",
+            "Financial Transaction Record",
+            "Order Request",
+            "Delivery Assignment",
+            "Feedback Record"
+          ],
+          "related_information_requirements": [
+            "Validated dispute details including nature of issue and resolution status",
+            "Original order line items, quantities, and unit prices",
+            "Original payment amount and transaction reference",
+            "Confirmation of delivery failure or successful handover status",
+            "Customer contact details for notification"
+          ],
+          "business_rules": [
+            "A refund must be initiated only after a dispute ticket is marked as validated or a delivery failure is explicitly confirmed.",
+            "The refund amount must match the total value of the items in the original Order Request.",
+            "No new Delivery Assignment can be created for the same Order Request while a refund is in progress.",
+            "The system must capture the specific reason code for the refund initiation to support financial auditing."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A Dispute Ticket is created and subsequently validated by the Regulatory Authority",
+              "when": "The system processes the validation status update",
+              "then": "The system automatically initiates a refund and updates the ticket status to 'Refund Initiated'"
+            },
+            {
+              "given": "A Delivery Partner reports a failed delivery attempt",
+              "when": "The system receives the confirmed failure notification",
+              "then": "The system automatically initiates a refund and prevents any new Delivery Assignment for that Order Request"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3045
+    },
+    {
+      "source_file": "FR-032.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "afba885d9c0597d3c1f9d5a9b4a5205a41d03a938c170a4f5c380e2e8a6b28f6",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall calculate and apply partial refunds for specific missing or damaged items within a valid Order Request based on verified inventory or delivery proof discrepancies.",
+          "business_need": "The business needs to automatically adjust financial obligations for customers when specific items in an order are unavailable or damaged, ensuring accurate billing and maintaining trust without requiring manual intervention for every discrepancy.",
+          "functional_behaviour": [
+            "The system shall identify the specific items in an Order Request that are flagged as missing or damaged based on Delivery Proof or Real-Time Inventory Snapshot data.",
+            "The system shall calculate the refund amount by multiplying the quantity of the affected items by their unit price as defined in the Product Catalog.",
+            "The system shall generate a Financial Transaction Record reflecting the deduction from the original payment and the issuance of the partial refund.",
+            "The system shall update the Customer Profile to reflect the refund status and notify the Customer via their primary contact method.",
+            "The system shall adjust the Financial Transaction Record associated with the Order Request to show the net payable amount after the partial refund is applied."
+          ],
+          "required_by_actors": [
+            "Customer",
+            "Store Partner",
+            "Delivery Partner",
+            "Platform Operator"
+          ],
+          "related_business_objects": [
+            "Order Request",
+            "Financial Transaction Record",
+            "Customer Profile",
+            "Delivery Proof",
+            "Real-Time Inventory Snapshot",
+            "Product Catalog"
+          ],
+          "related_information_requirements": [
+            "The specific list of items selected by the customer, their quantities, and unit prices.",
+            "Verified details about the ordering individual, including unique identifiers and contact methods.",
+            "The current, validated quantity of each sellable item at a specific store location.",
+            "Information confirming that the store has successfully picked, verified, and packed the order."
+          ],
+          "business_rules": [
+            "A partial refund shall only be triggered if the discrepancy is confirmed by a Delivery Proof or a Real-Time Inventory Snapshot indicating unavailability.",
+            "The refund amount shall strictly equal the sum of the unit prices for the specific missing or damaged items, excluding any taxes or delivery fees.",
+            "A partial refund shall not be processed if the Order Request has already been fully refunded or cancelled.",
+            "The system shall prevent a partial refund calculation if the item in question is marked as permanently discontinued in the Product Catalog."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "An Order Request contains three items where one is confirmed missing via Delivery Proof.",
+              "when": "The system processes the discrepancy for a partial refund.",
+              "then": "The system calculates the refund based only on the missing item's unit price and updates the Financial Transaction Record accordingly."
+            },
+            {
+              "given": "An Order Request contains items where the inventory shows partial stock but the Delivery Proof confirms full delivery.",
+              "when": "The system attempts to calculate a partial refund for missing items.",
+              "then": "The system does not generate a refund because the discrepancy is not confirmed as missing or damaged."
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3573
+    },
+    {
+      "source_file": "FR-033.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "ae0a40514effc9c9e64dd5ec351ef6c6addc1d419647651b1d2b56413d02569a",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall automatically reassign failed delivery tasks to available Delivery Partners based on proximity to the delivery address and current agent capacity.",
+          "business_need": "The business needs to minimize customer wait times and operational costs by ensuring failed deliveries are quickly re-allocated to the most suitable available agent.",
+          "functional_behaviour": [
+            "The system shall identify all active Delivery Tasks marked with a failed status.",
+            "The system shall calculate the proximity and estimated travel time between the failed delivery address and all available Delivery Partners.",
+            "The system shall filter available Delivery Partners based on their current workload capacity and service area constraints.",
+            "The system shall select the optimal Delivery Partner for reassignment based on the lowest estimated travel time and highest capacity.",
+            "The system shall update the Delivery Assignment record to reflect the new agent and generate a notification for the selected Delivery Partner."
+          ],
+          "required_by_actors": [
+            "Delivery Partner",
+            "Order Allocation Engine"
+          ],
+          "related_business_objects": [
+            "Delivery Assignment",
+            "Delivery Partner",
+            "Delivery Zone Map",
+            "Fulfillment Task",
+            "Real-Time Inventory Snapshot"
+          ],
+          "related_information_requirements": [
+            "Live visibility into the location, speed, and status of all active delivery agents and the aggregate capacity of the fleet within the service zone.",
+            "Calculated estimates of travel duration and distance between the store location and potential customer addresses, accounting for traffic patterns and route constraints.",
+            "The active linkage between a ready order and a specific delivery agent, including the assigned route, estimated arrival time, and the agent's current workload status."
+          ],
+          "business_rules": [
+            "A failed delivery task must be reassigned only if at least one Delivery Partner is available within the defined service area.",
+            "The system must prioritize the Delivery Partner with the shortest estimated travel time to the delivery address.",
+            "Reassignment is prohibited if the selected Delivery Partner has exceeded their maximum capacity threshold for the current shift.",
+            "The original Delivery Partner must be notified of the task cancellation before the new assignment is finalized."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A Delivery Task has failed and no new delivery slot is immediately requested by the customer.",
+              "when": "The Order Allocation Engine scans for failed tasks and available agents.",
+              "then": "The system reassigns the task to the nearest available Delivery Partner who has remaining capacity."
+            },
+            {
+              "given": "All Delivery Partners within the service area are at maximum capacity or outside the delivery radius.",
+              "when": "The system attempts to reassign a failed Delivery Task.",
+              "then": "The system marks the task as 'Pending Reassignment' and notifies the Fulfillment Supervisor instead of auto-assigning."
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": [
+            "Delivery Partner"
+          ]
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3320
+    },
+    {
+      "source_file": "FR-034.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "2c9aa27cf9f3ea667b30a60ca8d1587e9cbfd45f7f5d0c493d1e37525c9c6ac0",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall reverse inventory locks and financial reservations for an Order Request when a cancellation is confirmed before the Fulfillment Task reaches the 'Ready for Dispatch' status.",
+          "business_need": "The business needs to ensure that cancelled orders do not permanently reduce available stock or hold customer funds, maintaining accurate inventory levels and financial integrity.",
+          "functional_behaviour": [
+            "The system shall identify all inventory units locked by the Order Request and release them back to the Real-Time Inventory Snapshot.",
+            "The system shall reverse any financial reservations associated with the Order Request and update the Financial Transaction Record.",
+            "The system shall update the Order Request status to 'Cancelled' and log the reversal details in the system audit trail.",
+            "The system shall prevent the release of inventory or funds if the Order Request has already transitioned to a 'Ready for Dispatch' state.",
+            "The system shall notify the Store Partner of the inventory release to confirm the rollback was successful."
+          ],
+          "required_by_actors": [
+            "Customer",
+            "Store Partner",
+            "Order Allocation Engine"
+          ],
+          "related_business_objects": [
+            "Order Request",
+            "Real-Time Inventory Snapshot",
+            "Financial Transaction Record",
+            "Fulfillment Task"
+          ],
+          "related_information_requirements": [
+            "The current, validated quantity of each sellable item at a specific store location.",
+            "The active linkage between a ready order and a specific delivery agent.",
+            "The specific list of items selected by the customer and their quantities."
+          ],
+          "business_rules": [
+            "Inventory locks must be released immediately upon confirmation of cancellation before the Fulfillment Task status changes to 'Ready for Dispatch'.",
+            "Financial reservations must be reversed only if the Order Request has not yet been handed over to a Delivery Partner.",
+            "A cancellation rollback cannot be initiated if the order has already been physically picked and verified by the Store Partner.",
+            "The system must validate that the Order Request ID matches the inventory lock ID before releasing stock."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "An Order Request is in 'Processing' status with locked inventory and a financial reservation.",
+              "when": "The Customer initiates a cancellation and the system confirms it before dispatch.",
+              "then": "The inventory is released back to the Real-Time Inventory Snapshot and the financial reservation is reversed."
+            },
+            {
+              "given": "An Order Request has already transitioned to 'Ready for Dispatch' status.",
+              "when": "The Customer attempts to cancel the order.",
+              "then": "The system rejects the cancellation request and does not release any inventory or funds."
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3044
+    },
+    {
+      "source_file": "FR-035.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "a16c172ac67c875067341b43cf3fbd03c3c39ce0e03d4535922efc566ed390b6",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall enable authorized agents and customers to upload photos and documents to substantiate dispute claims regarding delivery exceptions.",
+          "business_need": "The business needs a centralized mechanism to collect verifiable evidence to resolve disputes fairly and accurately.",
+          "functional_behaviour": [
+            "The system shall allow the Customer and Delivery Partner to attach media files to an existing Dispute Ticket.",
+            "The system shall validate that uploaded files meet minimum quality standards before storing them.",
+            "The system shall associate the uploaded evidence directly with the specific Dispute Ticket and linked Order Request.",
+            "The system shall restrict upload permissions to only the actors involved in the specific dispute case.",
+            "The system shall generate a timestamped record of every file upload for audit purposes."
+          ],
+          "required_by_actors": [
+            "Customer",
+            "Delivery Partner",
+            "Fulfillment Supervisor"
+          ],
+          "related_business_objects": [
+            "Dispute Ticket",
+            "Order Request",
+            "Delivery Proof",
+            "Feedback Record"
+          ],
+          "related_information_requirements": [
+            "The complete record of monetary exchange",
+            "Verifiable evidence that the physical goods have reached the customer",
+            "A structured record of any deviation from the standard process"
+          ],
+          "business_rules": [
+            "Only actors explicitly assigned to a Dispute Ticket may upload evidence for that specific ticket.",
+            "Uploaded evidence must be linked to the Order Request associated with the Dispute Ticket.",
+            "The system must prevent duplicate uploads of the same file for the same Dispute Ticket.",
+            "All uploaded evidence must be retained indefinitely for potential Regulatory Authority review."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A Customer has an open Dispute Ticket for a damaged item",
+              "when": "The Customer uploads a photo of the damage via the portal",
+              "then": "The system associates the photo with the Dispute Ticket and marks the evidence as 'Submitted'"
+            },
+            {
+              "given": "A Delivery Partner attempts to upload a Delivery Proof photo for a closed ticket",
+              "when": "The system detects the ticket status is 'Resolved' and the actor is not the original claimant",
+              "then": "The system rejects the upload and displays an error message stating the ticket is no longer active for evidence submission"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 2632
+    },
+    {
+      "source_file": "FR-036.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "50ae6f8c5bab3169e3eb49b5cfabb5a5f5cf9c8103075f9ffd894b480abf4236",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall route unresolved disputes to senior support tiers based on calculated severity and financial impact thresholds.",
+          "business_need": "The business needs to ensure high-risk disputes receive immediate expert attention to minimize financial loss and maintain platform trust.",
+          "functional_behaviour": [
+            "The system shall calculate dispute severity by analyzing financial impact and fraud indicators.",
+            "The system shall automatically assign the dispute to a senior tier if severity exceeds defined thresholds.",
+            "The system shall notify the appropriate senior support agent upon successful escalation.",
+            "The system shall update the dispute ticket status to reflect the new handling tier.",
+            "The system shall log the escalation reason and timestamp for audit purposes."
+          ],
+          "required_by_actors": [
+            "Regulatory Authority",
+            "Fulfillment Supervisor",
+            "Platform Operator"
+          ],
+          "related_business_objects": [
+            "Dispute Ticket",
+            "Financial Transaction Record",
+            "Feedback Record"
+          ],
+          "related_information_requirements": [
+            "Monetary exchange details including costs and commissions",
+            "Fraud indicators and historical data",
+            "Current resolution status of the deviation"
+          ],
+          "business_rules": [
+            "A dispute must be escalated if the financial impact exceeds the standard liability limit.",
+            "A dispute must be escalated if fraud indicators suggest a high probability of fraudulent transaction.",
+            "Escalation must occur only after the initial support tier fails to resolve the issue within the standard timeframe.",
+            "The escalation path must strictly follow the hierarchy defined in the Store Partner Agreement."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A dispute ticket exists with high financial impact and confirmed fraud indicators",
+              "when": "The initial support tier fails to resolve the issue",
+              "then": "The system automatically routes the ticket to a senior support tier"
+            },
+            {
+              "given": "A dispute ticket has low financial impact and no fraud indicators",
+              "when": "The initial support tier fails to resolve the issue",
+              "then": "The system does not escalate the ticket to a senior support tier"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 2449
+    },
+    {
+      "source_file": "FR-037.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "57e9d7e3e91a66b1686caa16e1f17cdf1f0671c2df0601ff0ea86e0782254991",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall send real-time notifications to customers regarding the status updates of their refund requests.",
+          "business_need": "The business needs to maintain customer trust and reduce support volume by providing immediate transparency on refund processing stages.",
+          "functional_behaviour": [
+            "The system shall automatically generate a notification when a refund request transitions from pending to approved or rejected.",
+            "The system shall include the updated refund status and the expected timeline for funds to appear in the customer's account within the notification.",
+            "The system shall deliver the notification via the communication channel previously selected by the customer in their profile.",
+            "The system shall log the timestamp and content of every status notification sent to the customer for audit purposes.",
+            "The system shall suppress duplicate notifications if the refund status has not changed since the last message."
+          ],
+          "required_by_actors": [
+            "Customer",
+            "Platform Operator"
+          ],
+          "related_business_objects": [
+            "Customer Profile",
+            "Financial Transaction Record",
+            "Feedback Record"
+          ],
+          "related_information_requirements": [
+            "Current status of the refund request",
+            "Expected timeline for fund availability",
+            "Preferred communication channel of the customer"
+          ],
+          "business_rules": [
+            "A notification must be sent immediately upon any change in the refund request status.",
+            "Notifications must only be sent if the new status differs from the status of the most recent notification.",
+            "The notification content must accurately reflect the current state of the Financial Transaction Record.",
+            "The system must verify the active communication channel exists before attempting to send a notification."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A customer has submitted a refund request that is currently pending",
+              "when": "The system updates the request status to approved",
+              "then": "The system sends a notification to the customer confirming the approval and the expected fund arrival date"
+            },
+            {
+              "given": "A customer has received a notification about a pending refund request",
+              "when": "The system updates the request status to rejected without changing the status again",
+              "then": "The system does not send another notification to the customer"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 2608
+    },
+    {
+      "source_file": "FR-038.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "b1cc1438c1eed9b0c2b07e6c52959f1e98ea37d28ad20bb2d0930fa1d115fbf3",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall generate high-risk transaction alerts and perform refund/chargeback impact analysis to prevent financial loss before settlement.",
+          "business_need": "The business needs to proactively identify fraudulent patterns and quantify potential financial exposure to stop unauthorized chargebacks before funds are settled.",
+          "functional_behaviour": [
+            "The system shall analyze transaction indicators such as unusual order patterns, high-risk addresses, and payment anomalies to calculate fraud likelihood.",
+            "The system shall project the financial impact of potential refunds and chargebacks on net settlement amounts for the involved parties.",
+            "The system shall flag transactions exceeding the calculated risk threshold for immediate review by the Payment Provider.",
+            "The system shall update the Financial Transaction Record with the risk assessment status and projected liability.",
+            "The system shall notify the Payment Provider and Store Partner of the flagged transaction and the estimated financial impact."
+          ],
+          "required_by_actors": [
+            "Payment Provider",
+            "Store Partner",
+            "Platform Operator"
+          ],
+          "related_business_objects": [
+            "Financial Transaction Record",
+            "Customer Profile",
+            "Delivery Proof",
+            "Order Request"
+          ],
+          "related_information_requirements": [
+            "Indicators and historical data used to assess the likelihood of fraudulent transactions",
+            "The complete record of monetary exchange detailing item costs, delivery fees, taxes, and net settlement amounts",
+            "Verifiable evidence that the physical goods have reached the customer",
+            "Verified details about the ordering individual including unique identifiers and delivery addresses"
+          ],
+          "business_rules": [
+            "A transaction must be flagged if the calculated fraud likelihood score exceeds the configured risk threshold.",
+            "The projected financial impact must include the sum of item costs, delivery fees, taxes, and platform commissions.",
+            "A transaction must remain flagged until the Payment Provider confirms the outcome or the settlement period expires.",
+            "The impact analysis must be recalculated if new delivery proof or customer verification data becomes available."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A new Order Request contains indicators of unusual order patterns and a high-risk address",
+              "when": "The system processes the transaction for settlement",
+              "then": "The system shall generate a high-risk alert and update the Financial Transaction Record with the projected chargeback liability"
+            },
+            {
+              "given": "A transaction is flagged as high-risk but lacks sufficient delivery proof",
+              "when": "The system attempts to finalize the settlement calculation",
+              "then": "The system shall withhold the net settlement amount and notify the Payment Provider of the pending dispute review"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3121
+    },
+    {
+      "source_file": "FR-039.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "888de33731061ce1bf8a6988acc759ad6384336beffd290b104e2b898c68a889",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall continuously reconcile platform revenue shares against store partner settlements in real-time.",
+          "business_need": "This ensures financial accuracy and trust between the platform and store partners by immediately identifying and resolving discrepancies in revenue distribution.",
+          "functional_behaviour": [
+            "The system shall automatically ingest financial transaction records and store partner agreement terms to calculate expected revenue shares.",
+            "The system shall compare calculated revenue shares against actual settlement amounts generated by the payment provider.",
+            "The system shall generate a financial transaction record flagging any detected discrepancies for immediate review.",
+            "The system shall update the status of the reconciliation process to reflect resolved or pending items.",
+            "The system shall provide a real-time view of reconciliation health to the platform operator and store partner."
+          ],
+          "required_by_actors": [
+            "Platform Operator",
+            "Store Partner",
+            "Payment Provider"
+          ],
+          "related_business_objects": [
+            "Financial Transaction Record",
+            "Store Partner Agreement",
+            "Delivery Assignment"
+          ],
+          "related_information_requirements": [
+            "Real-time status of data link integrity between store POS and platform",
+            "Legally binding contractual details including commission rates and payout schedules",
+            "Complete record of monetary exchange including item costs, fees, and net settlement amounts",
+            "Calculated estimates of travel duration and distance affecting delivery fees",
+            "Current validated quantity of sellable items at specific store locations"
+          ],
+          "business_rules": [
+            "A discrepancy is flagged if the calculated revenue share differs from the settlement amount by more than zero.",
+            "Reconciliation status must update to 'Resolved' only after the discrepancy is corrected and verified.",
+            "Revenue share calculations must strictly adhere to the commission rates defined in the active Store Partner Agreement.",
+            "Settlement amounts must include all applicable taxes, delivery fees, and platform commissions as per the Financial Transaction Record."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A new order is completed and the Payment Provider confirms the transaction.",
+              "when": "The system processes the financial data against the Store Partner Agreement.",
+              "then": "The system calculates the revenue share and updates the Financial Transaction Record within seconds."
+            },
+            {
+              "given": "The calculated revenue share does not match the settlement amount due to a data sync error.",
+              "when": "The system detects the discrepancy during the real-time reconciliation cycle.",
+              "then": "The system flags the Financial Transaction Record as 'Discrepancy Detected' and notifies the Platform Operator."
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3083
+    },
+    {
+      "source_file": "FR-040.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "619f090e87388694b159ab2b63a0ba77059c93e60796912bf0b10cc581cc55d4",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall automatically compute and collect applicable taxes based on jurisdiction and product type during the order processing workflow.",
+          "business_need": "The business needs to ensure legal compliance and accurate revenue collection by dynamically applying the correct tax rates to every transaction.",
+          "functional_behaviour": [
+            "The system shall determine the applicable tax jurisdiction based on the delivery address and product origin.",
+            "The system shall retrieve the current tax rate for the specific product category within the determined jurisdiction.",
+            "The system shall calculate the tax amount by applying the rate to the taxable subtotal of the Order Request.",
+            "The system shall add the calculated tax to the Financial Transaction Record before finalizing the payment.",
+            "The system shall generate a breakdown of tax components visible to the Customer Profile.",
+            "The system shall validate that the total tax collected matches the liability required by the Regulatory Authority."
+          ],
+          "required_by_actors": [
+            "Customer",
+            "Store Partner",
+            "Platform Operator",
+            "Regulatory Authority"
+          ],
+          "related_business_objects": [
+            "Order Request",
+            "Financial Transaction Record",
+            "Customer Profile",
+            "Product Catalog",
+            "Delivery Zone Map"
+          ],
+          "related_information_requirements": [
+            "The complete record of monetary exchange, detailing item costs, delivery fees, taxes, platform commissions, and the net settlement amounts due to each party.",
+            "The unified digital representation of all sellable items, including descriptions, images, categories, and standardized pricing derived from the store partners' offerings.",
+            "A structured record of any deviation from the standard process, such as missing items, damaged goods, or failed deliveries, including the nature of the issue and current resolution status."
+          ],
+          "business_rules": [
+            "Tax must be calculated only on the subtotal of taxable items, excluding delivery fees and platform commissions.",
+            "The system must use the most current tax rate available for the specific jurisdiction at the time of order placement.",
+            "If a product is non-taxable in the delivery zone, the tax amount recorded must be zero.",
+            "The tax calculation must be reproducible using the same Order Request, Product Catalog, and Delivery Zone Map data."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "An Order Request is created for a taxable item delivered to a specific zone",
+              "when": "The system processes the payment",
+              "then": "The Financial Transaction Record includes the exact tax amount calculated from the current rate for that zone and product category"
+            },
+            {
+              "given": "An Order Request is created for a non-taxable item or a zone with zero tax rate",
+              "when": "The system processes the payment",
+              "then": "The Financial Transaction Record shows a tax amount of zero and no tax line item is generated"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3208
+    },
+    {
+      "source_file": "FR-041.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "ae644ddbdeb55f320d6d330956cba92717bcef0e2ac5f54c31044cccc952d408",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall calculate and settle multi-currency transactions by converting amounts using real-time exchange rates and recording all financial details in the base currency of the Platform Operator.",
+          "business_need": "The business needs this to ensure accurate revenue collection and fair settlement for Store Partners and Delivery Partners regardless of the transaction's original currency.",
+          "functional_behaviour": [
+            "The system shall capture the transaction amount, currency, and applicable exchange rate for every Order Request.",
+            "The system shall convert all monetary values to the Platform Operator's base currency for settlement calculations.",
+            "The system shall record the gross amount, platform commission, and net settlement amount for each party involved.",
+            "The system shall generate a Financial Transaction Record that includes the original currency, converted amount, and exchange rate used.",
+            "The system shall validate that the Store Partner Agreement allows transactions in the selected currency before processing.",
+            "The system shall flag any transaction where the exchange rate fluctuation exceeds a predefined tolerance threshold for review."
+          ],
+          "required_by_actors": [
+            "Payment Provider",
+            "Platform Operator",
+            "Store Partner",
+            "Delivery Partner"
+          ],
+          "related_business_objects": [
+            "Financial Transaction Record",
+            "Store Partner Agreement",
+            "Order Request",
+            "Customer Profile"
+          ],
+          "related_information_requirements": [
+            "The complete record of monetary exchange, detailing item costs, delivery fees, taxes, platform commissions, and the net settlement amounts due to each party.",
+            "The legally binding contractual details between the platform and physical stores, including commission rates, payout schedules, liability clauses, and specific performance guarantees."
+          ],
+          "business_rules": [
+            "The system shall only allow currency conversion if the Store Partner Agreement explicitly permits transactions in the selected currency.",
+            "The system shall record the exchange rate used at the exact moment the Financial Transaction Record is created.",
+            "The system shall calculate the net settlement amount by subtracting the platform commission from the converted gross amount.",
+            "The system shall reject the transaction if the exchange rate source is unavailable or invalid."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A customer places an Order Request with a Store Partner in a foreign currency",
+              "when": "The Payment Provider processes the payment and the system calculates the settlement",
+              "then": "The system generates a Financial Transaction Record showing the original amount, the converted base currency amount, and the correct net settlement for the Store Partner"
+            },
+            {
+              "given": "A Store Partner Agreement does not allow transactions in the currency selected by the customer",
+              "when": "The system attempts to process the multi-currency transaction",
+              "then": "The system rejects the Order Request and notifies the Payment Provider that the currency is not supported under the current agreement"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3386
+    },
+    {
+      "source_file": "FR-042.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "1b24f669d1810c52c6a8a3e40de4e8d4dbf6bcb60e0ec19d33e4ae281e7084b3",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall generate an immutable audit trail for every Financial Transaction Record and Settlement event to ensure financial integrity and regulatory compliance.",
+          "business_need": "The business requires a tamper-proof record of all monetary exchanges to resolve disputes, satisfy regulatory audits, and accurately calculate revenue shares.",
+          "functional_behaviour": [
+            "The system shall append every financial transaction entry to a write-once, append-only log structure.",
+            "The system shall cryptographically hash each new entry against the previous entry to maintain chain integrity.",
+            "The system shall record the full details of the Financial Transaction Record including costs, fees, taxes, and net settlement amounts.",
+            "The system shall timestamp every entry with a synchronized, non-adjustable time source.",
+            "The system shall prevent any actor from modifying, deleting, or reordering existing audit log entries."
+          ],
+          "required_by_actors": [
+            "Platform Operator",
+            "Payment Provider",
+            "Store Partner",
+            "Regulatory Authority"
+          ],
+          "related_business_objects": [
+            "Financial Transaction Record",
+            "Store Partner Agreement",
+            "Delivery Proof",
+            "Dispute Ticket"
+          ],
+          "related_information_requirements": [
+            "Complete record of monetary exchange detailing item costs, delivery fees, taxes, platform commissions, and net settlement amounts.",
+            "Cryptographic hash of the preceding log entry to verify chain integrity.",
+            "Immutable timestamp synchronized to a trusted time source.",
+            "Digital signature of the entity initiating the transaction."
+          ],
+          "business_rules": [
+            "An audit log entry must be created immediately upon the finalization of a Financial Transaction Record status.",
+            "Any attempt to modify an existing audit log entry must be rejected and logged as a security violation.",
+            "The audit trail must include the full context of the Store Partner Agreement applicable to the transaction.",
+            "Audit logs must be accessible to the Regulatory Authority without requiring Platform Operator approval."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A Payment Provider completes a settlement for a Financial Transaction Record",
+              "when": "The system processes the settlement event",
+              "then": "An immutable audit log entry is created with a unique hash linking it to the previous entry"
+            },
+            {
+              "given": "A Store Partner attempts to edit a finalized audit log entry for a Financial Transaction Record",
+              "when": "The system validates the request against the immutable log structure",
+              "then": "The system rejects the modification request and logs the attempt as a security violation"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 2940
+    },
+    {
+      "source_file": "FR-043.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "8ad1e30dd957f4f6a6cda6fc23693dac16b2944867095cfb5533ad8735df8072",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall execute a scheduled batch process to calculate, validate, and distribute financial settlements to Store Partners and Delivery Partners based on finalized transaction data.",
+          "business_need": "The business needs this to automate accurate fund distribution, ensuring partners receive correct payments while maintaining financial integrity and compliance with contractual agreements.",
+          "functional_behaviour": [
+            "The system shall aggregate all Order Requests with confirmed Delivery Proof and valid Financial Transaction Records within the defined settlement window.",
+            "The system shall apply commission rates and fee structures defined in the Store Partner Agreement to calculate net settlement amounts for each party.",
+            "The system shall validate that the total settlement amount for a transaction does not exceed the available funds in the corresponding Financial Transaction Record.",
+            "The system shall generate a Financial Transaction Record for each successful settlement and update the Customer Profile to reflect the completed payment status.",
+            "The system shall flag any settlement batch items where the Delivery Proof is missing or the Store Partner Agreement is expired for manual review.",
+            "The system shall generate a summary report of the batch processing results available to the Platform Operator for audit and reconciliation purposes."
+          ],
+          "required_by_actors": [
+            "Platform Operator",
+            "Store Partner",
+            "Delivery Partner",
+            "Payment Provider"
+          ],
+          "related_business_objects": [
+            "Financial Transaction Record",
+            "Store Partner Agreement",
+            "Order Request",
+            "Delivery Proof",
+            "Customer Profile"
+          ],
+          "related_information_requirements": [
+            "Complete record of monetary exchange including item costs, fees, taxes, and net amounts",
+            "Verifiable evidence of physical goods handover to the customer",
+            "Legally binding contractual details including commission rates and payout schedules",
+            "Unified digital representation of sellable items and pricing",
+            "Verified details about the ordering individual including unique identifiers and addresses"
+          ],
+          "business_rules": [
+            "A settlement batch must only include Order Requests where the Delivery Proof status is verified as successful.",
+            "The net settlement amount must be calculated strictly according to the active commission rates in the Store Partner Agreement.",
+            "Settlements cannot be processed if the associated Store Partner Agreement is expired or terminated.",
+            "Any discrepancy between the calculated settlement amount and the available Financial Transaction Record must trigger a batch halt for that specific item.",
+            "The system must exclude any Order Request flagged with high-risk indicators from the automated settlement batch."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "All Order Requests in the batch have valid Delivery Proof and active Store Partner Agreements",
+              "when": "The scheduled batch processing job runs at the defined time",
+              "then": "The system generates Financial Transaction Records with correct net amounts and updates partner balances"
+            },
+            {
+              "given": "An Order Request in the batch has an expired Store Partner Agreement or missing Delivery Proof",
+              "when": "The scheduled batch processing job runs at the defined time",
+              "then": "The system excludes the item from the batch and logs it as a failed settlement for manual review"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3712
+    },
+    {
+      "source_file": "FR-044.json",
+      "source_stage": "JSON_IMPORT",
+      "source_format": "JSON",
+      "file_extension": ".json",
+      "content_hash": "f5c1a93ffeadefe0df3ee597f62640f012d6613334615a72ce919a06737d75b2",
+      "original_content": {
+        "result": {
+          "requirement": "The system shall identify and flag suspicious financial patterns in financial transactions requiring manual review before settlement.",
+          "business_need": "The business needs this to prevent financial loss from fraud, reduce chargeback liabilities, and ensure accurate revenue settlement.",
+          "functional_behaviour": [
+            "The system shall analyze Financial Transaction Records against historical data and risk indicators to detect anomalies.",
+            "The system shall automatically flag transactions meeting suspicious pattern criteria for manual review by the Payment Provider.",
+            "The system shall prevent automatic settlement for flagged transactions until a Payment Provider resolves the review.",
+            "The system shall log the specific risk indicators and transaction details associated with each flagged event.",
+            "The system shall notify the Payment Provider of the flagged transaction and the reasons for the flag."
+          ],
+          "required_by_actors": [
+            "Payment Provider",
+            "Platform Operator"
+          ],
+          "related_business_objects": [
+            "Financial Transaction Record",
+            "Customer Profile"
+          ],
+          "related_information_requirements": [
+            "Indicators and historical data used to assess the likelihood of fraudulent transactions",
+            "The complete record of monetary exchange detailing item costs, delivery fees, taxes, and net settlement amounts",
+            "Verifiable evidence that the physical goods have reached the customer",
+            "Qualitative ratings and comments provided by the customer regarding the product quality and agent behavior"
+          ],
+          "business_rules": [
+            "A transaction is flagged if it exhibits unusual order patterns compared to the customer's historical behavior.",
+            "A transaction is flagged if it originates from a high-risk address or location not associated with the customer's profile.",
+            "A transaction is flagged if the payment method or amount deviates significantly from the customer's typical transaction profile.",
+            "Flagged transactions must remain in a pending state and cannot be settled until a Payment Provider manually approves or rejects them."
+          ],
+          "acceptance_criteria": [
+            {
+              "given": "A new financial transaction is initiated by a customer with a history of small purchases",
+              "when": "The transaction amount is significantly higher than the customer's average and the address is flagged as high-risk",
+              "then": "The system flags the Financial Transaction Record for manual review and prevents automatic settlement"
+            },
+            {
+              "given": "A financial transaction is processed for a new customer with no historical data",
+              "when": "The transaction amount exceeds the platform's standard threshold for new accounts without additional verification",
+              "then": "The system flags the Financial Transaction Record for manual review and prevents automatic settlement"
+            }
+          ]
+        },
+        "unmatched": {
+          "actors": [],
+          "objects": []
+        },
+        "evidence_count": 8
+      },
+      "character_count": 3072
+    }
+  ]
+}
