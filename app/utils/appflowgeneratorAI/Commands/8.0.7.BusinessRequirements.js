@@ -158,6 +158,8 @@ function extractJson(raw) {
     let data;
 
     try {
+
+       if(raw.includes("Return ONLY JSON, at most 3 needs:")) {
         const middle = raw
             .split("Return ONLY JSON, at most 3 needs:")[1]
             .split("[ Prompt:")[0]
@@ -168,7 +170,16 @@ function extractJson(raw) {
         data = JSON.parse(cleanJsonString);
 
         return data;
-
+       }
+       else if (raw.includes("baseline")) {
+        let middles = raw
+            .split("\"baseline\":")[1]
+            .split("[ Prompt:")[0]
+            .trim();
+        //    console.log("-----")
+        //     console.log(JSON.parse(middles.slice(0, -1)))
+            return JSON.parse(middles.slice(0, -1))
+        }
     } catch (e) {
         console.log(`Error parsing JSON: ${e.message}`);
         console.log(`Raw string that caused the error: ${cleanJsonString}`);
@@ -317,9 +328,22 @@ IMPORTANT RETRY INSTRUCTIONS:
                 tokens
             );
 
-            const parsed = extractJson(output);
+            // console.log('\n========== RAW MODEL OUTPUT ==========');
+            // console.log(output);
+            // console.log('======================================');
 
-            return parse(parsed);
+const parsed = extractJson(output);
+
+// console.log('\n========== EXTRACTED JSON ==========');
+// console.log(JSON.stringify(parsed, null, 2));
+// console.log('====================================');
+
+// console.log('\n========== BEFORE VALIDATION ==========');
+// console.log('Parsed is undefined:', parsed === undefined);
+// console.log('Parsed type:', typeof parsed);
+// console.log('======================================');
+
+return parse(parsed);
 
         } catch (error) {
             lastError = error;
@@ -629,6 +653,8 @@ Prefer these stakeholder names where they fit: ${ctx.actors.join('; ')}
 
 Return ONLY this JSON:
 {
+  "baseline":
+{
   "name": "3 to 8 word title",
   "business_requirement": "The business requires ... (1 or 2 sentences)",
   "business_objective": "which business goal this serves",
@@ -640,6 +666,7 @@ Return ONLY this JSON:
   "assumptions": ["0 to 3"],
   "risks_and_dependencies": ["0 to 3"],
   "linked_functional_requirements": ["ids from the list below that help realise it; empty list if none"]
+}
 }
 Every string under 220 characters. No Markdown, no commentary.
 <|im_end|>
@@ -660,6 +687,7 @@ ${NO_THINK}`;
 }
 
 function validateBR(o, knownFrIds) {
+    console.log('Validating business requirement:', o);
     const s = v => typeof v === 'string' && v.trim().length > 0;
     if (!s(o.business_requirement)) throw new Error('business_requirement missing');
     if (!s(o.business_objective)) throw new Error('business_objective missing');
