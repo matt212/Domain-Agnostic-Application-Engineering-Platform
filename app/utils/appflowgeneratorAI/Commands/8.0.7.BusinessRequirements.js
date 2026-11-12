@@ -37,9 +37,10 @@ const OUTPUT_DIR = process.env.BR_OUTPUT_DIR ||
 const INTERVIEW_DIR = path.join(OUTPUT_DIR, 'interview');
 const WORK_DIR = path.join(OUTPUT_DIR, 'work');
 const CONTEXT_FILE = path.join(OUTPUT_DIR, 'context.json');
-const INDEX_FILE = path.join(OUTPUT_DIR, 'business_requirement_index.json');
-const FINAL_FILE = path.join(OUTPUT_DIR, 'business_requirements.json');
-const TRACE_FILE = path.join(OUTPUT_DIR, 'business_requirements.trace.json');
+let timezone=getFormattedDateTime()
+const INDEX_FILE = path.join(OUTPUT_DIR, `business_requirement_index-${timezone}.json`);
+const FINAL_FILE = path.join(OUTPUT_DIR, `business_requirements-${timezone}.json`);
+const TRACE_FILE = path.join(OUTPUT_DIR, `business_requirements-${timezone}.trace.json`);
 
 // functional requirements are found in knowledge_ingestion_runs / knowledge_records by file name
 const FR_SOURCE_FILE = process.env.FR_SOURCE_FILE || null;
@@ -122,6 +123,13 @@ function stem(w) {
     if (w.length > 4) w = w.replace(/(ies|ied)$/, 'y').replace(/(ed|es|s)$/, '');
     if (w.length > 4) w = w.replace(/e$/, '');
     return w;
+}
+function getFormattedDateTime() {
+  const now = new Date();
+
+  const pad = (value) => String(value).padStart(2, '0');
+
+  return `${pad(now.getDate())}-${pad(now.getMonth() + 1)}-${String(now.getFullYear()).slice(-2)}_${pad(now.getHours())}:${pad(now.getMinutes())}`;
 }
 const stemTokens = s => norm(s).split(' ').filter(w => w.length >= 3 && !STOP.has(w)).map(stem);
 
@@ -475,6 +483,7 @@ async function stepLoad(pool) {
 }
 
 const loadContext = () => {
+    console.log(`Loading context from ${CONTEXT_FILE}`);
     if (!fs.existsSync(CONTEXT_FILE)) throw new Error('Run "load" first.');
     return JSON.parse(fs.readFileSync(CONTEXT_FILE, 'utf8'));
 };
@@ -673,6 +682,7 @@ function validateBR(o, knownFrIds) {
 
 async function stepGenerate() {
     const ctx = loadContext();
+    console.log(INDEX_FILE)
     if (!fs.existsSync(INDEX_FILE)) throw new Error('Run "draft" first.');
     const index = JSON.parse(fs.readFileSync(INDEX_FILE, 'utf8'));
     const toWrite = process.env.LIMIT ? index.slice(0, Number(process.env.LIMIT)) : index;
