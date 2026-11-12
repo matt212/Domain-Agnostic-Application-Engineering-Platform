@@ -151,29 +151,34 @@ function inner(row) {
 }
 
 
+
+   
 function extractJson(raw) {
-    const middle = raw
-  .split("Return ONLY JSON, at most 3 needs:")[1]
-  .split("[ Prompt:")[0]
-  .trim();
+    let cleanJsonString = '';
+    let data;
 
-// 2. Split by newline and take the second line (index 1) to skip the first truncated line
-const cleanJsonString = middle.split("\n")[1];
-
-// 3. Parse into a JavaScript object
-  
-let data;
     try {
+        const middle = raw
+            .split("Return ONLY JSON, at most 3 needs:")[1]
+            .split("[ Prompt:")[0]
+            .trim();
+
+        cleanJsonString = middle.split("\n")[1];
+
         data = JSON.parse(cleanJsonString);
+
+        return data;
+
     } catch (e) {
         console.log(`Error parsing JSON: ${e.message}`);
         console.log(`Raw string that caused the error: ${cleanJsonString}`);
-        data = raw // error in the above string (in this case, yes)!
+        console.log(`Complete model output:\n${raw}`);
+
+        throw e;
     }
-
-
-return data;
 }
+
+
 
 
 // ---- TF-IDF similarity (IDF comes from the texts themselves, so it adapts to any domain) ----
