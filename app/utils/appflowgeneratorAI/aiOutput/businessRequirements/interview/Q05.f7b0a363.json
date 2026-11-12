@@ -1,0 +1,17 @@
+{
+  "question": "What are the biggest operational, financial, legal and reputational risks, and what controls does the business need?",
+  "needs": [
+    {
+      "need": "The business needs to implement automated, real-time inventory reconciliation between physical store POS systems and the digital platform to prevent overselling and revenue leakage.",
+      "why": "In a hyperlocal model where speed is critical, discrepancies between physical stock and digital availability lead to failed deliveries, customer dissatisfaction, and financial loss from uncollectible orders."
+    },
+    {
+      "need": "The business needs to establish dynamic, region-specific compliance workflows that automatically validate gig-worker contracts, food safety certifications, and labor law adherence before operations commence in new zones.",
+      "why": "Regulatory requirements for food safety and gig-economy labor vary significantly by location; failure to adapt controls dynamically exposes the platform to fines, operational shutdowns, and severe reputational damage."
+    },
+    {
+      "need": "The business needs to deploy predictive risk analytics that correlate delivery delays, inventory errors, and customer sentiment to proactively identify and mitigate threats to brand reputation and SLA performance.",
+      "why": "In a low-margin, high-volume Q-commerce environment, reactive measures are too slow to protect brand equity; proactive identification of operational friction points is essential to maintain customer trust and retention."
+    }
+  ]
+}

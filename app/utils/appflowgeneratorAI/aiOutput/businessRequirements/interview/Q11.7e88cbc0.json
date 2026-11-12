@@ -1,0 +1,17 @@
+{
+  "question": "What would an experienced business analyst expect in this kind of business that is missing from the functional requirements?",
+  "needs": [
+    {
+      "need": "The business needs to dynamically adjust delivery fees and commissions based on real-time demand, weather, and traffic conditions to maintain profitability and service levels.",
+      "why": "Static pricing models fail in hyperlocal Q-Commerce where supply and demand fluctuate rapidly, directly impacting revenue optimization and SLA adherence."
+    },
+    {
+      "need": "The business needs to implement a robust dynamic pricing engine that adjusts delivery fees and commissions based on real-time demand, weather, and traffic conditions.",
+      "why": "Static pricing models fail in hyperlocal Q-Commerce where supply and demand fluctuate rapidly, directly impacting revenue optimization and SLA adherence."
+    },
+    {
+      "need": "The business needs to implement a robust dynamic pricing engine that adjusts delivery fees and commissions based on real-time demand, weather, and traffic conditions.",
+      "why": "Static pricing models fail in hyperlocal Q-Commerce where supply and demand fluctuate rapidly, directly impacting revenue optimization and SLA adherence."
+    }
+  ]
+}

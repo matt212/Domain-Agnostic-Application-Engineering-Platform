@@ -1,0 +1,17 @@
+{
+  "question": "Who are the stakeholders, and what does each of them need from this business that is not yet captured?",
+  "needs": [
+    {
+      "need": "The business needs to provide a transparent, real-time dashboard for Store Partners to view their specific order volume, revenue splits, and performance metrics against the platform's overall goals.",
+      "why": "Store Partners require visibility into their contribution to the platform's success and their individual financial performance to optimize staffing and inventory, which is not explicitly covered by existing agreement or quality management requirements."
+    },
+    {
+      "need": "The business needs to enable Delivery Partners to access historical earnings summaries, payout schedules, and tax documents directly within the platform interface.",
+      "why": "Gig-economy workers need immediate access to their financial history and compliance documents to manage their personal finances and tax obligations, a need distinct from the platform's internal settlement and audit logging functions."
+    },
+    {
+      "need": "The business needs to offer a dedicated customer-facing portal for managing subscription preferences, viewing detailed delivery history, and accessing personalized loyalty rewards beyond simple point accrual.",
+      "why": "Customers require a centralized hub to manage their recurring commitments and view the full value of their loyalty status, which goes beyond the basic feedback collection and profile management currently defined."
+    }
+  ]
+}

@@ -1,0 +1,377 @@
+[
+  {
+    "business_requirement_id": "BR-001",
+    "need": "The business needs to implement a robust dynamic pricing engine that adjusts delivery fees and commissions based on real-time demand, weather, and traffic conditions.",
+    "why": "Static pricing models fail in hyperlocal Q-Commerce where supply and demand fluctuate rapidly, directly impacting revenue optimization and SLA adherence.",
+    "origin": "interview",
+    "sources": [
+      "Q04",
+      "Q11"
+    ],
+    "frs": [
+      "FR-012",
+      "FR-045"
+    ]
+  },
+  {
+    "business_requirement_id": "BR-002",
+    "need": "The business needs to implement automated, real-time inventory reconciliation between physical store POS systems and the digital platform to prevent overselling and revenue leakage.",
+    "why": "In a hyperlocal model where speed is critical, discrepancies between physical stock and digital availability lead to failed deliveries, customer dissatisfaction, and financial loss from uncollectible orders.",
+    "origin": "interview",
+    "sources": [
+      "Q04",
+      "Q05",
+      "Q12"
+    ],
+    "frs": [
+      "FR-001",
+      "FR-002",
+      "FR-004",
+      "FR-055",
+      "FR-056"
+    ]
+  },
+  {
+    "business_requirement_id": "BR-003",
+    "need": "The business needs to continuously monitor and mitigate financial risks such as fraud, chargebacks, and payment provider failures to protect cash flow and ensure settlement reliability.",
+    "why": "In a high-volume, low-margin transaction model, even small percentages of failed settlements or fraudulent activity can significantly impact net revenue and operational sustainability.",
+    "origin": "interview",
+    "sources": [
+      "Q04"
+    ],
+    "frs": [
+      "FR-026",
+      "FR-027",
+      "FR-038",
+      "FR-044"
+    ]
+  },
+  {
+    "business_requirement_id": "BR-004",
+    "need": "The business needs to establish dynamic, region-specific compliance workflows that automatically validate gig-worker contracts, food safety certifications, and labor law adherence before operations commence in new zones.",
+    "why": "Regulatory requirements for food safety and gig-economy labor vary significantly by location; failure to adapt controls dynamically exposes the platform to fines, operational shutdowns, and severe reputational damage.",
+    "origin": "interview",
+    "sources": [
+      "Q05"
+    ],
+    "frs": [
+      "FR-032"
+    ]
+  },
+  {
+    "business_requirement_id": "BR-005",
+    "need": "The business needs to deploy predictive risk analytics that correlate delivery delays, inventory errors, and customer sentiment to proactively identify and mitigate threats to brand reputation and SLA performance.",
+    "why": "In a low-margin, high-volume Q-commerce environment, reactive measures are too slow to protect brand equity; proactive identification of operational friction points is essential to maintain customer trust and retention.",
+    "origin": "interview",
+    "sources": [
+      "Q05"
+    ],
+    "frs": [
+      "FR-051"
+    ]
+  },
+  {
+    "business_requirement_id": "BR-006",
+    "need": "The business must adhere to regional food safety standards and labor laws governing gig-economy workers, as regulatory compliance is a critical outcome and unresolved dependency.",
+    "why": "Non-compliance with these external obligations poses significant legal and reputational risks that could halt operations or result in fines.",
+    "origin": "interview",
+    "sources": [
+      "Q06",
+      "Q12"
+    ],
+    "frs": []
+  },
+  {
+    "business_requirement_id": "BR-007",
+    "need": "The business must dynamically calculate and collect applicable taxes based on local jurisdiction rules, as tax compliance is a mandatory financial settlement requirement.",
+    "why": "Failure to accurately apply varying tax rates across different service areas violates financial regulations and exposes the platform to penalties.",
+    "origin": "interview",
+    "sources": [
+      "Q06"
+    ],
+    "frs": [
+      "FR-030",
+      "FR-040"
+    ]
+  },
+  {
+    "business_requirement_id": "BR-008",
+    "need": "The business must validate regulatory compliance and contractual terms for all Store Partners and Delivery Partners before onboarding, as operational readiness depends on these external validations.",
+    "why": "Operating with unverified partners violates labor and safety policies, creating liability and disrupting the supply chain.",
+    "origin": "interview",
+    "sources": [
+      "Q06"
+    ],
+    "frs": [
+      "FR-008",
+      "FR-010",
+      "FR-019",
+      "FR-031",
+      "FR-043",
+      "FR-053"
+    ]
+  },
+  {
+    "business_requirement_id": "BR-009",
+    "need": "The business must guarantee the rapid isolation and containment of system outages or data corruption to prevent the propagation of errors across the entire order lifecycle and protect revenue integrity.",
+    "why": "In a hyperlocal model where speed is the primary value proposition, any system failure directly translates to missed delivery windows, customer churn, and potential regulatory breaches if food safety or labor laws are violated due to lack of oversight.",
+    "origin": "interview",
+    "sources": [
+      "Q07"
+    ],
+    "frs": [
+      "FR-024"
+    ]
+  },
+  {
+    "business_requirement_id": "BR-010",
+    "need": "The business must guarantee the immediate and transparent resolution of financial disputes and fraud attempts to maintain trust with both Store Partners and Customers while minimizing revenue leakage.",
+    "why": "Given the high volume of micro-transactions and reliance on third-party settlement, the inability to quickly reverse fraudulent charges or resolve billing disputes would erode partner confidence and trigger regulatory scrutiny regarding fund handling.",
+    "origin": "interview",
+    "sources": [
+      "Q07"
+    ],
+    "frs": [
+      "FR-021",
+      "FR-035",
+      "FR-036",
+      "FR-037",
+      "FR-061"
+    ]
+  },
+  {
+    "business_requirement_id": "BR-011",
+    "need": "The business must guarantee the preservation of an immutable audit trail for all operational anomalies to satisfy regulatory authorities and facilitate root cause analysis during high-stakes investigations.",
+    "why": "With significant regulatory exposure regarding gig-worker labor laws and food safety, the business cannot rely on verbal explanations; a verifiable, tamper-proof record of who did what and when is required to mitigate legal liability and prove compliance.",
+    "origin": "interview",
+    "sources": [
+      "Q07"
+    ],
+    "frs": [
+      "FR-013",
+      "FR-015",
+      "FR-020",
+      "FR-042"
+    ]
+  },
+  {
+    "business_requirement_id": "BR-012",
+    "need": "The business needs to dynamically scale its micro-fulfillment network and partner onboarding processes to maintain ultra-fast delivery SLAs as it expands into new geographic zones.",
+    "why": "Growth in locations and partners introduces complexity that, if not managed, will degrade the core value proposition of speed and reliability, leading to customer churn.",
+    "origin": "interview",
+    "sources": [
+      "Q08"
+    ],
+    "frs": [
+      "FR-014"
+    ]
+  },
+  {
+    "business_requirement_id": "BR-013",
+    "need": "The business needs to implement scalable, automated quality assurance and dispute resolution workflows to handle increased order volume without compromising service standards.",
+    "why": "As volume and offerings grow, manual oversight becomes a bottleneck; automated quality control is essential to protect brand reputation and ensure consistent customer satisfaction.",
+    "origin": "interview",
+    "sources": [
+      "Q08"
+    ],
+    "frs": [
+      "FR-007"
+    ]
+  },
+  {
+    "business_requirement_id": "BR-014",
+    "need": "The business needs to establish flexible, data-driven revenue management and settlement mechanisms that adapt to diverse partner types and dynamic market conditions.",
+    "why": "Scaling the partner ecosystem requires a monetization model that can efficiently handle varying commission structures, multi-currency transactions, and real-time reconciliation to sustain profitability.",
+    "origin": "interview",
+    "sources": [
+      "Q08"
+    ],
+    "frs": [
+      "FR-041"
+    ]
+  },
+  {
+    "business_requirement_id": "BR-015",
+    "need": "The business needs to provide real-time operational dashboards that visualize key performance indicators (KPIs) such as order fulfillment times, delivery agent utilization rates, and store partner quality scores to enabl...",
+    "why": "Without live visibility into these metrics, the business cannot proactively manage SLA compliance, optimize dynamic routing, or address bottlenecks in the hyperlocal delivery network before they impact customer satisfaction.",
+    "origin": "interview",
+    "sources": [
+      "Q09"
+    ],
+    "frs": [
+      "FR-003",
+      "FR-018",
+      "FR-022",
+      "FR-023",
+      "FR-029",
+      "FR-033",
+      "FR-047",
+      "FR-049",
+      "FR-050",
+      "FR-059",
+      "FR-060"
+    ]
+  },
+  {
+    "business_requirement_id": "BR-016",
+    "need": "The business needs to generate comprehensive financial reconciliation reports that compare platform revenue shares against actual store settlements and transaction fees to ensure accurate cost control and margin analysis...",
+    "why": "Given the complexity of multi-party financial flows involving commissions, delivery fees, and subscriptions, automated reconciliation is essential to prevent revenue leakage and maintain trust with store partners.",
+    "origin": "interview",
+    "sources": [
+      "Q09"
+    ],
+    "frs": [
+      "FR-005",
+      "FR-025",
+      "FR-039"
+    ]
+  },
+  {
+    "business_requirement_id": "BR-017",
+    "need": "The business needs to produce predictive analytics reports on demand patterns and inventory turnover to optimize resource allocation and reduce overselling incidents.",
+    "why": "In a model dependent on real-time inventory synchronization and ultra-fast delivery, forward-looking insights are critical for balancing supply with fluctuating demand and minimizing operational waste.",
+    "origin": "interview",
+    "sources": [
+      "Q09"
+    ],
+    "frs": [
+      "FR-006",
+      "FR-046",
+      "FR-058"
+    ]
+  },
+  {
+    "business_requirement_id": "BR-018",
+    "need": "The business needs to implement automated fallback routing and vendor diversification strategies to maintain order fulfillment when external logistics providers or mapping services experience outages.",
+    "why": "Third-party logistics and mapping dependencies are single points of failure that can halt the ultra-fast delivery promise, directly impacting customer satisfaction and revenue.",
+    "origin": "interview",
+    "sources": [
+      "Q10"
+    ],
+    "frs": [
+      "FR-028"
+    ]
+  },
+  {
+    "business_requirement_id": "BR-019",
+    "need": "The business needs to establish real-time monitoring and automatic failover mechanisms for external regulatory and tax service integrations.",
+    "why": "Disruptions in external compliance or tax calculation services pose a critical risk of regulatory non-compliance and financial penalties, which could stop operations in specific jurisdictions.",
+    "origin": "interview",
+    "sources": [
+      "Q10"
+    ],
+    "frs": []
+  },
+  {
+    "business_requirement_id": "BR-020",
+    "need": "The business needs to secure Service Level Agreements (SLAs) with critical third-party vendors that include guaranteed uptime, rapid incident response, and financial penalties for service degradation.",
+    "why": "Without contractual protections and performance guarantees, the business is exposed to operational downtime and reputational damage from vendor failures that are outside its direct control.",
+    "origin": "interview",
+    "sources": [
+      "Q10"
+    ],
+    "frs": []
+  },
+  {
+    "business_requirement_id": "BR-021",
+    "need": "The business can safely defer the implementation of advanced predictive inventory replenishment and complex demand forecasting models until after initial market data is collected.",
+    "why": "These features rely on historical transaction patterns and traffic data that only become available after the service has been live and processing orders.",
+    "origin": "interview",
+    "sources": [
+      "Q12"
+    ],
+    "frs": [
+      "FR-057"
+    ]
+  },
+  {
+    "business_requirement_id": "BR-022",
+    "need": "The business needs a centralized, accurate record of customer identity and preferences to ensure secure order routing, accurate financial settlement, and personalized service delivery.",
+    "why": "The system shall manage the full lifecycle of the Customer Profile, enabling the creation, modification, and archival of identity and preference records throughout the customer's engagement.",
+    "origin": "seeded_from_functional_requirements",
+    "sources": [],
+    "frs": [
+      "FR-009"
+    ]
+  },
+  {
+    "business_requirement_id": "BR-023",
+    "need": "The business needs a structured way to manage product lifecycle data to ensure accurate inventory representation and prevent overselling.",
+    "why": "The system shall enable the Merchandiser to create, update, and archive product catalog entries while enforcing data validation and version control.",
+    "origin": "seeded_from_functional_requirements",
+    "sources": [],
+    "frs": [
+      "FR-011"
+    ]
+  },
+  {
+    "business_requirement_id": "BR-024",
+    "need": "The business needs to restrict system access to ensure data security, operational integrity, and compliance with internal governance policies.",
+    "why": "The system shall enforce role-based access control by granting or denying system actions based on the specific permissions assigned to each actor.",
+    "origin": "seeded_from_functional_requirements",
+    "sources": [],
+    "frs": [
+      "FR-016"
+    ]
+  },
+  {
+    "business_requirement_id": "BR-025",
+    "need": "The business requires secure verification to prevent unauthorized access to sensitive customer data and delivery instructions by malicious actors impersonating gig-workers.",
+    "why": "The system shall enforce multi-factor authentication for all Delivery Partners accessing the delivery agent mobile application to verify identity before granting access to operational tools.",
+    "origin": "seeded_from_functional_requirements",
+    "sources": [],
+    "frs": [
+      "FR-017"
+    ]
+  },
+  {
+    "business_requirement_id": "BR-026",
+    "need": "The business needs to ensure that cancelled orders do not permanently reduce available stock or hold customer funds, maintaining accurate inventory levels and financial integrity.",
+    "why": "The system shall reverse inventory locks and financial reservations for an Order Request when a cancellation is confirmed before the Fulfillment Task reaches the 'Ready for Dispatch' status.",
+    "origin": "seeded_from_functional_requirements",
+    "sources": [],
+    "frs": [
+      "FR-034"
+    ]
+  },
+  {
+    "business_requirement_id": "BR-027",
+    "need": "The business needs to incentivize repeat purchases and retain customers by seamlessly integrating loyalty rewards into the transaction flow without manual intervention.",
+    "why": "The system shall automatically apply and track customer loyalty points or subscription benefits during the checkout and settlement process.",
+    "origin": "seeded_from_functional_requirements",
+    "sources": [],
+    "frs": [
+      "FR-048"
+    ]
+  },
+  {
+    "business_requirement_id": "BR-028",
+    "need": "The business needs to ensure customers receive timely, consistent updates across all preferred channels to reduce support inquiries and improve the delivery experience.",
+    "why": "The system shall orchestrate multi-channel notifications (SMS, email, app push) by automatically triggering messages when an Order Request status changes to Ready for Delivery or Assigned to a Delivery Partner.",
+    "origin": "seeded_from_functional_requirements",
+    "sources": [],
+    "frs": [
+      "FR-052"
+    ]
+  },
+  {
+    "business_requirement_id": "BR-029",
+    "need": "This requirement ensures customers can accurately define their purchase needs and delivery preferences to initiate the fulfillment process.",
+    "why": "The system shall enable customers to create, validate, and submit order requests containing selected items, quantities, and delivery instructions.",
+    "origin": "seeded_from_functional_requirements",
+    "sources": [],
+    "frs": [
+      "FR-054"
+    ]
+  },
+  {
+    "business_requirement_id": "BR-030",
+    "need": "The business needs to consolidate customer feedback to identify service weaknesses, evaluate partner performance, and drive quality improvements.",
+    "why": "The system shall aggregate feedback records to generate actionable insights for business strategy and operational improvement.",
+    "origin": "seeded_from_functional_requirements",
+    "sources": [],
+    "frs": [
+      "FR-062"
+    ]
+  }
+]

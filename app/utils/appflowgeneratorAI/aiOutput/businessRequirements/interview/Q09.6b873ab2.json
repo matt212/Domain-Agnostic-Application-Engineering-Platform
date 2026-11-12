@@ -1,0 +1,17 @@
+{
+  "question": "What information, reporting and visibility does the business need to run itself and improve?",
+  "needs": [
+    {
+      "need": "The business needs to provide real-time operational dashboards that visualize key performance indicators (KPIs) such as order fulfillment times, delivery agent utilization rates, and store partner quality scores to enabl...",
+      "why": "Without live visibility into these metrics, the business cannot proactively manage SLA compliance, optimize dynamic routing, or address bottlenecks in the hyperlocal delivery network before they impact customer satisfaction."
+    },
+    {
+      "need": "The business needs to generate comprehensive financial reconciliation reports that compare platform revenue shares against actual store settlements and transaction fees to ensure accurate cost control and margin analysis...",
+      "why": "Given the complexity of multi-party financial flows involving commissions, delivery fees, and subscriptions, automated reconciliation is essential to prevent revenue leakage and maintain trust with store partners."
+    },
+    {
+      "need": "The business needs to produce predictive analytics reports on demand patterns and inventory turnover to optimize resource allocation and reduce overselling incidents.",
+      "why": "In a model dependent on real-time inventory synchronization and ultra-fast delivery, forward-looking insights are critical for balancing supply with fluctuating demand and minimizing operational waste."
+    }
+  ]
+}

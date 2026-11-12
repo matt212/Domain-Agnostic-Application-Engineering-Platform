@@ -1,0 +1,17 @@
+{
+  "question": "Which regulations, policies or external obligations constrain how the business may operate?",
+  "needs": [
+    {
+      "need": "The business must adhere to regional food safety standards and labor laws governing gig-economy workers, as regulatory compliance is a critical outcome and unresolved dependency.",
+      "why": "Non-compliance with these external obligations poses significant legal and reputational risks that could halt operations or result in fines."
+    },
+    {
+      "need": "The business must dynamically calculate and collect applicable taxes based on local jurisdiction rules, as tax compliance is a mandatory financial settlement requirement.",
+      "why": "Failure to accurately apply varying tax rates across different service areas violates financial regulations and exposes the platform to penalties."
+    },
+    {
+      "need": "The business must validate regulatory compliance and contractual terms for all Store Partners and Delivery Partners before onboarding, as operational readiness depends on these external validations.",
+      "why": "Operating with unverified partners violates labor and safety policies, creating liability and disrupting the supply chain."
+    }
+  ]
+}

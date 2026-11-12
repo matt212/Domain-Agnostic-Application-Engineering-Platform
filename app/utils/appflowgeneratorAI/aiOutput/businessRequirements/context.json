@@ -1,0 +1,1058 @@
+{
+  "sourceFile": "consolidated-Functional-Requirements-12-11-26_01:11.json",
+  "digest": "BUSINESS CONTEXT:\n- Hyperlocal Grocery Delivery Quick Commerce (Q-Commerce) Aggregator Model with gig-economy logistics; monetized through transaction commissions, delivery fees, subscriptions, advertising, and...\nBUSINESS OPERATING MODEL:\n- Hyperlocal, ultra-fast (typically under 60 minutes) delivery of fresh perishables and daily essentials, relying on a dense network of micro-fulfillment centers rather than centralized wareho...\nBUSINESS PRODUCT SERVICE:\n- Hyperlocal last-mile delivery of physical goods\n- Algorithmic routing and order allocation services\n- Data analytics and advertising services derived from transaction data\n- Real-time access to aggregated grocery inventory via digital interface\nBUSINESS OUTCOME:\n- Satisfied customers with high ratings and repeat usage\n- Regulatory compliance and risk mitigation\n- Successful order fulfillment within target timeframes (e.g., <60 mins)\n- Accurate inventory availability and reduced overselling\n- Optimized revenue streams and cost control\n- Efficient utilization of store staff and delivery agents\nBUSINESS FUNCTION:\n- Compliance and regulatory adherence\n- Customer relationship and support\n- Financial settlement and revenue management\n- Inventory synchronization and validation\n- Order orchestration and allocation\n- Marketplace aggregation and catalog management\n- Logistics coordination and fulfillment\nBUSINESS MONETIZATION MODEL:\n- Aggregating fragmented inventory from hyperlocal stores into a unified digital interface, optimizing last-mile logistics through algorithmic routing, and enabling real-time order fulfillment...\nMONETIZATION STREAM:\n- Delivery Fees\n- Subscription Models\n- Advertising/Sponsored Listings\n- Data Analytics Services\n- Transaction Commission\nBUSINESS LIFECYCLE STAGE:\n- Order Preparation Allocation confirmation. Store personnel pick items, verify quality, pack for transport, and hand over to the delivery partner.\n- Financial Settlement Handover confirmation. Transaction is finalized, funds are transferred to the customer, and revenue share is settled between the platform and the store.\n- Operational Readiness Acquisition of sufficient initial inventory and confirmed delivery partner availability. Testing logistics routes, calibrating demand forecasting models, and conducting...\n- Post-Transaction Review Completion of settlement. Collection of feedback, rating of experience, and initiation of loyalty points accrual.\n- Order Initiation Customer action on the digital interface. Customer expresses need, browses available catalog, selects items, and submits a request for immediate fulfillment.\n- Handover & Confirmation Arrival at customer location. Customer receives the order, verifies contents, and confirms receipt via the platform.\n- Supply Chain Integration Completion of partner contracts and initial inventory data ingestion. Onboarding stores, defining SKU catalogs, mapping inventory locations, and establishing synchro...\n- Last-Mile Delivery Pickup confirmation from the store. Delivery partner picks up the order, navigates to the customer location, and completes the physical transfer.\n- Order Validation & Allocation Successful submission of the order request. System validates inventory availability, calculates fees, confirms delivery slot, and allocates the order to a speci...\n- Foundation Establishment Strategic decision to launch a new market zone or service category. Defining the service area, selecting store partners, establishing logistics partnerships, and set...\n- Lifecycle Conclusion Completion of all feedback and settlement processes. The specific order instance is closed; data is archived for analytics; optional dispute resolution window opens.\nACTOR DEFINITION:\n- Payment Provider: Financial institution that processes customer transactions and facilitates fund transfers.\n- Fulfillment Supervisor: Store staff member who coordinates the picking, packing, and handover of orders to delivery partners.\n- Platform Operator: Entity that manages the digital interface, orchestrates order allocation, and settles financial transactions.\n- Customer: End user who initiates orders, selects items, and confirms delivery completion.\n- Delivery Partner: Independent agent or gig-worker responsible for last-mile logistics and physical handover of goods.\n- Store Partner: Physical retail location that provides inventory, staff for order picking, and fulfillment capabilities.\n- Order Allocation Engine: Automated system component that validates inventory, calculates fees, and assigns orders to specific agents.\n- Merchandiser: Personnel at stores who pack orders and verify item quality before dispatch.\n- Regulatory Authority: External body that enforces food safety standards and labor laws applicable to the service.\nBUSINESS OBJECT:\n- Delivery Assignment\n- Store Partner Agreement\n- Product Catalog\n- Delivery Zone Map\n- Feedback Record\n- Order Request\n- Fulfillment Task\n- Dispute Ticket\n- Customer Profile\n- Service Area Definition\n- Financial Transaction Record\n- Delivery Proof\n- Real-Time Inventory Snapshot\n- Assigned Delivery Slot\nBUSINESS ASSUMPTION:\n- Real-time inventory synchronization between the physical store and the digital platform is technically feasible and reliable.\n- Customers prioritize speed over cost, making them willing to pay premium delivery fees.\n- Stores are willing to dedicate staff and space for third-party order fulfillment without disrupting their primary sales.\n- The geographic density of customers allows for efficient route optimization for delivery agents.\nUNRESOLVED DEPENDENCY:\n- Regulatory compliance regarding food safety and labor laws for gig-economy delivery workers varies significantly by region and may impact operational readiness.\n- The exact threshold for 'immediate' delivery (e.g., 15 mins vs 45 mins) depends on local traffic patterns and weather conditions, which are dynamic variables.\nEVIDENCE GAP:\n- The precise cost structure for the 'Dark Store' model versus the 'Store Partner' model varies by city and is not universally quantifiable.\n- Specific data on the failure rate of orders due to inventory discrepancies between the POS system and the platform catalog is unavailable.\nALTERNATIVE OPERATING MODEL:\n- Reduces capital expenditure on warehousing but may compromise speed and quality control; requires robust API integrations with multiple store systems. Marketplace Aggregator Model The platfo...\n- Balances cost and speed but requires complex logic to route orders to the optimal fulfillment node. Hybrid Model A mix of dark stores for high-frequency items and store pickup for bulk or la...\n- Enables faster delivery and better assortment control but significantly increases operational costs and complexity. Dark Store / Centralized Fulfillment Model The platform operates its own m...",
+  "actors": [
+    "Payment Provider",
+    "Fulfillment Supervisor",
+    "Platform Operator",
+    "Customer",
+    "Delivery Partner",
+    "Store Partner",
+    "Order Allocation Engine",
+    "Merchandiser",
+    "Regulatory Authority"
+  ],
+  "frs": [
+    {
+      "id": "FR-001",
+      "requirement": "The system shall maintain synchronized, real-time inventory levels across all Store/Fulfillment Centers to prevent overselling of perishable goods and ensure accurate stock visibility.",
+      "need": "The business requires immediate stock accuracy to prevent selling items that are out of stock or expired, thereby protecting revenue and maintaining customer trust.",
+      "actors": [
+        "Store Partner",
+        "Order Allocation Engine",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Real-Time Inventory Snapshot",
+        "Product Catalog",
+        "Order Request",
+        "Fulfillment Task"
+      ],
+      "recordId": "rec_684abc5b7a74ca61ecbf533c5dc01d0c2ad496af8edb55d906f907da76891660"
+    },
+    {
+      "id": "FR-002",
+      "requirement": "The system shall automatically assign incoming orders to the nearest Store Partner that has sufficient Real-Time Inventory Snapshot and available capacity.",
+      "need": "The business requires instant, optimal allocation of orders to physical nodes to minimize delivery time and prevent inventory overselling.",
+      "actors": [
+        "Order Allocation Engine",
+        "Store Partner"
+      ],
+      "objects": [
+        "Order Request",
+        "Real-Time Inventory Snapshot",
+        "Fulfillment Task",
+        "Delivery Assignment",
+        "Assigned Delivery Slot"
+      ],
+      "recordId": "rec_7cc783c1fca8c4855beb566e863168e854f603c3cc62dc8fbc8592706056f58d"
+    },
+    {
+      "id": "FR-003",
+      "requirement": "The system shall enable Delivery Partners to view, accept, and manage their assigned delivery slots while ensuring dynamic agent assignment and capacity verification.",
+      "need": "The business needs to optimize last-mile logistics by ensuring the right agent receives orders based on real-time capacity and workload status.",
+      "actors": [
+        "Delivery Partner",
+        "Order Allocation Engine"
+      ],
+      "objects": [
+        "Delivery Assignment",
+        "Assigned Delivery Slot",
+        "Real-Time Inventory Snapshot",
+        "Customer Profile",
+        "Delivery Zone Map"
+      ],
+      "recordId": "rec_4644b13216c33547c0fab58df1b18860c913e44d1f4c9c45a743207fe2ee862d"
+    },
+    {
+      "id": "FR-004",
+      "requirement": "The system shall capture and verify digital proof of delivery via direct input or external API retrieval before releasing funds.",
+      "need": "The business needs irrefutable evidence of physical handover to close the logistics loop and trigger financial settlement securely.",
+      "actors": [
+        "Delivery Partner",
+        "Store Partner",
+        "Payment Provider"
+      ],
+      "objects": [
+        "Delivery Proof",
+        "Delivery Assignment",
+        "Financial Transaction Record",
+        "Dispute Ticket"
+      ],
+      "recordId": "rec_033a9b3d09088ff00a4732f90f5aedbb81d2aabb0aa627303a31c257776dee5c"
+    },
+    {
+      "id": "FR-005",
+      "requirement": "The system shall automatically calculate and distribute transaction revenue to the Platform Operator, Store Partner, and Payment Provider immediately upon delivery confirmation.",
+      "need": "The business needs to ensure accurate, transparent, and timely financial settlement for all parties involved in a transaction to maintain trust and operational efficiency.",
+      "actors": [
+        "Platform Operator",
+        "Store Partner",
+        "Payment Provider"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Delivery Proof",
+        "Order Request",
+        "Store Partner Agreement"
+      ],
+      "recordId": "rec_0e56efb4b7fcd0dcf51b6b19a514a58c044df31d2f8d899e6e0cd4d4235b4be3"
+    },
+    {
+      "id": "FR-006",
+      "requirement": "The system shall generate real-time alerts for inventory items approaching their shelf-life limits to prioritize fulfillment or trigger removal.",
+      "need": "The business needs to minimize waste and maintain product quality by proactively managing perishable stock before it becomes unsellable.",
+      "actors": [
+        "Store Partner",
+        "Order Allocation Engine",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Real-Time Inventory Snapshot",
+        "Product Catalog",
+        "Order Request",
+        "Feedback Record"
+      ],
+      "recordId": "rec_0b451c900149a69c0874a3edb78135ad3e6894657f92bdad7f25daa6df482fb3"
+    },
+    {
+      "id": "FR-007",
+      "requirement": "The system shall automatically generate and track a Dispute Ticket when a Delivery Proof indicates a missing item, damage, or failed delivery.",
+      "need": "The business needs an automated mechanism to capture exceptions early, ensuring fair resolution and accurate financial adjustments without manual intervention.",
+      "actors": [
+        "Customer",
+        "Delivery Partner",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Dispute Ticket",
+        "Delivery Proof",
+        "Order Request",
+        "Financial Transaction Record",
+        "Feedback Record"
+      ],
+      "recordId": "rec_03e4efa73069cb3638686020eda152ac3b7a7ca634f5b767bac76bb46474dd4c"
+    },
+    {
+      "id": "FR-008",
+      "requirement": "The system shall retrieve, validate, and store external regulatory licenses and food safety certifications for Store Partners to ensure legal operation.",
+      "need": "The business needs to mitigate legal risks and maintain trust by ensuring all Store Partners operate within required regulatory boundaries.",
+      "actors": [
+        "Regulatory Authority",
+        "Store Partner",
+        "Fulfillment Supervisor"
+      ],
+      "objects": [
+        "Store Partner Agreement",
+        "Dispute Ticket",
+        "Customer Profile"
+      ],
+      "recordId": "rec_dd1e6f8b5dcca60f626069f45de7f56ca267682077d6a7dcb9c950b79e3a92f0"
+    },
+    {
+      "id": "FR-009",
+      "requirement": "The system shall manage the full lifecycle of the Customer Profile, enabling the creation, modification, and archival of identity and preference records throughout the customer's engagement.",
+      "need": "The business needs a centralized, accurate record of customer identity and preferences to ensure secure order routing, accurate financial settlement, and personalized service delivery.",
+      "actors": [
+        "Customer",
+        "Store Partner",
+        "Fulfillment Supervisor",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Customer Profile",
+        "Order Request",
+        "Financial Transaction Record"
+      ],
+      "recordId": "rec_bfb4f3a84801b8dacd74a72ff85f1020e501ba60849c20705734db8d022e6dbd"
+    },
+    {
+      "id": "FR-010",
+      "requirement": "The system shall manage the full lifecycle of Store Partner Agreements, enabling the creation, amendment, and historical tracking of commercial terms while controlling access to these documents.",
+      "need": "The business needs to maintain legally binding, auditable records of commercial terms to ensure operational compliance and accurate financial settlements with store partners.",
+      "actors": [
+        "Platform Operator",
+        "Store Partner"
+      ],
+      "objects": [
+        "Store Partner Agreement",
+        "Financial Transaction Record",
+        "Order Request"
+      ],
+      "recordId": "rec_3e62ff91938c0eaa3ade5670725e38d800d67f1cd6299c8b680a20dcf2194e05"
+    },
+    {
+      "id": "FR-011",
+      "requirement": "The system shall enable the Merchandiser to create, update, and archive product catalog entries while enforcing data validation and version control.",
+      "need": "The business needs a structured way to manage product lifecycle data to ensure accurate inventory representation and prevent overselling.",
+      "actors": [
+        "Merchandiser"
+      ],
+      "objects": [
+        "Product Catalog"
+      ],
+      "recordId": "rec_4d0416eeab9f4f18835beebf500e4635ada8ffb9fdacd6b52af711bee36d0e06"
+    },
+    {
+      "id": "FR-012",
+      "requirement": "The system shall enable the Platform Operator to create, modify, and version geospatial service area definitions and travel time matrices to ensure accurate delivery feasibility and pricing.",
+      "need": "The business needs this to dynamically restrict order acceptance to feasible areas and calculate accurate delivery fees based on real-time traffic and route constraints.",
+      "actors": [
+        "Platform Operator"
+      ],
+      "objects": [
+        "Service Area Definition",
+        "Delivery Zone Map",
+        "Order Request",
+        "Delivery Assignment"
+      ],
+      "recordId": "rec_5774c69dd7c1fb5a999134ef3047499377726144770da317bdf1d3dbbb835a75"
+    },
+    {
+      "id": "FR-013",
+      "requirement": "The system shall enable the secure creation, retention, and long-term archival of detailed financial ledgers and settlement records for all monetary exchanges.",
+      "need": "The business needs immutable financial records to ensure accurate revenue sharing, support regulatory audits, and provide verifiable evidence for dispute resolution.",
+      "actors": [
+        "Payment Provider",
+        "Platform Operator",
+        "Store Partner"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Delivery Proof",
+        "Dispute Ticket",
+        "Store Partner Agreement"
+      ],
+      "recordId": "rec_950eadbb4d67ebc65167cdec08b3318352eec5fd0ef256bdf87ecbd1e51a9d21"
+    },
+    {
+      "id": "FR-014",
+      "requirement": "The system shall manage the full lifecycle of Service Area Definitions, enabling the creation, activation, deactivation, and historical tracking of geographically delimited delivery zones.",
+      "need": "The business requires precise control over operational boundaries to ensure orders are only accepted and fulfilled within feasible geographic limits.",
+      "actors": [
+        "Platform Operator",
+        "Store Partner"
+      ],
+      "objects": [
+        "Service Area Definition",
+        "Delivery Zone Map",
+        "Store Partner Agreement"
+      ],
+      "recordId": "rec_10858d737cb400902d48e47d1e462249b49513bf4f1e7c8813704a02dc2e021d"
+    },
+    {
+      "id": "FR-015",
+      "requirement": "The system shall maintain an immutable chronological history of all status transitions for every Delivery Assignment from creation to final closure.",
+      "need": "The business needs this to provide full auditability of the delivery lifecycle, enabling root cause analysis for delays and verifying compliance with service level agreements.",
+      "actors": [
+        "Delivery Partner",
+        "Fulfillment Supervisor",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Delivery Assignment",
+        "Delivery Proof",
+        "Customer Profile",
+        "Order Request"
+      ],
+      "recordId": "rec_7201a9fef8bea5a3b3a4507da25adc4b87d763f71ba64c14e869f6c790b11171"
+    },
+    {
+      "id": "FR-016",
+      "requirement": "The system shall enforce role-based access control by granting or denying system actions based on the specific permissions assigned to each actor.",
+      "need": "The business needs to restrict system access to ensure data security, operational integrity, and compliance with internal governance policies.",
+      "actors": [
+        "Customer",
+        "Delivery Partner",
+        "Store Partner",
+        "Fulfillment Supervisor",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Customer Profile",
+        "Delivery Assignment",
+        "Order Request",
+        "Feedback Record"
+      ],
+      "recordId": "rec_e8ddbb153c6e306709a60344eb3c6d8e2a9110254667b697682c1b7b02823c8c"
+    },
+    {
+      "id": "FR-017",
+      "requirement": "The system shall enforce multi-factor authentication for all Delivery Partners accessing the delivery agent mobile application to verify identity before granting access to operational tools.",
+      "need": "The business requires secure verification to prevent unauthorized access to sensitive customer data and delivery instructions by malicious actors impersonating gig-workers.",
+      "actors": [
+        "Delivery Partner",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Delivery Partner",
+        "Customer Profile"
+      ],
+      "recordId": "rec_54628571594b13ad14c340ae8324bb85ac3558aeb44a150ecf7d9b2253b179cc"
+    },
+    {
+      "id": "FR-018",
+      "requirement": "The system shall enable Store Partner personnel to validate item quality against the order request before marking the fulfillment task as complete.",
+      "need": "The business needs this to prevent shipping defective or incorrect items, thereby reducing returns and maintaining customer trust.",
+      "actors": [
+        "Store Partner"
+      ],
+      "objects": [
+        "Order Request",
+        "Fulfillment Task",
+        "Real-Time Inventory Snapshot",
+        "Delivery Proof"
+      ],
+      "recordId": "rec_e8a12909b43733179d0355c4e2e2b0b025c6143d23ef28df7048d5c42d206ebd"
+    },
+    {
+      "id": "FR-019",
+      "requirement": "The system shall validate customer identity and contact details during the onboarding process to ensure compliance and secure account creation.",
+      "need": "The business needs to verify customer identity to prevent fraud, ensure accurate delivery routing, and maintain regulatory compliance before allowing order placement.",
+      "actors": [
+        "Customer",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Customer Profile",
+        "Dispute Ticket"
+      ],
+      "recordId": "rec_792132aef24566b49a6d14e336d8d905961c52db56d3bea77b1492f13f4d7a0e"
+    },
+    {
+      "id": "FR-020",
+      "requirement": "The system shall generate an immutable audit log for every action performed by authorized actors to satisfy external regulatory compliance requirements.",
+      "need": "The business needs this to provide verifiable proof of operational adherence to labor, data privacy, and safety laws during regulatory inspections.",
+      "actors": [
+        "Regulatory Authority",
+        "Platform Operator",
+        "Delivery Partner",
+        "Store Partner",
+        "Customer"
+      ],
+      "objects": [
+        "Customer Profile",
+        "Delivery Assignment",
+        "Financial Transaction Record",
+        "Feedback Record",
+        "Order Request"
+      ],
+      "recordId": "rec_87e843c1931969abdc4263e8c5a1ef2880bc161cfefd0fb0040a04b9ee3f6c35"
+    },
+    {
+      "id": "FR-021",
+      "requirement": "The system shall assign the authority to approve or reject a Dispute Ticket to a specific actor based on the ticket's origin, severity, and the involved partners.",
+      "need": "The business needs a clear, automated assignment of dispute resolution authority to ensure fair, timely, and legally compliant handling of customer claims.",
+      "actors": [
+        "Platform Operator",
+        "Store Partner",
+        "Delivery Partner",
+        "Fulfillment Supervisor"
+      ],
+      "objects": [
+        "Dispute Ticket",
+        "Customer Profile",
+        "Store Partner Agreement",
+        "Delivery Proof",
+        "Feedback Record"
+      ],
+      "recordId": "rec_0f31f448939acd34c2e61bfeffb511a711949471044107c6b32d40c65ea0b5fd"
+    },
+    {
+      "id": "FR-022",
+      "requirement": "The system shall prevent the submission of an Order Request if the calculated cart total is below the minimum order value defined in the Store Partner Agreement.",
+      "need": "The business needs this to ensure economic viability by preventing the processing of orders that cannot cover operational costs or meet delivery thresholds.",
+      "actors": [
+        "Customer",
+        "Store Partner"
+      ],
+      "objects": [
+        "Order Request",
+        "Store Partner Agreement",
+        "Customer Profile",
+        "Financial Transaction Record"
+      ],
+      "recordId": "rec_0cf6ab0717ec08ddbe18930f48614a66a52d7f0a2928e6c707801f05b3218104"
+    },
+    {
+      "id": "FR-023",
+      "requirement": "The system shall prevent the creation of an Order Request if the customer's delivery address falls outside the active boundaries of any defined Service Area Definition.",
+      "need": "The business needs to enforce strict geofencing to ensure operational feasibility and prevent accepting orders that cannot be physically fulfilled within the hyperlocal zones.",
+      "actors": [
+        "Customer",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Service Area Definition",
+        "Order Request",
+        "Customer Profile"
+      ],
+      "recordId": "rec_592b791cae696536bd3102d15cbb6e457b520611962d9dfa3991865ce872e4fb"
+    },
+    {
+      "id": "FR-024",
+      "requirement": "The system shall prevent the creation of an Order Request containing any Product Catalog item where the current date exceeds the item's expiry date or freshness threshold.",
+      "need": "The business needs to prevent the sale of expired or unsafe perishable goods to protect customer health and maintain regulatory compliance.",
+      "actors": [
+        "Customer",
+        "Store Partner"
+      ],
+      "objects": [
+        "Product Catalog",
+        "Order Request",
+        "Real-Time Inventory Snapshot"
+      ],
+      "recordId": "rec_c2351a23308597c1844bf137f35e105b844825cc56174d46d5ffe47834116f4d"
+    },
+    {
+      "id": "FR-025",
+      "requirement": "The system shall automatically calculate and apply the correct revenue share percentage to a Financial Transaction Record based on the active commission rate defined in the Store Partner Agreement.",
+      "need": "The business needs to ensure accurate and compliant revenue distribution between the platform and store partners by dynamically applying contractual commission rates to every financial settlement.",
+      "actors": [
+        "Store Partner",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Store Partner Agreement"
+      ],
+      "recordId": "rec_ae0bc029f7b17cab74344e06316ce110591af8b1b8900d08d6dae0d1cd868dbe"
+    },
+    {
+      "id": "FR-026",
+      "requirement": "The system shall evaluate transaction patterns and consume third-party fraud detection services to assess risk scores for orders before processing.",
+      "need": "The business needs this to prevent financial loss from fraudulent transactions and ensure secure payment processing.",
+      "actors": [
+        "Payment Provider",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Customer Profile",
+        "Order Request",
+        "Dispute Ticket"
+      ],
+      "recordId": "rec_050d8336fa430a6baa0e4ed0b5b2e5fc0c2425aa0dfc2926eddc51343cfd2775"
+    },
+    {
+      "id": "FR-027",
+      "requirement": "The system shall securely connect with the Payment Provider to process customer payments, initiate fund transfers, and manage refunds or reversals for financial transactions.",
+      "need": "The business requires a secure financial integration to accurately monetize transactions, settle funds between parties, and protect against financial loss through fraud detection and reversal capabilities.",
+      "actors": [
+        "Payment Provider",
+        "Platform Operator",
+        "Store Partner",
+        "Customer"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Customer Profile",
+        "Delivery Proof",
+        "Order Request"
+      ],
+      "recordId": "rec_6b93c7958c1e653710c6ecfabb2d845b2ddde3f4d28038761bbe2f866126d51d"
+    },
+    {
+      "id": "FR-028",
+      "requirement": "The system shall ingest real-time operational data from external logistics providers to monitor fleet availability and route constraints.",
+      "need": "The business needs this to dynamically adjust delivery capacity and fees based on live network status, preventing service degradation during congestion.",
+      "actors": [
+        "Platform Operator",
+        "Fulfillment Supervisor",
+        "Delivery Partner",
+        "Payment Provider"
+      ],
+      "objects": [
+        "Delivery Assignment",
+        "Delivery Zone Map",
+        "Delivery Proof",
+        "Real-Time Inventory Snapshot",
+        "Assigned Delivery Slot"
+      ],
+      "recordId": "rec_dce0e342083e013727727b643488d1ddc789a7c9a479c0a037081b54e073ab35"
+    },
+    {
+      "id": "FR-029",
+      "requirement": "The system shall integrate with external mapping services to consume live traffic and road network data for calculating accurate delivery times.",
+      "need": "Accurate delivery time estimates are critical for setting realistic fees, managing customer expectations, and optimizing fleet capacity.",
+      "actors": [
+        "Order Allocation Engine",
+        "Delivery Partner",
+        "Customer"
+      ],
+      "objects": [
+        "Delivery Assignment",
+        "Service Area Definition",
+        "Customer Profile"
+      ],
+      "recordId": "rec_fda948d2bcbc5e59812b02217484c80d2b06df7a9895ea06e181060ed03e7f4d"
+    },
+    {
+      "id": "FR-030",
+      "requirement": "The system shall integrate with external tax services to dynamically calculate and remit applicable sales taxes for transactions within authorized service zones.",
+      "need": "The business needs this to ensure full regulatory compliance and accurate financial reporting across varying jurisdictions.",
+      "actors": [
+        "Platform Operator",
+        "Regulatory Authority",
+        "Store Partner"
+      ],
+      "objects": [
+        "Order Request",
+        "Financial Transaction Record",
+        "Service Area Definition",
+        "Dispute Ticket",
+        "Customer Profile"
+      ],
+      "recordId": "rec_4fc9563c5d53608ec7bc3404e812f0b26b10bfc5f9f87ec17e1cda8a8afe1a36"
+    },
+    {
+      "id": "FR-031",
+      "requirement": "The system shall automatically initiate a refund process when a dispute ticket is validated by the Regulatory Authority or when a delivery failure is confirmed by the Delivery Partner.",
+      "need": "The business needs to automate financial reversals to ensure customer trust and operational efficiency when service failures or validated disputes occur.",
+      "actors": [
+        "Regulatory Authority",
+        "Delivery Partner",
+        "Customer"
+      ],
+      "objects": [
+        "Dispute Ticket",
+        "Financial Transaction Record",
+        "Order Request",
+        "Delivery Assignment",
+        "Feedback Record"
+      ],
+      "recordId": "rec_b81d916f457c4fbae44b01da5bda15ed8773477cbab9e95d6d007c018bcc29f9"
+    },
+    {
+      "id": "FR-032",
+      "requirement": "The system shall calculate and apply partial refunds for specific missing or damaged items within a valid Order Request based on verified inventory or delivery proof discrepancies.",
+      "need": "The business needs to automatically adjust financial obligations for customers when specific items in an order are unavailable or damaged, ensuring accurate billing and maintaining trust without requiring manual intervention for every discrepancy.",
+      "actors": [
+        "Customer",
+        "Store Partner",
+        "Delivery Partner",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Order Request",
+        "Financial Transaction Record",
+        "Customer Profile",
+        "Delivery Proof",
+        "Real-Time Inventory Snapshot",
+        "Product Catalog"
+      ],
+      "recordId": "rec_528414fc09fe5909ceab9d4e02598c32f39e95c3c911175089ee5202cd4be96c"
+    },
+    {
+      "id": "FR-033",
+      "requirement": "The system shall automatically reassign failed delivery tasks to available Delivery Partners based on proximity to the delivery address and current agent capacity.",
+      "need": "The business needs to minimize customer wait times and operational costs by ensuring failed deliveries are quickly re-allocated to the most suitable available agent.",
+      "actors": [
+        "Delivery Partner",
+        "Order Allocation Engine"
+      ],
+      "objects": [
+        "Delivery Assignment",
+        "Delivery Partner",
+        "Delivery Zone Map",
+        "Fulfillment Task",
+        "Real-Time Inventory Snapshot"
+      ],
+      "recordId": "rec_3aef74b4d24be6a641e5f2ad64c5bb1f98857a2b7c2fec6780871186d67ec7b3"
+    },
+    {
+      "id": "FR-034",
+      "requirement": "The system shall reverse inventory locks and financial reservations for an Order Request when a cancellation is confirmed before the Fulfillment Task reaches the 'Ready for Dispatch' status.",
+      "need": "The business needs to ensure that cancelled orders do not permanently reduce available stock or hold customer funds, maintaining accurate inventory levels and financial integrity.",
+      "actors": [
+        "Customer",
+        "Store Partner",
+        "Order Allocation Engine"
+      ],
+      "objects": [
+        "Order Request",
+        "Real-Time Inventory Snapshot",
+        "Financial Transaction Record",
+        "Fulfillment Task"
+      ],
+      "recordId": "rec_ee1d5ff2ce345ecb2e6958fe1e642373e58d4b2e9cd0686ed1b7c0c79e4aded1"
+    },
+    {
+      "id": "FR-035",
+      "requirement": "The system shall enable authorized agents and customers to upload photos and documents to substantiate dispute claims regarding delivery exceptions.",
+      "need": "The business needs a centralized mechanism to collect verifiable evidence to resolve disputes fairly and accurately.",
+      "actors": [
+        "Customer",
+        "Delivery Partner",
+        "Fulfillment Supervisor"
+      ],
+      "objects": [
+        "Dispute Ticket",
+        "Order Request",
+        "Delivery Proof",
+        "Feedback Record"
+      ],
+      "recordId": "rec_c0acbd6aefdfea1a39e6f2b5d9328b45cc8279cdfa089562e30cc820b6cc3d69"
+    },
+    {
+      "id": "FR-036",
+      "requirement": "The system shall route unresolved disputes to senior support tiers based on calculated severity and financial impact thresholds.",
+      "need": "The business needs to ensure high-risk disputes receive immediate expert attention to minimize financial loss and maintain platform trust.",
+      "actors": [
+        "Regulatory Authority",
+        "Fulfillment Supervisor",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Dispute Ticket",
+        "Financial Transaction Record",
+        "Feedback Record"
+      ],
+      "recordId": "rec_5b381b74e228523f3918cb2f1435882064124243a39c2ab53ccfbd590b3758a0"
+    },
+    {
+      "id": "FR-037",
+      "requirement": "The system shall send real-time notifications to customers regarding the status updates of their refund requests.",
+      "need": "The business needs to maintain customer trust and reduce support volume by providing immediate transparency on refund processing stages.",
+      "actors": [
+        "Customer",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Customer Profile",
+        "Financial Transaction Record",
+        "Feedback Record"
+      ],
+      "recordId": "rec_6d5df3deb9164afba1634a69c442b35d19439c2ac1d138b6e875c859410fdefc"
+    },
+    {
+      "id": "FR-038",
+      "requirement": "The system shall generate high-risk transaction alerts and perform refund/chargeback impact analysis to prevent financial loss before settlement.",
+      "need": "The business needs to proactively identify fraudulent patterns and quantify potential financial exposure to stop unauthorized chargebacks before funds are settled.",
+      "actors": [
+        "Payment Provider",
+        "Store Partner",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Customer Profile",
+        "Delivery Proof",
+        "Order Request"
+      ],
+      "recordId": "rec_1fc0eab405fa7220ff6cf4085df764a0f18c817d435047afbf542ab3f51ed94b"
+    },
+    {
+      "id": "FR-039",
+      "requirement": "The system shall continuously reconcile platform revenue shares against store partner settlements in real-time.",
+      "need": "This ensures financial accuracy and trust between the platform and store partners by immediately identifying and resolving discrepancies in revenue distribution.",
+      "actors": [
+        "Platform Operator",
+        "Store Partner",
+        "Payment Provider"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Store Partner Agreement",
+        "Delivery Assignment"
+      ],
+      "recordId": "rec_1de0c0207eb9dcd154a0edd4fbf6a768b8fffb886b42dfce00be645a7a57c748"
+    },
+    {
+      "id": "FR-040",
+      "requirement": "The system shall automatically compute and collect applicable taxes based on jurisdiction and product type during the order processing workflow.",
+      "need": "The business needs to ensure legal compliance and accurate revenue collection by dynamically applying the correct tax rates to every transaction.",
+      "actors": [
+        "Customer",
+        "Store Partner",
+        "Platform Operator",
+        "Regulatory Authority"
+      ],
+      "objects": [
+        "Order Request",
+        "Financial Transaction Record",
+        "Customer Profile",
+        "Product Catalog",
+        "Delivery Zone Map"
+      ],
+      "recordId": "rec_1eddeec1afbda655a5f0f7e05f2cc41a0480717dbf7da35ca225f16c641e0144"
+    },
+    {
+      "id": "FR-041",
+      "requirement": "The system shall calculate and settle multi-currency transactions by converting amounts using real-time exchange rates and recording all financial details in the base currency of the Platform Operator.",
+      "need": "The business needs this to ensure accurate revenue collection and fair settlement for Store Partners and Delivery Partners regardless of the transaction's original currency.",
+      "actors": [
+        "Payment Provider",
+        "Platform Operator",
+        "Store Partner",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Store Partner Agreement",
+        "Order Request",
+        "Customer Profile"
+      ],
+      "recordId": "rec_8caba2ed92e46bbc53f1b1b25b88bf9f30d05d00abf337158708f3390d620394"
+    },
+    {
+      "id": "FR-042",
+      "requirement": "The system shall generate an immutable audit trail for every Financial Transaction Record and Settlement event to ensure financial integrity and regulatory compliance.",
+      "need": "The business requires a tamper-proof record of all monetary exchanges to resolve disputes, satisfy regulatory audits, and accurately calculate revenue shares.",
+      "actors": [
+        "Platform Operator",
+        "Payment Provider",
+        "Store Partner",
+        "Regulatory Authority"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Store Partner Agreement",
+        "Delivery Proof",
+        "Dispute Ticket"
+      ],
+      "recordId": "rec_eeb893e2af19f41d0e2f68c00b24e61c3817a6f41873071cda35e1a84c6cb1d3"
+    },
+    {
+      "id": "FR-043",
+      "requirement": "The system shall execute a scheduled batch process to calculate, validate, and distribute financial settlements to Store Partners and Delivery Partners based on finalized transaction data.",
+      "need": "The business needs this to automate accurate fund distribution, ensuring partners receive correct payments while maintaining financial integrity and compliance with contractual agreements.",
+      "actors": [
+        "Platform Operator",
+        "Store Partner",
+        "Delivery Partner",
+        "Payment Provider"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Store Partner Agreement",
+        "Order Request",
+        "Delivery Proof",
+        "Customer Profile"
+      ],
+      "recordId": "rec_3e91ed22e6193836d23d3b2328a8b28b14d754d9b46540554a09039f5b7a38a1"
+    },
+    {
+      "id": "FR-044",
+      "requirement": "The system shall identify and flag suspicious financial patterns in financial transactions requiring manual review before settlement.",
+      "need": "The business needs this to prevent financial loss from fraud, reduce chargeback liabilities, and ensure accurate revenue settlement.",
+      "actors": [
+        "Payment Provider",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Customer Profile"
+      ],
+      "recordId": "rec_8ee4d2369849ae90400d3346f4ff377b30a506331101be5490b9d2330265a2ed"
+    },
+    {
+      "id": "FR-045",
+      "requirement": "The system shall dynamically adjust delivery fees and commissions based on real-time network congestion and predicted demand spikes.",
+      "need": "The business needs to balance network capacity with revenue optimization during high-demand periods to prevent service degradation.",
+      "actors": [
+        "Customer",
+        "Delivery Partner",
+        "Store Partner",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Order Request",
+        "Delivery Assignment",
+        "Financial Transaction Record",
+        "Delivery Zone Map",
+        "Real-Time Inventory Snapshot"
+      ],
+      "recordId": "rec_45613142e08b702dc2f7ff9b9940718fc1c80bc3ef77f8e8f83922848f811f64"
+    },
+    {
+      "id": "FR-046",
+      "requirement": "The system shall generate predictive inventory replenishment alerts for high-velocity items when projected demand exceeds current stock levels within a defined time window.",
+      "need": "The business needs to notify store partners of impending stockouts for fast-moving items to prevent order fulfillment failures and maintain customer satisfaction.",
+      "actors": [
+        "Store Partner",
+        "Order Allocation Engine"
+      ],
+      "objects": [
+        "Real-Time Inventory Snapshot",
+        "Fulfillment Task",
+        "Customer Profile",
+        "Feedback Record",
+        "Product Catalog"
+      ],
+      "recordId": "rec_b0f31849c6224462512e174dfa8af6be00e68838d98239bed20ee730ab75609d"
+    },
+    {
+      "id": "FR-047",
+      "requirement": "The system shall continuously recalculate optimal delivery paths for Delivery Partners by integrating live traffic data and new Order Request insertions.",
+      "need": "The business needs to minimize delivery times and fuel costs while ensuring timely order fulfillment in a dynamic logistics environment.",
+      "actors": [
+        "Delivery Partner",
+        "Order Allocation Engine",
+        "Fulfillment Supervisor"
+      ],
+      "objects": [
+        "Delivery Assignment",
+        "Order Request",
+        "Fulfillment Task",
+        "Delivery Proof",
+        "Assigned Delivery Slot",
+        "Real-Time Inventory Snapshot"
+      ],
+      "recordId": "rec_991ea96126be2cf1258afea6351addf10e802d184debe02c738157fb3c658f11"
+    },
+    {
+      "id": "FR-048",
+      "requirement": "The system shall automatically apply and track customer loyalty points or subscription benefits during the checkout and settlement process.",
+      "need": "The business needs to incentivize repeat purchases and retain customers by seamlessly integrating loyalty rewards into the transaction flow without manual intervention.",
+      "actors": [
+        "Customer",
+        "Platform Operator",
+        "Store Partner"
+      ],
+      "objects": [
+        "Customer Profile",
+        "Order Request",
+        "Financial Transaction Record",
+        "Feedback Record"
+      ],
+      "recordId": "rec_074c882b062f6a56548ac56e94ba7cbb6afb3a358696d2e3ea4001ab9371384c"
+    },
+    {
+      "id": "FR-049",
+      "requirement": "The system shall provide real-time dashboards tracking delivery speed, accuracy, and customer satisfaction scores for each Delivery Partner.",
+      "need": "The business needs live visibility into agent performance to optimize workforce allocation, identify training gaps, and ensure consistent service quality across the network.",
+      "actors": [
+        "Fulfillment Supervisor",
+        "Delivery Partner",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Delivery Assignment",
+        "Feedback Record",
+        "Delivery Proof",
+        "Delivery Partner",
+        "Real-Time Inventory Snapshot"
+      ],
+      "recordId": "rec_ec068be335b79c280f7900e4e9a0c35a320fb5f59c9e8d4338769d49fe875ecb"
+    },
+    {
+      "id": "FR-050",
+      "requirement": "The system shall automatically monitor Service Level Agreement (SLA) compliance for delivery times and order accuracy regarding Store Partners and alert the Fulfillment Supervisor upon breach.",
+      "need": "The business needs to proactively identify performance gaps to maintain contractual obligations and ensure customer satisfaction with delivery reliability.",
+      "actors": [
+        "Fulfillment Supervisor",
+        "Store Partner"
+      ],
+      "objects": [
+        "Store Partner Agreement",
+        "Delivery Assignment",
+        "Delivery Proof",
+        "Order Request",
+        "Feedback Record",
+        "Dispute Ticket"
+      ],
+      "recordId": "rec_6455ac3db97f13cffc37c37600176226bab40c3a55ce2ddcd3c96d17dab781de"
+    },
+    {
+      "id": "FR-051",
+      "requirement": "The system shall automatically generate and present retention incentives to customers identified as high-risk for churn based on negative feedback or service deviations.",
+      "need": "The business needs to proactively reduce customer attrition by offering targeted credits or offers immediately after detecting dissatisfaction signals.",
+      "actors": [
+        "Customer",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Feedback Record",
+        "Dispute Ticket",
+        "Customer Profile",
+        "Financial Transaction Record"
+      ],
+      "recordId": "rec_f643eee324df4f72831bb9439fe6054354cd0ee0603c1281b3d027541b25bd8e"
+    },
+    {
+      "id": "FR-052",
+      "requirement": "The system shall orchestrate multi-channel notifications (SMS, email, app push) by automatically triggering messages when an Order Request status changes to Ready for Delivery or Assigned to a Delivery Partner.",
+      "need": "The business needs to ensure customers receive timely, consistent updates across all preferred channels to reduce support inquiries and improve the delivery experience.",
+      "actors": [
+        "Customer",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Order Request",
+        "Customer Profile",
+        "Delivery Assignment",
+        "Feedback Record"
+      ],
+      "recordId": "rec_dab57f05672159efe871754708a7a76cff72b71e96560f4e0b4e783da5cca320"
+    },
+    {
+      "id": "FR-053",
+      "requirement": "The system shall validate regulatory compliance and contractual terms to authorize new Store Partners for platform operations.",
+      "need": "The business needs this to ensure all partners operate legally within defined zones and adhere to agreed financial and service standards before accepting orders.",
+      "actors": [
+        "Store Partner",
+        "Platform Operator",
+        "Regulatory Authority"
+      ],
+      "objects": [
+        "Store Partner Agreement",
+        "Service Area Definition",
+        "Customer Profile",
+        "Dispute Ticket"
+      ],
+      "recordId": "rec_2883ae64f79416556446d84e45b1d080fb6635dec7fbfe1e10c422566c01af6a"
+    },
+    {
+      "id": "FR-054",
+      "requirement": "The system shall enable customers to create, validate, and submit order requests containing selected items, quantities, and delivery instructions.",
+      "need": "This requirement ensures customers can accurately define their purchase needs and delivery preferences to initiate the fulfillment process.",
+      "actors": [
+        "Customer"
+      ],
+      "objects": [
+        "Order Request",
+        "Product Catalog",
+        "Customer Profile",
+        "Delivery Zone Map"
+      ],
+      "recordId": "rec_4f23779e609acc1740e460a3b137cbec623d011c5ecf5ed4d2b2b7c366cbf246"
+    },
+    {
+      "id": "FR-055",
+      "requirement": "The system shall route incoming order requests to the optimal Store Partner node and generate a corresponding Fulfillment Task for physical preparation and packing.",
+      "need": "The business needs to direct demand to the most efficient physical node to ensure timely order preparation and accurate inventory utilization.",
+      "actors": [
+        "Order Allocation Engine",
+        "Store Partner",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Order Request",
+        "Fulfillment Task",
+        "Real-Time Inventory Snapshot",
+        "Store Partner Agreement"
+      ],
+      "recordId": "rec_d19168aff4969c2184ae3c98b5ee91bd660a18a92c6117d41070e6b939f8d9ce"
+    },
+    {
+      "id": "FR-056",
+      "requirement": "The system shall enable the Delivery Partner to execute the physical movement of goods from the Store Partner to the Customer and generate verifiable proof of delivery.",
+      "need": "The business needs to conclusively close the logistics loop by verifying successful handover and triggering financial settlement.",
+      "actors": [
+        "Delivery Partner",
+        "Customer",
+        "Store Partner"
+      ],
+      "objects": [
+        "Delivery Assignment",
+        "Order Request",
+        "Fulfillment Task",
+        "Delivery Proof",
+        "Customer Profile",
+        "Financial Transaction Record"
+      ],
+      "recordId": "rec_7ade8e0f7d294e8cf1e8d7307f2e6eba305ac4f83ae744c197ba10725e116a6a"
+    },
+    {
+      "id": "FR-057",
+      "requirement": "The system shall enable a Customer to submit a Feedback Record containing a satisfaction rating and textual comments after a Delivery Proof has been verified for a completed Order Request.",
+      "need": "The business needs this capability to collect qualitative data on product quality and service performance to drive operational improvements and evaluate partner effectiveness.",
+      "actors": [
+        "Customer",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Feedback Record",
+        "Delivery Proof",
+        "Order Request",
+        "Customer Profile"
+      ],
+      "recordId": "rec_2d31383b3db41d98775ef6b7e6d7d34f1ed6f4d2e180a4468d6f4945653ecff5"
+    },
+    {
+      "id": "FR-058",
+      "requirement": "The system shall generate demand forecasts and resource plans to optimize agent positioning and store inventory levels based on predicted order volumes.",
+      "need": "The business needs this to proactively allocate agents and stock before peak demand occurs, preventing service failures and reducing operational waste.",
+      "actors": [
+        "Platform Operator",
+        "Fulfillment Supervisor",
+        "Store Partner",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Order Request",
+        "Real-Time Inventory Snapshot",
+        "Delivery Assignment",
+        "Service Area Definition",
+        "Customer Profile"
+      ],
+      "recordId": "rec_71eae2fcbcdd1ee4bd03044f9588eb6422fbd006bcfb977976e77b9bd32491d3"
+    },
+    {
+      "id": "FR-059",
+      "requirement": "The system shall calculate a quality score for each Store Partner based on order preparation accuracy and customer feedback records.",
+      "need": "The business needs to objectively measure store performance to incentivize high-quality order preparation and identify partners requiring operational support.",
+      "actors": [
+        "Fulfillment Supervisor",
+        "Store Partner"
+      ],
+      "objects": [
+        "Order Request",
+        "Fulfillment Task",
+        "Feedback Record",
+        "Store Partner Agreement"
+      ],
+      "recordId": "rec_f8dc50820e310364e4858a6fd9ee41014d20c8f73acee1f79033b9a0f572dde9"
+    },
+    {
+      "id": "FR-060",
+      "requirement": "The system shall generate actionable quality improvement alerts when aggregated feedback data indicates systemic operational weaknesses.",
+      "need": "The business needs to proactively identify and address recurring service failures to maintain partner trust and operational efficiency.",
+      "actors": [
+        "Platform Operator",
+        "Fulfillment Supervisor"
+      ],
+      "objects": [
+        "Feedback Record",
+        "Customer Profile",
+        "Delivery Assignment"
+      ],
+      "recordId": "rec_e336eb00685d81af85bc76a59760982326d62ea217a40ba6cb54674cf45dc754"
+    },
+    {
+      "id": "FR-061",
+      "requirement": "The system shall route low-rated feedback records to a Fulfillment Supervisor for investigation and resolution actions.",
+      "need": "The business needs to proactively identify service failures to maintain customer trust and ensure fair resolution of disputes.",
+      "actors": [
+        "Customer",
+        "Fulfillment Supervisor",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Feedback Record",
+        "Dispute Ticket",
+        "Delivery Proof",
+        "Customer Profile"
+      ],
+      "recordId": "rec_1319e0c7760228f35d150ba81297ec1e522f3bb013d7c279c7382891ceb8a50f"
+    },
+    {
+      "id": "FR-062",
+      "requirement": "The system shall aggregate feedback records to generate actionable insights for business strategy and operational improvement.",
+      "need": "The business needs to consolidate customer feedback to identify service weaknesses, evaluate partner performance, and drive quality improvements.",
+      "actors": [
+        "Customer",
+        "Platform Operator",
+        "Fulfillment Supervisor"
+      ],
+      "objects": [
+        "Feedback Record",
+        "Customer Profile",
+        "Delivery Partner",
+        "Store Partner Agreement"
+      ],
+      "recordId": "rec_2d6a42284d5a27dbff9f0c9e38ea84784658057fc474bf20162d53a7bb9cd2cd"
+    }
+  ]
+}

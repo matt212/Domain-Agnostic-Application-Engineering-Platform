@@ -1,0 +1,17 @@
+{
+  "question": "How does the business earn money or sustain itself, and what threatens that?",
+  "needs": [
+    {
+      "need": "The business needs to dynamically adjust delivery fees and commission structures based on real-time demand, traffic conditions, and operational costs to maintain margin stability during peak periods and adverse weather e...",
+      "why": "Static pricing models fail to cover the volatile cost structure of gig-economy logistics, threatening profitability when order volume surges or delivery costs spike unexpectedly."
+    },
+    {
+      "need": "The business needs to implement automated, real-time inventory reconciliation between physical store POS systems and the digital platform to prevent overselling and associated revenue loss.",
+      "why": "Inventory discrepancies lead to failed deliveries, customer refunds, and reputational damage, directly eroding the transaction commission revenue stream and increasing operational waste."
+    },
+    {
+      "need": "The business needs to continuously monitor and mitigate financial risks such as fraud, chargebacks, and payment provider failures to protect cash flow and ensure settlement reliability.",
+      "why": "In a high-volume, low-margin transaction model, even small percentages of failed settlements or fraudulent activity can significantly impact net revenue and operational sustainability."
+    }
+  ]
+}

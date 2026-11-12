@@ -1,0 +1,17 @@
+{
+  "question": "Why does this business exist, and what value must it deliver to each kind of customer or beneficiary?",
+  "needs": [
+    {
+      "need": "The business must deliver ultra-fast (under 60 minutes) access to fresh perishables and daily essentials to customers who prioritize speed and convenience over cost.",
+      "why": "This fulfills the core customer need for immediate gratification and reduces the friction of traditional grocery shopping, driving repeat usage and high ratings."
+    },
+    {
+      "need": "The business must provide a unified digital interface that aggregates fragmented inventory from multiple store partners to offer a comprehensive assortment without requiring customers to visit multiple locations.",
+      "why": "This creates value by simplifying the shopping experience and enabling the platform to monetize through transaction commissions and advertising on a consolidated marketplace."
+    },
+    {
+      "need": "The business must optimize last-mile logistics through algorithmic routing and a dense network of gig workers to ensure efficient order fulfillment and cost control.",
+      "why": "This operational efficiency is critical for maintaining profitability in a low-margin model while meeting the strict time commitments required to satisfy the 'quick commerce' promise."
+    }
+  ]
+}

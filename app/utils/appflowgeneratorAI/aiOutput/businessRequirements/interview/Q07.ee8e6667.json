@@ -1,0 +1,17 @@
+{
+  "question": "When things go wrong (failures, disputes, fraud, abuse, outages), what must the business guarantee?",
+  "needs": [
+    {
+      "need": "The business must guarantee the rapid isolation and containment of system outages or data corruption to prevent the propagation of errors across the entire order lifecycle and protect revenue integrity.",
+      "why": "In a hyperlocal model where speed is the primary value proposition, any system failure directly translates to missed delivery windows, customer churn, and potential regulatory breaches if food safety or labor laws are violated due to lack of oversight."
+    },
+    {
+      "need": "The business must guarantee the immediate and transparent resolution of financial disputes and fraud attempts to maintain trust with both Store Partners and Customers while minimizing revenue leakage.",
+      "why": "Given the high volume of micro-transactions and reliance on third-party settlement, the inability to quickly reverse fraudulent charges or resolve billing disputes would erode partner confidence and trigger regulatory scrutiny regarding fund handling."
+    },
+    {
+      "need": "The business must guarantee the preservation of an immutable audit trail for all operational anomalies to satisfy regulatory authorities and facilitate root cause analysis during high-stakes investigations.",
+      "why": "With significant regulatory exposure regarding gig-worker labor laws and food safety, the business cannot rely on verbal explanations; a verifiable, tamper-proof record of who did what and when is required to mitigate legal liability and prove compliance."
+    }
+  ]
+}

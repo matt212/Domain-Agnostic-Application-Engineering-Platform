@@ -1,0 +1,17 @@
+{
+  "question": "What outcomes would the business sponsor use to judge success, and how would each be measured?",
+  "needs": [
+    {
+      "need": "The business needs to measure and report on the percentage of orders fulfilled within the target timeframe (e.g., <60 minutes) to validate operational efficiency and service speed commitments.",
+      "why": "Meeting strict delivery windows is the core value proposition of the Q-Commerce model and directly drives customer retention and repeat usage."
+    },
+    {
+      "need": "The business needs to track the rate of inventory discrepancies and overselling incidents to ensure accurate availability data and minimize order failures.",
+      "why": "Accurate inventory synchronization is critical for maintaining customer trust and preventing revenue loss from failed deliveries in a high-velocity environment."
+    },
+    {
+      "need": "The business needs to monitor the efficiency of revenue streams, specifically the ratio of transaction commissions and delivery fees against operational costs, to ensure profitability.",
+      "why": "Sustaining the gig-economy logistics model requires rigorous cost control and optimization of multiple monetization channels to achieve a positive unit economics."
+    }
+  ]
+}
