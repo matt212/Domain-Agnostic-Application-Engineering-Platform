@@ -1,0 +1,40 @@
+{
+  "result": {
+    "name": "Optimize last-mile logistics via algorithmic routing",
+    "business_requirement": "The business requires an automated system to dynamically assign orders to gig workers and calculate optimal delivery paths to ensure efficient fulfillment and cost control.",
+    "business_objective": "Maintain profitability in a low-margin model while meeting strict time commitments required to satisfy the quick commerce promise.",
+    "business_value": "Meeting delivery targets ensures customer satisfaction and repeat usage, while dynamic routing minimizes operational costs and prevents order failures.",
+    "stakeholders": [
+      "Delivery Partner",
+      "Platform Operator",
+      "Order Allocation Engine"
+    ],
+    "success_measures": [
+      "Proposed: Average delivery time reduction of 15% within 3 months",
+      "Proposed: Reduction in failed delivery attempts by 20%",
+      "Proposed: Increase in gig worker utilization rate to 85%"
+    ],
+    "priority": "Must",
+    "policies_and_constraints": [
+      "Compliance with local gig-economy labor regulations regarding worker classification and pay transparency.",
+      "System must operate with low latency to support real-time decision-making during peak hours.",
+      "Routing algorithms must prioritize safety and avoid restricted zones defined by the Regulatory Authority."
+    ],
+    "assumptions": [
+      "Real-time traffic data from external logistics providers is available and accurate.",
+      "Delivery Partners have reliable access to navigation tools and communication channels.",
+      "Store Partners provide timely updates on inventory availability to support accurate allocation."
+    ],
+    "risks_and_dependencies": [
+      "Dependency on third-party traffic data providers; inaccurate data could lead to suboptimal routing.",
+      "Potential resistance from Delivery Partners if dynamic assignment algorithms are perceived as unfair.",
+      "Risk of system overload during extreme weather events or sudden demand spikes."
+    ],
+    "linked_functional_requirements": [
+      "FR-003",
+      "FR-047",
+      "FR-028"
+    ]
+  },
+  "unmatched_stakeholders": []
+}
