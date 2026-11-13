@@ -1,0 +1,38 @@
+{
+  "result": {
+    "name": "Multi-channel delivery status notifications",
+    "business_requirement": "The business requires the Platform Operator to automatically send timely updates via SMS, email, or app push when an order status changes to Ready for Delivery or Assigned to a Delivery Partner.",
+    "business_objective": "This serves the goal of reducing support inquiries and improving the overall customer delivery experience through transparency.",
+    "business_value": "Meeting this requirement reduces customer frustration and support costs, while failure leads to increased complaints and lower retention.",
+    "stakeholders": [
+      "Customer",
+      "Platform Operator",
+      "Delivery Partner"
+    ],
+    "success_measures": [
+      "Customer support ticket volume related to order status reduced by proposed 20%",
+      "Customer satisfaction score for delivery communication reaches proposed 4.5/5",
+      "Notification delivery success rate exceeds proposed 98%"
+    ],
+    "priority": "Should",
+    "policies_and_constraints": [
+      "Notifications must comply with local telecommunications and data privacy regulations.",
+      "Messages must be sent within 2 minutes of the status change event.",
+      "Customers must be able to opt-out of non-critical promotional notifications."
+    ],
+    "assumptions": [
+      "The Order Allocation Engine provides accurate, real-time status updates to the notification system.",
+      "Customers have provided valid contact preferences during onboarding.",
+      "Third-party SMS and email providers maintain high uptime availability."
+    ],
+    "risks_and_dependencies": [
+      "Dependency on external messaging providers may cause delays during network outages.",
+      "Incorrect status data from the Order Allocation Engine could trigger false notifications.",
+      "High message volume during peak hours may exceed carrier rate limits."
+    ],
+    "linked_functional_requirements": [
+      "FR-052"
+    ]
+  },
+  "unmatched_stakeholders": []
+}

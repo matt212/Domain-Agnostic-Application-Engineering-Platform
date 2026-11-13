@@ -13,7 +13,7 @@
  * or step by step (each step is resumable):
  *   load -> interview -> draft -> generate -> merge
  * for generate batches 
- *FROM_BR=BR-018 TO_BR=BR-025 node app/utils/appflowgeneratorAI/commands/8.0.7.BusinessRequirements.js generate
+ *FROM_BR=BR-031 TO_BR=BR-040 node app/utils/appflowgeneratorAI/commands/8.0.7.BusinessRequirements.js generate
  * Resume everything remaining
    node app/utils/appflowgeneratorAI/commands/8.0.7.BusinessRequirements.js generate
  * Runs entirely on your local llama-cli (MODEL_NAME, LLAMA_CLI_PATH, THREADS). Nothing leaves the machine.
@@ -691,7 +691,7 @@ ${NO_THINK}`;
 }
 
 function validateBR(o, knownFrIds) {
-    console.log('Validating business requirement:', o);
+    
     const s = v => typeof v === 'string' && v.trim().length > 0;
     if (!s(o.business_requirement)) throw new Error('business_requirement missing');
     if (!s(o.business_objective)) throw new Error('business_objective missing');
