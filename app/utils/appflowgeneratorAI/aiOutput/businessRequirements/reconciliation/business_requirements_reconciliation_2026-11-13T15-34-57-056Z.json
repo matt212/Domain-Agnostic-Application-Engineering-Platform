@@ -1,0 +1,2404 @@
+{
+  "report_metadata": {
+    "report_name": "Business Requirements Reconciliation",
+    "report_version": "1.0.0",
+    "generated_at": "2026-11-13T15:34:57.054Z",
+    "database": "demodb",
+    "schema": "requirements",
+    "method": "DETERMINISTIC_POSTGRESQL_SOURCE_COMPARISON",
+    "ai_processing_performed": false,
+    "database_modifications_performed": false
+  },
+  "reconciliation_policy": {
+    "matching_method": "EXACT_BUSINESS_REQUIREMENT_ID",
+    "content_comparison_method": "DETERMINISTIC_FIELD_LEVEL_JSON_COMPARISON",
+    "original_records_preserved": true,
+    "automatic_id_changes": false,
+    "automatic_merges": false,
+    "automatic_approvals": false,
+    "decisions_require_explicit_review": true,
+    "comparison_fields": [
+      "name",
+      "priority",
+      "assumptions",
+      "stakeholders",
+      "business_value",
+      "success_measures",
+      "business_objective",
+      "business_requirement",
+      "risks_and_dependencies",
+      "policies_and_constraints",
+      "linked_functional_requirements"
+    ]
+  },
+  "summary": {
+    "total_distinct_requirement_ids": 28,
+    "matched_by_id": 26,
+    "matched_content": 19,
+    "content_mismatches": 7,
+    "consolidated_only": 1,
+    "work_file_only": 1,
+    "data_integrity_review": 0,
+    "unclassified": 0,
+    "consolidated_source_requirement_count": 27,
+    "individual_work_file_requirement_count": 27,
+    "existing_consolidation_findings": 30,
+    "existing_overlap_pairs": 4
+  },
+  "requirements": [
+    {
+      "requirement_id": "BR-001",
+      "classification": "MATCHED_BY_ID",
+      "consolidated_source_records": [
+        {
+          "version_number": 1,
+          "version_reason": "Consolidated BR",
+          "source_file_id": "2",
+          "file_name": "business_requirements-13-11-26_11:43.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-13-11-26_11:43.json"
+        }
+      ],
+      "work_file_source_records": [
+        {
+          "version_number": 2,
+          "version_reason": "Individual work-file snapshot",
+          "source_file_id": "65",
+          "file_name": "BR-001.99eefbf0.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/work/BR-001.99eefbf0.json"
+        }
+      ],
+      "other_source_records": [],
+      "content_comparison": {
+        "comparison_status": "CONTENT_MATCH",
+        "comparison_method": "FIELD_LEVEL_JSON_COMPARISON",
+        "fields_examined": 11,
+        "matching_fields": [
+          "name",
+          "priority",
+          "assumptions",
+          "stakeholders",
+          "business_value",
+          "success_measures",
+          "business_objective",
+          "business_requirement",
+          "risks_and_dependencies",
+          "policies_and_constraints",
+          "linked_functional_requirements"
+        ],
+        "differing_fields": [],
+        "differences": []
+      },
+      "proposed_disposition": "MATCHED_CONTENT_PENDING_APPROVAL"
+    },
+    {
+      "requirement_id": "BR-002",
+      "classification": "MATCHED_BY_ID",
+      "consolidated_source_records": [
+        {
+          "version_number": 1,
+          "version_reason": "Consolidated BR",
+          "source_file_id": "2",
+          "file_name": "business_requirements-13-11-26_11:43.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-13-11-26_11:43.json"
+        }
+      ],
+      "work_file_source_records": [
+        {
+          "version_number": 2,
+          "version_reason": "Individual work-file snapshot",
+          "source_file_id": "66",
+          "file_name": "BR-002.232b4564.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/work/BR-002.232b4564.json"
+        }
+      ],
+      "other_source_records": [],
+      "content_comparison": {
+        "comparison_status": "CONTENT_MATCH",
+        "comparison_method": "FIELD_LEVEL_JSON_COMPARISON",
+        "fields_examined": 11,
+        "matching_fields": [
+          "name",
+          "priority",
+          "assumptions",
+          "stakeholders",
+          "business_value",
+          "success_measures",
+          "business_objective",
+          "business_requirement",
+          "risks_and_dependencies",
+          "policies_and_constraints",
+          "linked_functional_requirements"
+        ],
+        "differing_fields": [],
+        "differences": []
+      },
+      "proposed_disposition": "MATCHED_CONTENT_PENDING_APPROVAL"
+    },
+    {
+      "requirement_id": "BR-003",
+      "classification": "MATCHED_BY_ID",
+      "consolidated_source_records": [
+        {
+          "version_number": 1,
+          "version_reason": "Consolidated BR",
+          "source_file_id": "2",
+          "file_name": "business_requirements-13-11-26_11:43.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-13-11-26_11:43.json"
+        }
+      ],
+      "work_file_source_records": [
+        {
+          "version_number": 2,
+          "version_reason": "Individual work-file snapshot",
+          "source_file_id": "67",
+          "file_name": "BR-003.3d5d3a61.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/work/BR-003.3d5d3a61.json"
+        }
+      ],
+      "other_source_records": [],
+      "content_comparison": {
+        "comparison_status": "CONTENT_MATCH",
+        "comparison_method": "FIELD_LEVEL_JSON_COMPARISON",
+        "fields_examined": 11,
+        "matching_fields": [
+          "name",
+          "priority",
+          "assumptions",
+          "stakeholders",
+          "business_value",
+          "success_measures",
+          "business_objective",
+          "business_requirement",
+          "risks_and_dependencies",
+          "policies_and_constraints",
+          "linked_functional_requirements"
+        ],
+        "differing_fields": [],
+        "differences": []
+      },
+      "proposed_disposition": "MATCHED_CONTENT_PENDING_APPROVAL"
+    },
+    {
+      "requirement_id": "BR-004",
+      "classification": "MATCHED_BY_ID",
+      "consolidated_source_records": [
+        {
+          "version_number": 1,
+          "version_reason": "Consolidated BR",
+          "source_file_id": "2",
+          "file_name": "business_requirements-13-11-26_11:43.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-13-11-26_11:43.json"
+        }
+      ],
+      "work_file_source_records": [
+        {
+          "version_number": 2,
+          "version_reason": "Individual work-file snapshot",
+          "source_file_id": "68",
+          "file_name": "BR-004.98843b27.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/work/BR-004.98843b27.json"
+        }
+      ],
+      "other_source_records": [],
+      "content_comparison": {
+        "comparison_status": "CONTENT_MATCH",
+        "comparison_method": "FIELD_LEVEL_JSON_COMPARISON",
+        "fields_examined": 11,
+        "matching_fields": [
+          "name",
+          "priority",
+          "assumptions",
+          "stakeholders",
+          "business_value",
+          "success_measures",
+          "business_objective",
+          "business_requirement",
+          "risks_and_dependencies",
+          "policies_and_constraints",
+          "linked_functional_requirements"
+        ],
+        "differing_fields": [],
+        "differences": []
+      },
+      "proposed_disposition": "MATCHED_CONTENT_PENDING_APPROVAL"
+    },
+    {
+      "requirement_id": "BR-005",
+      "classification": "MATCHED_BY_ID",
+      "consolidated_source_records": [
+        {
+          "version_number": 1,
+          "version_reason": "Consolidated BR",
+          "source_file_id": "2",
+          "file_name": "business_requirements-13-11-26_11:43.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-13-11-26_11:43.json"
+        }
+      ],
+      "work_file_source_records": [
+        {
+          "version_number": 2,
+          "version_reason": "Individual work-file snapshot",
+          "source_file_id": "69",
+          "file_name": "BR-005.0a0909c3.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/work/BR-005.0a0909c3.json"
+        }
+      ],
+      "other_source_records": [],
+      "content_comparison": {
+        "comparison_status": "CONTENT_MISMATCH",
+        "comparison_method": "FIELD_LEVEL_JSON_COMPARISON",
+        "fields_examined": 11,
+        "matching_fields": [
+          "name",
+          "priority",
+          "assumptions",
+          "stakeholders",
+          "business_value",
+          "success_measures",
+          "business_objective",
+          "business_requirement",
+          "risks_and_dependencies",
+          "policies_and_constraints"
+        ],
+        "differing_fields": [
+          "linked_functional_requirements"
+        ],
+        "differences": [
+          {
+            "field": "linked_functional_requirements",
+            "consolidated_value": [
+              "FR-001",
+              "FR-007",
+              "FR-011",
+              "FR-032",
+              "FR-033",
+              "FR-039"
+            ],
+            "work_file_value": [
+              "FR-001",
+              "FR-007",
+              "FR-039"
+            ]
+          }
+        ]
+      },
+      "proposed_disposition": "CONTENT_REVIEW_REQUIRED"
+    },
+    {
+      "requirement_id": "BR-006",
+      "classification": "MATCHED_BY_ID",
+      "consolidated_source_records": [
+        {
+          "version_number": 1,
+          "version_reason": "Consolidated BR",
+          "source_file_id": "2",
+          "file_name": "business_requirements-13-11-26_11:43.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-13-11-26_11:43.json"
+        }
+      ],
+      "work_file_source_records": [
+        {
+          "version_number": 2,
+          "version_reason": "Individual work-file snapshot",
+          "source_file_id": "70",
+          "file_name": "BR-006.19646bae.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/work/BR-006.19646bae.json"
+        }
+      ],
+      "other_source_records": [],
+      "content_comparison": {
+        "comparison_status": "CONTENT_MATCH",
+        "comparison_method": "FIELD_LEVEL_JSON_COMPARISON",
+        "fields_examined": 11,
+        "matching_fields": [
+          "name",
+          "priority",
+          "assumptions",
+          "stakeholders",
+          "business_value",
+          "success_measures",
+          "business_objective",
+          "business_requirement",
+          "risks_and_dependencies",
+          "policies_and_constraints",
+          "linked_functional_requirements"
+        ],
+        "differing_fields": [],
+        "differences": []
+      },
+      "proposed_disposition": "MATCHED_CONTENT_PENDING_APPROVAL"
+    },
+    {
+      "requirement_id": "BR-007",
+      "classification": "MATCHED_BY_ID",
+      "consolidated_source_records": [
+        {
+          "version_number": 1,
+          "version_reason": "Consolidated BR",
+          "source_file_id": "2",
+          "file_name": "business_requirements-13-11-26_11:43.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-13-11-26_11:43.json"
+        }
+      ],
+      "work_file_source_records": [
+        {
+          "version_number": 2,
+          "version_reason": "Individual work-file snapshot",
+          "source_file_id": "71",
+          "file_name": "BR-007.386c0bd5.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/work/BR-007.386c0bd5.json"
+        }
+      ],
+      "other_source_records": [],
+      "content_comparison": {
+        "comparison_status": "CONTENT_MATCH",
+        "comparison_method": "FIELD_LEVEL_JSON_COMPARISON",
+        "fields_examined": 11,
+        "matching_fields": [
+          "name",
+          "priority",
+          "assumptions",
+          "stakeholders",
+          "business_value",
+          "success_measures",
+          "business_objective",
+          "business_requirement",
+          "risks_and_dependencies",
+          "policies_and_constraints",
+          "linked_functional_requirements"
+        ],
+        "differing_fields": [],
+        "differences": []
+      },
+      "proposed_disposition": "MATCHED_CONTENT_PENDING_APPROVAL"
+    },
+    {
+      "requirement_id": "BR-008",
+      "classification": "MATCHED_BY_ID",
+      "consolidated_source_records": [
+        {
+          "version_number": 1,
+          "version_reason": "Consolidated BR",
+          "source_file_id": "2",
+          "file_name": "business_requirements-13-11-26_11:43.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-13-11-26_11:43.json"
+        }
+      ],
+      "work_file_source_records": [
+        {
+          "version_number": 2,
+          "version_reason": "Individual work-file snapshot",
+          "source_file_id": "72",
+          "file_name": "BR-008.338caf87.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/work/BR-008.338caf87.json"
+        }
+      ],
+      "other_source_records": [],
+      "content_comparison": {
+        "comparison_status": "CONTENT_MATCH",
+        "comparison_method": "FIELD_LEVEL_JSON_COMPARISON",
+        "fields_examined": 11,
+        "matching_fields": [
+          "name",
+          "priority",
+          "assumptions",
+          "stakeholders",
+          "business_value",
+          "success_measures",
+          "business_objective",
+          "business_requirement",
+          "risks_and_dependencies",
+          "policies_and_constraints",
+          "linked_functional_requirements"
+        ],
+        "differing_fields": [],
+        "differences": []
+      },
+      "proposed_disposition": "MATCHED_CONTENT_PENDING_APPROVAL"
+    },
+    {
+      "requirement_id": "BR-009",
+      "classification": "MATCHED_BY_ID",
+      "consolidated_source_records": [
+        {
+          "version_number": 1,
+          "version_reason": "Consolidated BR",
+          "source_file_id": "2",
+          "file_name": "business_requirements-13-11-26_11:43.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-13-11-26_11:43.json"
+        }
+      ],
+      "work_file_source_records": [
+        {
+          "version_number": 2,
+          "version_reason": "Individual work-file snapshot",
+          "source_file_id": "73",
+          "file_name": "BR-009.0e348fb0.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/work/BR-009.0e348fb0.json"
+        }
+      ],
+      "other_source_records": [],
+      "content_comparison": {
+        "comparison_status": "CONTENT_MATCH",
+        "comparison_method": "FIELD_LEVEL_JSON_COMPARISON",
+        "fields_examined": 11,
+        "matching_fields": [
+          "name",
+          "priority",
+          "assumptions",
+          "stakeholders",
+          "business_value",
+          "success_measures",
+          "business_objective",
+          "business_requirement",
+          "risks_and_dependencies",
+          "policies_and_constraints",
+          "linked_functional_requirements"
+        ],
+        "differing_fields": [],
+        "differences": []
+      },
+      "proposed_disposition": "MATCHED_CONTENT_PENDING_APPROVAL"
+    },
+    {
+      "requirement_id": "BR-010",
+      "classification": "MATCHED_BY_ID",
+      "consolidated_source_records": [
+        {
+          "version_number": 1,
+          "version_reason": "Consolidated BR",
+          "source_file_id": "2",
+          "file_name": "business_requirements-13-11-26_11:43.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-13-11-26_11:43.json"
+        }
+      ],
+      "work_file_source_records": [
+        {
+          "version_number": 2,
+          "version_reason": "Individual work-file snapshot",
+          "source_file_id": "74",
+          "file_name": "BR-010.af94a625.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/work/BR-010.af94a625.json"
+        }
+      ],
+      "other_source_records": [],
+      "content_comparison": {
+        "comparison_status": "CONTENT_MISMATCH",
+        "comparison_method": "FIELD_LEVEL_JSON_COMPARISON",
+        "fields_examined": 11,
+        "matching_fields": [
+          "name",
+          "priority",
+          "assumptions",
+          "stakeholders",
+          "business_value",
+          "success_measures",
+          "business_objective",
+          "business_requirement",
+          "risks_and_dependencies",
+          "policies_and_constraints"
+        ],
+        "differing_fields": [
+          "linked_functional_requirements"
+        ],
+        "differences": [
+          {
+            "field": "linked_functional_requirements",
+            "consolidated_value": [
+              "FR-012",
+              "FR-029",
+              "FR-045",
+              "FR-047"
+            ],
+            "work_file_value": [
+              "FR-045",
+              "FR-029",
+              "FR-047"
+            ]
+          }
+        ]
+      },
+      "proposed_disposition": "CONTENT_REVIEW_REQUIRED"
+    },
+    {
+      "requirement_id": "BR-011",
+      "classification": "MATCHED_BY_ID",
+      "consolidated_source_records": [
+        {
+          "version_number": 1,
+          "version_reason": "Consolidated BR",
+          "source_file_id": "2",
+          "file_name": "business_requirements-13-11-26_11:43.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-13-11-26_11:43.json"
+        }
+      ],
+      "work_file_source_records": [
+        {
+          "version_number": 2,
+          "version_reason": "Individual work-file snapshot",
+          "source_file_id": "75",
+          "file_name": "BR-011.96e3f493.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/work/BR-011.96e3f493.json"
+        }
+      ],
+      "other_source_records": [],
+      "content_comparison": {
+        "comparison_status": "CONTENT_MISMATCH",
+        "comparison_method": "FIELD_LEVEL_JSON_COMPARISON",
+        "fields_examined": 11,
+        "matching_fields": [
+          "name",
+          "priority",
+          "assumptions",
+          "stakeholders",
+          "business_value",
+          "success_measures",
+          "business_objective",
+          "business_requirement",
+          "risks_and_dependencies",
+          "policies_and_constraints"
+        ],
+        "differing_fields": [
+          "linked_functional_requirements"
+        ],
+        "differences": [
+          {
+            "field": "linked_functional_requirements",
+            "consolidated_value": [
+              "FR-001",
+              "FR-002",
+              "FR-004",
+              "FR-022",
+              "FR-034",
+              "FR-039",
+              "FR-055"
+            ],
+            "work_file_value": [
+              "FR-001",
+              "FR-002",
+              "FR-039"
+            ]
+          }
+        ]
+      },
+      "proposed_disposition": "CONTENT_REVIEW_REQUIRED"
+    },
+    {
+      "requirement_id": "BR-012",
+      "classification": "MATCHED_BY_ID",
+      "consolidated_source_records": [
+        {
+          "version_number": 1,
+          "version_reason": "Consolidated BR",
+          "source_file_id": "2",
+          "file_name": "business_requirements-13-11-26_11:43.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-13-11-26_11:43.json"
+        }
+      ],
+      "work_file_source_records": [
+        {
+          "version_number": 2,
+          "version_reason": "Individual work-file snapshot",
+          "source_file_id": "76",
+          "file_name": "BR-012.8d5af8a3.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/work/BR-012.8d5af8a3.json"
+        }
+      ],
+      "other_source_records": [],
+      "content_comparison": {
+        "comparison_status": "CONTENT_MATCH",
+        "comparison_method": "FIELD_LEVEL_JSON_COMPARISON",
+        "fields_examined": 11,
+        "matching_fields": [
+          "name",
+          "priority",
+          "assumptions",
+          "stakeholders",
+          "business_value",
+          "success_measures",
+          "business_objective",
+          "business_requirement",
+          "risks_and_dependencies",
+          "policies_and_constraints",
+          "linked_functional_requirements"
+        ],
+        "differing_fields": [],
+        "differences": []
+      },
+      "proposed_disposition": "MATCHED_CONTENT_PENDING_APPROVAL"
+    },
+    {
+      "requirement_id": "BR-013",
+      "classification": "MATCHED_BY_ID",
+      "consolidated_source_records": [
+        {
+          "version_number": 1,
+          "version_reason": "Consolidated BR",
+          "source_file_id": "2",
+          "file_name": "business_requirements-13-11-26_11:43.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-13-11-26_11:43.json"
+        }
+      ],
+      "work_file_source_records": [
+        {
+          "version_number": 2,
+          "version_reason": "Individual work-file snapshot",
+          "source_file_id": "77",
+          "file_name": "BR-013.64d66080.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/work/BR-013.64d66080.json"
+        }
+      ],
+      "other_source_records": [],
+      "content_comparison": {
+        "comparison_status": "CONTENT_MISMATCH",
+        "comparison_method": "FIELD_LEVEL_JSON_COMPARISON",
+        "fields_examined": 11,
+        "matching_fields": [
+          "name",
+          "priority",
+          "assumptions",
+          "stakeholders",
+          "business_value",
+          "success_measures",
+          "business_objective",
+          "business_requirement",
+          "risks_and_dependencies",
+          "policies_and_constraints"
+        ],
+        "differing_fields": [
+          "linked_functional_requirements"
+        ],
+        "differences": [
+          {
+            "field": "linked_functional_requirements",
+            "consolidated_value": [
+              "FR-008",
+              "FR-017",
+              "FR-020",
+              "FR-023",
+              "FR-053"
+            ],
+            "work_file_value": [
+              "FR-008",
+              "FR-020",
+              "FR-053",
+              "FR-017"
+            ]
+          }
+        ]
+      },
+      "proposed_disposition": "CONTENT_REVIEW_REQUIRED"
+    },
+    {
+      "requirement_id": "BR-014",
+      "classification": "MATCHED_BY_ID",
+      "consolidated_source_records": [
+        {
+          "version_number": 1,
+          "version_reason": "Consolidated BR",
+          "source_file_id": "2",
+          "file_name": "business_requirements-13-11-26_11:43.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-13-11-26_11:43.json"
+        }
+      ],
+      "work_file_source_records": [
+        {
+          "version_number": 2,
+          "version_reason": "Individual work-file snapshot",
+          "source_file_id": "78",
+          "file_name": "BR-014.04021aa2.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/work/BR-014.04021aa2.json"
+        }
+      ],
+      "other_source_records": [],
+      "content_comparison": {
+        "comparison_status": "CONTENT_MATCH",
+        "comparison_method": "FIELD_LEVEL_JSON_COMPARISON",
+        "fields_examined": 11,
+        "matching_fields": [
+          "name",
+          "priority",
+          "assumptions",
+          "stakeholders",
+          "business_value",
+          "success_measures",
+          "business_objective",
+          "business_requirement",
+          "risks_and_dependencies",
+          "policies_and_constraints",
+          "linked_functional_requirements"
+        ],
+        "differing_fields": [],
+        "differences": []
+      },
+      "proposed_disposition": "MATCHED_CONTENT_PENDING_APPROVAL"
+    },
+    {
+      "requirement_id": "BR-015",
+      "classification": "MATCHED_BY_ID",
+      "consolidated_source_records": [
+        {
+          "version_number": 1,
+          "version_reason": "Consolidated BR",
+          "source_file_id": "2",
+          "file_name": "business_requirements-13-11-26_11:43.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-13-11-26_11:43.json"
+        }
+      ],
+      "work_file_source_records": [
+        {
+          "version_number": 2,
+          "version_reason": "Individual work-file snapshot",
+          "source_file_id": "79",
+          "file_name": "BR-015.1427cac4.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/work/BR-015.1427cac4.json"
+        }
+      ],
+      "other_source_records": [],
+      "content_comparison": {
+        "comparison_status": "CONTENT_MATCH",
+        "comparison_method": "FIELD_LEVEL_JSON_COMPARISON",
+        "fields_examined": 11,
+        "matching_fields": [
+          "name",
+          "priority",
+          "assumptions",
+          "stakeholders",
+          "business_value",
+          "success_measures",
+          "business_objective",
+          "business_requirement",
+          "risks_and_dependencies",
+          "policies_and_constraints",
+          "linked_functional_requirements"
+        ],
+        "differing_fields": [],
+        "differences": []
+      },
+      "proposed_disposition": "MATCHED_CONTENT_PENDING_APPROVAL"
+    },
+    {
+      "requirement_id": "BR-016",
+      "classification": "MATCHED_BY_ID",
+      "consolidated_source_records": [
+        {
+          "version_number": 1,
+          "version_reason": "Consolidated BR",
+          "source_file_id": "2",
+          "file_name": "business_requirements-13-11-26_11:43.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-13-11-26_11:43.json"
+        }
+      ],
+      "work_file_source_records": [
+        {
+          "version_number": 2,
+          "version_reason": "Individual work-file snapshot",
+          "source_file_id": "80",
+          "file_name": "BR-016.91ed068d.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/work/BR-016.91ed068d.json"
+        }
+      ],
+      "other_source_records": [],
+      "content_comparison": {
+        "comparison_status": "CONTENT_MATCH",
+        "comparison_method": "FIELD_LEVEL_JSON_COMPARISON",
+        "fields_examined": 11,
+        "matching_fields": [
+          "name",
+          "priority",
+          "assumptions",
+          "stakeholders",
+          "business_value",
+          "success_measures",
+          "business_objective",
+          "business_requirement",
+          "risks_and_dependencies",
+          "policies_and_constraints",
+          "linked_functional_requirements"
+        ],
+        "differing_fields": [],
+        "differences": []
+      },
+      "proposed_disposition": "MATCHED_CONTENT_PENDING_APPROVAL"
+    },
+    {
+      "requirement_id": "BR-017",
+      "classification": "MATCHED_BY_ID",
+      "consolidated_source_records": [
+        {
+          "version_number": 1,
+          "version_reason": "Consolidated BR",
+          "source_file_id": "2",
+          "file_name": "business_requirements-13-11-26_11:43.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-13-11-26_11:43.json"
+        }
+      ],
+      "work_file_source_records": [
+        {
+          "version_number": 2,
+          "version_reason": "Individual work-file snapshot",
+          "source_file_id": "81",
+          "file_name": "BR-017.b22d53d4.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/work/BR-017.b22d53d4.json"
+        }
+      ],
+      "other_source_records": [],
+      "content_comparison": {
+        "comparison_status": "CONTENT_MATCH",
+        "comparison_method": "FIELD_LEVEL_JSON_COMPARISON",
+        "fields_examined": 11,
+        "matching_fields": [
+          "name",
+          "priority",
+          "assumptions",
+          "stakeholders",
+          "business_value",
+          "success_measures",
+          "business_objective",
+          "business_requirement",
+          "risks_and_dependencies",
+          "policies_and_constraints",
+          "linked_functional_requirements"
+        ],
+        "differing_fields": [],
+        "differences": []
+      },
+      "proposed_disposition": "MATCHED_CONTENT_PENDING_APPROVAL"
+    },
+    {
+      "requirement_id": "BR-018",
+      "classification": "MATCHED_BY_ID",
+      "consolidated_source_records": [
+        {
+          "version_number": 1,
+          "version_reason": "Consolidated BR",
+          "source_file_id": "2",
+          "file_name": "business_requirements-13-11-26_11:43.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-13-11-26_11:43.json"
+        }
+      ],
+      "work_file_source_records": [
+        {
+          "version_number": 2,
+          "version_reason": "Individual work-file snapshot",
+          "source_file_id": "82",
+          "file_name": "BR-018.9c9d6134.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/work/BR-018.9c9d6134.json"
+        }
+      ],
+      "other_source_records": [],
+      "content_comparison": {
+        "comparison_status": "CONTENT_MISMATCH",
+        "comparison_method": "FIELD_LEVEL_JSON_COMPARISON",
+        "fields_examined": 11,
+        "matching_fields": [
+          "name",
+          "priority",
+          "assumptions",
+          "stakeholders",
+          "business_value",
+          "success_measures",
+          "business_objective",
+          "business_requirement",
+          "risks_and_dependencies",
+          "policies_and_constraints"
+        ],
+        "differing_fields": [
+          "linked_functional_requirements"
+        ],
+        "differences": [
+          {
+            "field": "linked_functional_requirements",
+            "consolidated_value": [
+              "FR-005",
+              "FR-013",
+              "FR-019",
+              "FR-021",
+              "FR-026",
+              "FR-027",
+              "FR-031",
+              "FR-035",
+              "FR-036",
+              "FR-037",
+              "FR-039",
+              "FR-042",
+              "FR-043",
+              "FR-061"
+            ],
+            "work_file_value": [
+              "FR-005",
+              "FR-021",
+              "FR-026",
+              "FR-027",
+              "FR-031",
+              "FR-035",
+              "FR-036",
+              "FR-037",
+              "FR-039",
+              "FR-042",
+              "FR-043",
+              "FR-061"
+            ]
+          }
+        ]
+      },
+      "proposed_disposition": "CONTENT_REVIEW_REQUIRED"
+    },
+    {
+      "requirement_id": "BR-019",
+      "classification": "MATCHED_BY_ID",
+      "consolidated_source_records": [
+        {
+          "version_number": 1,
+          "version_reason": "Consolidated BR",
+          "source_file_id": "2",
+          "file_name": "business_requirements-13-11-26_11:43.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-13-11-26_11:43.json"
+        }
+      ],
+      "work_file_source_records": [
+        {
+          "version_number": 2,
+          "version_reason": "Individual work-file snapshot",
+          "source_file_id": "83",
+          "file_name": "BR-019.3d7715d4.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/work/BR-019.3d7715d4.json"
+        }
+      ],
+      "other_source_records": [],
+      "content_comparison": {
+        "comparison_status": "CONTENT_MATCH",
+        "comparison_method": "FIELD_LEVEL_JSON_COMPARISON",
+        "fields_examined": 11,
+        "matching_fields": [
+          "name",
+          "priority",
+          "assumptions",
+          "stakeholders",
+          "business_value",
+          "success_measures",
+          "business_objective",
+          "business_requirement",
+          "risks_and_dependencies",
+          "policies_and_constraints",
+          "linked_functional_requirements"
+        ],
+        "differing_fields": [],
+        "differences": []
+      },
+      "proposed_disposition": "MATCHED_CONTENT_PENDING_APPROVAL"
+    },
+    {
+      "requirement_id": "BR-020",
+      "classification": "MATCHED_BY_ID",
+      "consolidated_source_records": [
+        {
+          "version_number": 1,
+          "version_reason": "Consolidated BR",
+          "source_file_id": "2",
+          "file_name": "business_requirements-13-11-26_11:43.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-13-11-26_11:43.json"
+        }
+      ],
+      "work_file_source_records": [
+        {
+          "version_number": 2,
+          "version_reason": "Individual work-file snapshot",
+          "source_file_id": "84",
+          "file_name": "BR-020.99e1e4e8.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/work/BR-020.99e1e4e8.json"
+        }
+      ],
+      "other_source_records": [],
+      "content_comparison": {
+        "comparison_status": "CONTENT_MATCH",
+        "comparison_method": "FIELD_LEVEL_JSON_COMPARISON",
+        "fields_examined": 11,
+        "matching_fields": [
+          "name",
+          "priority",
+          "assumptions",
+          "stakeholders",
+          "business_value",
+          "success_measures",
+          "business_objective",
+          "business_requirement",
+          "risks_and_dependencies",
+          "policies_and_constraints",
+          "linked_functional_requirements"
+        ],
+        "differing_fields": [],
+        "differences": []
+      },
+      "proposed_disposition": "MATCHED_CONTENT_PENDING_APPROVAL"
+    },
+    {
+      "requirement_id": "BR-021",
+      "classification": "MATCHED_BY_ID",
+      "consolidated_source_records": [
+        {
+          "version_number": 1,
+          "version_reason": "Consolidated BR",
+          "source_file_id": "2",
+          "file_name": "business_requirements-13-11-26_11:43.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-13-11-26_11:43.json"
+        }
+      ],
+      "work_file_source_records": [
+        {
+          "version_number": 2,
+          "version_reason": "Individual work-file snapshot",
+          "source_file_id": "85",
+          "file_name": "BR-021.f4c525f0.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/work/BR-021.f4c525f0.json"
+        }
+      ],
+      "other_source_records": [],
+      "content_comparison": {
+        "comparison_status": "CONTENT_MATCH",
+        "comparison_method": "FIELD_LEVEL_JSON_COMPARISON",
+        "fields_examined": 11,
+        "matching_fields": [
+          "name",
+          "priority",
+          "assumptions",
+          "stakeholders",
+          "business_value",
+          "success_measures",
+          "business_objective",
+          "business_requirement",
+          "risks_and_dependencies",
+          "policies_and_constraints",
+          "linked_functional_requirements"
+        ],
+        "differing_fields": [],
+        "differences": []
+      },
+      "proposed_disposition": "MATCHED_CONTENT_PENDING_APPROVAL"
+    },
+    {
+      "requirement_id": "BR-022",
+      "classification": "MATCHED_BY_ID",
+      "consolidated_source_records": [
+        {
+          "version_number": 1,
+          "version_reason": "Consolidated BR",
+          "source_file_id": "2",
+          "file_name": "business_requirements-13-11-26_11:43.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-13-11-26_11:43.json"
+        }
+      ],
+      "work_file_source_records": [
+        {
+          "version_number": 2,
+          "version_reason": "Individual work-file snapshot",
+          "source_file_id": "86",
+          "file_name": "BR-022.7b3c9633.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/work/BR-022.7b3c9633.json"
+        }
+      ],
+      "other_source_records": [],
+      "content_comparison": {
+        "comparison_status": "CONTENT_MISMATCH",
+        "comparison_method": "FIELD_LEVEL_JSON_COMPARISON",
+        "fields_examined": 11,
+        "matching_fields": [
+          "name",
+          "priority",
+          "assumptions",
+          "stakeholders",
+          "business_value",
+          "success_measures",
+          "business_objective",
+          "business_requirement",
+          "risks_and_dependencies",
+          "policies_and_constraints"
+        ],
+        "differing_fields": [
+          "linked_functional_requirements"
+        ],
+        "differences": [
+          {
+            "field": "linked_functional_requirements",
+            "consolidated_value": [
+              "FR-005",
+              "FR-025",
+              "FR-027",
+              "FR-039",
+              "FR-041",
+              "FR-043",
+              "FR-056"
+            ],
+            "work_file_value": [
+              "FR-041",
+              "FR-025",
+              "FR-043",
+              "FR-027",
+              "FR-039",
+              "FR-005"
+            ]
+          }
+        ]
+      },
+      "proposed_disposition": "CONTENT_REVIEW_REQUIRED"
+    },
+    {
+      "requirement_id": "BR-023",
+      "classification": "MATCHED_BY_ID",
+      "consolidated_source_records": [
+        {
+          "version_number": 1,
+          "version_reason": "Consolidated BR",
+          "source_file_id": "2",
+          "file_name": "business_requirements-13-11-26_11:43.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-13-11-26_11:43.json"
+        }
+      ],
+      "work_file_source_records": [
+        {
+          "version_number": 2,
+          "version_reason": "Individual work-file snapshot",
+          "source_file_id": "87",
+          "file_name": "BR-023.33be6a38.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/work/BR-023.33be6a38.json"
+        }
+      ],
+      "other_source_records": [],
+      "content_comparison": {
+        "comparison_status": "CONTENT_MATCH",
+        "comparison_method": "FIELD_LEVEL_JSON_COMPARISON",
+        "fields_examined": 11,
+        "matching_fields": [
+          "name",
+          "priority",
+          "assumptions",
+          "stakeholders",
+          "business_value",
+          "success_measures",
+          "business_objective",
+          "business_requirement",
+          "risks_and_dependencies",
+          "policies_and_constraints",
+          "linked_functional_requirements"
+        ],
+        "differing_fields": [],
+        "differences": []
+      },
+      "proposed_disposition": "MATCHED_CONTENT_PENDING_APPROVAL"
+    },
+    {
+      "requirement_id": "BR-024",
+      "classification": "MATCHED_BY_ID",
+      "consolidated_source_records": [
+        {
+          "version_number": 1,
+          "version_reason": "Consolidated BR",
+          "source_file_id": "2",
+          "file_name": "business_requirements-13-11-26_11:43.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-13-11-26_11:43.json"
+        }
+      ],
+      "work_file_source_records": [
+        {
+          "version_number": 2,
+          "version_reason": "Individual work-file snapshot",
+          "source_file_id": "88",
+          "file_name": "BR-024.0835b7cf.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/work/BR-024.0835b7cf.json"
+        }
+      ],
+      "other_source_records": [],
+      "content_comparison": {
+        "comparison_status": "CONTENT_MATCH",
+        "comparison_method": "FIELD_LEVEL_JSON_COMPARISON",
+        "fields_examined": 11,
+        "matching_fields": [
+          "name",
+          "priority",
+          "assumptions",
+          "stakeholders",
+          "business_value",
+          "success_measures",
+          "business_objective",
+          "business_requirement",
+          "risks_and_dependencies",
+          "policies_and_constraints",
+          "linked_functional_requirements"
+        ],
+        "differing_fields": [],
+        "differences": []
+      },
+      "proposed_disposition": "MATCHED_CONTENT_PENDING_APPROVAL"
+    },
+    {
+      "requirement_id": "BR-025",
+      "classification": "MATCHED_BY_ID",
+      "consolidated_source_records": [
+        {
+          "version_number": 1,
+          "version_reason": "Consolidated BR",
+          "source_file_id": "2",
+          "file_name": "business_requirements-13-11-26_11:43.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-13-11-26_11:43.json"
+        }
+      ],
+      "work_file_source_records": [
+        {
+          "version_number": 2,
+          "version_reason": "Individual work-file snapshot",
+          "source_file_id": "89",
+          "file_name": "BR-025.dc3645c2.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/work/BR-025.dc3645c2.json"
+        }
+      ],
+      "other_source_records": [],
+      "content_comparison": {
+        "comparison_status": "CONTENT_MATCH",
+        "comparison_method": "FIELD_LEVEL_JSON_COMPARISON",
+        "fields_examined": 11,
+        "matching_fields": [
+          "name",
+          "priority",
+          "assumptions",
+          "stakeholders",
+          "business_value",
+          "success_measures",
+          "business_objective",
+          "business_requirement",
+          "risks_and_dependencies",
+          "policies_and_constraints",
+          "linked_functional_requirements"
+        ],
+        "differing_fields": [],
+        "differences": []
+      },
+      "proposed_disposition": "MATCHED_CONTENT_PENDING_APPROVAL"
+    },
+    {
+      "requirement_id": "BR-026",
+      "classification": "CONSOLIDATED_ONLY",
+      "consolidated_source_records": [
+        {
+          "version_number": 1,
+          "version_reason": "Consolidated BR",
+          "source_file_id": "2",
+          "file_name": "business_requirements-13-11-26_11:43.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-13-11-26_11:43.json"
+        }
+      ],
+      "work_file_source_records": [],
+      "other_source_records": [],
+      "content_comparison": null,
+      "proposed_disposition": "INVESTIGATE_MISSING_INDIVIDUAL_WORK_FILE"
+    },
+    {
+      "requirement_id": "BR-027",
+      "classification": "MATCHED_BY_ID",
+      "consolidated_source_records": [
+        {
+          "version_number": 1,
+          "version_reason": "Consolidated BR",
+          "source_file_id": "2",
+          "file_name": "business_requirements-13-11-26_11:43.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-13-11-26_11:43.json"
+        }
+      ],
+      "work_file_source_records": [
+        {
+          "version_number": 2,
+          "version_reason": "Individual work-file snapshot",
+          "source_file_id": "90",
+          "file_name": "BR-027.c30714c6.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/work/BR-027.c30714c6.json"
+        }
+      ],
+      "other_source_records": [],
+      "content_comparison": {
+        "comparison_status": "CONTENT_MISMATCH",
+        "comparison_method": "FIELD_LEVEL_JSON_COMPARISON",
+        "fields_examined": 11,
+        "matching_fields": [],
+        "differing_fields": [
+          "name",
+          "priority",
+          "assumptions",
+          "stakeholders",
+          "business_value",
+          "success_measures",
+          "business_objective",
+          "business_requirement",
+          "risks_and_dependencies",
+          "policies_and_constraints",
+          "linked_functional_requirements"
+        ],
+        "differences": [
+          {
+            "field": "name",
+            "consolidated_value": "Multi-channel delivery status notifications",
+            "work_file_value": "Proactive Perishable Inventory Management"
+          },
+          {
+            "field": "priority",
+            "consolidated_value": "Should",
+            "work_file_value": "Must"
+          },
+          {
+            "field": "assumptions",
+            "consolidated_value": [
+              "The Order Allocation Engine provides accurate, real-time status updates to the notification system.",
+              "Customers have provided valid contact preferences during onboarding.",
+              "Third-party SMS and email providers maintain high uptime availability."
+            ],
+            "work_file_value": [
+              "Store Partners have access to accurate real-time inventory data.",
+              "Delivery Partners can be routed to prioritize near-expiry items efficiently."
+            ]
+          },
+          {
+            "field": "stakeholders",
+            "consolidated_value": [
+              "Customer",
+              "Platform Operator",
+              "Delivery Partner"
+            ],
+            "work_file_value": [
+              "Store Partner",
+              "Fulfillment Supervisor",
+              "Platform Operator"
+            ]
+          },
+          {
+            "field": "business_value",
+            "consolidated_value": "Meeting this requirement reduces customer frustration and support costs, while failure leads to increased complaints and lower retention.",
+            "work_file_value": "If met, the business reduces financial loss from unsellable goods and ensures customer satisfaction through high-quality deliveries; if not met, waste increases and customer trust erodes."
+          },
+          {
+            "field": "success_measures",
+            "consolidated_value": [
+              "Customer support ticket volume related to order status reduced by proposed 20%",
+              "Customer satisfaction score for delivery communication reaches proposed 4.5/5",
+              "Notification delivery success rate exceeds proposed 98%"
+            ],
+            "work_file_value": [
+              "Percentage reduction in expired inventory write-offs",
+              "Time elapsed between shelf-life alert generation and order fulfillment",
+              "Proposed 95% reduction in waste incidents per month"
+            ]
+          },
+          {
+            "field": "business_objective",
+            "consolidated_value": "This serves the goal of reducing support inquiries and improving the overall customer delivery experience through transparency.",
+            "work_file_value": "This requirement serves the goal of minimizing product waste and maintaining quality standards to protect brand reputation and reduce loss costs."
+          },
+          {
+            "field": "business_requirement",
+            "consolidated_value": "The business requires the Platform Operator to automatically send timely updates via SMS, email, or app push when an order status changes to Ready for Delivery or Assigned to a Delivery Partner.",
+            "work_file_value": "The business requires a mechanism to proactively manage perishable stock by generating real-time alerts for items approaching shelf-life limits to prioritize fulfillment or trigger removal."
+          },
+          {
+            "field": "risks_and_dependencies",
+            "consolidated_value": [
+              "Dependency on external messaging providers may cause delays during network outages.",
+              "Incorrect status data from the Order Allocation Engine could trigger false notifications.",
+              "High message volume during peak hours may exceed carrier rate limits."
+            ],
+            "work_file_value": [
+              "Dependency on the accuracy of the Order Allocation Engine for prioritization.",
+              "Risk of operational disruption if removal processes are not clearly defined."
+            ]
+          },
+          {
+            "field": "policies_and_constraints",
+            "consolidated_value": [
+              "Notifications must comply with local telecommunications and data privacy regulations.",
+              "Messages must be sent within 2 minutes of the status change event.",
+              "Customers must be able to opt-out of non-critical promotional notifications."
+            ],
+            "work_file_value": [
+              "Alerts must trigger before the item reaches its absolute expiration date.",
+              "Removal protocols must comply with local food safety regulations.",
+              "Inventory data must be synchronized in real-time across all Store Partners."
+            ]
+          },
+          {
+            "field": "linked_functional_requirements",
+            "consolidated_value": [
+              "FR-052"
+            ],
+            "work_file_value": [
+              "FR-006",
+              "FR-024"
+            ]
+          }
+        ]
+      },
+      "proposed_disposition": "CONTENT_REVIEW_REQUIRED"
+    },
+    {
+      "requirement_id": "BR-028",
+      "classification": "WORK_FILE_ONLY",
+      "consolidated_source_records": [],
+      "work_file_source_records": [
+        {
+          "version_number": 1,
+          "version_reason": "Individual work-file snapshot",
+          "source_file_id": "91",
+          "file_name": "BR-028.dd147ae4.json",
+          "file_path": "app/utils/appflowgeneratorAI/aiOutput/businessRequirements/work/BR-028.dd147ae4.json"
+        }
+      ],
+      "other_source_records": [],
+      "content_comparison": null,
+      "proposed_disposition": "INVESTIGATE_MISSING_FROM_CONSOLIDATED_PORTFOLIO"
+    }
+  ],
+  "existing_finding_summary": [
+    {
+      "finding_type": "STRUCTURAL",
+      "severity": "HIGH",
+      "count": 2,
+      "affected_requirement_ids": []
+    },
+    {
+      "finding_type": "WORK_FILE_COMPARISON",
+      "severity": "HIGH",
+      "count": 28,
+      "affected_requirement_ids": [
+        "BR-003",
+        "BR-005",
+        "BR-007",
+        "BR-010",
+        "BR-011",
+        "BR-012",
+        "BR-013",
+        "BR-014",
+        "BR-015",
+        "BR-016",
+        "BR-017",
+        "BR-018",
+        "BR-019",
+        "BR-020",
+        "BR-021",
+        "BR-022",
+        "BR-023",
+        "BR-027"
+      ]
+    }
+  ],
+  "existing_consolidation_findings": [
+    {
+      "consolidation_finding_id": "1",
+      "consolidation_run_id": "1",
+      "requirement_id": "BR-003",
+      "finding_type": "WORK_FILE_COMPARISON",
+      "severity": "HIGH",
+      "field_name": "linked_functional_requirements",
+      "consolidated_value": null,
+      "work_file_value": "BR-003.3d5d3a61.json",
+      "finding_description": "Consolidated linked_functional_requirements differs from the work file.",
+      "recommendation": null,
+      "raw_finding": {
+        "field": "linked_functional_requirements",
+        "finding": "Consolidated linked_functional_requirements differs from the work file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION_MISMATCH",
+        "work_file": "BR-003.3d5d3a61.json",
+        "business_requirement_id": "BR-003"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    },
+    {
+      "consolidation_finding_id": "2",
+      "consolidation_run_id": "1",
+      "requirement_id": "BR-005",
+      "finding_type": "WORK_FILE_COMPARISON",
+      "severity": "HIGH",
+      "field_name": "linked_functional_requirements",
+      "consolidated_value": null,
+      "work_file_value": "BR-005.0a0909c3.json",
+      "finding_description": "Consolidated linked_functional_requirements differs from the work file.",
+      "recommendation": null,
+      "raw_finding": {
+        "field": "linked_functional_requirements",
+        "finding": "Consolidated linked_functional_requirements differs from the work file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION_MISMATCH",
+        "work_file": "BR-005.0a0909c3.json",
+        "business_requirement_id": "BR-005"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    },
+    {
+      "consolidation_finding_id": "3",
+      "consolidation_run_id": "1",
+      "requirement_id": "BR-007",
+      "finding_type": "WORK_FILE_COMPARISON",
+      "severity": "HIGH",
+      "field_name": "linked_functional_requirements",
+      "consolidated_value": null,
+      "work_file_value": "BR-007.386c0bd5.json",
+      "finding_description": "Consolidated linked_functional_requirements differs from the work file.",
+      "recommendation": null,
+      "raw_finding": {
+        "field": "linked_functional_requirements",
+        "finding": "Consolidated linked_functional_requirements differs from the work file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION_MISMATCH",
+        "work_file": "BR-007.386c0bd5.json",
+        "business_requirement_id": "BR-007"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    },
+    {
+      "consolidation_finding_id": "4",
+      "consolidation_run_id": "1",
+      "requirement_id": "BR-010",
+      "finding_type": "WORK_FILE_COMPARISON",
+      "severity": "HIGH",
+      "field_name": "linked_functional_requirements",
+      "consolidated_value": null,
+      "work_file_value": "BR-010.af94a625.json",
+      "finding_description": "Consolidated linked_functional_requirements differs from the work file.",
+      "recommendation": null,
+      "raw_finding": {
+        "field": "linked_functional_requirements",
+        "finding": "Consolidated linked_functional_requirements differs from the work file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION_MISMATCH",
+        "work_file": "BR-010.af94a625.json",
+        "business_requirement_id": "BR-010"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    },
+    {
+      "consolidation_finding_id": "5",
+      "consolidation_run_id": "1",
+      "requirement_id": "BR-011",
+      "finding_type": "WORK_FILE_COMPARISON",
+      "severity": "HIGH",
+      "field_name": "linked_functional_requirements",
+      "consolidated_value": null,
+      "work_file_value": "BR-011.96e3f493.json",
+      "finding_description": "Consolidated linked_functional_requirements differs from the work file.",
+      "recommendation": null,
+      "raw_finding": {
+        "field": "linked_functional_requirements",
+        "finding": "Consolidated linked_functional_requirements differs from the work file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION_MISMATCH",
+        "work_file": "BR-011.96e3f493.json",
+        "business_requirement_id": "BR-011"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    },
+    {
+      "consolidation_finding_id": "6",
+      "consolidation_run_id": "1",
+      "requirement_id": "BR-012",
+      "finding_type": "WORK_FILE_COMPARISON",
+      "severity": "HIGH",
+      "field_name": "linked_functional_requirements",
+      "consolidated_value": null,
+      "work_file_value": "BR-012.8d5af8a3.json",
+      "finding_description": "Consolidated linked_functional_requirements differs from the work file.",
+      "recommendation": null,
+      "raw_finding": {
+        "field": "linked_functional_requirements",
+        "finding": "Consolidated linked_functional_requirements differs from the work file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION_MISMATCH",
+        "work_file": "BR-012.8d5af8a3.json",
+        "business_requirement_id": "BR-012"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    },
+    {
+      "consolidation_finding_id": "7",
+      "consolidation_run_id": "1",
+      "requirement_id": "BR-013",
+      "finding_type": "WORK_FILE_COMPARISON",
+      "severity": "HIGH",
+      "field_name": "linked_functional_requirements",
+      "consolidated_value": null,
+      "work_file_value": "BR-013.64d66080.json",
+      "finding_description": "Consolidated linked_functional_requirements differs from the work file.",
+      "recommendation": null,
+      "raw_finding": {
+        "field": "linked_functional_requirements",
+        "finding": "Consolidated linked_functional_requirements differs from the work file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION_MISMATCH",
+        "work_file": "BR-013.64d66080.json",
+        "business_requirement_id": "BR-013"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    },
+    {
+      "consolidation_finding_id": "8",
+      "consolidation_run_id": "1",
+      "requirement_id": "BR-014",
+      "finding_type": "WORK_FILE_COMPARISON",
+      "severity": "HIGH",
+      "field_name": "linked_functional_requirements",
+      "consolidated_value": null,
+      "work_file_value": "BR-014.04021aa2.json",
+      "finding_description": "Consolidated linked_functional_requirements differs from the work file.",
+      "recommendation": null,
+      "raw_finding": {
+        "field": "linked_functional_requirements",
+        "finding": "Consolidated linked_functional_requirements differs from the work file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION_MISMATCH",
+        "work_file": "BR-014.04021aa2.json",
+        "business_requirement_id": "BR-014"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    },
+    {
+      "consolidation_finding_id": "9",
+      "consolidation_run_id": "1",
+      "requirement_id": "BR-015",
+      "finding_type": "WORK_FILE_COMPARISON",
+      "severity": "HIGH",
+      "field_name": "linked_functional_requirements",
+      "consolidated_value": null,
+      "work_file_value": "BR-015.1427cac4.json",
+      "finding_description": "Consolidated linked_functional_requirements differs from the work file.",
+      "recommendation": null,
+      "raw_finding": {
+        "field": "linked_functional_requirements",
+        "finding": "Consolidated linked_functional_requirements differs from the work file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION_MISMATCH",
+        "work_file": "BR-015.1427cac4.json",
+        "business_requirement_id": "BR-015"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    },
+    {
+      "consolidation_finding_id": "10",
+      "consolidation_run_id": "1",
+      "requirement_id": "BR-016",
+      "finding_type": "WORK_FILE_COMPARISON",
+      "severity": "HIGH",
+      "field_name": "linked_functional_requirements",
+      "consolidated_value": null,
+      "work_file_value": "BR-016.91ed068d.json",
+      "finding_description": "Consolidated linked_functional_requirements differs from the work file.",
+      "recommendation": null,
+      "raw_finding": {
+        "field": "linked_functional_requirements",
+        "finding": "Consolidated linked_functional_requirements differs from the work file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION_MISMATCH",
+        "work_file": "BR-016.91ed068d.json",
+        "business_requirement_id": "BR-016"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    },
+    {
+      "consolidation_finding_id": "11",
+      "consolidation_run_id": "1",
+      "requirement_id": "BR-017",
+      "finding_type": "WORK_FILE_COMPARISON",
+      "severity": "HIGH",
+      "field_name": "linked_functional_requirements",
+      "consolidated_value": null,
+      "work_file_value": "BR-017.b22d53d4.json",
+      "finding_description": "Consolidated linked_functional_requirements differs from the work file.",
+      "recommendation": null,
+      "raw_finding": {
+        "field": "linked_functional_requirements",
+        "finding": "Consolidated linked_functional_requirements differs from the work file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION_MISMATCH",
+        "work_file": "BR-017.b22d53d4.json",
+        "business_requirement_id": "BR-017"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    },
+    {
+      "consolidation_finding_id": "12",
+      "consolidation_run_id": "1",
+      "requirement_id": "BR-018",
+      "finding_type": "WORK_FILE_COMPARISON",
+      "severity": "HIGH",
+      "field_name": "linked_functional_requirements",
+      "consolidated_value": null,
+      "work_file_value": "BR-018.9c9d6134.json",
+      "finding_description": "Consolidated linked_functional_requirements differs from the work file.",
+      "recommendation": null,
+      "raw_finding": {
+        "field": "linked_functional_requirements",
+        "finding": "Consolidated linked_functional_requirements differs from the work file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION_MISMATCH",
+        "work_file": "BR-018.9c9d6134.json",
+        "business_requirement_id": "BR-018"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    },
+    {
+      "consolidation_finding_id": "13",
+      "consolidation_run_id": "1",
+      "requirement_id": "BR-019",
+      "finding_type": "WORK_FILE_COMPARISON",
+      "severity": "HIGH",
+      "field_name": "linked_functional_requirements",
+      "consolidated_value": null,
+      "work_file_value": "BR-019.3d7715d4.json",
+      "finding_description": "Consolidated linked_functional_requirements differs from the work file.",
+      "recommendation": null,
+      "raw_finding": {
+        "field": "linked_functional_requirements",
+        "finding": "Consolidated linked_functional_requirements differs from the work file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION_MISMATCH",
+        "work_file": "BR-019.3d7715d4.json",
+        "business_requirement_id": "BR-019"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    },
+    {
+      "consolidation_finding_id": "14",
+      "consolidation_run_id": "1",
+      "requirement_id": "BR-020",
+      "finding_type": "WORK_FILE_COMPARISON",
+      "severity": "HIGH",
+      "field_name": "linked_functional_requirements",
+      "consolidated_value": null,
+      "work_file_value": "BR-020.99e1e4e8.json",
+      "finding_description": "Consolidated linked_functional_requirements differs from the work file.",
+      "recommendation": null,
+      "raw_finding": {
+        "field": "linked_functional_requirements",
+        "finding": "Consolidated linked_functional_requirements differs from the work file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION_MISMATCH",
+        "work_file": "BR-020.99e1e4e8.json",
+        "business_requirement_id": "BR-020"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    },
+    {
+      "consolidation_finding_id": "15",
+      "consolidation_run_id": "1",
+      "requirement_id": "BR-021",
+      "finding_type": "WORK_FILE_COMPARISON",
+      "severity": "HIGH",
+      "field_name": "linked_functional_requirements",
+      "consolidated_value": null,
+      "work_file_value": "BR-021.f4c525f0.json",
+      "finding_description": "Consolidated linked_functional_requirements differs from the work file.",
+      "recommendation": null,
+      "raw_finding": {
+        "field": "linked_functional_requirements",
+        "finding": "Consolidated linked_functional_requirements differs from the work file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION_MISMATCH",
+        "work_file": "BR-021.f4c525f0.json",
+        "business_requirement_id": "BR-021"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    },
+    {
+      "consolidation_finding_id": "16",
+      "consolidation_run_id": "1",
+      "requirement_id": "BR-022",
+      "finding_type": "WORK_FILE_COMPARISON",
+      "severity": "HIGH",
+      "field_name": "linked_functional_requirements",
+      "consolidated_value": null,
+      "work_file_value": "BR-022.7b3c9633.json",
+      "finding_description": "Consolidated linked_functional_requirements differs from the work file.",
+      "recommendation": null,
+      "raw_finding": {
+        "field": "linked_functional_requirements",
+        "finding": "Consolidated linked_functional_requirements differs from the work file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION_MISMATCH",
+        "work_file": "BR-022.7b3c9633.json",
+        "business_requirement_id": "BR-022"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    },
+    {
+      "consolidation_finding_id": "17",
+      "consolidation_run_id": "1",
+      "requirement_id": "BR-023",
+      "finding_type": "WORK_FILE_COMPARISON",
+      "severity": "HIGH",
+      "field_name": "linked_functional_requirements",
+      "consolidated_value": null,
+      "work_file_value": "BR-023.33be6a38.json",
+      "finding_description": "Consolidated linked_functional_requirements differs from the work file.",
+      "recommendation": null,
+      "raw_finding": {
+        "field": "linked_functional_requirements",
+        "finding": "Consolidated linked_functional_requirements differs from the work file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION_MISMATCH",
+        "work_file": "BR-023.33be6a38.json",
+        "business_requirement_id": "BR-023"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    },
+    {
+      "consolidation_finding_id": "18",
+      "consolidation_run_id": "1",
+      "requirement_id": "BR-027",
+      "finding_type": "WORK_FILE_COMPARISON",
+      "severity": "HIGH",
+      "field_name": "name",
+      "consolidated_value": null,
+      "work_file_value": "BR-027.c30714c6.json",
+      "finding_description": "Consolidated name differs from the work file.",
+      "recommendation": null,
+      "raw_finding": {
+        "field": "name",
+        "finding": "Consolidated name differs from the work file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION_MISMATCH",
+        "work_file": "BR-027.c30714c6.json",
+        "business_requirement_id": "BR-027"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    },
+    {
+      "consolidation_finding_id": "19",
+      "consolidation_run_id": "1",
+      "requirement_id": "BR-027",
+      "finding_type": "WORK_FILE_COMPARISON",
+      "severity": "HIGH",
+      "field_name": "business_requirement",
+      "consolidated_value": null,
+      "work_file_value": "BR-027.c30714c6.json",
+      "finding_description": "Consolidated business_requirement differs from the work file.",
+      "recommendation": null,
+      "raw_finding": {
+        "field": "business_requirement",
+        "finding": "Consolidated business_requirement differs from the work file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION_MISMATCH",
+        "work_file": "BR-027.c30714c6.json",
+        "business_requirement_id": "BR-027"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    },
+    {
+      "consolidation_finding_id": "20",
+      "consolidation_run_id": "1",
+      "requirement_id": "BR-027",
+      "finding_type": "WORK_FILE_COMPARISON",
+      "severity": "HIGH",
+      "field_name": "business_objective",
+      "consolidated_value": null,
+      "work_file_value": "BR-027.c30714c6.json",
+      "finding_description": "Consolidated business_objective differs from the work file.",
+      "recommendation": null,
+      "raw_finding": {
+        "field": "business_objective",
+        "finding": "Consolidated business_objective differs from the work file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION_MISMATCH",
+        "work_file": "BR-027.c30714c6.json",
+        "business_requirement_id": "BR-027"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    },
+    {
+      "consolidation_finding_id": "21",
+      "consolidation_run_id": "1",
+      "requirement_id": "BR-027",
+      "finding_type": "WORK_FILE_COMPARISON",
+      "severity": "HIGH",
+      "field_name": "business_value",
+      "consolidated_value": null,
+      "work_file_value": "BR-027.c30714c6.json",
+      "finding_description": "Consolidated business_value differs from the work file.",
+      "recommendation": null,
+      "raw_finding": {
+        "field": "business_value",
+        "finding": "Consolidated business_value differs from the work file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION_MISMATCH",
+        "work_file": "BR-027.c30714c6.json",
+        "business_requirement_id": "BR-027"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    },
+    {
+      "consolidation_finding_id": "22",
+      "consolidation_run_id": "1",
+      "requirement_id": "BR-027",
+      "finding_type": "WORK_FILE_COMPARISON",
+      "severity": "HIGH",
+      "field_name": "stakeholders",
+      "consolidated_value": null,
+      "work_file_value": "BR-027.c30714c6.json",
+      "finding_description": "Consolidated stakeholders differs from the work file.",
+      "recommendation": null,
+      "raw_finding": {
+        "field": "stakeholders",
+        "finding": "Consolidated stakeholders differs from the work file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION_MISMATCH",
+        "work_file": "BR-027.c30714c6.json",
+        "business_requirement_id": "BR-027"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    },
+    {
+      "consolidation_finding_id": "23",
+      "consolidation_run_id": "1",
+      "requirement_id": "BR-027",
+      "finding_type": "WORK_FILE_COMPARISON",
+      "severity": "HIGH",
+      "field_name": "success_measures",
+      "consolidated_value": null,
+      "work_file_value": "BR-027.c30714c6.json",
+      "finding_description": "Consolidated success_measures differs from the work file.",
+      "recommendation": null,
+      "raw_finding": {
+        "field": "success_measures",
+        "finding": "Consolidated success_measures differs from the work file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION_MISMATCH",
+        "work_file": "BR-027.c30714c6.json",
+        "business_requirement_id": "BR-027"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    },
+    {
+      "consolidation_finding_id": "24",
+      "consolidation_run_id": "1",
+      "requirement_id": "BR-027",
+      "finding_type": "WORK_FILE_COMPARISON",
+      "severity": "HIGH",
+      "field_name": "priority",
+      "consolidated_value": null,
+      "work_file_value": "BR-027.c30714c6.json",
+      "finding_description": "Consolidated priority differs from the work file.",
+      "recommendation": null,
+      "raw_finding": {
+        "field": "priority",
+        "finding": "Consolidated priority differs from the work file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION_MISMATCH",
+        "work_file": "BR-027.c30714c6.json",
+        "business_requirement_id": "BR-027"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    },
+    {
+      "consolidation_finding_id": "25",
+      "consolidation_run_id": "1",
+      "requirement_id": "BR-027",
+      "finding_type": "WORK_FILE_COMPARISON",
+      "severity": "HIGH",
+      "field_name": "policies_and_constraints",
+      "consolidated_value": null,
+      "work_file_value": "BR-027.c30714c6.json",
+      "finding_description": "Consolidated policies_and_constraints differs from the work file.",
+      "recommendation": null,
+      "raw_finding": {
+        "field": "policies_and_constraints",
+        "finding": "Consolidated policies_and_constraints differs from the work file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION_MISMATCH",
+        "work_file": "BR-027.c30714c6.json",
+        "business_requirement_id": "BR-027"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    },
+    {
+      "consolidation_finding_id": "26",
+      "consolidation_run_id": "1",
+      "requirement_id": "BR-027",
+      "finding_type": "WORK_FILE_COMPARISON",
+      "severity": "HIGH",
+      "field_name": "assumptions",
+      "consolidated_value": null,
+      "work_file_value": "BR-027.c30714c6.json",
+      "finding_description": "Consolidated assumptions differs from the work file.",
+      "recommendation": null,
+      "raw_finding": {
+        "field": "assumptions",
+        "finding": "Consolidated assumptions differs from the work file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION_MISMATCH",
+        "work_file": "BR-027.c30714c6.json",
+        "business_requirement_id": "BR-027"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    },
+    {
+      "consolidation_finding_id": "27",
+      "consolidation_run_id": "1",
+      "requirement_id": "BR-027",
+      "finding_type": "WORK_FILE_COMPARISON",
+      "severity": "HIGH",
+      "field_name": "risks_and_dependencies",
+      "consolidated_value": null,
+      "work_file_value": "BR-027.c30714c6.json",
+      "finding_description": "Consolidated risks_and_dependencies differs from the work file.",
+      "recommendation": null,
+      "raw_finding": {
+        "field": "risks_and_dependencies",
+        "finding": "Consolidated risks_and_dependencies differs from the work file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION_MISMATCH",
+        "work_file": "BR-027.c30714c6.json",
+        "business_requirement_id": "BR-027"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    },
+    {
+      "consolidation_finding_id": "28",
+      "consolidation_run_id": "1",
+      "requirement_id": "BR-027",
+      "finding_type": "WORK_FILE_COMPARISON",
+      "severity": "HIGH",
+      "field_name": "linked_functional_requirements",
+      "consolidated_value": null,
+      "work_file_value": "BR-027.c30714c6.json",
+      "finding_description": "Consolidated linked_functional_requirements differs from the work file.",
+      "recommendation": null,
+      "raw_finding": {
+        "field": "linked_functional_requirements",
+        "finding": "Consolidated linked_functional_requirements differs from the work file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION_MISMATCH",
+        "work_file": "BR-027.c30714c6.json",
+        "business_requirement_id": "BR-027"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    },
+    {
+      "consolidation_finding_id": "29",
+      "consolidation_run_id": "1",
+      "requirement_id": null,
+      "finding_type": "STRUCTURAL",
+      "severity": "HIGH",
+      "field_name": null,
+      "consolidated_value": null,
+      "work_file_value": null,
+      "finding_description": "BR-028 exists in work/ but is missing from the consolidated file.",
+      "recommendation": null,
+      "raw_finding": {
+        "finding": "BR-028 exists in work/ but is missing from the consolidated file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    },
+    {
+      "consolidation_finding_id": "30",
+      "consolidation_run_id": "1",
+      "requirement_id": null,
+      "finding_type": "STRUCTURAL",
+      "severity": "HIGH",
+      "field_name": null,
+      "consolidated_value": null,
+      "work_file_value": null,
+      "finding_description": "BR-026 exists in the consolidated file but has no matching work file.",
+      "recommendation": null,
+      "raw_finding": {
+        "finding": "BR-026 exists in the consolidated file but has no matching work file.",
+        "severity": "HIGH",
+        "dimension": "CONSOLIDATION"
+      },
+      "created_at": "2026-11-13T14:30:04.669Z"
+    }
+  ],
+  "overlap_pair_assessments": [
+    {
+      "overlap_pair_id": "2",
+      "consolidation_run_id": "1",
+      "business_requirement_1": "BR-003",
+      "business_requirement_2": "BR-020",
+      "overlap_type": "OVERLAPPING",
+      "current_status": "UNRESOLVED",
+      "existing_reason": "Both requirements address the operational capability to maintain delivery SLAs. BR-003 focuses on the algorithmic assignment and routing of existing orders to gig workers. BR-020 focuses on scaling the network and onboarding partners to handle volume during expansion. Both are critical to the 'ultra-fast delivery' outcome, sharing the scope of logistics efficiency and capacity management.",
+      "overlapping_scope": "Ensuring efficient fulfillment, maintaining delivery speed, and managing logistics capacity.",
+      "existing_recommendation": "Verify if BR-020 is strictly about geographic expansion/scaling while BR-003 is about daily operational optimization, or if they represent a single 'Logistics Scalability and Efficiency' capability.",
+      "original_assessment": {
+        "br_a": "BR-003",
+        "br_b": "BR-020",
+        "reason": "Both requirements address the operational capability to maintain delivery SLAs. BR-003 focuses on the algorithmic assignment and routing of existing orders to gig workers. BR-020 focuses on scaling the network and onboarding partners to handle volume during expansion. Both are critical to the 'ultra-fast delivery' outcome, sharing the scope of logistics efficiency and capacity management.",
+        "confidence": "MEDIUM",
+        "classification": "OVERLAPPING",
+        "recommendation": "Verify if BR-020 is strictly about geographic expansion/scaling while BR-003 is about daily operational optimization, or if they represent a single 'Logistics Scalability and Efficiency' capability.",
+        "overlapping_scope": "Ensuring efficient fulfillment, maintaining delivery speed, and managing logistics capacity."
+      },
+      "reconciliation_status": "PENDING_EXPLICIT_DECISION",
+      "permitted_decisions": [
+        "RETAIN_SEPARATELY",
+        "REVISE",
+        "MERGE",
+        "RETAIN_AS_ALTERNATIVES"
+      ],
+      "automatic_merge_performed": false
+    },
+    {
+      "overlap_pair_id": "1",
+      "consolidation_run_id": "1",
+      "business_requirement_1": "BR-005",
+      "business_requirement_2": "BR-011",
+      "overlap_type": "OVERLAPPING",
+      "current_status": "UNRESOLVED",
+      "existing_reason": "Both requirements address the prevention of overselling and revenue leakage through inventory accuracy. BR-005 focuses on monitoring discrepancies and incidents, while BR-011 focuses on the technical mechanism of real-time synchronization between POS and the platform. The underlying business need (accurate inventory to prevent failed orders) is materially shared.",
+      "overlapping_scope": "Prevention of overselling, accurate inventory availability, and reduction of failed deliveries.",
+      "existing_recommendation": "Review if BR-005 is intended as a monitoring/reporting layer on top of the technical reconciliation in BR-011, or if they should be consolidated into a single 'Inventory Integrity' requirement.",
+      "original_assessment": {
+        "br_a": "BR-005",
+        "br_b": "BR-011",
+        "reason": "Both requirements address the prevention of overselling and revenue leakage through inventory accuracy. BR-005 focuses on monitoring discrepancies and incidents, while BR-011 focuses on the technical mechanism of real-time synchronization between POS and the platform. The underlying business need (accurate inventory to prevent failed orders) is materially shared.",
+        "confidence": "HIGH",
+        "classification": "OVERLAPPING",
+        "recommendation": "Review if BR-005 is intended as a monitoring/reporting layer on top of the technical reconciliation in BR-011, or if they should be consolidated into a single 'Inventory Integrity' requirement.",
+        "overlapping_scope": "Prevention of overselling, accurate inventory availability, and reduction of failed deliveries."
+      },
+      "reconciliation_status": "PENDING_EXPLICIT_DECISION",
+      "permitted_decisions": [
+        "RETAIN_SEPARATELY",
+        "REVISE",
+        "MERGE",
+        "RETAIN_AS_ALTERNATIVES"
+      ],
+      "automatic_merge_performed": false
+    },
+    {
+      "overlap_pair_id": "3",
+      "consolidation_run_id": "1",
+      "business_requirement_1": "BR-012",
+      "business_requirement_2": "BR-018",
+      "overlap_type": "OVERLAPPING",
+      "current_status": "UNRESOLVED",
+      "existing_reason": "Both requirements target financial risk and integrity. BR-012 covers broad financial risks including fraud, chargebacks, and payment failures. BR-018 specifically targets the resolution of financial disputes and fraud attempts. The underlying need to protect cash flow and ensure settlement reliability is shared, with BR-018 acting as a specific subset or workflow of the broader risk mitigation in BR-012.",
+      "overlapping_scope": "Fraud mitigation, financial dispute resolution, and protection of cash flow/settlement integrity.",
+      "existing_recommendation": "Determine if BR-018 is a specific user-facing workflow required in addition to the backend risk monitoring in BR-012, or if it should be merged to avoid redundancy in financial controls.",
+      "original_assessment": {
+        "br_a": "BR-012",
+        "br_b": "BR-018",
+        "reason": "Both requirements target financial risk and integrity. BR-012 covers broad financial risks including fraud, chargebacks, and payment failures. BR-018 specifically targets the resolution of financial disputes and fraud attempts. The underlying need to protect cash flow and ensure settlement reliability is shared, with BR-018 acting as a specific subset or workflow of the broader risk mitigation in BR-012.",
+        "confidence": "HIGH",
+        "classification": "OVERLAPPING",
+        "recommendation": "Determine if BR-018 is a specific user-facing workflow required in addition to the backend risk monitoring in BR-012, or if it should be merged to avoid redundancy in financial controls.",
+        "overlapping_scope": "Fraud mitigation, financial dispute resolution, and protection of cash flow/settlement integrity."
+      },
+      "reconciliation_status": "PENDING_EXPLICIT_DECISION",
+      "permitted_decisions": [
+        "RETAIN_SEPARATELY",
+        "REVISE",
+        "MERGE",
+        "RETAIN_AS_ALTERNATIVES"
+      ],
+      "automatic_merge_performed": false
+    },
+    {
+      "overlap_pair_id": "4",
+      "consolidation_run_id": "1",
+      "business_requirement_1": "BR-013",
+      "business_requirement_2": "BR-019",
+      "overlap_type": "OVERLAPPING",
+      "current_status": "UNRESOLVED",
+      "existing_reason": "Both requirements address regulatory compliance and legal liability. BR-013 mandates adherence to external laws (food safety, labor). BR-019 mandates an immutable audit trail to prove compliance during investigations. The business need to mitigate legal liability and satisfy regulatory authorities is shared, with BR-019 serving as the evidentiary mechanism for BR-013.",
+      "overlapping_scope": "Mitigation of legal liability, regulatory compliance, and protection against fines/reputational damage.",
+      "existing_recommendation": "Confirm if BR-019 is a distinct technical requirement for audit trails or if it is a sub-component of the broader compliance mandate in BR-013.",
+      "original_assessment": {
+        "br_a": "BR-013",
+        "br_b": "BR-019",
+        "reason": "Both requirements address regulatory compliance and legal liability. BR-013 mandates adherence to external laws (food safety, labor). BR-019 mandates an immutable audit trail to prove compliance during investigations. The business need to mitigate legal liability and satisfy regulatory authorities is shared, with BR-019 serving as the evidentiary mechanism for BR-013.",
+        "confidence": "MEDIUM",
+        "classification": "OVERLAPPING",
+        "recommendation": "Confirm if BR-019 is a distinct technical requirement for audit trails or if it is a sub-component of the broader compliance mandate in BR-013.",
+        "overlapping_scope": "Mitigation of legal liability, regulatory compliance, and protection against fines/reputational damage."
+      },
+      "reconciliation_status": "PENDING_EXPLICIT_DECISION",
+      "permitted_decisions": [
+        "RETAIN_SEPARATELY",
+        "REVISE",
+        "MERGE",
+        "RETAIN_AS_ALTERNATIVES"
+      ],
+      "automatic_merge_performed": false
+    }
+  ],
+  "proposed_reconciliation_actions": {
+    "note": "These are review classifications, not approved decisions. No database decisions have been inserted.",
+    "consolidated_only": [
+      {
+        "requirement_id": "BR-026",
+        "proposed_action": "INVESTIGATE_MISSING_INDIVIDUAL_WORK_FILE",
+        "approval_required": true
+      }
+    ],
+    "work_file_only": [
+      {
+        "requirement_id": "BR-028",
+        "proposed_action": "INVESTIGATE_MISSING_FROM_CONSOLIDATED_PORTFOLIO",
+        "approval_required": true
+      }
+    ],
+    "content_mismatches": [
+      {
+        "requirement_id": "BR-005",
+        "differing_fields": [
+          "linked_functional_requirements"
+        ],
+        "proposed_action": "REVIEW_CONTENT_DIFFERENCES",
+        "approval_required": true
+      },
+      {
+        "requirement_id": "BR-010",
+        "differing_fields": [
+          "linked_functional_requirements"
+        ],
+        "proposed_action": "REVIEW_CONTENT_DIFFERENCES",
+        "approval_required": true
+      },
+      {
+        "requirement_id": "BR-011",
+        "differing_fields": [
+          "linked_functional_requirements"
+        ],
+        "proposed_action": "REVIEW_CONTENT_DIFFERENCES",
+        "approval_required": true
+      },
+      {
+        "requirement_id": "BR-013",
+        "differing_fields": [
+          "linked_functional_requirements"
+        ],
+        "proposed_action": "REVIEW_CONTENT_DIFFERENCES",
+        "approval_required": true
+      },
+      {
+        "requirement_id": "BR-018",
+        "differing_fields": [
+          "linked_functional_requirements"
+        ],
+        "proposed_action": "REVIEW_CONTENT_DIFFERENCES",
+        "approval_required": true
+      },
+      {
+        "requirement_id": "BR-022",
+        "differing_fields": [
+          "linked_functional_requirements"
+        ],
+        "proposed_action": "REVIEW_CONTENT_DIFFERENCES",
+        "approval_required": true
+      },
+      {
+        "requirement_id": "BR-027",
+        "differing_fields": [
+          "name",
+          "priority",
+          "assumptions",
+          "stakeholders",
+          "business_value",
+          "success_measures",
+          "business_objective",
+          "business_requirement",
+          "risks_and_dependencies",
+          "policies_and_constraints",
+          "linked_functional_requirements"
+        ],
+        "proposed_action": "REVIEW_CONTENT_DIFFERENCES",
+        "approval_required": true
+      }
+    ],
+    "overlap_pairs": [
+      {
+        "overlap_pair_id": "2",
+        "requirement_ids": [
+          "BR-003",
+          "BR-020"
+        ],
+        "proposed_action": "REVIEW_EXISTING_OVERLAP_ASSESSMENT",
+        "approval_required": true
+      },
+      {
+        "overlap_pair_id": "1",
+        "requirement_ids": [
+          "BR-005",
+          "BR-011"
+        ],
+        "proposed_action": "REVIEW_EXISTING_OVERLAP_ASSESSMENT",
+        "approval_required": true
+      },
+      {
+        "overlap_pair_id": "3",
+        "requirement_ids": [
+          "BR-012",
+          "BR-018"
+        ],
+        "proposed_action": "REVIEW_EXISTING_OVERLAP_ASSESSMENT",
+        "approval_required": true
+      },
+      {
+        "overlap_pair_id": "4",
+        "requirement_ids": [
+          "BR-013",
+          "BR-019"
+        ],
+        "proposed_action": "REVIEW_EXISTING_OVERLAP_ASSESSMENT",
+        "approval_required": true
+      }
+    ]
+  },
+  "verification": {
+    "status": "CHECK",
+    "checks": [
+      {
+        "check": "Consolidated BR count",
+        "actual": 27,
+        "expected": 27,
+        "status": "PASS"
+      },
+      {
+        "check": "Individual work-file BR count",
+        "actual": 27,
+        "expected": 27,
+        "status": "PASS"
+      },
+      {
+        "check": "Matched BR IDs",
+        "actual": 26,
+        "expected": 25,
+        "status": "CHECK"
+      },
+      {
+        "check": "Consolidated-only BR IDs",
+        "actual": 1,
+        "expected": 1,
+        "status": "PASS"
+      },
+      {
+        "check": "Work-file-only BR IDs",
+        "actual": 1,
+        "expected": 1,
+        "status": "PASS"
+      },
+      {
+        "check": "Work-file comparison findings",
+        "actual": 28,
+        "expected": 28,
+        "status": "PASS"
+      },
+      {
+        "check": "Structural findings",
+        "actual": 2,
+        "expected": 2,
+        "status": "PASS"
+      },
+      {
+        "check": "Overlap pairs",
+        "actual": 4,
+        "expected": 4,
+        "status": "PASS"
+      }
+    ]
+  }
+}
