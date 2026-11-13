@@ -1055,5 +1055,2265 @@
         "FR-052"
       ]
     }
-  ]
+  ],
+  "validation": {
+    "validation_version": "8.0.8-batched",
+    "validated_at": "2026-11-13T12:35:22.155Z",
+    "validator": "unsloth/Qwen3.5-9B-GGUF",
+    "status": "FAIL",
+    "source": {
+      "ingestion_id": "2",
+      "functional_requirement_source": "consolidated-Functional-Requirements-12-11-26_01:11.json",
+      "functional_requirement_count": 62,
+      "discovered_work_file_count": 27,
+      "readable_work_file_count": 27,
+      "consolidated_file": "business_requirements-13-11-26_11:43.json"
+    },
+    "individual_validation": {
+      "counts": {
+        "PASS": 12,
+        "REVIEW": 15,
+        "FAIL": 0
+      },
+      "results": [
+        {
+          "business_requirement_id": "BR-001",
+          "file": "BR-001.99eefbf0.json",
+          "status": "REVIEW",
+          "semantic_reused": true
+        },
+        {
+          "business_requirement_id": "BR-002",
+          "file": "BR-002.232b4564.json",
+          "status": "REVIEW",
+          "semantic_reused": true
+        },
+        {
+          "business_requirement_id": "BR-003",
+          "file": "BR-003.3d5d3a61.json",
+          "status": "REVIEW",
+          "semantic_reused": true
+        },
+        {
+          "business_requirement_id": "BR-004",
+          "file": "BR-004.98843b27.json",
+          "status": "PASS",
+          "semantic_reused": false
+        },
+        {
+          "business_requirement_id": "BR-005",
+          "file": "BR-005.0a0909c3.json",
+          "status": "PASS",
+          "semantic_reused": false
+        },
+        {
+          "business_requirement_id": "BR-006",
+          "file": "BR-006.19646bae.json",
+          "status": "REVIEW",
+          "semantic_reused": false
+        },
+        {
+          "business_requirement_id": "BR-007",
+          "file": "BR-007.386c0bd5.json",
+          "status": "PASS",
+          "semantic_reused": false
+        },
+        {
+          "business_requirement_id": "BR-008",
+          "file": "BR-008.338caf87.json",
+          "status": "PASS",
+          "semantic_reused": false
+        },
+        {
+          "business_requirement_id": "BR-009",
+          "file": "BR-009.0e348fb0.json",
+          "status": "PASS",
+          "semantic_reused": false
+        },
+        {
+          "business_requirement_id": "BR-010",
+          "file": "BR-010.af94a625.json",
+          "status": "REVIEW",
+          "semantic_reused": false
+        },
+        {
+          "business_requirement_id": "BR-011",
+          "file": "BR-011.96e3f493.json",
+          "status": "REVIEW",
+          "semantic_reused": false
+        },
+        {
+          "business_requirement_id": "BR-012",
+          "file": "BR-012.8d5af8a3.json",
+          "status": "PASS",
+          "semantic_reused": false
+        },
+        {
+          "business_requirement_id": "BR-013",
+          "file": "BR-013.64d66080.json",
+          "status": "PASS",
+          "semantic_reused": false
+        },
+        {
+          "business_requirement_id": "BR-014",
+          "file": "BR-014.04021aa2.json",
+          "status": "PASS",
+          "semantic_reused": false
+        },
+        {
+          "business_requirement_id": "BR-015",
+          "file": "BR-015.1427cac4.json",
+          "status": "PASS",
+          "semantic_reused": false
+        },
+        {
+          "business_requirement_id": "BR-016",
+          "file": "BR-016.91ed068d.json",
+          "status": "PASS",
+          "semantic_reused": false
+        },
+        {
+          "business_requirement_id": "BR-017",
+          "file": "BR-017.b22d53d4.json",
+          "status": "REVIEW",
+          "semantic_reused": false
+        },
+        {
+          "business_requirement_id": "BR-018",
+          "file": "BR-018.9c9d6134.json",
+          "status": "REVIEW",
+          "semantic_reused": false
+        },
+        {
+          "business_requirement_id": "BR-019",
+          "file": "BR-019.3d7715d4.json",
+          "status": "REVIEW",
+          "semantic_reused": false
+        },
+        {
+          "business_requirement_id": "BR-020",
+          "file": "BR-020.99e1e4e8.json",
+          "status": "REVIEW",
+          "semantic_reused": false
+        },
+        {
+          "business_requirement_id": "BR-021",
+          "file": "BR-021.f4c525f0.json",
+          "status": "REVIEW",
+          "semantic_reused": false
+        },
+        {
+          "business_requirement_id": "BR-022",
+          "file": "BR-022.7b3c9633.json",
+          "status": "REVIEW",
+          "semantic_reused": false
+        },
+        {
+          "business_requirement_id": "BR-023",
+          "file": "BR-023.33be6a38.json",
+          "status": "REVIEW",
+          "semantic_reused": false
+        },
+        {
+          "business_requirement_id": "BR-024",
+          "file": "BR-024.0835b7cf.json",
+          "status": "REVIEW",
+          "semantic_reused": false
+        },
+        {
+          "business_requirement_id": "BR-025",
+          "file": "BR-025.dc3645c2.json",
+          "status": "PASS",
+          "semantic_reused": false
+        },
+        {
+          "business_requirement_id": "BR-027",
+          "file": "BR-027.c30714c6.json",
+          "status": "REVIEW",
+          "semantic_reused": false
+        },
+        {
+          "business_requirement_id": "BR-028",
+          "file": "BR-028.dd147ae4.json",
+          "status": "PASS",
+          "semantic_reused": false
+        }
+      ],
+      "duplicate_work_file_ids": []
+    },
+    "portfolio_validation": {
+      "source_hash": "8dd99e715cc0751c7f0d9f93d85b8528594788086ac4b36ade3c2bbb1a4f6573",
+      "assessed_at": "2026-11-13T12:34:31.588Z",
+      "method": "single_portfolio_ai_assessment",
+      "br_count": 27,
+      "results": [
+        {
+          "br_a": "BR-005",
+          "br_b": "BR-011",
+          "classification": "OVERLAPPING",
+          "confidence": "HIGH",
+          "reason": "Both requirements address the prevention of overselling and revenue leakage through inventory accuracy. BR-005 focuses on monitoring discrepancies and incidents, while BR-011 focuses on the technical mechanism of real-time synchronization between POS and the platform. The underlying business need (accurate inventory to prevent failed orders) is materially shared.",
+          "overlapping_scope": "Prevention of overselling, accurate inventory availability, and reduction of failed deliveries.",
+          "recommendation": "Review if BR-005 is intended as a monitoring/reporting layer on top of the technical reconciliation in BR-011, or if they should be consolidated into a single 'Inventory Integrity' requirement."
+        },
+        {
+          "br_a": "BR-003",
+          "br_b": "BR-020",
+          "classification": "OVERLAPPING",
+          "confidence": "MEDIUM",
+          "reason": "Both requirements address the operational capability to maintain delivery SLAs. BR-003 focuses on the algorithmic assignment and routing of existing orders to gig workers. BR-020 focuses on scaling the network and onboarding partners to handle volume during expansion. Both are critical to the 'ultra-fast delivery' outcome, sharing the scope of logistics efficiency and capacity management.",
+          "overlapping_scope": "Ensuring efficient fulfillment, maintaining delivery speed, and managing logistics capacity.",
+          "recommendation": "Verify if BR-020 is strictly about geographic expansion/scaling while BR-003 is about daily operational optimization, or if they represent a single 'Logistics Scalability and Efficiency' capability."
+        },
+        {
+          "br_a": "BR-012",
+          "br_b": "BR-018",
+          "classification": "OVERLAPPING",
+          "confidence": "HIGH",
+          "reason": "Both requirements target financial risk and integrity. BR-012 covers broad financial risks including fraud, chargebacks, and payment failures. BR-018 specifically targets the resolution of financial disputes and fraud attempts. The underlying need to protect cash flow and ensure settlement reliability is shared, with BR-018 acting as a specific subset or workflow of the broader risk mitigation in BR-012.",
+          "overlapping_scope": "Fraud mitigation, financial dispute resolution, and protection of cash flow/settlement integrity.",
+          "recommendation": "Determine if BR-018 is a specific user-facing workflow required in addition to the backend risk monitoring in BR-012, or if it should be merged to avoid redundancy in financial controls."
+        },
+        {
+          "br_a": "BR-013",
+          "br_b": "BR-019",
+          "classification": "OVERLAPPING",
+          "confidence": "MEDIUM",
+          "reason": "Both requirements address regulatory compliance and legal liability. BR-013 mandates adherence to external laws (food safety, labor). BR-019 mandates an immutable audit trail to prove compliance during investigations. The business need to mitigate legal liability and satisfy regulatory authorities is shared, with BR-019 serving as the evidentiary mechanism for BR-013.",
+          "overlapping_scope": "Mitigation of legal liability, regulatory compliance, and protection against fines/reputational damage.",
+          "recommendation": "Confirm if BR-019 is a distinct technical requirement for audit trails or if it is a sub-component of the broader compliance mandate in BR-013."
+        }
+      ],
+      "confirmed_duplicates": [],
+      "overlapping_pairs": [
+        {
+          "br_a": "BR-005",
+          "br_b": "BR-011",
+          "classification": "OVERLAPPING",
+          "confidence": "HIGH",
+          "reason": "Both requirements address the prevention of overselling and revenue leakage through inventory accuracy. BR-005 focuses on monitoring discrepancies and incidents, while BR-011 focuses on the technical mechanism of real-time synchronization between POS and the platform. The underlying business need (accurate inventory to prevent failed orders) is materially shared.",
+          "overlapping_scope": "Prevention of overselling, accurate inventory availability, and reduction of failed deliveries.",
+          "recommendation": "Review if BR-005 is intended as a monitoring/reporting layer on top of the technical reconciliation in BR-011, or if they should be consolidated into a single 'Inventory Integrity' requirement."
+        },
+        {
+          "br_a": "BR-003",
+          "br_b": "BR-020",
+          "classification": "OVERLAPPING",
+          "confidence": "MEDIUM",
+          "reason": "Both requirements address the operational capability to maintain delivery SLAs. BR-003 focuses on the algorithmic assignment and routing of existing orders to gig workers. BR-020 focuses on scaling the network and onboarding partners to handle volume during expansion. Both are critical to the 'ultra-fast delivery' outcome, sharing the scope of logistics efficiency and capacity management.",
+          "overlapping_scope": "Ensuring efficient fulfillment, maintaining delivery speed, and managing logistics capacity.",
+          "recommendation": "Verify if BR-020 is strictly about geographic expansion/scaling while BR-003 is about daily operational optimization, or if they represent a single 'Logistics Scalability and Efficiency' capability."
+        },
+        {
+          "br_a": "BR-012",
+          "br_b": "BR-018",
+          "classification": "OVERLAPPING",
+          "confidence": "HIGH",
+          "reason": "Both requirements target financial risk and integrity. BR-012 covers broad financial risks including fraud, chargebacks, and payment failures. BR-018 specifically targets the resolution of financial disputes and fraud attempts. The underlying need to protect cash flow and ensure settlement reliability is shared, with BR-018 acting as a specific subset or workflow of the broader risk mitigation in BR-012.",
+          "overlapping_scope": "Fraud mitigation, financial dispute resolution, and protection of cash flow/settlement integrity.",
+          "recommendation": "Determine if BR-018 is a specific user-facing workflow required in addition to the backend risk monitoring in BR-012, or if it should be merged to avoid redundancy in financial controls."
+        },
+        {
+          "br_a": "BR-013",
+          "br_b": "BR-019",
+          "classification": "OVERLAPPING",
+          "confidence": "MEDIUM",
+          "reason": "Both requirements address regulatory compliance and legal liability. BR-013 mandates adherence to external laws (food safety, labor). BR-019 mandates an immutable audit trail to prove compliance during investigations. The business need to mitigate legal liability and satisfy regulatory authorities is shared, with BR-019 serving as the evidentiary mechanism for BR-013.",
+          "overlapping_scope": "Mitigation of legal liability, regulatory compliance, and protection against fines/reputational damage.",
+          "recommendation": "Confirm if BR-019 is a distinct technical requirement for audit trails or if it is a sub-component of the broader compliance mandate in BR-013."
+        }
+      ],
+      "assessment_summary": "The portfolio contains 28 Business Requirements covering a high-velocity grocery delivery platform. While most requirements are distinct, four pairs were identified with significant overlap. BR-005 and BR-011 overlap on inventory accuracy; BR-003 and BR-020 overlap on logistics efficiency and scaling; BR-012 and BR-018 overlap on financial risk and fraud; and BR-013 and BR-019 overlap on regulatory compliance and audit evidence. No exact duplicates were found, but reviewers should validate the boundary between monitoring vs. technical implementation and broad vs. specific compliance requirements.",
+      "execution_status": "COMPLETED"
+    },
+    "fr_to_br_validation": {
+      "source_hash": "a2fd0f1e0754fb50b8a2531c71f2f67b05f330f6a504983ca823987594af3b90",
+      "assessed_at": "2026-11-13T12:35:22.152Z",
+      "execution_status": "PARTIAL",
+      "functional_requirements_assessed": 62,
+      "functional_requirements_expected": 62,
+      "results": [
+        {
+          "functional_requirement_id": "FR-001",
+          "existing_links": [
+            "BR-001",
+            "BR-005",
+            "BR-011",
+            "BR-017",
+            "BR-023"
+          ],
+          "candidate_business_requirements": [
+            "BR-011",
+            "BR-027",
+            "BR-005",
+            "BR-023",
+            "BR-001",
+            "BR-017"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-002",
+          "existing_links": [
+            "BR-011"
+          ],
+          "candidate_business_requirements": [
+            "BR-011",
+            "BR-007",
+            "BR-023",
+            "BR-005"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-003",
+          "existing_links": [
+            "BR-003"
+          ],
+          "candidate_business_requirements": [
+            "BR-003",
+            "BR-028",
+            "BR-007",
+            "BR-011"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-004",
+          "existing_links": [],
+          "candidate_business_requirements": [
+            "BR-028",
+            "BR-022",
+            "BR-011",
+            "BR-003"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-005",
+          "existing_links": [
+            "BR-006",
+            "BR-007",
+            "BR-018",
+            "BR-022"
+          ],
+          "candidate_business_requirements": [
+            "BR-007",
+            "BR-018",
+            "BR-022",
+            "BR-011",
+            "BR-006"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-006",
+          "existing_links": [
+            "BR-001",
+            "BR-027"
+          ],
+          "candidate_business_requirements": [
+            "BR-027",
+            "BR-023",
+            "BR-011",
+            "BR-007",
+            "BR-001"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-007",
+          "existing_links": [
+            "BR-005",
+            "BR-021"
+          ],
+          "candidate_business_requirements": [
+            "BR-021",
+            "BR-018",
+            "BR-005",
+            "BR-011"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-008",
+          "existing_links": [
+            "BR-013",
+            "BR-016"
+          ],
+          "candidate_business_requirements": [
+            "BR-013",
+            "BR-016",
+            "BR-019",
+            "BR-007"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-009",
+          "existing_links": [
+            "BR-009"
+          ],
+          "candidate_business_requirements": [
+            "BR-009",
+            "BR-003",
+            "BR-022",
+            "BR-005"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-010",
+          "existing_links": [
+            "BR-016"
+          ],
+          "candidate_business_requirements": [
+            "BR-016",
+            "BR-007",
+            "BR-008",
+            "BR-022"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-011",
+          "existing_links": [],
+          "candidate_business_requirements": [
+            "BR-005",
+            "BR-011",
+            "BR-023",
+            "BR-017"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-012",
+          "existing_links": [],
+          "candidate_business_requirements": [
+            "BR-010",
+            "BR-011",
+            "BR-003",
+            "BR-028"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-013",
+          "existing_links": [],
+          "candidate_business_requirements": [
+            "BR-018",
+            "BR-019",
+            "BR-022",
+            "BR-008"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-014",
+          "existing_links": [
+            "BR-020"
+          ],
+          "candidate_business_requirements": [
+            "BR-004",
+            "BR-006",
+            "BR-025",
+            "BR-007",
+            "BR-020"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-015",
+          "existing_links": [
+            "BR-019"
+          ],
+          "candidate_business_requirements": [
+            "BR-019",
+            "BR-028",
+            "BR-004",
+            "BR-008"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-016",
+          "existing_links": [
+            "BR-008"
+          ],
+          "candidate_business_requirements": [
+            "BR-008",
+            "BR-016",
+            "BR-028",
+            "BR-017"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-017",
+          "existing_links": [
+            "BR-008",
+            "BR-013"
+          ],
+          "candidate_business_requirements": [
+            "BR-008",
+            "BR-016",
+            "BR-028",
+            "BR-003",
+            "BR-013"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-018",
+          "existing_links": [],
+          "candidate_business_requirements": [
+            "BR-007",
+            "BR-027",
+            "BR-021",
+            "BR-011"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-019",
+          "existing_links": [],
+          "candidate_business_requirements": [
+            "BR-016",
+            "BR-018",
+            "BR-011",
+            "BR-003"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-020",
+          "existing_links": [
+            "BR-013",
+            "BR-016",
+            "BR-017",
+            "BR-019"
+          ],
+          "candidate_business_requirements": [
+            "BR-019",
+            "BR-013",
+            "BR-008",
+            "BR-017",
+            "BR-016"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-021",
+          "existing_links": [
+            "BR-018",
+            "BR-021"
+          ],
+          "candidate_business_requirements": [
+            "BR-018",
+            "BR-021",
+            "BR-028",
+            "BR-003"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-022",
+          "existing_links": [],
+          "candidate_business_requirements": [
+            "BR-007",
+            "BR-011",
+            "BR-006",
+            "BR-028"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-023",
+          "existing_links": [],
+          "candidate_business_requirements": [
+            "BR-004",
+            "BR-011",
+            "BR-013",
+            "BR-003"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-024",
+          "existing_links": [
+            "BR-027"
+          ],
+          "candidate_business_requirements": [
+            "BR-011",
+            "BR-027",
+            "BR-017",
+            "BR-007"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-025",
+          "existing_links": [
+            "BR-006",
+            "BR-022"
+          ],
+          "candidate_business_requirements": [
+            "BR-022",
+            "BR-007",
+            "BR-018",
+            "BR-011",
+            "BR-006"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-026",
+          "existing_links": [
+            "BR-012",
+            "BR-018"
+          ],
+          "candidate_business_requirements": [
+            "BR-025",
+            "BR-012",
+            "BR-024",
+            "BR-018"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-027",
+          "existing_links": [
+            "BR-012",
+            "BR-018",
+            "BR-022"
+          ],
+          "candidate_business_requirements": [
+            "BR-012",
+            "BR-018",
+            "BR-022",
+            "BR-027"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-028",
+          "existing_links": [
+            "BR-003",
+            "BR-024"
+          ],
+          "candidate_business_requirements": [
+            "BR-028",
+            "BR-020",
+            "BR-010",
+            "BR-011",
+            "BR-003",
+            "BR-024"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-029",
+          "existing_links": [
+            "BR-010",
+            "BR-024"
+          ],
+          "candidate_business_requirements": [
+            "BR-010",
+            "BR-024",
+            "BR-020",
+            "BR-017"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-030",
+          "existing_links": [
+            "BR-015"
+          ],
+          "candidate_business_requirements": [
+            "BR-015",
+            "BR-022",
+            "BR-008",
+            "BR-004"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-031",
+          "existing_links": [
+            "BR-017",
+            "BR-018"
+          ],
+          "candidate_business_requirements": [
+            "BR-018",
+            "BR-019",
+            "BR-017",
+            "BR-012"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-032",
+          "existing_links": [],
+          "candidate_business_requirements": [
+            "BR-005",
+            "BR-021",
+            "BR-011",
+            "BR-027"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-033",
+          "existing_links": [],
+          "candidate_business_requirements": [
+            "BR-005",
+            "BR-011",
+            "BR-028",
+            "BR-010"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-034",
+          "existing_links": [],
+          "candidate_business_requirements": [
+            "BR-023",
+            "BR-011",
+            "BR-027",
+            "BR-007"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-035",
+          "existing_links": [
+            "BR-018"
+          ],
+          "candidate_business_requirements": [
+            "BR-018",
+            "BR-021",
+            "BR-019",
+            "BR-028"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-036",
+          "existing_links": [
+            "BR-018"
+          ],
+          "candidate_business_requirements": [
+            "BR-018",
+            "BR-021",
+            "BR-012",
+            "BR-005"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-037",
+          "existing_links": [
+            "BR-018"
+          ],
+          "candidate_business_requirements": [
+            "BR-028",
+            "BR-018",
+            "BR-011",
+            "BR-019"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-038",
+          "existing_links": [
+            "BR-012"
+          ],
+          "candidate_business_requirements": [
+            "BR-012",
+            "BR-018",
+            "BR-017",
+            "BR-027"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-039",
+          "existing_links": [
+            "BR-005",
+            "BR-007",
+            "BR-011",
+            "BR-012",
+            "BR-018",
+            "BR-022"
+          ],
+          "candidate_business_requirements": [
+            "BR-007",
+            "BR-022",
+            "BR-011",
+            "BR-006",
+            "BR-005",
+            "BR-012",
+            "BR-018"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-040",
+          "existing_links": [
+            "BR-015"
+          ],
+          "candidate_business_requirements": [
+            "BR-015",
+            "BR-019",
+            "BR-018",
+            "BR-008"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-041",
+          "existing_links": [
+            "BR-022"
+          ],
+          "candidate_business_requirements": [
+            "BR-022",
+            "BR-007",
+            "BR-011",
+            "BR-018"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-042",
+          "existing_links": [
+            "BR-015",
+            "BR-018",
+            "BR-019"
+          ],
+          "candidate_business_requirements": [
+            "BR-019",
+            "BR-018",
+            "BR-012",
+            "BR-022",
+            "BR-015"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-043",
+          "existing_links": [
+            "BR-008",
+            "BR-018",
+            "BR-022"
+          ],
+          "candidate_business_requirements": [
+            "BR-022",
+            "BR-007",
+            "BR-016",
+            "BR-018",
+            "BR-008"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-044",
+          "existing_links": [
+            "BR-012"
+          ],
+          "candidate_business_requirements": [
+            "BR-018",
+            "BR-022",
+            "BR-012",
+            "BR-011"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-045",
+          "existing_links": [
+            "BR-006",
+            "BR-010"
+          ],
+          "candidate_business_requirements": [
+            "BR-010",
+            "BR-020",
+            "BR-023",
+            "BR-011",
+            "BR-006"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-046",
+          "existing_links": [
+            "BR-023"
+          ],
+          "candidate_business_requirements": [
+            "BR-023",
+            "BR-011",
+            "BR-027",
+            "BR-007"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-047",
+          "existing_links": [
+            "BR-003",
+            "BR-010",
+            "BR-024"
+          ],
+          "candidate_business_requirements": [
+            "BR-003",
+            "BR-028",
+            "BR-010",
+            "BR-005",
+            "BR-024"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-048",
+          "existing_links": [
+            "BR-009"
+          ],
+          "candidate_business_requirements": [
+            "BR-009",
+            "BR-021",
+            "BR-012",
+            "BR-018"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-049",
+          "existing_links": [
+            "BR-021"
+          ],
+          "candidate_business_requirements": [
+            "BR-007",
+            "BR-021",
+            "BR-022",
+            "BR-011"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-050",
+          "existing_links": [
+            "BR-014",
+            "BR-020",
+            "BR-025"
+          ],
+          "candidate_business_requirements": [
+            "BR-007",
+            "BR-010",
+            "BR-020",
+            "BR-016",
+            "BR-014",
+            "BR-025"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-051",
+          "existing_links": [
+            "BR-009",
+            "BR-014"
+          ],
+          "candidate_business_requirements": [
+            "BR-014",
+            "BR-009",
+            "BR-004",
+            "BR-002"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-052",
+          "existing_links": [
+            "BR-028"
+          ],
+          "candidate_business_requirements": [
+            "BR-028",
+            "BR-021",
+            "BR-022",
+            "BR-002"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-053",
+          "existing_links": [
+            "BR-013",
+            "BR-016",
+            "BR-020",
+            "BR-025"
+          ],
+          "candidate_business_requirements": [
+            "BR-016",
+            "BR-004",
+            "BR-018",
+            "BR-007",
+            "BR-013",
+            "BR-020",
+            "BR-025"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-054",
+          "existing_links": [
+            "BR-002",
+            "BR-004"
+          ],
+          "candidate_business_requirements": [
+            "BR-028",
+            "BR-027",
+            "BR-001",
+            "BR-009",
+            "BR-002",
+            "BR-004"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-055",
+          "existing_links": [],
+          "candidate_business_requirements": [
+            "BR-011",
+            "BR-007",
+            "BR-023",
+            "BR-010"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-056",
+          "existing_links": [],
+          "candidate_business_requirements": [
+            "BR-022",
+            "BR-028",
+            "BR-007",
+            "BR-003"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-057",
+          "existing_links": [
+            "BR-021"
+          ],
+          "candidate_business_requirements": [
+            "BR-007",
+            "BR-021",
+            "BR-014",
+            "BR-027"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-058",
+          "existing_links": [
+            "BR-023"
+          ],
+          "candidate_business_requirements": [
+            "BR-023",
+            "BR-010",
+            "BR-007",
+            "BR-027"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-059",
+          "existing_links": [
+            "BR-007",
+            "BR-014",
+            "BR-021"
+          ],
+          "candidate_business_requirements": [
+            "BR-007",
+            "BR-021",
+            "BR-027",
+            "BR-028",
+            "BR-014"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-060",
+          "existing_links": [
+            "BR-014"
+          ],
+          "candidate_business_requirements": [
+            "BR-027",
+            "BR-021",
+            "BR-014",
+            "BR-007"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-061",
+          "existing_links": [
+            "BR-014",
+            "BR-018",
+            "BR-021"
+          ],
+          "candidate_business_requirements": [
+            "BR-018",
+            "BR-021",
+            "BR-014",
+            "BR-003"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        },
+        {
+          "functional_requirement_id": "FR-062",
+          "existing_links": [
+            "BR-002"
+          ],
+          "candidate_business_requirements": [
+            "BR-007",
+            "BR-021",
+            "BR-014",
+            "BR-004",
+            "BR-002"
+          ],
+          "relationships": [],
+          "status": "UNCLEAR",
+          "error": "No JSON object found in model output."
+        }
+      ],
+      "semantic_relationships": [],
+      "unsupported_links": [],
+      "partial_links": [],
+      "unclear_links": []
+    },
+    "consolidated_validation": {
+      "structure": {
+        "findings": [
+          {
+            "dimension": "CONSOLIDATION",
+            "severity": "HIGH",
+            "finding": "BR-028 exists in work/ but is missing from the consolidated file."
+          },
+          {
+            "dimension": "CONSOLIDATION",
+            "severity": "HIGH",
+            "finding": "BR-026 exists in the consolidated file but has no matching work file."
+          }
+        ],
+        "functional_requirement_coverage": [
+          {
+            "functional_requirement_id": "FR-001",
+            "linked_business_requirements": [
+              "BR-001",
+              "BR-005",
+              "BR-011",
+              "BR-017",
+              "BR-023"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-002",
+            "linked_business_requirements": [
+              "BR-011"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-003",
+            "linked_business_requirements": [
+              "BR-003"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-004",
+            "linked_business_requirements": [
+              "BR-011"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-005",
+            "linked_business_requirements": [
+              "BR-006",
+              "BR-007",
+              "BR-018",
+              "BR-022"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-006",
+            "linked_business_requirements": [
+              "BR-001",
+              "BR-026"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-007",
+            "linked_business_requirements": [
+              "BR-005",
+              "BR-021"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-008",
+            "linked_business_requirements": [
+              "BR-013",
+              "BR-016"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-009",
+            "linked_business_requirements": [
+              "BR-009"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-010",
+            "linked_business_requirements": [
+              "BR-016"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-011",
+            "linked_business_requirements": [
+              "BR-005"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-012",
+            "linked_business_requirements": [
+              "BR-010"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-013",
+            "linked_business_requirements": [
+              "BR-018"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-014",
+            "linked_business_requirements": [
+              "BR-020"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-015",
+            "linked_business_requirements": [
+              "BR-019"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-016",
+            "linked_business_requirements": [
+              "BR-008"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-017",
+            "linked_business_requirements": [
+              "BR-008",
+              "BR-013"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-018",
+            "linked_business_requirements": [
+              "BR-026"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-019",
+            "linked_business_requirements": [
+              "BR-018"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-020",
+            "linked_business_requirements": [
+              "BR-013",
+              "BR-016",
+              "BR-017",
+              "BR-019"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-021",
+            "linked_business_requirements": [
+              "BR-018",
+              "BR-021"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-022",
+            "linked_business_requirements": [
+              "BR-011"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-023",
+            "linked_business_requirements": [
+              "BR-013"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-024",
+            "linked_business_requirements": [
+              "BR-026"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-025",
+            "linked_business_requirements": [
+              "BR-006",
+              "BR-022"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-026",
+            "linked_business_requirements": [
+              "BR-012",
+              "BR-018"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-027",
+            "linked_business_requirements": [
+              "BR-012",
+              "BR-018",
+              "BR-022"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-028",
+            "linked_business_requirements": [
+              "BR-003",
+              "BR-024"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-029",
+            "linked_business_requirements": [
+              "BR-010",
+              "BR-024"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-030",
+            "linked_business_requirements": [
+              "BR-015"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-031",
+            "linked_business_requirements": [
+              "BR-017",
+              "BR-018"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-032",
+            "linked_business_requirements": [
+              "BR-005"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-033",
+            "linked_business_requirements": [
+              "BR-005"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-034",
+            "linked_business_requirements": [
+              "BR-011"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-035",
+            "linked_business_requirements": [
+              "BR-018"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-036",
+            "linked_business_requirements": [
+              "BR-018"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-037",
+            "linked_business_requirements": [
+              "BR-018"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-038",
+            "linked_business_requirements": [
+              "BR-012"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-039",
+            "linked_business_requirements": [
+              "BR-005",
+              "BR-007",
+              "BR-011",
+              "BR-012",
+              "BR-018",
+              "BR-022"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-040",
+            "linked_business_requirements": [
+              "BR-015"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-041",
+            "linked_business_requirements": [
+              "BR-022"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-042",
+            "linked_business_requirements": [
+              "BR-015",
+              "BR-018",
+              "BR-019"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-043",
+            "linked_business_requirements": [
+              "BR-008",
+              "BR-018",
+              "BR-022"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-044",
+            "linked_business_requirements": [
+              "BR-012"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-045",
+            "linked_business_requirements": [
+              "BR-006",
+              "BR-010"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-046",
+            "linked_business_requirements": [
+              "BR-023"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-047",
+            "linked_business_requirements": [
+              "BR-003",
+              "BR-010",
+              "BR-024"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-048",
+            "linked_business_requirements": [
+              "BR-009"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-049",
+            "linked_business_requirements": [
+              "BR-021"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-050",
+            "linked_business_requirements": [
+              "BR-014",
+              "BR-020",
+              "BR-025"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-051",
+            "linked_business_requirements": [
+              "BR-009",
+              "BR-014"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-052",
+            "linked_business_requirements": [
+              "BR-027"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-053",
+            "linked_business_requirements": [
+              "BR-013",
+              "BR-016",
+              "BR-020",
+              "BR-025"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-054",
+            "linked_business_requirements": [
+              "BR-002",
+              "BR-004"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-055",
+            "linked_business_requirements": [
+              "BR-011"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-056",
+            "linked_business_requirements": [
+              "BR-022"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-057",
+            "linked_business_requirements": [
+              "BR-021"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-058",
+            "linked_business_requirements": [
+              "BR-023"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-059",
+            "linked_business_requirements": [
+              "BR-007",
+              "BR-014",
+              "BR-021"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-060",
+            "linked_business_requirements": [
+              "BR-014"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-061",
+            "linked_business_requirements": [
+              "BR-014",
+              "BR-018",
+              "BR-021"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "functional_requirement_id": "FR-062",
+            "linked_business_requirements": [
+              "BR-002"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          }
+        ],
+        "business_requirement_coverage": [
+          {
+            "business_requirement_id": "BR-001",
+            "linked_functional_requirements": [
+              "FR-001",
+              "FR-006"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "business_requirement_id": "BR-002",
+            "linked_functional_requirements": [
+              "FR-054",
+              "FR-062"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "business_requirement_id": "BR-003",
+            "linked_functional_requirements": [
+              "FR-003",
+              "FR-028",
+              "FR-047"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "business_requirement_id": "BR-004",
+            "linked_functional_requirements": [
+              "FR-054"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "business_requirement_id": "BR-005",
+            "linked_functional_requirements": [
+              "FR-001",
+              "FR-007",
+              "FR-011",
+              "FR-032",
+              "FR-033",
+              "FR-039"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "business_requirement_id": "BR-006",
+            "linked_functional_requirements": [
+              "FR-005",
+              "FR-025",
+              "FR-045"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "business_requirement_id": "BR-007",
+            "linked_functional_requirements": [
+              "FR-005",
+              "FR-039",
+              "FR-059"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "business_requirement_id": "BR-008",
+            "linked_functional_requirements": [
+              "FR-016",
+              "FR-017",
+              "FR-043"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "business_requirement_id": "BR-009",
+            "linked_functional_requirements": [
+              "FR-009",
+              "FR-048",
+              "FR-051"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "business_requirement_id": "BR-010",
+            "linked_functional_requirements": [
+              "FR-012",
+              "FR-029",
+              "FR-045",
+              "FR-047"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "business_requirement_id": "BR-011",
+            "linked_functional_requirements": [
+              "FR-001",
+              "FR-002",
+              "FR-004",
+              "FR-022",
+              "FR-034",
+              "FR-039",
+              "FR-055"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "business_requirement_id": "BR-012",
+            "linked_functional_requirements": [
+              "FR-026",
+              "FR-027",
+              "FR-038",
+              "FR-039",
+              "FR-044"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "business_requirement_id": "BR-013",
+            "linked_functional_requirements": [
+              "FR-008",
+              "FR-017",
+              "FR-020",
+              "FR-023",
+              "FR-053"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "business_requirement_id": "BR-014",
+            "linked_functional_requirements": [
+              "FR-050",
+              "FR-051",
+              "FR-059",
+              "FR-060",
+              "FR-061"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "business_requirement_id": "BR-015",
+            "linked_functional_requirements": [
+              "FR-030",
+              "FR-040",
+              "FR-042"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "business_requirement_id": "BR-016",
+            "linked_functional_requirements": [
+              "FR-008",
+              "FR-010",
+              "FR-020",
+              "FR-053"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "business_requirement_id": "BR-017",
+            "linked_functional_requirements": [
+              "FR-001",
+              "FR-020",
+              "FR-031"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "business_requirement_id": "BR-018",
+            "linked_functional_requirements": [
+              "FR-005",
+              "FR-013",
+              "FR-019",
+              "FR-021",
+              "FR-026",
+              "FR-027",
+              "FR-031",
+              "FR-035",
+              "FR-036",
+              "FR-037",
+              "FR-039",
+              "FR-042",
+              "FR-043",
+              "FR-061"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "business_requirement_id": "BR-019",
+            "linked_functional_requirements": [
+              "FR-015",
+              "FR-020",
+              "FR-042"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "business_requirement_id": "BR-020",
+            "linked_functional_requirements": [
+              "FR-014",
+              "FR-050",
+              "FR-053"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "business_requirement_id": "BR-021",
+            "linked_functional_requirements": [
+              "FR-007",
+              "FR-021",
+              "FR-049",
+              "FR-057",
+              "FR-059",
+              "FR-061"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "business_requirement_id": "BR-022",
+            "linked_functional_requirements": [
+              "FR-005",
+              "FR-025",
+              "FR-027",
+              "FR-039",
+              "FR-041",
+              "FR-043",
+              "FR-056"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "business_requirement_id": "BR-023",
+            "linked_functional_requirements": [
+              "FR-001",
+              "FR-046",
+              "FR-058"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "business_requirement_id": "BR-024",
+            "linked_functional_requirements": [
+              "FR-028",
+              "FR-029",
+              "FR-047"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "business_requirement_id": "BR-025",
+            "linked_functional_requirements": [
+              "FR-050",
+              "FR-053"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "business_requirement_id": "BR-026",
+            "linked_functional_requirements": [
+              "FR-006",
+              "FR-018",
+              "FR-024"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          },
+          {
+            "business_requirement_id": "BR-027",
+            "linked_functional_requirements": [
+              "FR-052"
+            ],
+            "status": "STRUCTURALLY_LINKED"
+          }
+        ],
+        "unlinked_functional_requirements": [],
+        "business_requirements_without_functional_requirements": []
+      },
+      "work_file_comparison_findings": [
+        {
+          "dimension": "CONSOLIDATION_MISMATCH",
+          "severity": "HIGH",
+          "business_requirement_id": "BR-003",
+          "field": "linked_functional_requirements",
+          "work_file": "BR-003.3d5d3a61.json",
+          "finding": "Consolidated linked_functional_requirements differs from the work file."
+        },
+        {
+          "dimension": "CONSOLIDATION_MISMATCH",
+          "severity": "HIGH",
+          "business_requirement_id": "BR-005",
+          "field": "linked_functional_requirements",
+          "work_file": "BR-005.0a0909c3.json",
+          "finding": "Consolidated linked_functional_requirements differs from the work file."
+        },
+        {
+          "dimension": "CONSOLIDATION_MISMATCH",
+          "severity": "HIGH",
+          "business_requirement_id": "BR-007",
+          "field": "linked_functional_requirements",
+          "work_file": "BR-007.386c0bd5.json",
+          "finding": "Consolidated linked_functional_requirements differs from the work file."
+        },
+        {
+          "dimension": "CONSOLIDATION_MISMATCH",
+          "severity": "HIGH",
+          "business_requirement_id": "BR-010",
+          "field": "linked_functional_requirements",
+          "work_file": "BR-010.af94a625.json",
+          "finding": "Consolidated linked_functional_requirements differs from the work file."
+        },
+        {
+          "dimension": "CONSOLIDATION_MISMATCH",
+          "severity": "HIGH",
+          "business_requirement_id": "BR-011",
+          "field": "linked_functional_requirements",
+          "work_file": "BR-011.96e3f493.json",
+          "finding": "Consolidated linked_functional_requirements differs from the work file."
+        },
+        {
+          "dimension": "CONSOLIDATION_MISMATCH",
+          "severity": "HIGH",
+          "business_requirement_id": "BR-012",
+          "field": "linked_functional_requirements",
+          "work_file": "BR-012.8d5af8a3.json",
+          "finding": "Consolidated linked_functional_requirements differs from the work file."
+        },
+        {
+          "dimension": "CONSOLIDATION_MISMATCH",
+          "severity": "HIGH",
+          "business_requirement_id": "BR-013",
+          "field": "linked_functional_requirements",
+          "work_file": "BR-013.64d66080.json",
+          "finding": "Consolidated linked_functional_requirements differs from the work file."
+        },
+        {
+          "dimension": "CONSOLIDATION_MISMATCH",
+          "severity": "HIGH",
+          "business_requirement_id": "BR-014",
+          "field": "linked_functional_requirements",
+          "work_file": "BR-014.04021aa2.json",
+          "finding": "Consolidated linked_functional_requirements differs from the work file."
+        },
+        {
+          "dimension": "CONSOLIDATION_MISMATCH",
+          "severity": "HIGH",
+          "business_requirement_id": "BR-015",
+          "field": "linked_functional_requirements",
+          "work_file": "BR-015.1427cac4.json",
+          "finding": "Consolidated linked_functional_requirements differs from the work file."
+        },
+        {
+          "dimension": "CONSOLIDATION_MISMATCH",
+          "severity": "HIGH",
+          "business_requirement_id": "BR-016",
+          "field": "linked_functional_requirements",
+          "work_file": "BR-016.91ed068d.json",
+          "finding": "Consolidated linked_functional_requirements differs from the work file."
+        },
+        {
+          "dimension": "CONSOLIDATION_MISMATCH",
+          "severity": "HIGH",
+          "business_requirement_id": "BR-017",
+          "field": "linked_functional_requirements",
+          "work_file": "BR-017.b22d53d4.json",
+          "finding": "Consolidated linked_functional_requirements differs from the work file."
+        },
+        {
+          "dimension": "CONSOLIDATION_MISMATCH",
+          "severity": "HIGH",
+          "business_requirement_id": "BR-018",
+          "field": "linked_functional_requirements",
+          "work_file": "BR-018.9c9d6134.json",
+          "finding": "Consolidated linked_functional_requirements differs from the work file."
+        },
+        {
+          "dimension": "CONSOLIDATION_MISMATCH",
+          "severity": "HIGH",
+          "business_requirement_id": "BR-019",
+          "field": "linked_functional_requirements",
+          "work_file": "BR-019.3d7715d4.json",
+          "finding": "Consolidated linked_functional_requirements differs from the work file."
+        },
+        {
+          "dimension": "CONSOLIDATION_MISMATCH",
+          "severity": "HIGH",
+          "business_requirement_id": "BR-020",
+          "field": "linked_functional_requirements",
+          "work_file": "BR-020.99e1e4e8.json",
+          "finding": "Consolidated linked_functional_requirements differs from the work file."
+        },
+        {
+          "dimension": "CONSOLIDATION_MISMATCH",
+          "severity": "HIGH",
+          "business_requirement_id": "BR-021",
+          "field": "linked_functional_requirements",
+          "work_file": "BR-021.f4c525f0.json",
+          "finding": "Consolidated linked_functional_requirements differs from the work file."
+        },
+        {
+          "dimension": "CONSOLIDATION_MISMATCH",
+          "severity": "HIGH",
+          "business_requirement_id": "BR-022",
+          "field": "linked_functional_requirements",
+          "work_file": "BR-022.7b3c9633.json",
+          "finding": "Consolidated linked_functional_requirements differs from the work file."
+        },
+        {
+          "dimension": "CONSOLIDATION_MISMATCH",
+          "severity": "HIGH",
+          "business_requirement_id": "BR-023",
+          "field": "linked_functional_requirements",
+          "work_file": "BR-023.33be6a38.json",
+          "finding": "Consolidated linked_functional_requirements differs from the work file."
+        },
+        {
+          "dimension": "CONSOLIDATION_MISMATCH",
+          "severity": "HIGH",
+          "business_requirement_id": "BR-027",
+          "field": "name",
+          "work_file": "BR-027.c30714c6.json",
+          "finding": "Consolidated name differs from the work file."
+        },
+        {
+          "dimension": "CONSOLIDATION_MISMATCH",
+          "severity": "HIGH",
+          "business_requirement_id": "BR-027",
+          "field": "business_requirement",
+          "work_file": "BR-027.c30714c6.json",
+          "finding": "Consolidated business_requirement differs from the work file."
+        },
+        {
+          "dimension": "CONSOLIDATION_MISMATCH",
+          "severity": "HIGH",
+          "business_requirement_id": "BR-027",
+          "field": "business_objective",
+          "work_file": "BR-027.c30714c6.json",
+          "finding": "Consolidated business_objective differs from the work file."
+        },
+        {
+          "dimension": "CONSOLIDATION_MISMATCH",
+          "severity": "HIGH",
+          "business_requirement_id": "BR-027",
+          "field": "business_value",
+          "work_file": "BR-027.c30714c6.json",
+          "finding": "Consolidated business_value differs from the work file."
+        },
+        {
+          "dimension": "CONSOLIDATION_MISMATCH",
+          "severity": "HIGH",
+          "business_requirement_id": "BR-027",
+          "field": "stakeholders",
+          "work_file": "BR-027.c30714c6.json",
+          "finding": "Consolidated stakeholders differs from the work file."
+        },
+        {
+          "dimension": "CONSOLIDATION_MISMATCH",
+          "severity": "HIGH",
+          "business_requirement_id": "BR-027",
+          "field": "success_measures",
+          "work_file": "BR-027.c30714c6.json",
+          "finding": "Consolidated success_measures differs from the work file."
+        },
+        {
+          "dimension": "CONSOLIDATION_MISMATCH",
+          "severity": "HIGH",
+          "business_requirement_id": "BR-027",
+          "field": "priority",
+          "work_file": "BR-027.c30714c6.json",
+          "finding": "Consolidated priority differs from the work file."
+        },
+        {
+          "dimension": "CONSOLIDATION_MISMATCH",
+          "severity": "HIGH",
+          "business_requirement_id": "BR-027",
+          "field": "policies_and_constraints",
+          "work_file": "BR-027.c30714c6.json",
+          "finding": "Consolidated policies_and_constraints differs from the work file."
+        },
+        {
+          "dimension": "CONSOLIDATION_MISMATCH",
+          "severity": "HIGH",
+          "business_requirement_id": "BR-027",
+          "field": "assumptions",
+          "work_file": "BR-027.c30714c6.json",
+          "finding": "Consolidated assumptions differs from the work file."
+        },
+        {
+          "dimension": "CONSOLIDATION_MISMATCH",
+          "severity": "HIGH",
+          "business_requirement_id": "BR-027",
+          "field": "risks_and_dependencies",
+          "work_file": "BR-027.c30714c6.json",
+          "finding": "Consolidated risks_and_dependencies differs from the work file."
+        },
+        {
+          "dimension": "CONSOLIDATION_MISMATCH",
+          "severity": "HIGH",
+          "business_requirement_id": "BR-027",
+          "field": "linked_functional_requirements",
+          "work_file": "BR-027.c30714c6.json",
+          "finding": "Consolidated linked_functional_requirements differs from the work file."
+        }
+      ]
+    },
+    "approval": {
+      "status": "NOT_APPROVED",
+      "approved_at": null,
+      "approved_by": null
+    }
+  }
 }

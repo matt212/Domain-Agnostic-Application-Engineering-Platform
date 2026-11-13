@@ -36,5 +36,30 @@
       "FR-020"
     ]
   },
-  "unmatched_stakeholders": []
+  "unmatched_stakeholders": [],
+  "validation": {
+    "validation_version": "8.0.8-batched",
+    "validated_at": "2026-11-13T11:21:00.904Z",
+    "validator": "unsloth/Qwen3.5-9B-GGUF",
+    "status": "PASS",
+    "source_hash": "fde67b47cafcd945d582234e08ecb0df498226534139d84eb30004f31aa4aecf",
+    "structural_findings": [],
+    "semantic": {
+      "status": "PASS",
+      "business_quality": "PASS",
+      "solution_leakage": "NONE",
+      "unsupported_assumptions": "UNVERIFIED",
+      "findings": [
+        {
+          "dimension": "UNSUPPORTED_METRIC",
+          "severity": "MEDIUM",
+          "finding": "The success measure 'Average partner onboarding validation time is proposed under 48 hours' is labeled as proposed and lacks supporting evidence.",
+          "evidence": "Business Context mentions 'Operational Readiness' and 'Supply Chain Integration' but does not specify onboarding timelines or validation duration targets.",
+          "recommendation": "Review the 48-hour target with operations and legal teams to ensure it is realistic given the complexity of regulatory license verification."
+        }
+      ],
+      "assessment_summary": "BR-016 clearly defines the need for partner compliance validation to mitigate legal risk. The requirement is well-scoped around pre-onboarding checks. The only finding is the unverified 'proposed' metric regarding onboarding time, which needs stakeholder validation."
+    },
+    "reused_existing_semantic_assessment": false
+  }
 }

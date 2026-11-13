@@ -83,6 +83,9 @@
       "assessment_summary": "The Business Requirement is generally clear and addresses a meaningful business need for efficiency and cost control in a Q-Commerce model. The linked Functional Requirements substantively support the stated needs. However, there is a potential solution leakage issue where the BR prescribes specific system architecture ('Order Allocation Engine') and specific implementation methods ('calculate optimal delivery paths') rather than focusing solely on the business outcome. Additionally, the distinction between confirmed and proposed metrics in the success measures could be clearer."
     },
     "linked_fr_count": 3,
-    "known_linked_fr_count": 3
+    "known_linked_fr_count": 3,
+    "validation_version": "8.0.8-batched",
+    "source_hash": "702c5eefe73d631fc3375e1d80dcd55874b8dd3028735f1a8b9d4b34f77727f9",
+    "reused_existing_semantic_assessment": true
   }
 }

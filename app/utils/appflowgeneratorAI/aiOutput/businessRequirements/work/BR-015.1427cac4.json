@@ -35,5 +35,30 @@
       "FR-042"
     ]
   },
-  "unmatched_stakeholders": []
+  "unmatched_stakeholders": [],
+  "validation": {
+    "validation_version": "8.0.8-batched",
+    "validated_at": "2026-11-13T11:21:00.902Z",
+    "validator": "unsloth/Qwen3.5-9B-GGUF",
+    "status": "PASS",
+    "source_hash": "e58e12626bbfe04b5e25c1119818e153bec9dc51bfeffab0917da2b11521e44a",
+    "structural_findings": [],
+    "semantic": {
+      "status": "PASS",
+      "business_quality": "PASS",
+      "solution_leakage": "NONE",
+      "unsupported_assumptions": "UNVERIFIED",
+      "findings": [
+        {
+          "dimension": "UNSUPPORTED_METRIC",
+          "severity": "MEDIUM",
+          "finding": "The success measure 'proposed 99.9% accuracy in tax calculation' is labeled as proposed and lacks supporting evidence in the business context.",
+          "evidence": "Business Context mentions 'Regulatory compliance' and 'Financial settlement' but does not specify accuracy targets or tax calculation metrics.",
+          "recommendation": "Validate the 99.9% accuracy target with legal or finance stakeholders to ensure it aligns with regulatory expectations and operational reality."
+        }
+      ],
+      "assessment_summary": "BR-015 addresses a critical compliance need for tax calculation. The requirement is clear and outcome-focused. The primary issue is the inclusion of a specific accuracy metric (99.9%) which is marked as proposed and not supported by the provided business context."
+    },
+    "reused_existing_semantic_assessment": false
+  }
 }

@@ -1,0 +1,40 @@
+{
+  "result": {
+    "name": "Regulatory Compliance for Food Safety and Labor Laws",
+    "business_requirement": "The business requires strict adherence to external food safety standards and gig-economy labor laws to mitigate legal liability and operational risk.",
+    "business_objective": "Ensure the platform operates within legal boundaries to prevent fines, shutdowns, and reputational damage.",
+    "business_value": "Meeting this requirement protects the business from immediate legal action and ensures sustainable operations; failure results in severe financial penalties and loss of license.",
+    "stakeholders": [
+      "Regulatory Authority",
+      "Platform Operator",
+      "Store Partner",
+      "Delivery Partner"
+    ],
+    "success_measures": [
+      "100% of Store Partners hold valid food safety certifications prior to onboarding",
+      "100% of Delivery Partners complete mandatory labor law compliance training before activation",
+      "Zero regulatory fines or legal injunctions within the first 12 months of operation"
+    ],
+    "priority": "Must",
+    "policies_and_constraints": [
+      "No Store Partner may operate on the platform without verified food safety certification.",
+      "All Delivery Partner contracts must explicitly comply with local gig-economy labor statutes.",
+      "Regulatory audits must be conducted quarterly by an independent third party."
+    ],
+    "assumptions": [
+      "Relevant regulatory frameworks remain stable during the initial launch phase.",
+      "Store Partners are willing to provide necessary documentation for verification."
+    ],
+    "risks_and_dependencies": [
+      "Delays in obtaining necessary licenses could postpone market entry in specific zones.",
+      "Non-compliance could lead to immediate suspension of operations by the Regulatory Authority."
+    ],
+    "linked_functional_requirements": [
+      "FR-008",
+      "FR-020",
+      "FR-053",
+      "FR-017"
+    ]
+  },
+  "unmatched_stakeholders": []
+}

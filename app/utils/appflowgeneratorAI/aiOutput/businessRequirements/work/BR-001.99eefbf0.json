@@ -75,6 +75,9 @@
       "assessment_summary": "The Business Requirement is clear and defines a meaningful business need with appropriate stakeholders and value. However, it contains a high-severity unsupported assumption regarding store inventory accuracy, which is flagged as a known evidence gap. Additionally, the linked Functional Requirements are insufficient; they address inventory quality but fail to address the critical logistics and time-based constraints (60-minute window) required to fulfill the core business requirement."
     },
     "linked_fr_count": 2,
-    "known_linked_fr_count": 2
+    "known_linked_fr_count": 2,
+    "validation_version": "8.0.8-batched",
+    "source_hash": "9f52532623a46c6f2fee10c3110f50d4509a31f9ac6e3f51b1c185edd7c356b8",
+    "reused_existing_semantic_assessment": true
   }
 }

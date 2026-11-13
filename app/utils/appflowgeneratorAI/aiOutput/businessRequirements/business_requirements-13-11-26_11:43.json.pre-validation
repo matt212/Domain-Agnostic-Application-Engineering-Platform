@@ -1,0 +1,1059 @@
+{
+  "business_requirements": [
+    {
+      "business_requirement_id": "BR-001",
+      "name": "Ultra-fast delivery of fresh perishables",
+      "business_requirement": "The business requires the capability to guarantee delivery of fresh perishables and daily essentials to customers within a 60-minute window.",
+      "business_objective": "This serves the core goal of meeting customer expectations for immediate gratification and reducing the friction of traditional grocery shopping.",
+      "business_value": "Meeting this requirement drives repeat usage and high ratings, while failure results in lost revenue and reputational damage due to spoiled goods or late arrivals.",
+      "stakeholders": [
+        "Customer",
+        "Delivery Partner",
+        "Store Partner",
+        "Platform Operator"
+      ],
+      "success_measures": [
+        "95% of orders delivered within 60 minutes",
+        "0% spoilage rate for perishable items",
+        "Customer satisfaction score >4.5 stars"
+      ],
+      "priority": "Must",
+      "policies_and_constraints": [
+        "Compliance with local food safety and delivery regulations",
+        "Adherence to gig-economy labor laws for delivery partners"
+      ],
+      "assumptions": [
+        "Store partners maintain accurate real-time inventory levels",
+        "Delivery partners are available within the service zone"
+      ],
+      "risks_and_dependencies": [
+        "Traffic congestion or weather events may exceed time targets",
+        "Inventory synchronization failures may lead to overselling"
+      ],
+      "linked_functional_requirements": [
+        "FR-001",
+        "FR-006"
+      ]
+    },
+    {
+      "business_requirement_id": "BR-002",
+      "name": "Unified Digital Marketplace Interface",
+      "business_requirement": "The business requires a unified digital interface that aggregates fragmented inventory from multiple store partners to present a comprehensive assortment to customers.",
+      "business_objective": "This serves the goal of simplifying the shopping experience and enabling monetization through transaction commissions and advertising on a consolidated marketplace.",
+      "business_value": "Meeting this requirement increases customer retention and revenue; failure results in a fragmented user experience and lost sales opportunities.",
+      "stakeholders": [
+        "Customer",
+        "Store Partner",
+        "Platform Operator"
+      ],
+      "success_measures": [
+        "proposed 95% of customers find all required items in a single search",
+        "proposed 20% increase in average order value due to cross-store availability",
+        "proposed reduction in customer support queries regarding stock availability by 30%"
+      ],
+      "priority": "Must",
+      "policies_and_constraints": [
+        "Inventory data must be synchronized in real-time to prevent overselling.",
+        "The interface must comply with data privacy regulations regarding customer location and purchase history.",
+        "Store partners must retain the right to define their own product categorization within the unified catalog."
+      ],
+      "assumptions": [
+        "Store partners will provide accurate and up-to-date inventory feeds via API.",
+        "Customers expect a seamless browsing experience without distinguishing between different store sources.",
+        "Network latency will not exceed thresholds that delay inventory updates during peak hours."
+      ],
+      "risks_and_dependencies": [
+        "Dependency on the Order Allocation Engine to validate inventory availability before display.",
+        "Risk of data inconsistency if store partners fail to update stock levels promptly.",
+        "Potential complexity in managing conflicting pricing or promotional offers across different store partners."
+      ],
+      "linked_functional_requirements": [
+        "FR-054",
+        "FR-062"
+      ]
+    },
+    {
+      "business_requirement_id": "BR-003",
+      "name": "Optimize last-mile logistics via algorithmic routing",
+      "business_requirement": "The business requires an automated system to dynamically assign orders to gig workers and calculate optimal delivery paths to ensure efficient fulfillment and cost control.",
+      "business_objective": "Maintain profitability in a low-margin model while meeting strict time commitments required to satisfy the quick commerce promise.",
+      "business_value": "Meeting delivery targets ensures customer satisfaction and repeat usage, while dynamic routing minimizes operational costs and prevents order failures.",
+      "stakeholders": [
+        "Delivery Partner",
+        "Platform Operator",
+        "Order Allocation Engine"
+      ],
+      "success_measures": [
+        "Proposed: Average delivery time reduction of 15% within 3 months",
+        "Proposed: Reduction in failed delivery attempts by 20%",
+        "Proposed: Increase in gig worker utilization rate to 85%"
+      ],
+      "priority": "Must",
+      "policies_and_constraints": [
+        "Compliance with local gig-economy labor regulations regarding worker classification and pay transparency.",
+        "System must operate with low latency to support real-time decision-making during peak hours.",
+        "Routing algorithms must prioritize safety and avoid restricted zones defined by the Regulatory Authority."
+      ],
+      "assumptions": [
+        "Real-time traffic data from external logistics providers is available and accurate.",
+        "Delivery Partners have reliable access to navigation tools and communication channels.",
+        "Store Partners provide timely updates on inventory availability to support accurate allocation."
+      ],
+      "risks_and_dependencies": [
+        "Dependency on third-party traffic data providers; inaccurate data could lead to suboptimal routing.",
+        "Potential resistance from Delivery Partners if dynamic assignment algorithms are perceived as unfair.",
+        "Risk of system overload during extreme weather events or sudden demand spikes."
+      ],
+      "linked_functional_requirements": [
+        "FR-003",
+        "FR-028",
+        "FR-047"
+      ]
+    },
+    {
+      "business_requirement_id": "BR-004",
+      "name": "Measure orders fulfilled within target timeframes",
+      "business_requirement": "The business requires the Platform Operator to calculate and report the percentage of orders successfully delivered within the committed target window to validate service speed.",
+      "business_objective": "This requirement supports the core value proposition of ultra-fast delivery to drive customer retention and repeat usage.",
+      "business_value": "Meeting this metric ensures operational efficiency and maintains trust, while failure risks high churn and regulatory non-compliance regarding service level agreements.",
+      "stakeholders": [
+        "Platform Operator",
+        "Customer",
+        "Delivery Partner",
+        "Store Partner"
+      ],
+      "success_measures": [
+        "Percentage of orders delivered within 60 minutes: proposed 95%",
+        "Report generation frequency: daily",
+        "Data accuracy rate: 100%"
+      ],
+      "priority": "Must",
+      "policies_and_constraints": [
+        "Metrics must align with the specific service area boundaries defined in the contract.",
+        "Data must be anonymized before sharing with external analytics partners.",
+        "Reports must be generated in real-time or near real-time."
+      ],
+      "assumptions": [
+        "Delivery partners accurately log arrival times via the digital interface.",
+        "Store partners confirm order pickup times within the system.",
+        "Network connectivity is sufficient for real-time data transmission."
+      ],
+      "risks_and_dependencies": [
+        "Reliance on third-party delivery partner data accuracy may introduce reporting errors.",
+        "System latency could delay the availability of real-time metrics.",
+        "Changes in traffic patterns or weather may temporarily impact target achievement."
+      ],
+      "linked_functional_requirements": [
+        "FR-054"
+      ]
+    },
+    {
+      "business_requirement_id": "BR-005",
+      "name": "Track inventory discrepancies and overselling incidents",
+      "business_requirement": "The business requires continuous monitoring of inventory discrepancy rates and overselling incidents to ensure data accuracy and minimize order failures.",
+      "business_objective": "Maintain customer trust and prevent revenue loss from failed deliveries in a high-velocity environment.",
+      "business_value": "Accurate availability data reduces failed deliveries and protects revenue, while harm occurs if overselling leads to customer dissatisfaction and financial loss.",
+      "stakeholders": [
+        "Platform Operator",
+        "Store Partner",
+        "Customer",
+        "Fulfillment Supervisor"
+      ],
+      "success_measures": [
+        "Overselling incident rate below proposed 1.5% per month",
+        "Inventory data accuracy rate above proposed 99.5%",
+        "Order failure rate due to stock discrepancies below proposed 0.8%"
+      ],
+      "priority": "Must",
+      "policies_and_constraints": [
+        "Real-time synchronization is mandatory for perishable goods.",
+        "Discrepancies must be flagged immediately upon detection.",
+        "Data retention for discrepancy logs must comply with Regulatory Authority standards."
+      ],
+      "assumptions": [
+        "Store Partners provide accurate initial inventory data during onboarding.",
+        "Network latency does not exceed 200ms during peak hours.",
+        "Delivery Partners confirm receipt within the standard timeframe."
+      ],
+      "risks_and_dependencies": [
+        "High risk of revenue loss if overselling goes undetected.",
+        "Dependent on FR-001 for real-time inventory synchronization.",
+        "Dependent on FR-007 for automated dispute ticket generation."
+      ],
+      "linked_functional_requirements": [
+        "FR-001",
+        "FR-007",
+        "FR-011",
+        "FR-032",
+        "FR-033",
+        "FR-039"
+      ]
+    },
+    {
+      "business_requirement_id": "BR-006",
+      "name": "Monitor revenue efficiency against operational costs",
+      "business_requirement": "The business requires a mechanism to continuously monitor the ratio of transaction commissions and delivery fees against operational costs to ensure profitability.",
+      "business_objective": "Sustaining the gig-economy logistics model requires rigorous cost control and optimization of multiple monetization channels to achieve positive unit economics.",
+      "business_value": "Ensures financial sustainability by identifying unprofitable orders or routes, while failure leads to eroding margins and potential service collapse.",
+      "stakeholders": [
+        "Platform Operator",
+        "Payment Provider",
+        "Delivery Partner"
+      ],
+      "success_measures": [
+        "Real-time visibility of gross margin per order",
+        "Alerts triggered when commission-to-cost ratio falls below proposed threshold",
+        "Trend analysis of profitability across service zones"
+      ],
+      "priority": "Must",
+      "policies_and_constraints": [
+        "Financial data must be reconciled with Payment Provider records within 24 hours.",
+        "Operational cost data must be validated by the Fulfillment Supervisor before inclusion in reports.",
+        "Profitability metrics must exclude one-time setup costs for new Store Partners."
+      ],
+      "assumptions": [
+        "Operational cost data is accurately captured by the Order Allocation Engine.",
+        "Transaction fees are consistently reported by the Payment Provider."
+      ],
+      "risks_and_dependencies": [
+        "Dependency on real-time data ingestion from external logistics providers (FR-028).",
+        "Risk of data latency affecting the accuracy of dynamic fee adjustments (FR-045).",
+        "Potential for revenue share calculation errors impacting Store Partner settlements (FR-005)."
+      ],
+      "linked_functional_requirements": [
+        "FR-005",
+        "FR-025",
+        "FR-045"
+      ]
+    },
+    {
+      "business_requirement_id": "BR-007",
+      "name": "Real-time Store Partner Performance Dashboard",
+      "business_requirement": "The business requires a transparent dashboard for Store Partners to view real-time order volume, revenue splits, and performance metrics.",
+      "business_objective": "Enable Store Partners to optimize staffing and inventory by understanding their individual financial contribution and operational performance.",
+      "business_value": "Improved partner retention and operational efficiency through data-driven decision-making; failure risks partner churn and inventory mismanagement.",
+      "stakeholders": [
+        "Store Partner",
+        "Platform Operator",
+        "Fulfillment Supervisor"
+      ],
+      "success_measures": [
+        "95% of Store Partners access the dashboard within 24 hours of launch",
+        "Proposed 30% reduction in partner-reported inventory discrepancies within 3 months",
+        "100% accuracy in displayed revenue split calculations against actual settlements"
+      ],
+      "priority": "Should",
+      "policies_and_constraints": [
+        "Data displayed must align with real-time settlement records per FR-039 and FR-005.",
+        "Performance metrics must be calculated using the quality scoring logic defined in FR-059.",
+        "Access to financial data is restricted to authorized Store Partner accounts only."
+      ],
+      "assumptions": [
+        "The underlying order allocation and settlement systems are functioning correctly.",
+        "Store Partners have reliable internet access to view the dashboard.",
+        "Historical data is available for at least the past 30 days upon launch."
+      ],
+      "risks_and_dependencies": [
+        "Dependency on real-time data feeds from the Order Allocation Engine and Payment Provider.",
+        "Potential confusion if dashboard metrics differ from legacy reporting tools.",
+        "Risk of data latency if the reconciliation process (FR-039) is delayed."
+      ],
+      "linked_functional_requirements": [
+        "FR-005",
+        "FR-039",
+        "FR-059"
+      ]
+    },
+    {
+      "business_requirement_id": "BR-008",
+      "name": "Delivery Partner Financial Transparency Portal",
+      "business_requirement": "The business requires the platform to provide Delivery Partners with direct, secure access to their historical earnings summaries, payout schedules, and tax documents within the application interface.",
+      "business_objective": "This requirement supports the business goal of ensuring gig-economy worker financial compliance and trust, distinct from internal platform audit logging.",
+      "business_value": "Meeting this need reduces administrative friction for workers managing personal finances and mitigates reputational risk associated with tax non-compliance; failure to provide this harms worker retention and regulatory standing.",
+      "stakeholders": [
+        "Delivery Partner",
+        "Platform Operator",
+        "Payment Provider",
+        "Regulatory Authority"
+      ],
+      "success_measures": [
+        "100% of active Delivery Partners can access earnings data within 30 seconds of login",
+        "Zero critical security incidents related to financial data exposure",
+        "Proposed 20% reduction in customer support tickets regarding payment queries"
+      ],
+      "priority": "Should",
+      "policies_and_constraints": [
+        "Access to financial data must be restricted to authenticated Delivery Partners only.",
+        "All financial document downloads must be encrypted and logged for audit purposes.",
+        "Data retention for historical earnings must comply with local labor and tax laws."
+      ],
+      "assumptions": [
+        "The Payment Provider can supply standardized earnings and tax data feeds.",
+        "Delivery Partners have consistent mobile device access to the application.",
+        "Existing authentication systems support secure access to sensitive financial modules."
+      ],
+      "risks_and_dependencies": [
+        "Dependency on Payment Provider API stability for real-time data accuracy.",
+        "Potential regulatory changes affecting tax document formats or retention periods.",
+        "Risk of data leakage if role-based access controls (FR-016) are not strictly enforced."
+      ],
+      "linked_functional_requirements": [
+        "FR-016",
+        "FR-017",
+        "FR-043"
+      ]
+    },
+    {
+      "business_requirement_id": "BR-009",
+      "name": "Customer Self-Service Loyalty and Subscription Portal",
+      "business_requirement": "The business requires a dedicated customer-facing portal enabling users to manage subscription preferences, view detailed delivery history, and access personalized loyalty rewards.",
+      "business_objective": "This requirement serves the goal of enhancing customer retention and increasing lifetime value through improved engagement and transparency.",
+      "business_value": "Meeting this need increases customer loyalty and reduces churn, while failure results in lower retention rates and diminished competitive advantage.",
+      "stakeholders": [
+        "Customer",
+        "Platform Operator"
+      ],
+      "success_measures": [
+        "Proposed: 15% increase in monthly active users within 6 months",
+        "Proposed: 10% reduction in customer support tickets regarding account management",
+        "Proposed: 20% increase in subscription renewal rates"
+      ],
+      "priority": "Should",
+      "policies_and_constraints": [
+        "Data privacy regulations must be strictly adhered to when displaying customer history.",
+        "The portal must integrate seamlessly with existing authentication systems."
+      ],
+      "assumptions": [
+        "Customers have access to standard mobile or desktop devices.",
+        "The current backend data infrastructure supports real-time retrieval of loyalty metrics."
+      ],
+      "risks_and_dependencies": [
+        "Dependency on the stability of the Customer Profile management system.",
+        "Potential complexity in personalizing rewards without clear behavioral data."
+      ],
+      "linked_functional_requirements": [
+        "FR-009",
+        "FR-048",
+        "FR-051"
+      ]
+    },
+    {
+      "business_requirement_id": "BR-010",
+      "name": "Dynamic Pricing Engine for Demand-Based Fees",
+      "business_requirement": "The business requires a dynamic pricing mechanism that adjusts delivery fees and commissions in real-time based on demand, weather, and traffic conditions.",
+      "business_objective": "This serves the goal of revenue optimization and Service Level Agreement (SLA) adherence during supply-demand fluctuations.",
+      "business_value": "Meeting this requirement maximizes revenue during peak times and ensures timely deliveries; failure results in lost revenue and breached delivery promises.",
+      "stakeholders": [
+        "Platform Operator",
+        "Customer",
+        "Delivery Partner",
+        "Store Partner"
+      ],
+      "success_measures": [
+        "Achieve a proposed 15% increase in revenue during peak demand periods",
+        "Maintain a proposed 98% on-time delivery rate during high-congestion events",
+        "Reduce customer order abandonment rate by proposed 10% due to excessive fees"
+      ],
+      "priority": "Must",
+      "policies_and_constraints": [
+        "Pricing adjustments must be transparent and communicated to the Customer before order confirmation.",
+        "Compliance with proposed Regulatory Authority guidelines on price discrimination and surge pricing disclosure.",
+        "Fee adjustments cannot exceed a proposed 200% of the base rate in any single transaction."
+      ],
+      "assumptions": [
+        "Real-time traffic and weather data from external providers will be available with minimal latency.",
+        "The Order Allocation Engine can process pricing logic within the 60-minute delivery window.",
+        "Store Partners will accept variable commission structures tied to real-time demand."
+      ],
+      "risks_and_dependencies": [
+        "Dependency on FR-029 and FR-047 for accurate live traffic and routing data integration.",
+        "Risk of customer churn if dynamic pricing is perceived as unfair or unpredictable.",
+        "Potential system latency if the pricing engine cannot update faster than demand shifts."
+      ],
+      "linked_functional_requirements": [
+        "FR-012",
+        "FR-029",
+        "FR-045",
+        "FR-047"
+      ]
+    },
+    {
+      "business_requirement_id": "BR-011",
+      "name": "Real-Time Inventory Reconciliation",
+      "business_requirement": "The business requires automated, real-time synchronization between physical store POS systems and the digital platform to prevent overselling and revenue leakage.",
+      "business_objective": "Ensure accurate inventory availability to maintain high customer satisfaction and prevent financial loss from uncollectible orders.",
+      "business_value": "Prevents failed deliveries and revenue leakage while ensuring regulatory compliance and operational efficiency.",
+      "stakeholders": [
+        "Store Partner",
+        "Platform Operator",
+        "Customer",
+        "Payment Provider"
+      ],
+      "success_measures": [
+        "Zero overselling incidents per 1,000 orders (proposed)",
+        "Inventory data latency under 5 seconds",
+        "Reduction in order cancellation rate due to stock errors by 90%"
+      ],
+      "priority": "Must",
+      "policies_and_constraints": [
+        "Must comply with local data privacy regulations regarding POS data integration.",
+        "Integration must not exceed 200ms latency during peak traffic hours.",
+        "System must support offline POS fallback with automatic sync upon reconnection."
+      ],
+      "assumptions": [
+        "Store Partners will provide API access to their POS systems.",
+        "Network connectivity at Store Partners is stable and reliable.",
+        "SKU definitions are consistent across physical and digital catalogs."
+      ],
+      "risks_and_dependencies": [
+        "Dependency on Store Partners' willingness to share real-time POS data.",
+        "Risk of data inconsistency if POS and platform clocks are not synchronized.",
+        "Potential disruption to existing POS workflows during integration."
+      ],
+      "linked_functional_requirements": [
+        "FR-001",
+        "FR-002",
+        "FR-004",
+        "FR-022",
+        "FR-034",
+        "FR-039",
+        "FR-055"
+      ]
+    },
+    {
+      "business_requirement_id": "BR-012",
+      "name": "Continuous Financial Risk Mitigation",
+      "business_requirement": "The business requires continuous monitoring and mitigation of financial risks including fraud, chargebacks, and payment failures to protect cash flow and ensure settlement reliability.",
+      "business_objective": "This requirement serves the goal of operational sustainability and regulatory compliance in a high-volume, low-margin transaction model.",
+      "business_value": "Meeting this requirement prevents significant revenue loss and maintains trust, while failure leads to cash flow disruption and potential regulatory penalties.",
+      "stakeholders": [
+        "Payment Provider",
+        "Platform Operator",
+        "Store Partner",
+        "Customer",
+        "Regulatory Authority"
+      ],
+      "success_measures": [
+        "Zero unauthorized chargebacks per 1,000 transactions",
+        "99.9% successful settlement rate for valid transactions",
+        "Fraud detection latency proposed under 2 seconds"
+      ],
+      "priority": "Must",
+      "policies_and_constraints": [
+        "All financial settlements must comply with local regulatory authority standards.",
+        "Customer funds must be held in segregated accounts pending verification.",
+        "High-risk transactions require manual review before final settlement."
+      ],
+      "assumptions": [
+        "Third-party fraud detection services provide accurate risk scoring.",
+        "Real-time connectivity with the Payment Provider is maintained.",
+        "Store partners provide accurate inventory data to prevent overselling fraud."
+      ],
+      "risks_and_dependencies": [
+        "Dependency on external Payment Provider APIs may cause settlement delays.",
+        "Emerging fraud techniques may outpace current detection algorithms.",
+        "Currency volatility may impact multi-currency settlement accuracy."
+      ],
+      "linked_functional_requirements": [
+        "FR-026",
+        "FR-027",
+        "FR-038",
+        "FR-039",
+        "FR-044"
+      ]
+    },
+    {
+      "business_requirement_id": "BR-013",
+      "name": "Regulatory Compliance for Food Safety and Labor Laws",
+      "business_requirement": "The business requires strict adherence to external food safety standards and gig-economy labor laws to mitigate legal liability and operational risk.",
+      "business_objective": "Ensure the platform operates within legal boundaries to prevent fines, shutdowns, and reputational damage.",
+      "business_value": "Meeting this requirement protects the business from immediate legal action and ensures sustainable operations; failure results in severe financial penalties and loss of license.",
+      "stakeholders": [
+        "Regulatory Authority",
+        "Platform Operator",
+        "Store Partner",
+        "Delivery Partner"
+      ],
+      "success_measures": [
+        "100% of Store Partners hold valid food safety certifications prior to onboarding",
+        "100% of Delivery Partners complete mandatory labor law compliance training before activation",
+        "Zero regulatory fines or legal injunctions within the first 12 months of operation"
+      ],
+      "priority": "Must",
+      "policies_and_constraints": [
+        "No Store Partner may operate on the platform without verified food safety certification.",
+        "All Delivery Partner contracts must explicitly comply with local gig-economy labor statutes.",
+        "Regulatory audits must be conducted quarterly by an independent third party."
+      ],
+      "assumptions": [
+        "Relevant regulatory frameworks remain stable during the initial launch phase.",
+        "Store Partners are willing to provide necessary documentation for verification."
+      ],
+      "risks_and_dependencies": [
+        "Delays in obtaining necessary licenses could postpone market entry in specific zones.",
+        "Non-compliance could lead to immediate suspension of operations by the Regulatory Authority."
+      ],
+      "linked_functional_requirements": [
+        "FR-008",
+        "FR-017",
+        "FR-020",
+        "FR-023",
+        "FR-053"
+      ]
+    },
+    {
+      "business_requirement_id": "BR-014",
+      "name": "Proactive Risk Analytics for Brand Protection",
+      "business_requirement": "The business requires a predictive analytics capability that correlates delivery delays, inventory errors, and customer sentiment to proactively identify and mitigate threats to brand reputation and SLA performance.",
+      "business_objective": "This serves the goal of maintaining customer trust and retention in a low-margin, high-volume environment by shifting from reactive to proactive operational management.",
+      "business_value": "Meeting this requirement prevents brand equity erosion and customer churn caused by unaddressed operational friction, while failure results in reputational damage and lost revenue.",
+      "stakeholders": [
+        "Platform Operator",
+        "Customer",
+        "Store Partner",
+        "Delivery Partner"
+      ],
+      "success_measures": [
+        "Percentage reduction in customer churn attributed to operational issues",
+        "Time-to-resolution for identified high-risk operational events",
+        "Improvement in Net Promoter Score (NPS) for at-risk customer segments"
+      ],
+      "priority": "Must",
+      "policies_and_constraints": [
+        "Analytics must operate in real-time to enable immediate intervention.",
+        "Data usage must comply with all applicable privacy regulations.",
+        "Alerts must be actionable by the Fulfillment Supervisor within 15 minutes."
+      ],
+      "assumptions": [
+        "Historical data on delays, errors, and sentiment is available for model training.",
+        "Integration with existing order and feedback systems is technically feasible."
+      ],
+      "risks_and_dependencies": [
+        "Risk of false positives triggering unnecessary operational interventions.",
+        "Dependency on the accuracy of real-time inventory and sentiment data feeds."
+      ],
+      "linked_functional_requirements": [
+        "FR-050",
+        "FR-051",
+        "FR-059",
+        "FR-060",
+        "FR-061"
+      ]
+    },
+    {
+      "business_requirement_id": "BR-015",
+      "name": "Dynamic Tax Calculation and Collection",
+      "business_requirement": "The business requires the automatic calculation and collection of applicable taxes based on local jurisdiction rules and product types during order processing.",
+      "business_objective": "Ensure strict adherence to financial regulations and mitigate the risk of penalties from tax authorities.",
+      "business_value": "Prevents regulatory fines and maintains financial integrity, while harm arises from non-compliance and potential legal action.",
+      "stakeholders": [
+        "Regulatory Authority",
+        "Payment Provider",
+        "Platform Operator"
+      ],
+      "success_measures": [
+        "100% of transactions processed with correct tax rates",
+        "Zero regulatory penalties or fines within the reporting period",
+        "proposed 99.9% accuracy in tax calculation across all service areas"
+      ],
+      "priority": "Must",
+      "policies_and_constraints": [
+        "Tax rates must be updated in real-time to reflect local jurisdiction changes.",
+        "Calculations must be immutable and auditable for every transaction.",
+        "System must handle varying tax rules for different product categories."
+      ],
+      "assumptions": [
+        "External tax services or internal logic will have access to up-to-date jurisdictional tax data.",
+        "Product catalog data accurately reflects taxable status for all SKUs."
+      ],
+      "risks_and_dependencies": [
+        "Failure to update tax rules promptly leads to non-compliance.",
+        "Dependency on accurate geospatial data for determining applicable jurisdictions.",
+        "Potential system downtime during tax rule updates."
+      ],
+      "linked_functional_requirements": [
+        "FR-030",
+        "FR-040",
+        "FR-042"
+      ]
+    },
+    {
+      "business_requirement_id": "BR-016",
+      "name": "Mandatory Partner Compliance Validation",
+      "business_requirement": "The business requires a strict pre-onboarding validation process for all Store and Delivery Partners to verify regulatory licenses and contractual terms before operational access is granted.",
+      "business_objective": "This requirement ensures operational readiness by mitigating legal liability and supply chain disruptions caused by unverified partners.",
+      "business_value": "Meeting this requirement protects the business from regulatory fines and reputational harm, while non-compliance risks immediate service suspension and legal action.",
+      "stakeholders": [
+        "Regulatory Authority",
+        "Store Partner",
+        "Delivery Partner",
+        "Platform Operator"
+      ],
+      "success_measures": [
+        "100% of active partners possess verified regulatory licenses",
+        "Zero onboarding incidents due to unverified compliance status",
+        "Average partner onboarding validation time is proposed under 48 hours"
+      ],
+      "priority": "Must",
+      "policies_and_constraints": [
+        "No partner may access the platform without a valid, verified license.",
+        "Contractual terms must be digitally signed and stored immutably.",
+        "Validation must occur prior to any order allocation or financial settlement."
+      ],
+      "assumptions": [
+        "External regulatory bodies provide digital verification data.",
+        "Partners are willing to provide necessary documentation promptly."
+      ],
+      "risks_and_dependencies": [
+        "Delays in external license verification could slow market expansion.",
+        "Reliance on third-party data sources for compliance checks."
+      ],
+      "linked_functional_requirements": [
+        "FR-008",
+        "FR-010",
+        "FR-020",
+        "FR-053"
+      ]
+    },
+    {
+      "business_requirement_id": "BR-017",
+      "name": "Rapid Isolation of System Outages",
+      "business_requirement": "The business requires the immediate containment of system failures or data corruption to prevent error propagation across the order lifecycle and protect revenue integrity.",
+      "business_objective": "This requirement serves the goal of maintaining high service availability and ensuring regulatory compliance during critical operational disruptions.",
+      "business_value": "Meeting this requirement prevents missed delivery windows, customer churn, and potential regulatory breaches, while failing to do so risks significant financial loss and reputational damage.",
+      "stakeholders": [
+        "Platform Operator",
+        "Regulatory Authority",
+        "Customer"
+      ],
+      "success_measures": [
+        "Mean Time to Contain (MTTC) is less than proposed 5 minutes",
+        "Zero incidents of error propagation across unrelated order batches",
+        "100% containment of data corruption within isolated modules"
+      ],
+      "priority": "Must",
+      "policies_and_constraints": [
+        "Containment procedures must not compromise data integrity for active transactions.",
+        "Isolation mechanisms must comply with proposed regulatory data retention policies.",
+        "Rollback procedures must be validated by the Platform Operator before deployment."
+      ],
+      "assumptions": [
+        "The Order Allocation Engine includes automated health monitoring capabilities.",
+        "Store Partners have redundant connectivity to report local system failures.",
+        "The Payment Provider supports rapid transaction reversal upon failure detection."
+      ],
+      "risks_and_dependencies": [
+        "Dependency on the Order Allocation Engine for real-time failure detection.",
+        "Risk of false positives triggering unnecessary service interruptions.",
+        "Potential conflict with high-availability requirements for live order processing."
+      ],
+      "linked_functional_requirements": [
+        "FR-001",
+        "FR-020",
+        "FR-031"
+      ]
+    },
+    {
+      "business_requirement_id": "BR-018",
+      "name": "Guarantee immediate dispute resolution and fraud mitigation",
+      "business_requirement": "The business requires the immediate and transparent resolution of financial disputes and fraud attempts to maintain trust with Store Partners and Customers while minimizing revenue leakage.",
+      "business_objective": "Ensure financial integrity and regulatory compliance during high-volume micro-transaction settlement cycles.",
+      "business_value": "Failure to resolve disputes quickly erodes partner confidence and triggers regulatory scrutiny, leading to revenue loss and reputational damage.",
+      "stakeholders": [
+        "Payment Provider",
+        "Fulfillment Supervisor",
+        "Platform Operator",
+        "Customer",
+        "Store Partner",
+        "Regulatory Authority"
+      ],
+      "success_measures": [
+        "Dispute resolution time < 24 hours",
+        "Fraud detection rate > 95%",
+        "Revenue leakage < 0.5% of total transactions"
+      ],
+      "priority": "Must",
+      "policies_and_constraints": [
+        "All financial settlements must be reconciled in real-time against store partner records.",
+        "Dispute resolution must adhere to local consumer protection and financial regulations.",
+        "Fraud detection must occur before order fulfillment to prevent loss."
+      ],
+      "assumptions": [
+        "Third-party fraud detection services provide accurate risk scores within acceptable latency.",
+        "Store Partners provide accurate inventory and transaction data for reconciliation.",
+        "Payment Provider APIs support real-time refund and reversal operations."
+      ],
+      "risks_and_dependencies": [
+        "Dependency on Payment Provider API uptime for real-time fund reversals.",
+        "Risk of false positives in fraud detection leading to delayed deliveries.",
+        "Regulatory changes in fund handling requirements may alter dispute workflows."
+      ],
+      "linked_functional_requirements": [
+        "FR-005",
+        "FR-013",
+        "FR-019",
+        "FR-021",
+        "FR-026",
+        "FR-027",
+        "FR-031",
+        "FR-035",
+        "FR-036",
+        "FR-037",
+        "FR-039",
+        "FR-042",
+        "FR-043",
+        "FR-061"
+      ]
+    },
+    {
+      "business_requirement_id": "BR-019",
+      "name": "Immutable Audit Trail for Operational Anomalies",
+      "business_requirement": "The business requires a tamper-proof, immutable record of all operational anomalies to satisfy Regulatory Authority mandates and enable accurate root cause analysis during high-stakes investigations.",
+      "business_objective": "Mitigate legal liability and prove compliance regarding gig-worker labor laws and food safety standards.",
+      "business_value": "Failure to provide a verifiable record exposes the business to regulatory fines, legal action, and reputational damage, while success ensures operational transparency and trust.",
+      "stakeholders": [
+        "Regulatory Authority",
+        "Platform Operator",
+        "Fulfillment Supervisor",
+        "Delivery Partner"
+      ],
+      "success_measures": [
+        "100% of operational anomalies recorded in an immutable ledger",
+        "Zero successful tampering attempts on audit logs",
+        "Root cause analysis time reduced by proposed 50% for high-stakes incidents"
+      ],
+      "priority": "Must",
+      "policies_and_constraints": [
+        "Audit logs must be cryptographically signed and stored on a write-once-read-many (WORM) storage system.",
+        "Access to raw anomaly data is restricted to authorized Platform Operator roles only.",
+        "Retention period for immutable records must align with proposed local jurisdiction laws."
+      ],
+      "assumptions": [
+        "The Order Allocation Engine generates standardized event data for all anomalies.",
+        "Third-party cryptographic infrastructure is available and reliable.",
+        "Regulatory Authority defines specific data retention periods annually."
+      ],
+      "risks_and_dependencies": [
+        "Dependency on external cryptographic service availability for log integrity.",
+        "Potential conflict between immutable storage costs and proposed budget constraints.",
+        "Risk of data loss if the underlying storage infrastructure fails before redundancy is established."
+      ],
+      "linked_functional_requirements": [
+        "FR-015",
+        "FR-020",
+        "FR-042"
+      ]
+    },
+    {
+      "business_requirement_id": "BR-020",
+      "name": "Dynamic Micro-Fulfillment Network Scaling",
+      "business_requirement": "The business requires the capability to dynamically scale its micro-fulfillment network and partner onboarding processes to maintain ultra-fast delivery SLAs during geographic expansion.",
+      "business_objective": "This requirement ensures that network complexity does not degrade the core value proposition of speed and reliability as the business enters new markets.",
+      "business_value": "Meeting this need prevents customer churn caused by service degradation, while failure risks losing market share to competitors with superior reliability.",
+      "stakeholders": [
+        "Platform Operator",
+        "Store Partner",
+        "Delivery Partner",
+        "Regulatory Authority"
+      ],
+      "success_measures": [
+        "Zero SLA breaches in new zones within 30 days of launch",
+        "Partner onboarding time reduced by proposed 40% compared to legacy methods",
+        "Network capacity utilization variance maintained within proposed 15% threshold"
+      ],
+      "priority": "Must",
+      "policies_and_constraints": [
+        "All new zones must achieve full regulatory compliance before operational activation.",
+        "Onboarding processes must not exceed proposed 48 hours for standard store partners.",
+        "Scaling must preserve the <60 minute delivery window for existing customers."
+      ],
+      "assumptions": [
+        "Real-time data feeds from logistics providers will remain stable during expansion.",
+        "Store partners will adhere to standardized digital onboarding protocols.",
+        "Traffic and demand prediction models will accurately forecast new zone loads."
+      ],
+      "risks_and_dependencies": [
+        "Rapid expansion may overwhelm current Order Allocation Engine capabilities without dynamic adjustment.",
+        "Dependency on external logistics providers for real-time fleet data availability.",
+        "Potential regulatory delays in new geographic zones could halt onboarding."
+      ],
+      "linked_functional_requirements": [
+        "FR-014",
+        "FR-050",
+        "FR-053"
+      ]
+    },
+    {
+      "business_requirement_id": "BR-021",
+      "name": "Automated Quality Assurance and Dispute Resolution",
+      "business_requirement": "The business requires scalable, automated workflows to validate order quality and resolve disputes without manual intervention, ensuring consistent service standards as volume grows.",
+      "business_objective": "Protect brand reputation and maintain high customer satisfaction levels during periods of rapid order volume expansion.",
+      "business_value": "Prevents revenue loss from unresolved disputes and ensures consistent delivery quality, while reducing operational bottlenecks caused by manual oversight.",
+      "stakeholders": [
+        "Platform Operator",
+        "Customer",
+        "Delivery Partner",
+        "Store Partner",
+        "Fulfillment Supervisor"
+      ],
+      "success_measures": [
+        "Dispute resolution time reduced to proposed 2 hours or less",
+        "Order quality error rate below proposed 2%",
+        "Automated dispute resolution coverage of proposed 90% of cases"
+      ],
+      "priority": "Must",
+      "policies_and_constraints": [
+        "All dispute workflows must comply with Regulatory Authority consumer protection guidelines.",
+        "Automated decisions must allow for human override by the Fulfillment Supervisor within 15 minutes.",
+        "Data used for quality scoring must be anonymized before sharing with Store Partners."
+      ],
+      "assumptions": [
+        "Real-time feedback data from Customers is available immediately after delivery.",
+        "Store Partners have digital interfaces capable of receiving automated quality alerts.",
+        "The Order Allocation Engine provides accurate inventory status for validation checks."
+      ],
+      "risks_and_dependencies": [
+        "Over-reliance on automation may miss nuanced customer complaints requiring human empathy.",
+        "System performance may degrade if dispute volume spikes unexpectedly during peak hours.",
+        "Dependent on the accuracy of Delivery Proof data provided by Delivery Partners."
+      ],
+      "linked_functional_requirements": [
+        "FR-007",
+        "FR-021",
+        "FR-049",
+        "FR-057",
+        "FR-059",
+        "FR-061"
+      ]
+    },
+    {
+      "business_requirement_id": "BR-022",
+      "name": "Flexible Revenue and Settlement Management",
+      "business_requirement": "The business requires a dynamic financial framework that supports diverse partner commission structures, multi-currency transactions, and real-time reconciliation to sustain ecosystem profitability.",
+      "business_objective": "Enable scalable monetization and accurate financial settlement across a heterogeneous network of store and delivery partners.",
+      "business_value": "Ensures revenue integrity and partner trust while adapting to volatile market conditions and varying partner agreements.",
+      "stakeholders": [
+        "Payment Provider",
+        "Store Partner",
+        "Platform Operator",
+        "Fulfillment Supervisor"
+      ],
+      "success_measures": [
+        "100% accuracy in multi-currency settlement calculations",
+        "Real-time reconciliation completion within 5 minutes of transaction closure",
+        "Zero disputes regarding revenue share percentages per partner tier"
+      ],
+      "priority": "Must",
+      "policies_and_constraints": [
+        "All settlements must comply with local financial regulations and tax laws.",
+        "Currency conversion must use real-time exchange rates from a designated source.",
+        "Revenue share logic must be auditable and immutable once finalized."
+      ],
+      "assumptions": [
+        "The Payment Provider provides real-time transaction status updates.",
+        "Store Partners provide accurate inventory and sales data for validation."
+      ],
+      "risks_and_dependencies": [
+        "Currency volatility may impact net revenue if hedging strategies are not implemented.",
+        "System dependency on the Payment Provider's API uptime for settlement execution.",
+        "Complexity in managing varying contract terms across different Store Partners."
+      ],
+      "linked_functional_requirements": [
+        "FR-005",
+        "FR-025",
+        "FR-027",
+        "FR-039",
+        "FR-041",
+        "FR-043",
+        "FR-056"
+      ]
+    },
+    {
+      "business_requirement_id": "BR-023",
+      "name": "Predictive Analytics for Demand and Inventory Optimization",
+      "business_requirement": "The business requires predictive analytics reports on demand patterns and inventory turnover to optimize resource allocation and reduce overselling incidents.",
+      "business_objective": "This requirement serves the goal of balancing supply with fluctuating demand to minimize operational waste and ensure high fulfillment accuracy.",
+      "business_value": "Meeting this need reduces inventory shrinkage and waste while improving customer satisfaction through accurate stock availability; failure results in overselling, financial loss, and reputational damage.",
+      "stakeholders": [
+        "Platform Operator",
+        "Store Partner",
+        "Order Allocation Engine"
+      ],
+      "success_measures": [
+        "Proposed reduction of overselling incidents by 15% within six months",
+        "Proposed improvement in inventory turnover accuracy to within 5% variance",
+        "Proposed decrease in waste disposal costs by 10% annually"
+      ],
+      "priority": "Must",
+      "policies_and_constraints": [
+        "Reports must be generated in real-time or near real-time to support immediate decision-making.",
+        "Data privacy regulations regarding customer purchase history must be strictly adhered to.",
+        "Analytics models must be auditable and explainable for regulatory compliance."
+      ],
+      "assumptions": [
+        "Historical transaction data is accurate and sufficiently granular for pattern recognition.",
+        "Store Partners provide timely updates on inventory levels and shelf-life data.",
+        "External factors like weather and local events can be integrated into forecasting models."
+      ],
+      "risks_and_dependencies": [
+        "Risk of model inaccuracy due to sudden, unpredictable demand spikes or supply chain disruptions.",
+        "Dependency on the integrity of real-time inventory synchronization systems.",
+        "Potential resistance from Store Partners if recommendations lead to increased labor costs."
+      ],
+      "linked_functional_requirements": [
+        "FR-001",
+        "FR-046",
+        "FR-058"
+      ]
+    },
+    {
+      "business_requirement_id": "BR-024",
+      "name": "Automated fallback routing and vendor diversification",
+      "business_requirement": "The business requires resilient order allocation capabilities that automatically switch to alternative logistics providers or mapping services when primary external dependencies fail.",
+      "business_objective": "This serves the goal of maintaining ultra-fast delivery promises and preventing revenue loss during third-party outages.",
+      "business_value": "If met, the business ensures continuous operations and customer trust; if not, service interruptions will lead to order cancellations and regulatory non-compliance.",
+      "stakeholders": [
+        "Platform Operator",
+        "Delivery Partner",
+        "Customer",
+        "Order Allocation Engine"
+      ],
+      "success_measures": [
+        "Zero critical order delays during external provider outages",
+        "Automated failover activation within proposed 5 minutes of outage detection",
+        "Maintained order fulfillment rate of proposed 99.5% during dependency failures"
+      ],
+      "priority": "Must",
+      "policies_and_constraints": [
+        "Failover logic must prioritize customer delivery timeframes over cost optimization.",
+        "Switching between providers must not require manual intervention by the Platform Operator.",
+        "System must log all fallback events for post-incident analysis by the Regulatory Authority."
+      ],
+      "assumptions": [
+        "Alternative logistics providers and mapping services are available in the target service zones.",
+        "Real-time data exchange between the Order Allocation Engine and external vendors is technically feasible.",
+        "Store Partners can fulfill orders within the extended timeframe if delivery routing is delayed."
+      ],
+      "risks_and_dependencies": [
+        "Dependency on the availability of secondary vendors which may also experience outages.",
+        "Latency in detecting the primary provider failure could delay the switch.",
+        "Incompatibility of data formats between the Order Allocation Engine and alternative providers."
+      ],
+      "linked_functional_requirements": [
+        "FR-028",
+        "FR-029",
+        "FR-047"
+      ]
+    },
+    {
+      "business_requirement_id": "BR-025",
+      "name": "Third-Party Vendor SLA Enforcement",
+      "business_requirement": "The business requires legally binding Service Level Agreements with critical third-party vendors that mandate guaranteed uptime, rapid incident response, and financial penalties for service degradation.",
+      "business_objective": "Mitigate operational downtime and reputational damage caused by failures in external dependencies beyond the platform's direct control.",
+      "business_value": "Ensures service continuity and protects brand reputation by holding vendors accountable for performance, while preventing revenue loss from unavailability.",
+      "stakeholders": [
+        "Platform Operator",
+        "Payment Provider",
+        "Delivery Partner",
+        "Store Partner"
+      ],
+      "success_measures": [
+        "100% of critical vendors have active SLAs with defined penalty clauses",
+        "Average vendor incident response time meets proposed 1-hour target",
+        "Zero unplanned service outages exceeding proposed 15-minute threshold"
+      ],
+      "priority": "Must",
+      "policies_and_constraints": [
+        "All SLAs must include clear definitions of uptime and response metrics",
+        "Penalty clauses must be enforceable under local jurisdiction laws",
+        "Vendors must provide real-time status reporting interfaces"
+      ],
+      "assumptions": [
+        "Critical vendors are identified based on current dependency mapping",
+        "Legal review is available to draft and approve contract terms",
+        "Vendors are willing to negotiate standard industry SLA terms"
+      ],
+      "risks_and_dependencies": [
+        "Vendors may refuse to accept financial penalty clauses",
+        "Ambiguity in SLA definitions could lead to disputes",
+        "Dependency on external vendors for core functions creates single points of failure"
+      ],
+      "linked_functional_requirements": [
+        "FR-050",
+        "FR-053"
+      ]
+    },
+    {
+      "business_requirement_id": "BR-026",
+      "name": "Proactive Perishable Inventory Management",
+      "business_requirement": "The business requires a mechanism to proactively manage perishable stock by generating real-time alerts for items approaching shelf-life limits to prioritize fulfillment or trigger removal.",
+      "business_objective": "This requirement serves the goal of minimizing product waste and maintaining quality standards to protect brand reputation and reduce loss costs.",
+      "business_value": "If met, the business reduces financial loss from unsellable goods and ensures customer satisfaction through high-quality deliveries; if not met, waste increases and customer trust erodes.",
+      "stakeholders": [
+        "Store Partner",
+        "Fulfillment Supervisor",
+        "Platform Operator"
+      ],
+      "success_measures": [
+        "Percentage reduction in expired inventory write-offs",
+        "Time elapsed between shelf-life alert generation and order fulfillment",
+        "Proposed 95% reduction in waste incidents per month"
+      ],
+      "priority": "Must",
+      "policies_and_constraints": [
+        "Alerts must trigger before the item reaches its absolute expiration date.",
+        "Removal protocols must comply with local food safety regulations.",
+        "Inventory data must be synchronized in real-time across all Store Partners."
+      ],
+      "assumptions": [
+        "Store Partners have access to accurate real-time inventory data.",
+        "Delivery Partners can be routed to prioritize near-expiry items efficiently."
+      ],
+      "risks_and_dependencies": [
+        "Dependency on the accuracy of the Order Allocation Engine for prioritization.",
+        "Risk of operational disruption if removal processes are not clearly defined."
+      ],
+      "linked_functional_requirements": [
+        "FR-006",
+        "FR-018",
+        "FR-024"
+      ]
+    },
+    {
+      "business_requirement_id": "BR-027",
+      "name": "Multi-channel delivery status notifications",
+      "business_requirement": "The business requires the Platform Operator to automatically send timely updates via SMS, email, or app push when an order status changes to Ready for Delivery or Assigned to a Delivery Partner.",
+      "business_objective": "This serves the goal of reducing support inquiries and improving the overall customer delivery experience through transparency.",
+      "business_value": "Meeting this requirement reduces customer frustration and support costs, while failure leads to increased complaints and lower retention.",
+      "stakeholders": [
+        "Customer",
+        "Platform Operator",
+        "Delivery Partner"
+      ],
+      "success_measures": [
+        "Customer support ticket volume related to order status reduced by proposed 20%",
+        "Customer satisfaction score for delivery communication reaches proposed 4.5/5",
+        "Notification delivery success rate exceeds proposed 98%"
+      ],
+      "priority": "Should",
+      "policies_and_constraints": [
+        "Notifications must comply with local telecommunications and data privacy regulations.",
+        "Messages must be sent within 2 minutes of the status change event.",
+        "Customers must be able to opt-out of non-critical promotional notifications."
+      ],
+      "assumptions": [
+        "The Order Allocation Engine provides accurate, real-time status updates to the notification system.",
+        "Customers have provided valid contact preferences during onboarding.",
+        "Third-party SMS and email providers maintain high uptime availability."
+      ],
+      "risks_and_dependencies": [
+        "Dependency on external messaging providers may cause delays during network outages.",
+        "Incorrect status data from the Order Allocation Engine could trigger false notifications.",
+        "High message volume during peak hours may exceed carrier rate limits."
+      ],
+      "linked_functional_requirements": [
+        "FR-052"
+      ]
+    }
+  ]
+}

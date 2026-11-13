@@ -1,0 +1,39 @@
+{
+  "result": {
+    "name": "Measure orders fulfilled within target timeframes",
+    "business_requirement": "The business requires the Platform Operator to calculate and report the percentage of orders successfully delivered within the committed target window to validate service speed.",
+    "business_objective": "This requirement supports the core value proposition of ultra-fast delivery to drive customer retention and repeat usage.",
+    "business_value": "Meeting this metric ensures operational efficiency and maintains trust, while failure risks high churn and regulatory non-compliance regarding service level agreements.",
+    "stakeholders": [
+      "Platform Operator",
+      "Customer",
+      "Delivery Partner",
+      "Store Partner"
+    ],
+    "success_measures": [
+      "Percentage of orders delivered within 60 minutes: proposed 95%",
+      "Report generation frequency: daily",
+      "Data accuracy rate: 100%"
+    ],
+    "priority": "Must",
+    "policies_and_constraints": [
+      "Metrics must align with the specific service area boundaries defined in the contract.",
+      "Data must be anonymized before sharing with external analytics partners.",
+      "Reports must be generated in real-time or near real-time."
+    ],
+    "assumptions": [
+      "Delivery partners accurately log arrival times via the digital interface.",
+      "Store partners confirm order pickup times within the system.",
+      "Network connectivity is sufficient for real-time data transmission."
+    ],
+    "risks_and_dependencies": [
+      "Reliance on third-party delivery partner data accuracy may introduce reporting errors.",
+      "System latency could delay the availability of real-time metrics.",
+      "Changes in traffic patterns or weather may temporarily impact target achievement."
+    ],
+    "linked_functional_requirements": [
+      "FR-054"
+    ]
+  },
+  "unmatched_stakeholders": []
+}

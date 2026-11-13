@@ -77,6 +77,9 @@
       "assessment_summary": "The Business Requirement (BR-002) is well-defined with clear business value, meaningful objectives, and appropriate success measures. It avoids solution leakage by focusing on the 'what' (unified interface) rather than the 'how'. However, the linkage to Functional Requirement FR-062 is weak; FR-062 addresses post-transaction analytics rather than the core inventory aggregation and presentation function of the BR. A dedicated FR for catalog/inventory aggregation would strengthen the requirement set."
     },
     "linked_fr_count": 2,
-    "known_linked_fr_count": 2
+    "known_linked_fr_count": 2,
+    "validation_version": "8.0.8-batched",
+    "source_hash": "13d28cb20998e63afce45a77a379fa9e75c21f99e0264f59d4ea22ea4d23f937",
+    "reused_existing_semantic_assessment": true
   }
 }
