@@ -4,17 +4,27 @@
 /**
  * 8.0.8 - BUSINESS REQUIREMENTS VALIDATION
  *
- * VALIDATION ONLY. No interview, draft, generation, merge or DB writes.
+ * VALIDATION ONLY.
+ *
+ * - Does not generate or rewrite business requirements.
+ * - Does not create or modify database tables.
+ * - Preserves existing BR work files and their result objects.
+ * - Reuses existing individual semantic validations.
+ * - Performs deterministic structural validation.
+ * - Performs batched AI business-quality validation.
+ * - Performs one portfolio-level BR duplication assessment.
+ * - Performs batched FR-to-BR portfolio relationship assessments.
+ * - Writes the final report into the existing consolidated BR JSON.
  *
  * Run:
- *   node app/utils/appflowgeneratorAI/Commands/8.0.8.BusinessRequirements.js
+ * node app/utils/appflowgeneratorAI/commands/8.0.8.BusinessRequirements.js
  *
- * Or:
- *   node app/utils/appflowgeneratorAI/Commands/8.0.8.BusinessRequirements.js validate
+ * Optional:
+ * BR_FORCE_AI=true node app/utils/appflowgeneratorAI/commands/8.0.8.BusinessRequirements.js
  *
  * Explicit approval:
- *   Set APPROVE_BUSINESS_REQUIREMENTS = true below,
- *   then run with the "approve" command.
+ * Set APPROVE_BUSINESS_REQUIREMENTS=true below,
+ * then run with "approve".
  */
 
 // ============================================================
@@ -23,6 +33,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const { spawn } = require('child_process');
 const { Pool } = require('pg');
 
@@ -32,42 +43,63 @@ const { Pool } = require('pg');
 
 const ROOT = process.cwd();
 
-const MODEL = process.env.MODEL_NAME || 'unsloth/Qwen3.5-9B-GGUF';
-const LLAMA_CLI = process.env.LLAMA_CLI_PATH || 'llama-cli';
+const MODEL =
+    process.env.MODEL_NAME || 'unsloth/Qwen3.5-9B-GGUF';
 
-const DB_CONFIG_PATH = path.join(ROOT, 'app/config/config.json');
+const LLAMA_CLI =
+    process.env.LLAMA_CLI_PATH || 'llama-cli';
 
-const OUTPUT_DIR = process.env.BR_OUTPUT_DIR ||
-    path.join(ROOT, 'app/utils/appflowgeneratorAI/aiOutput/businessRequirements');
+const DB_CONFIG_PATH =
+    path.join(ROOT, 'app/config/config.json');
+
+const OUTPUT_DIR =
+    process.env.BR_OUTPUT_DIR ||
+    path.join(
+        ROOT,
+        'app/utils/appflowgeneratorAI/aiOutput/businessRequirements'
+    );
 
 const WORK_DIR = path.join(OUTPUT_DIR, 'work');
 
-// SET THE EXISTING CONSOLIDATED FILE HERE.
-// Do not pass the filename through the command line.
-const BR_FINAL_FILE = 'business_requirements-13-11-26_11:43.json';
+// Existing consolidated file. Configure here, not through CLI.
+const BR_FINAL_FILE =
+    'business_requirements-13-11-26_11:43.json';
 
-const FINAL_FILE_PATH = path.join(OUTPUT_DIR, BR_FINAL_FILE);
+const FINAL_FILE_PATH =
+    path.join(OUTPUT_DIR, BR_FINAL_FILE);
 
-// Functional Requirement ingestion selection.
-const FR_SOURCE_FILE = process.env.FR_SOURCE_FILE || null;
+const FR_SOURCE_FILE =
+    process.env.FR_SOURCE_FILE || null;
+
 const FR_SOURCE_PATTERN =
-    process.env.FR_SOURCE_PATTERN || '%consolidated-Functional-Requirements%';
+    process.env.FR_SOURCE_PATTERN ||
+    '%consolidated-Functional-Requirements%';
 
-// Approval is deliberately disabled by default.
 const APPROVE_BUSINESS_REQUIREMENTS = false;
+
+// Reuse existing semantic validations unless explicitly forced.
+const FORCE_AI =
+    String(process.env.BR_FORCE_AI || '').toLowerCase() === 'true';
+
+// Existing BR assessments are processed in batches.
+const BR_BATCH_SIZE = 5;
+
+// All FRs are assessed, in manageable batches.
+const FR_BATCH_SIZE = 16;
+
+// Each FR is compared with its existing BR links and top candidates.
+const FR_CANDIDATE_COUNT = 4;
 
 const SETTINGS = {
     threads: Number(process.env.THREADS || 6),
     context: 6144,
     batch: 512,
     temperature: 0.1,
-    maxTokens: 1800,
     timeoutMs: 300 * 60 * 1000,
     heartbeatMs: 30000,
-
-    // Candidate generation only. Similarity never confirms a relationship.
-    duplicateCandidateThreshold: 0.10,
-    relationshipCandidateCount: 4
+    brMaxTokens: 2400,
+    duplicateMaxTokens: 1400,
+    frMaxTokens: 2800
 };
 
 const DIGEST_CATEGORIES = [
@@ -87,17 +119,26 @@ const DIGEST_CATEGORIES = [
     ['ALTERNATIVE_OPERATING_MODEL', 4]
 ];
 
+const NO_THINK = '<think>\n\n</think>\n';
+
 const log = message =>
     console.log(`[8.0.8] ${new Date().toISOString()} ${message}`);
 
-const arr = value => Array.isArray(value) ? value : [];
+const arr = value =>
+    Array.isArray(value) ? value : [];
 
 const cut = (value, max = 500) => {
-    const text = String(value ?? '').replace(/\s+/g, ' ').trim();
-    return text.length > max ? text.slice(0, max) + '...' : text;
+    const text = String(value ?? '')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+    return text.length > max
+        ? text.slice(0, max) + '...'
+        : text;
 };
 
-const pad = value => String(value).padStart(3, '0');
+const pad = value =>
+    String(value).padStart(3, '0');
 
 const normalize = value =>
     String(value ?? '')
@@ -107,40 +148,14 @@ const normalize = value =>
 
 function flatText(value) {
     if (value == null) return '';
-    if (typeof value !== 'object') return String(value);
-    return Object.values(value).map(flatText).join(' ');
-}
 
-function inner(row) {
-    let content = row.content;
-
-    if (typeof content === 'string') {
-        try {
-            content = JSON.parse(content);
-        } catch {
-            return { text: content };
-        }
+    if (typeof value !== 'object') {
+        return String(value);
     }
 
-    content = content || {};
-
-    let business = content.content !== undefined
-        ? content.content
-        : content;
-
-    if (typeof business === 'string') {
-        try {
-            business = JSON.parse(business);
-        } catch {
-            return { text: business };
-        }
-    }
-
-    if (Array.isArray(business)) return { items: business };
-
-    return business && typeof business === 'object'
-        ? business
-        : { text: String(business ?? '') };
+    return Object.values(value)
+        .map(flatText)
+        .join(' ');
 }
 
 function readJson(file) {
@@ -150,8 +165,23 @@ function readJson(file) {
 function writeJsonAtomic(file, data) {
     const temp = `${file}.${process.pid}.tmp`;
 
-    fs.writeFileSync(temp, JSON.stringify(data, null, 2));
+    fs.writeFileSync(
+        temp,
+        JSON.stringify(data, null, 2)
+    );
+
     fs.renameSync(temp, file);
+}
+
+function hash(value) {
+    return crypto
+        .createHash('sha256')
+        .update(
+            typeof value === 'string'
+                ? value
+                : JSON.stringify(value)
+        )
+        .digest('hex');
 }
 
 function stableStringify(value) {
@@ -170,12 +200,14 @@ function stableStringify(value) {
 
 // ============================================================
 // 3. DATABASE CONNECTION
-// Uses the same development configuration as 8.0.7.
+// Uses the existing 8.0.8 development configuration.
 // ============================================================
 
 function createPool() {
     if (!fs.existsSync(DB_CONFIG_PATH)) {
-        throw new Error(`Database config not found: ${DB_CONFIG_PATH}`);
+        throw new Error(
+            `Database config not found: ${DB_CONFIG_PATH}`
+        );
     }
 
     const config = JSON.parse(
@@ -183,7 +215,9 @@ function createPool() {
     ).development;
 
     if (!config) {
-        throw new Error('Missing development database configuration.');
+        throw new Error(
+            'Missing development database configuration.'
+        );
     }
 
     return new Pool({
@@ -197,13 +231,13 @@ function createPool() {
 }
 
 // ============================================================
-// 4. LOAD EXISTING FUNCTIONAL REQUIREMENTS
-// SQL and record interpretation follow 8.0.7.
+// 4. LOAD EXISTING FUNCTIONAL REQUIREMENTS AND EVIDENCE
 // ============================================================
 
-const FR_CONTENT_FILTER =
-    `kr.content ? 'result'
-     AND NULLIF(kr.content #>> '{result,requirement}', '') IS NOT NULL`;
+const FR_CONTENT_FILTER = `
+    kr.content ? 'result'
+    AND NULLIF(kr.content #>> '{result,requirement}', '') IS NOT NULL
+`;
 
 async function resolveFrRun(pool) {
     const columns = `
@@ -238,7 +272,9 @@ async function resolveFrRun(pool) {
 
     if (!result.rows.length) {
         throw new Error(
-            `No COMPLETED ingestion run found for ${FR_SOURCE_FILE || FR_SOURCE_PATTERN}.`
+            `No COMPLETED ingestion run found for ${
+                FR_SOURCE_FILE || FR_SOURCE_PATTERN
+            }.`
         );
     }
 
@@ -287,11 +323,46 @@ async function fetchFrRows(pool, run) {
 }
 
 function frIdFrom(value) {
-    const match = /FR[-_ ]?(\d{1,4})/i.exec(String(value || ''));
+    const match =
+        /FR[-_ ]?(\d{1,4})/i.exec(String(value || ''));
 
     return match
         ? `FR-${pad(Number(match[1]))}`
         : null;
+}
+
+function inner(row) {
+    let content = row.content;
+
+    if (typeof content === 'string') {
+        try {
+            content = JSON.parse(content);
+        } catch {
+            return { text: content };
+        }
+    }
+
+    content = content || {};
+
+    let business = content.content !== undefined
+        ? content.content
+        : content;
+
+    if (typeof business === 'string') {
+        try {
+            business = JSON.parse(business);
+        } catch {
+            return { text: business };
+        }
+    }
+
+    if (Array.isArray(business)) {
+        return { items: business };
+    }
+
+    return business && typeof business === 'object'
+        ? business
+        : { text: String(business ?? '') };
 }
 
 function parseFrRow(row) {
@@ -313,7 +384,8 @@ function parseFrRow(row) {
         : inner(row);
 
     return {
-        id: frIdFrom(row.source_file) ||
+        id:
+            frIdFrom(row.source_file) ||
             frIdFrom(row.record_id) ||
             data.requirement_id ||
             null,
@@ -336,10 +408,10 @@ async function loadEvidence(pool) {
         );
     }
 
-    log(`FR records found via ${fetched.via}: ${fetched.rows.length}.`);
+    log(
+        `FR records found via ${fetched.via}: ${fetched.rows.length}.`
+    );
 
-    // Deduplicate by FR ID. Latest encountered record wins,
-    // matching the existing 8.0.7 behaviour.
     const byId = new Map();
     let unnamed = 0;
 
@@ -350,7 +422,10 @@ async function loadEvidence(pool) {
 
         if (!fr.id) {
             fr.id = `FR-${pad(900 + ++unnamed)}`;
-            log(`WARNING: no FR ID found for record ${row.record_id}; assigned ${fr.id}.`);
+
+            log(
+                `WARNING: no FR ID found for record ${row.record_id}; assigned ${fr.id}.`
+            );
         }
 
         byId.set(fr.id, fr);
@@ -363,7 +438,9 @@ async function loadEvidence(pool) {
     );
 
     if (!frs.length) {
-        throw new Error('No usable Functional Requirements were parsed.');
+        throw new Error(
+            'No usable Functional Requirements were parsed.'
+        );
     }
 
     const expected = run.records_imported == null
@@ -371,10 +448,11 @@ async function loadEvidence(pool) {
         : Number(run.records_imported);
 
     if (expected !== null && expected !== frs.length) {
-        log(`WARNING: ingestion reports ${expected} records; parsed ${frs.length} FRs.`);
+        log(
+            `WARNING: ingestion reports ${expected} records; parsed ${frs.length} FRs.`
+        );
     }
 
-    // Exclude the FR records from the business-context digest.
     const kbResult = await pool.query(
         `SELECT record_id, semantic_category, content
            FROM knowledge_records
@@ -395,11 +473,15 @@ async function loadEvidence(pool) {
     const digestLines = [];
 
     for (const [category, cap] of DIGEST_CATEGORIES) {
-        const rows = kb.filter(item => item.category === category).slice(0, cap);
+        const rows = kb
+            .filter(item => item.category === category)
+            .slice(0, cap);
 
         if (!rows.length) continue;
 
-        digestLines.push(`${category.replace(/_/g, ' ')}:`);
+        digestLines.push(
+            `${category.replace(/_/g, ' ')}:`
+        );
 
         for (const item of rows) {
             const data = item.data;
@@ -414,21 +496,12 @@ async function loadEvidence(pool) {
         }
     }
 
-    const digest = digestLines.join('\n').slice(0, 7000);
-
-    const actors = [...new Set([
-        ...kb
-            .filter(item => item.category === 'ACTOR_DEFINITION')
-            .map(item => item.data.actor_name)
-            .filter(Boolean),
-        ...frs.flatMap(fr => fr.actors)
-    ])];
+    const digest = digestLines.join('\n').slice(0, 3500);
 
     return {
         ingestion: run,
         frs,
         digest,
-        actors,
         knowledgeRecordCount: kb.length
     };
 }
@@ -476,15 +549,19 @@ function extractJson(raw) {
             depth--;
 
             if (depth === 0) {
-                return JSON.parse(text.slice(start, i + 1));
+                return JSON.parse(
+                    text.slice(start, i + 1)
+                );
             }
         }
     }
 
-    throw new Error('Model JSON is incomplete or truncated.');
+    throw new Error(
+        'Model JSON is incomplete or truncated.'
+    );
 }
 
-function runLocal(label, prompt, maxTokens = SETTINGS.maxTokens) {
+function runLocal(label, prompt, maxTokens) {
     return new Promise((resolve, reject) => {
         const started = Date.now();
 
@@ -514,7 +591,9 @@ function runLocal(label, prompt, maxTokens = SETTINGS.maxTokens) {
         });
 
         const heartbeat = setInterval(() => {
-            log(`${label}: ${Math.round((Date.now() - started) / 1000)}s; ${output.length} output chars.`);
+            log(
+                `${label}: ${Math.round((Date.now() - started) / 1000)}s; ${output.length} output chars.`
+            );
         }, SETTINGS.heartbeatMs);
 
         const timeout = setTimeout(() => {
@@ -524,6 +603,7 @@ function runLocal(label, prompt, maxTokens = SETTINGS.maxTokens) {
 
         function finish(error, result) {
             if (settled) return;
+
             settled = true;
 
             clearInterval(heartbeat);
@@ -545,13 +625,17 @@ function runLocal(label, prompt, maxTokens = SETTINGS.maxTokens) {
 
         child.on('close', code => {
             if (code !== 0) {
-                return finish(new Error(
-                    `${label}: llama-cli exit code ${code}: ${cut(stderr, 1200)}`
-                ));
+                return finish(
+                    new Error(
+                        `${label}: llama-cli exit code ${code}: ${cut(stderr, 1200)}`
+                    )
+                );
             }
 
             if (!output.trim()) {
-                return finish(new Error(`${label}: empty output.`));
+                return finish(
+                    new Error(`${label}: empty output.`)
+                );
             }
 
             finish(null, output);
@@ -559,7 +643,7 @@ function runLocal(label, prompt, maxTokens = SETTINGS.maxTokens) {
     });
 }
 
-async function askJson(label, prompt, tokens = SETTINGS.maxTokens) {
+async function askJson(label, prompt, tokens) {
     let lastError;
 
     for (let attempt = 1; attempt <= 2; attempt++) {
@@ -570,13 +654,15 @@ async function askJson(label, prompt, tokens = SETTINGS.maxTokens) {
 
 Your previous response was invalid or incomplete.
 Return ONLY one complete valid JSON object.
-Do not include explanations or Markdown.
-Keep the JSON concise and close every object and array.`;
+Do not include Markdown or explanations.
+Keep the JSON concise.`;
 
             const raw = await runLocal(
                 `${label} attempt ${attempt}`,
                 actualPrompt,
-                attempt === 1 ? tokens : Math.max(500, Math.floor(tokens * 0.75))
+                attempt === 1
+                    ? tokens
+                    : Math.max(500, Math.floor(tokens * 0.75))
             );
 
             return extractJson(raw);
@@ -590,33 +676,37 @@ Keep the JSON concise and close every object and array.`;
     throw lastError;
 }
 
-const NO_THINK = '<think>\n\n</think>\n';
-
 // ============================================================
-// 6. DISCOVER EVERY EXISTING WORK FILE
+// 6. DISCOVER EXISTING BR WORK FILES
 // ============================================================
 
 function discoverWorkFiles() {
     if (!fs.existsSync(WORK_DIR)) {
-        throw new Error(`BR work directory not found: ${WORK_DIR}`);
+        throw new Error(
+            `BR work directory not found: ${WORK_DIR}`
+        );
     }
 
-    // Accept:
-    // BR-001.99eefbf0.json
-    // BR-001.json
-    //
-    // Do not use LIMIT or slice().
     const filenames = fs.readdirSync(WORK_DIR)
-        .filter(file => /^BR-\d{3,}(?:\.[^.]+)?\.json$/i.test(file))
+        .filter(file =>
+            /^BR-\d{3,}(?:\.[^.]+)?\.json$/i.test(file)
+        )
         .sort((a, b) => {
-            const idA = Number((a.match(/^BR-(\d+)/i) || [])[1] || 0);
-            const idB = Number((b.match(/^BR-(\d+)/i) || [])[1] || 0);
+            const idA = Number(
+                (a.match(/^BR-(\d+)/i) || [])[1] || 0
+            );
+
+            const idB = Number(
+                (b.match(/^BR-(\d+)/i) || [])[1] || 0
+            );
 
             return idA - idB || a.localeCompare(b);
         });
 
     if (!filenames.length) {
-        throw new Error(`No BR JSON files found in ${WORK_DIR}`);
+        throw new Error(
+            `No BR JSON files found in ${WORK_DIR}`
+        );
     }
 
     const files = filenames.map(filename => {
@@ -644,18 +734,15 @@ function discoverWorkFiles() {
 
     log(`Discovered ${files.length} BR work files.`);
 
-    for (const item of files) {
-        log(`Discovered ${item.id}: ${item.file}`);
-    }
-
     return files;
 }
 
 // ============================================================
-// 7. BR STRUCTURAL VALIDATION
+// 7. DETERMINISTIC STRUCTURAL VALIDATION
+// No LLM.
 // ============================================================
 
-function structuralValidation(br, knownFrIds) {
+function structuralValidation(br, knownFrIds, duplicateIds) {
     const findings = [];
     const result = br.result || {};
 
@@ -669,7 +756,9 @@ function structuralValidation(br, knownFrIds) {
         return findings;
     }
 
-    if (!result || typeof result !== 'object' || Array.isArray(result)) {
+    if (!result ||
+        typeof result !== 'object' ||
+        Array.isArray(result)) {
         findings.push({
             dimension: 'STRUCTURE',
             severity: 'HIGH',
@@ -677,6 +766,14 @@ function structuralValidation(br, knownFrIds) {
         });
 
         return findings;
+    }
+
+    if (duplicateIds.has(br.id)) {
+        findings.push({
+            dimension: 'STRUCTURE',
+            severity: 'HIGH',
+            finding: `Duplicate BR ID: ${br.id}.`
+        });
     }
 
     const requiredFields = [
@@ -692,6 +789,24 @@ function structuralValidation(br, knownFrIds) {
                 dimension: 'STRUCTURE',
                 severity: 'HIGH',
                 finding: `Missing required field: ${field}`
+            });
+        }
+    }
+
+    for (const field of [
+        'stakeholders',
+        'success_measures',
+        'policies_and_constraints',
+        'assumptions',
+        'risks_and_dependencies',
+        'linked_functional_requirements'
+    ]) {
+        if (result[field] !== undefined &&
+            !Array.isArray(result[field])) {
+            findings.push({
+                dimension: 'STRUCTURE',
+                severity: 'HIGH',
+                finding: `${field} must be an array.`
             });
         }
     }
@@ -722,6 +837,14 @@ function structuralValidation(br, knownFrIds) {
         });
     }
 
+    if (new Set(linked).size !== linked.length) {
+        findings.push({
+            dimension: 'FR_RELATIONSHIP',
+            severity: 'MEDIUM',
+            finding: 'Duplicate FR IDs exist in linked_functional_requirements.'
+        });
+    }
+
     for (const id of linked) {
         if (!knownFrIds.has(id)) {
             findings.push({
@@ -736,151 +859,530 @@ function structuralValidation(br, knownFrIds) {
 }
 
 // ============================================================
-// 8. INDIVIDUAL BR BUSINESS-QUALITY VALIDATION
+// 8. COMPACT BR DATA FOR AI BATCH ASSESSMENT
 // ============================================================
 
-function individualPrompt(br, linkedFrs, evidence) {
+function compactBr(br) {
+    const r = br.result || {};
+
+    return {
+        business_requirement_id: br.id,
+        name: cut(r.name, 160),
+        business_requirement: cut(r.business_requirement, 450),
+        business_objective: cut(r.business_objective, 250),
+        business_value: cut(r.business_value, 250),
+        stakeholders: arr(r.stakeholders).map(x => cut(x, 100)),
+        success_measures: arr(r.success_measures).map(x => cut(x, 140)),
+        policies_and_constraints:
+            arr(r.policies_and_constraints).map(x => cut(x, 140)),
+        assumptions: arr(r.assumptions).map(x => cut(x, 180)),
+        risks_and_dependencies:
+            arr(r.risks_and_dependencies).map(x => cut(x, 160))
+    };
+}
+
+function hasReusableSemanticValidation(br) {
+    return Boolean(
+        !FORCE_AI &&
+        br.data &&
+        br.data.validation &&
+        br.data.validation.semantic &&
+        br.data.validation.validated_at
+    );
+}
+
+function buildBrBatchPrompt(brs, evidence) {
+    const compact = brs.map(compactBr);
+
     return `<|im_start|>system
-You are an independent senior business analyst auditing a business requirement.
+You are an independent senior business analyst auditing generated
+Business Requirements against supplied discovery evidence.
 
-Do not rewrite the requirement. Assess it as supplied.
+Assess EACH supplied BR independently.
 
-Assess:
-1. Business-level quality and clarity.
-2. Whether the underlying business need is meaningful and sufficiently clear.
-3. Whether business value is explained rather than merely asserted.
-4. Solution leakage: implementation, technology, architecture, UI or system
-   design being prescribed without a business-level justification.
-5. Unsupported assumptions, claims, policies, targets or metrics.
-6. Internal contradictions and inconsistencies.
-7. Whether each linked Functional Requirement substantively supports this BR.
+For every BR assess:
+1. Business quality: genuine business need, clarity, business value.
+2. Solution leakage: technical implementation or architecture prescribed
+   instead of a business outcome.
+3. Unsupported assumptions, claims, success measures and metrics.
+4. Contradictions or unclear business meaning.
 
-Rules:
-- Similar wording is not proof of a valid relationship.
+Evidence rules:
+- Use only the supplied business context as evidence.
+- Missing evidence means UNVERIFIED, not FALSE.
+- Use CONTRADICTED only when supplied evidence directly conflicts.
 - Do not invent facts, regulations, metrics or targets.
-- A proposed target is acceptable only when explicitly labelled proposed.
-- Distinguish unsupported evidence from a confirmed false statement.
-- Do not treat every reference to a system as solution leakage.
-- Do not change any original BR content.
+- A proposed measure must be labelled as proposed.
+- Do not prescribe APIs, integrations, databases, software or architecture.
+- Do not rewrite the BR.
+- Do not treat ordinary references to systems as automatic solution leakage.
+- Keep findings concise and specific.
 
 Return ONLY JSON:
 {
-  "status":"PASS|REVIEW|FAIL",
-  "business_quality":"PASS|REVIEW|FAIL",
-  "solution_leakage":"NONE|POSSIBLE|CONFIRMED",
-  "unsupported_assumptions":"NONE|POSSIBLE|CONFIRMED",
-  "fr_relationships":[
+  "assessments": [
     {
-      "functional_requirement_id":"FR-001",
-      "status":"SUPPORTED|PARTIAL|UNSUPPORTED|UNCLEAR",
-      "reason":"Evidence-based explanation"
+      "business_requirement_id": "BR-001",
+      "status": "PASS|REVIEW|FAIL",
+      "business_quality": "PASS|REVIEW|FAIL",
+      "solution_leakage": "NONE|POSSIBLE|CONFIRMED",
+      "unsupported_assumptions": "NONE|UNVERIFIED|CONTRADICTED",
+      "findings": [
+        {
+          "dimension": "BUSINESS_QUALITY|SOLUTION_LEAKAGE|UNSUPPORTED_ASSUMPTION|UNSUPPORTED_METRIC|CONSISTENCY",
+          "severity": "HIGH|MEDIUM|LOW",
+          "finding": "Specific issue",
+          "evidence": "Relevant supplied evidence or evidence gap",
+          "recommendation": "Business-level review action"
+        }
+      ],
+      "assessment_summary": "Concise assessment"
     }
-  ],
-  "findings":[
-    {
-      "dimension":"BUSINESS_QUALITY|SOLUTION_LEAKAGE|UNSUPPORTED_ASSUMPTION|FR_RELATIONSHIP|CONSISTENCY",
-      "severity":"HIGH|MEDIUM|LOW",
-      "finding":"Specific issue",
-      "evidence":"Text or evidence gap",
-      "recommendation":"What needs review"
-    }
-  ],
-  "assessment_summary":"Concise assessment"
+  ]
 }
 <|im_end|>
 <|im_start|>user
-BUSINESS CONTEXT:
+DISCOVERY BUSINESS CONTEXT:
 ${evidence.digest}
 
-FUNCTIONAL REQUIREMENTS LINKED TO THIS BR:
-${JSON.stringify(linkedFrs, null, 2)}
-
-BUSINESS REQUIREMENT:
-${JSON.stringify({
-    business_requirement_id: br.id,
-    ...br.result
-}, null, 2)}
+BUSINESS REQUIREMENTS:
+${JSON.stringify(compact, null, 2)}
 <|im_end|>
 <|im_start|>assistant
 ${NO_THINK}`;
 }
 
-async function validateIndividual(br, evidence, knownFrIds) {
-    const structural = structuralValidation(br, knownFrIds);
+function normalizeBrAssessment(assessment, br) {
+    const allowed = ['PASS', 'REVIEW', 'FAIL'];
 
-    if (br.readError || !br.result || typeof br.result !== 'object') {
-        return {
-            status: 'FAIL',
-            validated_at: new Date().toISOString(),
-            structural_findings: structural,
-            semantic: null
-        };
-    }
-
-    const linkedIds = arr(br.result.linked_functional_requirements);
-
-    const linkedFrs = evidence.frs.filter(fr =>
-        linkedIds.includes(fr.id)
-    );
-
-    let semantic;
-
-    try {
-        semantic = await askJson(
-            `Individual BR validation ${br.id}`,
-            individualPrompt(br, linkedFrs, evidence)
-        );
-    } catch (error) {
-        semantic = {
-            status: 'REVIEW',
-            business_quality: 'REVIEW',
-            findings: [{
-                dimension: 'VALIDATION_EXECUTION',
-                severity: 'HIGH',
-                finding: error.message,
-                evidence: null,
-                recommendation: 'Rerun this BR validation.'
-            }],
-            assessment_summary: 'AI assessment could not be completed.'
-        };
-    }
-
-    const aiStatus = ['PASS', 'REVIEW', 'FAIL'].includes(
-        String(semantic.status).toUpperCase()
+    const status = allowed.includes(
+        String(assessment.status || '').toUpperCase()
     )
-        ? String(semantic.status).toUpperCase()
+        ? String(assessment.status).toUpperCase()
         : 'REVIEW';
 
-    const structuralFail = structural.some(
-        finding => finding.severity === 'HIGH'
+    return {
+        status,
+        business_quality: allowed.includes(
+            String(assessment.business_quality || '').toUpperCase()
+        )
+            ? String(assessment.business_quality).toUpperCase()
+            : 'REVIEW',
+
+        solution_leakage: [
+            'NONE', 'POSSIBLE', 'CONFIRMED'
+        ].includes(
+            String(assessment.solution_leakage || '').toUpperCase()
+        )
+            ? String(assessment.solution_leakage).toUpperCase()
+            : 'POSSIBLE',
+
+        unsupported_assumptions: [
+            'NONE', 'UNVERIFIED', 'CONTRADICTED'
+        ].includes(
+            String(assessment.unsupported_assumptions || '').toUpperCase()
+        )
+            ? String(assessment.unsupported_assumptions).toUpperCase()
+            : 'UNVERIFIED',
+
+        findings: arr(assessment.findings),
+
+        assessment_summary: cut(
+            assessment.assessment_summary ||
+            'Assessment returned without a summary.',
+            1000
+        )
+    };
+}
+
+function saveBrValidation(br, validation) {
+    if (br.readError) return;
+
+    // Preserve the original BR result and all existing properties.
+    br.data.validation = validation;
+
+    const backup = `${br.fullPath}.pre-validation`;
+
+    if (!fs.existsSync(backup)) {
+        fs.copyFileSync(br.fullPath, backup);
+    }
+
+    writeJsonAtomic(br.fullPath, br.data);
+
+    // Keep in-memory data synchronized.
+    br.result = br.data.result;
+}
+
+async function validateBrBatches(workBrs, evidence, knownFrIds) {
+    const duplicateIds = new Set();
+
+    const idCounts = new Map();
+
+    for (const br of workBrs) {
+        idCounts.set(
+            br.id,
+            (idCounts.get(br.id) || 0) + 1
+        );
+    }
+
+    for (const [id, count] of idCounts) {
+        if (count > 1) duplicateIds.add(id);
+    }
+
+    const pending = [];
+    const results = [];
+
+    // First run deterministic structural checks on every BR.
+    for (const br of workBrs) {
+        const structural = structuralValidation(
+            br,
+            knownFrIds,
+            duplicateIds
+        );
+
+        if (hasReusableSemanticValidation(br)) {
+            const existing = br.data.validation;
+
+            const highStructural = structural.some(
+                item => item.severity === 'HIGH'
+            );
+
+            const status = highStructural
+                ? 'FAIL'
+                : existing.status || existing.semantic.status || 'REVIEW';
+
+            const validation = {
+                ...existing,
+                status,
+                validation_version: '8.0.8-batched',
+                source_hash: hash(br.result),
+                structural_findings: structural,
+                reused_existing_semantic_assessment: true
+            };
+
+            saveBrValidation(br, validation);
+
+            results.push({
+                business_requirement_id: br.id,
+                file: br.file,
+                status,
+                semantic_reused: true
+            });
+
+            log(`${br.id}: reusing existing semantic assessment.`);
+        } else {
+            const validation = {
+                status: structural.some(
+                    item => item.severity === 'HIGH'
+                ) ? 'FAIL' : 'REVIEW',
+                validation_version: '8.0.8-batched',
+                validated_at: new Date().toISOString(),
+                structural_findings: structural,
+                semantic: null,
+                source_hash: hash(br.result),
+                reused_existing_semantic_assessment: false
+            };
+
+            if (br.readError) {
+                results.push({
+                    business_requirement_id: br.id,
+                    file: br.file,
+                    status: 'FAIL',
+                    semantic_reused: false
+                });
+
+                continue;
+            }
+
+            br.data.validation = validation;
+            pending.push(br);
+        }
+    }
+
+    log(
+        `Existing semantic assessments reused: ${results.filter(x => x.semantic_reused).length}.`
+    );
+
+    log(
+        `BRs requiring AI assessment: ${pending.length}.`
+    );
+
+    // Assess unvalidated BRs in batches instead of one process per BR.
+    for (
+        let start = 0;
+        start < pending.length;
+        start += BR_BATCH_SIZE
+    ) {
+        const batch = pending.slice(
+            start,
+            start + BR_BATCH_SIZE
+        );
+
+        log(
+            `Business-quality AI batch ${Math.floor(start / BR_BATCH_SIZE) + 1}: ${batch.map(br => br.id).join(', ')}`
+        );
+
+        let assessments = [];
+
+        try {
+            const response = await askJson(
+                `BR quality batch ${Math.floor(start / BR_BATCH_SIZE) + 1}`,
+                buildBrBatchPrompt(batch, evidence),
+                SETTINGS.brMaxTokens
+            );
+
+            assessments = arr(response.assessments);
+
+        } catch (error) {
+            log(`BR batch assessment failed: ${error.message}`);
+        }
+
+        const byId = new Map(
+            assessments.map(item => [
+                String(item.business_requirement_id || '').toUpperCase(),
+                item
+            ])
+        );
+
+        // Save each BR after its batch finishes.
+        for (const br of batch) {
+            const structural = structuralValidation(
+                br,
+                knownFrIds,
+                duplicateIds
+            );
+
+            const assessment = byId.get(br.id);
+
+            let semantic;
+
+            if (assessment) {
+                semantic = normalizeBrAssessment(
+                    assessment,
+                    br
+                );
+            } else {
+                semantic = {
+                    status: 'REVIEW',
+                    business_quality: 'REVIEW',
+                    solution_leakage: 'POSSIBLE',
+                    unsupported_assumptions: 'UNVERIFIED',
+                    findings: [{
+                        dimension: 'VALIDATION_EXECUTION',
+                        severity: 'HIGH',
+                        finding: 'No usable AI assessment returned for this BR.',
+                        evidence: null,
+                        recommendation: 'Rerun this BR assessment.'
+                    }],
+                    assessment_summary:
+                        'AI assessment was incomplete or missing.'
+                };
+            }
+
+            const structuralFail = structural.some(
+                item => item.severity === 'HIGH'
+            );
+
+            const validation = {
+                validation_version: '8.0.8-batched',
+                validated_at: new Date().toISOString(),
+                validator: MODEL,
+                status: structuralFail
+                    ? 'FAIL'
+                    : semantic.status,
+                source_hash: hash(br.result),
+                structural_findings: structural,
+                semantic,
+                reused_existing_semantic_assessment: false
+            };
+
+            saveBrValidation(br, validation);
+
+            results.push({
+                business_requirement_id: br.id,
+                file: br.file,
+                status: validation.status,
+                semantic_reused: false
+            });
+
+            log(`${br.id}: ${validation.status} (saved).`);
+        }
+    }
+
+    // Include reused and newly generated results in BR file order.
+    const resultById = new Map(
+        results.map(item => [item.business_requirement_id, item])
     );
 
     return {
-        status: structuralFail ? 'FAIL' : aiStatus,
-        validated_at: new Date().toISOString(),
-        validator: MODEL,
-        structural_findings: structural,
-        semantic,
-        linked_fr_count: linkedIds.length,
-        known_linked_fr_count: linkedFrs.length
+        results: workBrs.map(br =>
+            resultById.get(br.id) || {
+                business_requirement_id: br.id,
+                file: br.file,
+                status: 'REVIEW'
+            }
+        ),
+        duplicateIds: [...duplicateIds]
     };
 }
 
 // ============================================================
-// 9. SIMILARITY: CANDIDATE DISCOVERY ONLY
+// 9. BR-TO-BR PORTFOLIO DUPLICATION
+// One portfolio-level AI assessment.
+// ============================================================
+
+function compactBrPortfolio(brs) {
+    return brs.map(br => {
+        const r = br.result || {};
+
+        return {
+            id: br.id,
+            name: cut(r.name, 120),
+            business_requirement: cut(r.business_requirement, 300),
+            business_objective: cut(r.business_objective, 160),
+            business_value: cut(r.business_value, 120)
+        };
+    });
+}
+
+function duplicatePortfolioPrompt(brs) {
+    return `<|im_start|>system
+You are auditing a complete portfolio of Business Requirements.
+
+Compare the underlying business needs, intended outcomes, scope and
+responsibilities across the entire portfolio.
+
+Identify pairs that are:
+DUPLICATE: substantially the same underlying business need and outcome.
+OVERLAPPING: materially shared scope, but distinct needs remain.
+
+Do not classify requirements as duplicates merely because they share:
+- keywords
+- actors
+- business objects
+- broad business objectives
+- functional requirements
+
+Do not merge, delete or rewrite any requirement.
+Do not invent requirements.
+If no duplicate or overlapping pair exists, return an empty pairs array.
+
+Return ONLY JSON:
+{
+  "pairs": [
+    {
+      "br_a": "BR-001",
+      "br_b": "BR-002",
+      "classification": "DUPLICATE|OVERLAPPING",
+      "confidence": "HIGH|MEDIUM|LOW",
+      "reason": "Specific comparison of underlying business needs",
+      "overlapping_scope": "What overlaps",
+      "recommendation": "Reviewer action"
+    }
+  ],
+  "assessment_summary": "Concise portfolio assessment"
+}
+<|im_end|>
+<|im_start|>user
+COMPLETE BUSINESS REQUIREMENT PORTFOLIO:
+${JSON.stringify(compactBrPortfolio(brs), null, 2)}
+<|im_end|>
+<|im_start|>assistant
+${NO_THINK}`;
+}
+
+async function validateBrPortfolio(brs, previousValidation) {
+    const portfolioHash = hash(
+        brs.map(br => ({
+            id: br.id,
+            result: br.result
+        }))
+    );
+
+    const previous = previousValidation?.portfolio_validation;
+
+    if (
+        !FORCE_AI &&
+        previous &&
+        previous.source_hash === portfolioHash
+    ) {
+        log('Reusing cached BR-to-BR portfolio assessment.');
+
+        return previous;
+    }
+
+    log(
+        `Starting one portfolio-level BR duplication assessment for ${brs.length} BRs.`
+    );
+
+    try {
+        const response = await askJson(
+            'BR portfolio duplication',
+            duplicatePortfolioPrompt(brs),
+            SETTINGS.duplicateMaxTokens
+        );
+
+        const pairs = arr(response.pairs)
+            .filter(pair =>
+                brs.some(br => br.id === pair.br_a) &&
+                brs.some(br => br.id === pair.br_b)
+            );
+
+        return {
+            source_hash: portfolioHash,
+            assessed_at: new Date().toISOString(),
+            method: 'single_portfolio_ai_assessment',
+            br_count: brs.length,
+            results: pairs,
+            confirmed_duplicates: pairs.filter(
+                item => item.classification === 'DUPLICATE'
+            ),
+            overlapping_pairs: pairs.filter(
+                item => item.classification === 'OVERLAPPING'
+            ),
+            assessment_summary: cut(
+                response.assessment_summary,
+                1500
+            ),
+            execution_status: 'COMPLETED'
+        };
+
+    } catch (error) {
+        return {
+            source_hash: portfolioHash,
+            assessed_at: new Date().toISOString(),
+            method: 'single_portfolio_ai_assessment',
+            br_count: brs.length,
+            results: [],
+            confirmed_duplicates: [],
+            overlapping_pairs: [],
+            assessment_summary:
+                'Portfolio duplication assessment could not be completed.',
+            execution_status: 'FAILED',
+            error: error.message
+        };
+    }
+}
+
+// ============================================================
+// 10. FR-TO-BR PORTFOLIO RELATIONSHIPS
+// Every FR is assessed. Existing links are never omitted.
 // ============================================================
 
 const STOP_WORDS = new Set([
-    'the', 'and', 'for', 'with', 'that', 'this', 'from', 'into',
-    'shall', 'system', 'their', 'have', 'been', 'will', 'such',
-    'each', 'when', 'then', 'which', 'based', 'business',
-    'needs', 'need', 'must', 'through', 'using'
+    'the', 'and', 'for', 'with', 'that', 'this', 'from',
+    'into', 'shall', 'system', 'their', 'have', 'been',
+    'will', 'such', 'each', 'when', 'then', 'which',
+    'based', 'business', 'needs', 'need', 'must',
+    'through', 'using'
 ]);
 
 function words(text) {
     return normalize(text)
         .split(' ')
-        .filter(word => word.length >= 3 && !STOP_WORDS.has(word));
+        .filter(word =>
+            word.length >= 3 && !STOP_WORDS.has(word)
+        );
 }
 
 function vectorize(texts) {
@@ -904,13 +1406,19 @@ function vectorize(texts) {
         for (const word of document) {
             const weight =
                 (vector.get(word) || 0) +
-                Math.log((count + 1) / ((documentFrequency.get(word) || 0) + 1)) + 1;
+                Math.log(
+                    (count + 1) /
+                    ((documentFrequency.get(word) || 0) + 1)
+                ) + 1;
 
             vector.set(word, weight);
         }
 
         const magnitude = Math.sqrt(
-            [...vector.values()].reduce((sum, value) => sum + value * value, 0)
+            [...vector.values()].reduce(
+                (sum, value) => sum + value * value,
+                0
+            )
         ) || 1;
 
         for (const [word, value] of vector) {
@@ -932,13 +1440,13 @@ function cosine(a, b) {
 }
 
 function brText(br) {
-    const result = br.result || {};
+    const r = br.result || {};
 
     return [
-        result.name,
-        result.business_requirement,
-        result.business_objective,
-        result.business_value
+        r.name,
+        r.business_requirement,
+        r.business_objective,
+        r.business_value
     ].join(' ');
 }
 
@@ -951,152 +1459,23 @@ function frText(fr) {
     ].join(' ');
 }
 
-function similarityMatrix(textsA, textsB) {
-    const vectors = vectorize([...textsA, ...textsB]);
+function buildRelationshipItems(frs, brs) {
+    const vectors = vectorize([
+        ...frs.map(frText),
+        ...brs.map(brText)
+    ]);
 
-    const A = vectors.slice(0, textsA.length);
-    const B = vectors.slice(textsA.length);
-
-    return A.map(a => B.map(b => cosine(a, b)));
-}
-
-// ============================================================
-// 10. BR-TO-BR SEMANTIC DUPLICATION VALIDATION
-// ============================================================
-
-function buildDuplicateCandidates(brs) {
-    const texts = brs.map(brText);
-    const vectors = vectorize(texts);
-
-    const candidates = [];
-
-    // Every BR is compared with every other BR for candidate discovery.
-    // No fixed BR count or generation batch boundary is used.
-    for (let i = 0; i < brs.length; i++) {
-        for (let j = i + 1; j < brs.length; j++) {
-            const score = cosine(vectors[i], vectors[j]);
-
-            if (score >= SETTINGS.duplicateCandidateThreshold) {
-                candidates.push({
-                    br_a: brs[i],
-                    br_b: brs[j],
-                    similarity: Number(score.toFixed(4))
-                });
-            }
-        }
-    }
-
-    return candidates.sort((a, b) => b.similarity - a.similarity);
-}
-
-function duplicatePrompt(pair) {
-    return `<|im_start|>system
-You are evaluating two business requirements for semantic duplication.
-
-Classify them as:
-DUPLICATE: substantially the same underlying business need and outcome.
-OVERLAPPING: some shared scope, but distinct business needs remain.
-DISTINCT: materially different business needs.
-UNCLEAR: insufficient evidence.
-
-Do not call them duplicates merely because they share keywords,
-stakeholders, business objects, functional requirements or a broad objective.
-
-Compare their underlying intent, scope, outcomes and responsibilities.
-Do not merge, delete or rewrite either BR.
-
-Return ONLY JSON:
-{
-  "classification":"DUPLICATE|OVERLAPPING|DISTINCT|UNCLEAR",
-  "confidence":"HIGH|MEDIUM|LOW",
-  "reason":"Evidence-based explanation",
-  "overlapping_scope":"What overlaps",
-  "recommendation":"Reviewer action"
-}
-<|im_end|>
-<|im_start|>user
-BR A:
-${JSON.stringify({ id: pair.br_a.id, ...pair.br_a.result }, null, 2)}
-
-BR B:
-${JSON.stringify({ id: pair.br_b.id, ...pair.br_b.result }, null, 2)}
-<|im_end|>
-<|im_start|>assistant
-${NO_THINK}`;
-}
-
-async function validateDuplicates(brs) {
-    const candidates = buildDuplicateCandidates(brs);
-    const results = [];
-
-    log(`BR-to-BR candidate pairs: ${candidates.length}.`);
-
-    for (const pair of candidates) {
-        try {
-            const assessment = await askJson(
-                `BR duplication ${pair.br_a.id}/${pair.br_b.id}`,
-                duplicatePrompt(pair),
-                1000
-            );
-
-            results.push({
-                br_a: pair.br_a.id,
-                br_b: pair.br_b.id,
-                lexical_similarity: pair.similarity,
-                ...assessment
-            });
-
-        } catch (error) {
-            results.push({
-                br_a: pair.br_a.id,
-                br_b: pair.br_b.id,
-                lexical_similarity: pair.similarity,
-                classification: 'UNCLEAR',
-                confidence: 'LOW',
-                reason: error.message,
-                recommendation: 'Rerun this comparison.'
-            });
-        }
-    }
-
-    return {
-        candidate_pair_count: candidates.length,
-        assessed_pair_count: results.length,
-        results,
-        confirmed_duplicates: results.filter(
-            item => item.classification === 'DUPLICATE'
-        ),
-        overlapping_pairs: results.filter(
-            item => item.classification === 'OVERLAPPING'
-        ),
-        unresolved_pairs: results.filter(
-            item => item.classification === 'UNCLEAR'
-        )
-    };
-}
-
-// ============================================================
-// 11. FR-TO-BR SEMANTIC RELATIONSHIP VALIDATION
-//
-// Every FR is assessed against:
-// - BRs already linked to it.
-// - Its top similarity-ranked BR candidates.
-//
-// Similarity proposes candidates only.
-// The model determines the semantic relationship.
-// ============================================================
-
-function buildRelationshipCandidates(frs, brs) {
-    const matrix = similarityMatrix(
-        frs.map(frText),
-        brs.map(brText)
-    );
+    const frVectors = vectors.slice(0, frs.length);
+    const brVectors = vectors.slice(frs.length);
 
     return frs.map((fr, index) => {
         const existingLinks = new Set();
 
         for (const br of brs) {
-            if (arr(br.result?.linked_functional_requirements).includes(fr.id)) {
+            if (
+                arr(br.result?.linked_functional_requirements)
+                    .includes(fr.id)
+            ) {
                 existingLinks.add(br.id);
             }
         }
@@ -1104,10 +1483,13 @@ function buildRelationshipCandidates(frs, brs) {
         const ranked = brs
             .map((br, brIndex) => ({
                 br,
-                score: matrix[index][brIndex]
+                score: cosine(
+                    frVectors[index],
+                    brVectors[brIndex]
+                )
             }))
             .sort((a, b) => b.score - a.score)
-            .slice(0, SETTINGS.relationshipCandidateCount);
+            .slice(0, FR_CANDIDATE_COUNT);
 
         const selected = new Map();
 
@@ -1115,12 +1497,20 @@ function buildRelationshipCandidates(frs, brs) {
             selected.set(item.br.id, item);
         }
 
-        // Never omit an existing link, even if its similarity is low.
+        // Preserve all existing links, regardless of similarity.
         for (const br of brs) {
-            if (existingLinks.has(br.id) && !selected.has(br.id)) {
+            if (
+                existingLinks.has(br.id) &&
+                !selected.has(br.id)
+            ) {
+                const brIndex = brs.indexOf(br);
+
                 selected.set(br.id, {
                     br,
-                    score: matrix[index][brs.indexOf(br)]
+                    score: cosine(
+                        frVectors[index],
+                        brVectors[brIndex]
+                    )
                 });
             }
         }
@@ -1133,111 +1523,249 @@ function buildRelationshipCandidates(frs, brs) {
     });
 }
 
-function relationshipPrompt(item) {
-    const candidates = item.candidates.map(candidate => ({
-        business_requirement_id: candidate.br.id,
-        existing_link: item.existing_links.includes(candidate.br.id),
-        candidate_similarity: Number(candidate.score.toFixed(4)),
-        name: candidate.br.result?.name,
-        business_requirement: candidate.br.result?.business_requirement,
-        business_objective: candidate.br.result?.business_objective
+function relationshipBatchPrompt(items) {
+    const compact = items.map(item => ({
+        functional_requirement: {
+            id: item.fr.id,
+            requirement: item.fr.requirement,
+            business_need: item.fr.need,
+            actors: item.fr.actors,
+            objects: item.fr.objects
+        },
+
+        existing_links: item.existing_links,
+
+        candidate_business_requirements:
+            item.candidates.map(candidate => ({
+                id: candidate.br.id,
+                existing_link:
+                    item.existing_links.includes(candidate.br.id),
+                name: cut(candidate.br.result?.name, 100),
+                business_requirement:
+                    cut(candidate.br.result?.business_requirement, 220),
+                business_objective:
+                    cut(candidate.br.result?.business_objective, 140)
+            }))
     }));
 
     return `<|im_start|>system
-You are independently validating whether a Functional Requirement
-substantively contributes to a Business Requirement.
+You are independently validating the relationship between Functional
+Requirements and Business Requirements across a business portfolio.
 
-A candidate may be an existing link or a newly discovered possible link.
+Assess EVERY supplied FR.
 
-Classify each candidate:
+For each candidate BR classify:
 SUPPORTED: the FR directly implements or materially contributes to the BR.
-PARTIAL: the FR contributes to only part of the BR.
-UNSUPPORTED: the FR does not substantively support the BR.
+PARTIAL: it contributes to only part of the BR.
+UNSUPPORTED: it does not substantively support the BR.
 UNCLEAR: insufficient information.
 
-Do not infer support from keyword similarity alone.
-Do not force every FR to link to a BR.
-An FR may support multiple BRs where the business meaning justifies it.
-Do not invent missing business scope.
+Rules:
+- Existing links must be assessed.
+- Candidate links may reveal a missing relationship.
+- Similar wording is not proof of support.
+- Do not force every FR to link to a BR.
+- An FR may support multiple BRs.
+- Do not invent missing business scope.
+- Do not recommend technical solutions.
+- Assess the actual business intent and outcomes.
+- Return one result for every supplied FR.
+- Keep reasons concise.
 
 Return ONLY JSON:
 {
-  "functional_requirement_id":"FR-001",
-  "relationships":[
+  "functional_requirements": [
     {
-      "business_requirement_id":"BR-001",
-      "status":"SUPPORTED|PARTIAL|UNSUPPORTED|UNCLEAR",
-      "reason":"Evidence-based explanation"
+      "functional_requirement_id": "FR-001",
+      "relationships": [
+        {
+          "business_requirement_id": "BR-001",
+          "status": "SUPPORTED|PARTIAL|UNSUPPORTED|UNCLEAR",
+          "existing_link": true,
+          "reason": "Specific business-level explanation"
+        }
+      ]
     }
-  ],
-  "assessment_summary":"Concise assessment"
+  ]
 }
 <|im_end|>
 <|im_start|>user
-FUNCTIONAL REQUIREMENT:
-${JSON.stringify(item.fr, null, 2)}
-
-EXISTING LINKS:
-${JSON.stringify(item.existing_links)}
-
-BUSINESS REQUIREMENT CANDIDATES:
-${JSON.stringify(candidates, null, 2)}
+FR AND BR PORTFOLIO CANDIDATES:
+${JSON.stringify(compact, null, 2)}
 <|im_end|>
 <|im_start|>assistant
 ${NO_THINK}`;
 }
 
-async function validateFrRelationships(frs, brs) {
-    const candidates = buildRelationshipCandidates(frs, brs);
-    const results = [];
+async function validateFrPortfolio(frs, brs, previousValidation) {
+    const sourceHash = hash({
+        frs,
+        brs: brs.map(br => ({
+            id: br.id,
+            result: br.result
+        }))
+    });
 
-    log(`Validating semantic FR relationships for all ${frs.length} FRs.`);
+    const previous = previousValidation?.fr_to_br_validation;
 
-    // Sequential execution: one local llama-cli process at a time.
-    for (const item of candidates) {
+    if (
+        !FORCE_AI &&
+        previous &&
+        previous.source_hash === sourceHash &&
+        previous.execution_status === 'COMPLETED'
+    ) {
+        log('Reusing cached FR-to-BR portfolio assessment.');
+
+        return previous;
+    }
+
+    const items = buildRelationshipItems(frs, brs);
+    const allResults = [];
+
+    const batches = [];
+
+    for (
+        let start = 0;
+        start < items.length;
+        start += FR_BATCH_SIZE
+    ) {
+        batches.push(
+            items.slice(start, start + FR_BATCH_SIZE)
+        );
+    }
+
+    log(
+        `Assessing all ${frs.length} FRs in ${batches.length} portfolio batches.`
+    );
+
+    for (let index = 0; index < batches.length; index++) {
+        const batch = batches[index];
+
+        log(
+            `FR relationship batch ${index + 1}/${batches.length}: ${batch.length} FRs.`
+        );
+
         try {
-            const assessment = await askJson(
-                `FR relationship ${item.fr.id}`,
-                relationshipPrompt(item),
-                1400
+            const response = await askJson(
+                `FR portfolio batch ${index + 1}`,
+                relationshipBatchPrompt(batch),
+                SETTINGS.frMaxTokens
             );
 
-            results.push({
-                functional_requirement_id: item.fr.id,
-                existing_links: item.existing_links,
-                candidate_business_requirements: item.candidates.map(
-                    candidate => candidate.br.id
-                ),
-                relationships: arr(assessment.relationships),
-                assessment_summary: assessment.assessment_summary
-            });
+            const returned = arr(
+                response.functional_requirements
+            );
+
+            const byId = new Map(
+                returned.map(item => [
+                    String(item.functional_requirement_id || '').toUpperCase(),
+                    item
+                ])
+            );
+
+            for (const item of batch) {
+                const assessment = byId.get(item.fr.id);
+
+                allResults.push({
+                    functional_requirement_id: item.fr.id,
+                    existing_links: item.existing_links,
+                    candidate_business_requirements:
+                        item.candidates.map(candidate => candidate.br.id),
+                    relationships: assessment
+                        ? arr(assessment.relationships)
+                        : [],
+                    status: assessment ? 'ASSESSED' : 'UNCLEAR',
+                    error: assessment
+                        ? null
+                        : 'Model omitted this FR from its response.'
+                });
+            }
 
         } catch (error) {
-            results.push({
-                functional_requirement_id: item.fr.id,
-                existing_links: item.existing_links,
-                relationships: [],
-                status: 'UNCLEAR',
-                error: error.message
+            for (const item of batch) {
+                allResults.push({
+                    functional_requirement_id: item.fr.id,
+                    existing_links: item.existing_links,
+                    candidate_business_requirements:
+                        item.candidates.map(candidate => candidate.br.id),
+                    relationships: [],
+                    status: 'UNCLEAR',
+                    error: error.message
+                });
+            }
+        }
+    }
+
+    const allPairs = [];
+
+    for (const item of allResults) {
+        for (const relationship of item.relationships) {
+            allPairs.push({
+                functional_requirement_id:
+                    item.functional_requirement_id,
+                ...relationship
             });
         }
     }
 
-    return results;
+    return {
+        source_hash: sourceHash,
+        assessed_at: new Date().toISOString(),
+        execution_status: allResults.every(
+            item => item.status === 'ASSESSED'
+        )
+            ? 'COMPLETED'
+            : 'PARTIAL',
+        functional_requirements_assessed: allResults.length,
+        functional_requirements_expected: frs.length,
+        results: allResults,
+        semantic_relationships: allPairs,
+        unsupported_links: allPairs.filter(
+            item => item.status === 'UNSUPPORTED'
+        ),
+        partial_links: allPairs.filter(
+            item => item.status === 'PARTIAL'
+        ),
+        unclear_links: allPairs.filter(
+            item => item.status === 'UNCLEAR'
+        )
+    };
 }
 
 // ============================================================
-// 12. CONSOLIDATED FILE VALIDATION
+// 11. CONSOLIDATED FILE AND TWO-WAY STRUCTURAL COVERAGE
 // ============================================================
 
 function validateConsolidatedStructure(finalData, workBrs, evidence) {
     const findings = [];
 
-    const consolidated = arr(finalData.business_requirements);
+    const consolidated =
+        arr(finalData.business_requirements);
 
     const workIds = new Set(
         workBrs.map(br => br.id)
     );
+
+    const consolidatedIdCounts = new Map();
+
+    for (const br of consolidated) {
+        const id = br.business_requirement_id;
+
+        consolidatedIdCounts.set(
+            id,
+            (consolidatedIdCounts.get(id) || 0) + 1
+        );
+    }
+
+    for (const [id, count] of consolidatedIdCounts) {
+        if (count > 1) {
+            findings.push({
+                dimension: 'STRUCTURE',
+                severity: 'HIGH',
+                finding: `Duplicate consolidated BR ID: ${id}.`
+            });
+        }
+    }
 
     const consolidatedIds = new Set(
         consolidated.map(br => br.business_requirement_id)
@@ -1248,7 +1776,8 @@ function validateConsolidatedStructure(finalData, workBrs, evidence) {
             findings.push({
                 dimension: 'CONSOLIDATION',
                 severity: 'HIGH',
-                finding: `${br.id} exists in work/ but is missing from the consolidated file.`
+                finding:
+                    `${br.id} exists in work/ but is missing from the consolidated file.`
             });
         }
     }
@@ -1258,7 +1787,8 @@ function validateConsolidatedStructure(finalData, workBrs, evidence) {
             findings.push({
                 dimension: 'CONSOLIDATION',
                 severity: 'HIGH',
-                finding: `${br.business_requirement_id} exists in the consolidated file but has no matching work file.`
+                finding:
+                    `${br.business_requirement_id} exists in the consolidated file but has no matching work file.`
             });
         }
     }
@@ -1291,13 +1821,17 @@ function validateConsolidatedStructure(finalData, workBrs, evidence) {
 
     const frCoverage = evidence.frs.map(fr => ({
         functional_requirement_id: fr.id,
-        linked_business_requirements: linkedByFr.get(fr.id) || [],
-        status: linkedByFr.has(fr.id) ? 'STRUCTURALLY_LINKED' : 'UNLINKED'
+        linked_business_requirements:
+            linkedByFr.get(fr.id) || [],
+        status: linkedByFr.has(fr.id)
+            ? 'STRUCTURALLY_LINKED'
+            : 'UNLINKED'
     }));
 
     const brCoverage = consolidated.map(br => ({
         business_requirement_id: br.business_requirement_id,
-        linked_functional_requirements: arr(br.linked_functional_requirements),
+        linked_functional_requirements:
+            arr(br.linked_functional_requirements),
         status: arr(br.linked_functional_requirements).length
             ? 'STRUCTURALLY_LINKED'
             : 'UNLINKED'
@@ -1356,7 +1890,8 @@ function compareWorkWithConsolidated(workBrs, finalData) {
                     business_requirement_id: work.id,
                     field,
                     work_file: work.file,
-                    finding: `Consolidated ${field} differs from the work file.`
+                    finding:
+                        `Consolidated ${field} differs from the work file.`
                 });
             }
         }
@@ -1366,7 +1901,67 @@ function compareWorkWithConsolidated(workBrs, finalData) {
 }
 
 // ============================================================
-// 13. VALIDATION WORKFLOW
+// 12. OVERALL VALIDATION AND REPORT
+// ============================================================
+
+function determineOverallStatus({
+    individualResults,
+    duplicatePortfolio,
+    frPortfolio,
+    structural,
+    comparison
+}) {
+    const failCount = individualResults.filter(
+        item => item.status === 'FAIL'
+    ).length;
+
+    const reviewCount = individualResults.filter(
+        item => item.status === 'REVIEW'
+    ).length;
+
+    const highStructural = structural.findings.some(
+        item => item.severity === 'HIGH'
+    );
+
+    const highMismatch = comparison.some(
+        item => item.severity === 'HIGH'
+    );
+
+    if (failCount > 0 || highStructural || highMismatch) {
+        return 'FAIL';
+    }
+
+    const hasDuplicate =
+        duplicatePortfolio.confirmed_duplicates?.length > 0;
+
+    const hasOverlap =
+        duplicatePortfolio.overlapping_pairs?.length > 0;
+
+    const hasFrIssues =
+        frPortfolio.execution_status !== 'COMPLETED' ||
+        frPortfolio.unsupported_links?.length > 0 ||
+        frPortfolio.partial_links?.length > 0 ||
+        frPortfolio.unclear_links?.length > 0;
+
+    const hasCoverageIssues =
+        structural.unlinked_functional_requirements.length > 0 ||
+        structural.business_requirements_without_functional_requirements.length > 0;
+
+    if (
+        reviewCount > 0 ||
+        hasDuplicate ||
+        hasOverlap ||
+        hasFrIssues ||
+        hasCoverageIssues
+    ) {
+        return 'REVIEW';
+    }
+
+    return 'PASS';
+}
+
+// ============================================================
+// 13. MAIN VALIDATION WORKFLOW
 // ============================================================
 
 async function validate() {
@@ -1378,10 +1973,17 @@ async function validate() {
         );
     }
 
+    const finalData = readJson(FINAL_FILE_PATH);
+
+    if (!Array.isArray(finalData.business_requirements)) {
+        throw new Error(
+            'Consolidated file must contain a business_requirements array.'
+        );
+    }
+
     const pool = createPool();
 
     try {
-        // A. Load existing evidence.
         log('Loading existing Functional Requirements and business context.');
 
         const evidence = await loadEvidence(pool);
@@ -1393,194 +1995,96 @@ async function validate() {
             evidence.frs.map(fr => fr.id)
         );
 
-        // B. Discover every existing BR work file.
         const workBrs = discoverWorkFiles();
 
-        // C. Validate every work file, sequentially.
-        const individualResults = [];
-
-        log(`Starting individual validation for all ${workBrs.length} BR files.`);
-
-        for (let index = 0; index < workBrs.length; index++) {
-            const br = workBrs[index];
-
-            log(
-                `Individual BR ${index + 1}/${workBrs.length}: ${br.id} (${br.file})`
-            );
-
-            const validation = await validateIndividual(
-                br,
-                evidence,
-                knownFrIds
-            );
-
-            individualResults.push({
-                business_requirement_id: br.id,
-                file: br.file,
-                status: validation.status
-            });
-
-            // A malformed JSON file cannot safely be overwritten.
-            if (br.readError) {
-                log(`SKIPPED WRITE for ${br.file}: ${br.readError}`);
-                continue;
-            }
-
-            // Preserve the original BR payload.
-            // Only add/update the validation property.
-            br.data.validation = validation;
-
-            // Keep a one-time backup of the original work file.
-            const backup = `${br.fullPath}.pre-validation`;
-
-            if (!fs.existsSync(backup)) {
-                fs.copyFileSync(br.fullPath, backup);
-            }
-
-            writeJsonAtomic(br.fullPath, br.data);
-
-            log(`${br.id}: ${validation.status}`);
-        }
-
-        // D. Use only readable BRs for semantic portfolio comparisons.
         const validWorkBrs = workBrs.filter(
-            br => !br.readError &&
+            br =>
+                !br.readError &&
                 br.result &&
-                typeof br.result === 'object'
+                typeof br.result === 'object' &&
+                !Array.isArray(br.result)
         );
 
         if (!validWorkBrs.length) {
-            throw new Error('No readable BR work files available for portfolio validation.');
-        }
-
-        // E. Validate BR-to-BR duplication across all discovered BRs.
-        log('Starting BR-to-BR semantic duplication assessment.');
-
-        const portfolio = await validateDuplicates(validWorkBrs);
-
-        // F. Validate FR-to-BR relationships for every FR.
-        log('Starting FR-to-BR semantic relationship assessment.');
-
-        const frRelationships = await validateFrRelationships(
-            evidence.frs,
-            validWorkBrs
-        );
-
-        // G. Read and validate the configured consolidated file.
-        log(`Reading configured consolidated file: ${BR_FINAL_FILE}`);
-
-        const finalData = readJson(FINAL_FILE_PATH);
-
-        if (!Array.isArray(finalData.business_requirements)) {
             throw new Error(
-                'Consolidated file must contain a business_requirements array.'
+                'No readable BR work files available.'
             );
         }
 
-        const consolidatedStructure = validateConsolidatedStructure(
+        // A. Deterministic structure + batched individual AI assessments.
+        log('STEP 1: Structural and business-quality validation.');
+
+        const individual = await validateBrBatches(
+            workBrs,
+            evidence,
+            knownFrIds
+        );
+
+        // B. BR-to-BR portfolio duplication.
+        log('STEP 2: BR-to-BR portfolio duplication.');
+
+        const duplicatePortfolio = await validateBrPortfolio(
+            validWorkBrs,
+            finalData.validation
+        );
+
+        // C. Complete FR-to-BR relationship assessment.
+        log('STEP 3: FR-to-BR portfolio relationship assessment.');
+
+        const frPortfolio = await validateFrPortfolio(
+            evidence.frs,
+            validWorkBrs,
+            finalData.validation
+        );
+
+        // D. Consolidated structure and two-way coverage.
+        log('STEP 4: Consolidated structure and two-way coverage.');
+
+        const structural = validateConsolidatedStructure(
             finalData,
             validWorkBrs,
             evidence
         );
 
-        const contentComparison = compareWorkWithConsolidated(
+        const comparison = compareWorkWithConsolidated(
             validWorkBrs,
             finalData
         );
 
-        // H. Aggregate semantic relationship results.
-        const semanticRelationships = [];
+        // E. Overall status.
+        const overallStatus = determineOverallStatus({
+            individualResults: individual.results,
+            duplicatePortfolio,
+            frPortfolio,
+            structural,
+            comparison
+        });
 
-        for (const frResult of frRelationships) {
-            for (const relationship of frResult.relationships) {
-                semanticRelationships.push({
-                    functional_requirement_id: frResult.functional_requirement_id,
-                    ...relationship
-                });
-            }
-        }
-
-        const unsupportedLinks = semanticRelationships.filter(
-            item => item.status === 'UNSUPPORTED'
-        );
-
-        const partialLinks = semanticRelationships.filter(
-            item => item.status === 'PARTIAL'
-        );
-
-        const unclearLinks = semanticRelationships.filter(
-            item => item.status === 'UNCLEAR'
-        );
-
-        const structurallyLinkedPairs = new Set();
-
-        for (const br of finalData.business_requirements) {
-            for (const frId of arr(br.linked_functional_requirements)) {
-                structurallyLinkedPairs.add(`${frId}|${br.business_requirement_id}`);
-            }
-        }
-
-        const semanticallySupportedPairs = new Set(
-            semanticRelationships
-                .filter(item => item.status === 'SUPPORTED')
-                .map(item => `${item.functional_requirement_id}|${item.business_requirement_id}`)
-        );
-
-        const structurallyLinkedButNotSupported = [
-            ...structurallyLinkedPairs
-        ].filter(pair => !semanticallySupportedPairs.has(pair));
-
-        // I. Determine overall validation status.
         const counts = {
-            PASS: individualResults.filter(item => item.status === 'PASS').length,
-            REVIEW: individualResults.filter(item => item.status === 'REVIEW').length,
-            FAIL: individualResults.filter(item => item.status === 'FAIL').length
+            PASS: individual.results.filter(
+                item => item.status === 'PASS'
+            ).length,
+
+            REVIEW: individual.results.filter(
+                item => item.status === 'REVIEW'
+            ).length,
+
+            FAIL: individual.results.filter(
+                item => item.status === 'FAIL'
+            ).length
         };
 
-        const highStructuralFindings =
-            consolidatedStructure.findings.filter(
-                item => item.severity === 'HIGH'
-            );
-
-        const highMismatchFindings =
-            contentComparison.filter(
-                item => item.severity === 'HIGH'
-            );
-
-        const hasFailure =
-            counts.FAIL > 0 ||
-            highStructuralFindings.length > 0 ||
-            highMismatchFindings.length > 0;
-
-        const hasReview =
-            counts.REVIEW > 0 ||
-            portfolio.confirmed_duplicates.length > 0 ||
-            portfolio.overlapping_pairs.length > 0 ||
-            portfolio.unresolved_pairs.length > 0 ||
-            unsupportedLinks.length > 0 ||
-            partialLinks.length > 0 ||
-            unclearLinks.length > 0 ||
-            structurallyLinkedButNotSupported.length > 0 ||
-            frRelationships.some(item => item.error);
-
-        const overallStatus = hasFailure
-            ? 'FAIL'
-            : hasReview
-                ? 'REVIEW'
-                : 'PASS';
-
-        // J. Attach validation to the existing consolidated artifact.
         const validation = {
-            validation_version: '8.0.8',
+            validation_version: '8.0.8-batched',
             validated_at: new Date().toISOString(),
             validator: MODEL,
             status: overallStatus,
 
             source: {
                 ingestion_id: evidence.ingestion.ingestion_id,
-                functional_requirement_source: evidence.ingestion.source_file,
+                functional_requirement_source:
+                    evidence.ingestion.source_file,
                 functional_requirement_count: evidence.frs.length,
-                work_directory: WORK_DIR,
                 discovered_work_file_count: workBrs.length,
                 readable_work_file_count: validWorkBrs.length,
                 consolidated_file: BR_FINAL_FILE
@@ -1588,24 +2092,17 @@ async function validate() {
 
             individual_validation: {
                 counts,
-                results: individualResults
+                results: individual.results,
+                duplicate_work_file_ids: individual.duplicateIds
             },
 
-            portfolio_validation: portfolio,
+            portfolio_validation: duplicatePortfolio,
 
-            fr_to_br_validation: {
-                functional_requirements_assessed: frRelationships.length,
-                semantic_relationships: frRelationships,
-                unsupported_links: unsupportedLinks,
-                partial_links: partialLinks,
-                unclear_links: unclearLinks,
-                structurally_linked_but_not_semantically_supported:
-                    structurallyLinkedButNotSupported
-            },
+            fr_to_br_validation: frPortfolio,
 
             consolidated_validation: {
-                structure: consolidatedStructure,
-                work_file_comparison_findings: contentComparison
+                structure: structural,
+                work_file_comparison_findings: comparison
             },
 
             approval: {
@@ -1615,14 +2112,14 @@ async function validate() {
             }
         };
 
-        // Backup consolidated file once.
-        const finalBackup = `${FINAL_FILE_PATH}.pre-validation`;
+        // Preserve the original consolidated requirements.
+        // Only add/update the top-level validation property.
+        const backup = `${FINAL_FILE_PATH}.pre-validation`;
 
-        if (!fs.existsSync(finalBackup)) {
-            fs.copyFileSync(FINAL_FILE_PATH, finalBackup);
+        if (!fs.existsSync(backup)) {
+            fs.copyFileSync(FINAL_FILE_PATH, backup);
         }
 
-        // Existing BRs are untouched; only top-level validation is added.
         finalData.validation = validation;
 
         writeJsonAtomic(FINAL_FILE_PATH, finalData);
@@ -1630,16 +2127,26 @@ async function validate() {
         log('================================================');
         log('BUSINESS REQUIREMENTS VALIDATION COMPLETE');
         log(`Overall status: ${overallStatus}`);
-        log(`Discovered BR files: ${workBrs.length}`);
-        log(`Readable BR files: ${validWorkBrs.length}`);
-        log(`PASS: ${counts.PASS}`);
-        log(`REVIEW: ${counts.REVIEW}`);
-        log(`FAIL: ${counts.FAIL}`);
-        log(`BR duplication candidates assessed: ${portfolio.assessed_pair_count}`);
-        log(`Confirmed duplicate pairs: ${portfolio.confirmed_duplicates.length}`);
-        log(`FRs semantically assessed: ${frRelationships.length}`);
-        log(`Unsupported FR-BR links: ${unsupportedLinks.length}`);
-        log(`Unlinked FRs: ${consolidatedStructure.unlinked_functional_requirements.length}`);
+        log(`BR files: ${workBrs.length}`);
+        log(`FRs: ${evidence.frs.length}`);
+        log(`Individual PASS: ${counts.PASS}`);
+        log(`Individual REVIEW: ${counts.REVIEW}`);
+        log(`Individual FAIL: ${counts.FAIL}`);
+        log(
+            `BR duplicates: ${duplicatePortfolio.confirmed_duplicates?.length || 0}`
+        );
+        log(
+            `BR overlaps: ${duplicatePortfolio.overlapping_pairs?.length || 0}`
+        );
+        log(
+            `FR relationships assessed: ${frPortfolio.functional_requirements_assessed}/${evidence.frs.length}`
+        );
+        log(
+            `Unsupported FR relationships: ${frPortfolio.unsupported_links?.length || 0}`
+        );
+        log(
+            `Unlinked FRs: ${structural.unlinked_functional_requirements.length}`
+        );
         log(`Consolidated file updated: ${BR_FINAL_FILE}`);
         log('Approval: NOT_APPROVED');
         log('================================================');
@@ -1661,13 +2168,17 @@ function approve() {
     }
 
     if (!fs.existsSync(FINAL_FILE_PATH)) {
-        throw new Error(`Consolidated file not found: ${FINAL_FILE_PATH}`);
+        throw new Error(
+            `Consolidated file not found: ${FINAL_FILE_PATH}`
+        );
     }
 
     const data = readJson(FINAL_FILE_PATH);
 
     if (!data.validation) {
-        throw new Error('No validation results exist. Run validation first.');
+        throw new Error(
+            'No validation results exist. Run validation first.'
+        );
     }
 
     if (data.validation.status !== 'PASS') {
@@ -1722,8 +2233,7 @@ module.exports = {
     parseFrRow,
     discoverWorkFiles,
     structuralValidation,
-    buildDuplicateCandidates,
-    buildRelationshipCandidates,
+    buildRelationshipItems,
     validateConsolidatedStructure,
     compareWorkWithConsolidated
 };

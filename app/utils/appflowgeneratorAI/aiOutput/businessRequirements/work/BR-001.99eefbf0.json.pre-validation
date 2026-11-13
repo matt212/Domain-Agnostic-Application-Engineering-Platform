@@ -1,0 +1,37 @@
+{
+  "result": {
+    "name": "Ultra-fast delivery of fresh perishables",
+    "business_requirement": "The business requires the capability to guarantee delivery of fresh perishables and daily essentials to customers within a 60-minute window.",
+    "business_objective": "This serves the core goal of meeting customer expectations for immediate gratification and reducing the friction of traditional grocery shopping.",
+    "business_value": "Meeting this requirement drives repeat usage and high ratings, while failure results in lost revenue and reputational damage due to spoiled goods or late arrivals.",
+    "stakeholders": [
+      "Customer",
+      "Delivery Partner",
+      "Store Partner",
+      "Platform Operator"
+    ],
+    "success_measures": [
+      "95% of orders delivered within 60 minutes",
+      "0% spoilage rate for perishable items",
+      "Customer satisfaction score >4.5 stars"
+    ],
+    "priority": "Must",
+    "policies_and_constraints": [
+      "Compliance with local food safety and delivery regulations",
+      "Adherence to gig-economy labor laws for delivery partners"
+    ],
+    "assumptions": [
+      "Store partners maintain accurate real-time inventory levels",
+      "Delivery partners are available within the service zone"
+    ],
+    "risks_and_dependencies": [
+      "Traffic congestion or weather events may exceed time targets",
+      "Inventory synchronization failures may lead to overselling"
+    ],
+    "linked_functional_requirements": [
+      "FR-001",
+      "FR-006"
+    ]
+  },
+  "unmatched_stakeholders": []
+}
