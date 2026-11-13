@@ -12,7 +12,10 @@
  *   node 8_3_0_businessRequirements.js all
  * or step by step (each step is resumable):
  *   load -> interview -> draft -> generate -> merge
- *
+ * for generate batches 
+ *FROM_BR=BR-018 TO_BR=BR-025 node app/utils/appflowgeneratorAI/commands/8.0.7.BusinessRequirements.js generate
+ * Resume everything remaining
+   node app/utils/appflowgeneratorAI/commands/8.0.7.BusinessRequirements.js generate
  * Runs entirely on your local llama-cli (MODEL_NAME, LLAMA_CLI_PATH, THREADS). Nothing leaves the machine.
  * Smoke test first:  LIMIT=2 node 8_3_0_businessRequirements.js all
  */
@@ -38,7 +41,8 @@ const INTERVIEW_DIR = path.join(OUTPUT_DIR, 'interview');
 const WORK_DIR = path.join(OUTPUT_DIR, 'work');
 const CONTEXT_FILE = path.join(OUTPUT_DIR, 'context.json');
 let timezone=getFormattedDateTime()
-const INDEX_FILE = path.join(OUTPUT_DIR, `business_requirement_index-${timezone}.json`);
+//const INDEX_FILE = path.join(OUTPUT_DIR, `business_requirement_index-${timezone}.json`);
+const INDEX_FILE = path.join(OUTPUT_DIR,'business_requirement_index-13-11-26_01:05.json');
 const FINAL_FILE = path.join(OUTPUT_DIR, `business_requirements-${timezone}.json`);
 const TRACE_FILE = path.join(OUTPUT_DIR, `business_requirements-${timezone}.trace.json`);
 
@@ -714,45 +718,257 @@ function validateBR(o, knownFrIds) {
 }
 
 async function stepGenerate() {
+    // const ctx = loadContext();
+    // console.log(INDEX_FILE)
+    // if (!fs.existsSync(INDEX_FILE)) throw new Error('Run "draft" first.');
+    // const index = JSON.parse(fs.readFileSync(INDEX_FILE, 'utf8'));
+    // const toWrite = process.env.LIMIT ? index.slice(0, Number(process.env.LIMIT)) : index;
+    // fs.mkdirSync(WORK_DIR, { recursive: true });
+
+    // const frById = new Map(ctx.frs.map(f => [f.id, f]));
+    // const known = new Set(frById.keys());
+    // const sim = crossSimilarity(index.map(c => `${c.need} ${c.why}`), ctx.frs.map(f => `${f.requirement} ${f.need || ''}`));
+
+    // log(`Writing business requirements with the local model (${MODEL}).`);
+    // let done = 0, failed = 0;
+
+    // await runPool(toWrite.map((c) => ({ c, i: index.indexOf(c) })), concurrency(), async ({ c, i }) => {
+    //     const file = workFile(c);
+    //     if (fs.existsSync(file)) { done++; return; }
+
+    //     const near = ctx.frs.map((f, j) => ({ id: f.id, s: sim[i][j] }))
+    //         .filter(x => !c.frs.includes(x.id)).sort((a, b) => b.s - a.s)
+    //         .slice(0, SETTINGS.extraCandidates).map(x => x.id);
+    //     const frList = uniq([...c.frs, ...near]).slice(0, SETTINGS.maxCandidates).map(id => frById.get(id));
+
+    //     const started = Date.now();
+    //     const result = await ask(c.business_requirement_id, h => writePrompt(ctx, c, frList, h),
+    //         SETTINGS.writeTokens, j => validateBR(j, known));
+    //     if (!result) { failed++; log(`${c.business_requirement_id} FAILED; rerun generate to retry.`); return; }
+
+    //     const unmatched = [];
+    //     result.stakeholders = uniq(result.stakeholders.map(n => {
+    //         const hit = ctx.actors.find(a => same(a, n));
+    //         if (!hit) unmatched.push(n);
+    //         return hit || n;
+    //     }));
+    //     fs.writeFileSync(file, JSON.stringify({ result, unmatched_stakeholders: unmatched }, null, 2));
+    //     done++;
+    //     log(`${c.business_requirement_id} done in ${((Date.now() - started) / 1000).toFixed(0)}s (${done}/${toWrite.length})`);
+    // });
+    // log(`Generate finished. done=${done} failed=${failed}`);
     const ctx = loadContext();
-    console.log(INDEX_FILE)
-    if (!fs.existsSync(INDEX_FILE)) throw new Error('Run "draft" first.');
-    const index = JSON.parse(fs.readFileSync(INDEX_FILE, 'utf8'));
-    const toWrite = process.env.LIMIT ? index.slice(0, Number(process.env.LIMIT)) : index;
-    fs.mkdirSync(WORK_DIR, { recursive: true });
 
-    const frById = new Map(ctx.frs.map(f => [f.id, f]));
-    const known = new Set(frById.keys());
-    const sim = crossSimilarity(index.map(c => `${c.need} ${c.why}`), ctx.frs.map(f => `${f.requirement} ${f.need || ''}`));
+console.log('\n========== GENERATE INITIALISATION ==========');
+console.log('INDEX_FILE:', INDEX_FILE);
 
-    log(`Writing business requirements with the local model (${MODEL}).`);
-    let done = 0, failed = 0;
+if (!fs.existsSync(INDEX_FILE)) {
+    throw new Error('Run "draft" first.');
+}
 
-    await runPool(toWrite.map((c) => ({ c, i: index.indexOf(c) })), concurrency(), async ({ c, i }) => {
-        const file = workFile(c);
-        if (fs.existsSync(file)) { done++; return; }
+const index = JSON.parse(fs.readFileSync(INDEX_FILE, 'utf8'));
 
-        const near = ctx.frs.map((f, j) => ({ id: f.id, s: sim[i][j] }))
-            .filter(x => !c.frs.includes(x.id)).sort((a, b) => b.s - a.s)
-            .slice(0, SETTINGS.extraCandidates).map(x => x.id);
-        const frList = uniq([...c.frs, ...near]).slice(0, SETTINGS.maxCandidates).map(id => frById.get(id));
+fs.mkdirSync(WORK_DIR, { recursive: true });
+
+const frById = new Map(ctx.frs.map(f => [f.id, f]));
+const known = new Set(frById.keys());
+
+const sim = crossSimilarity(
+    index.map(c => `${c.need} ${c.why}`),
+    ctx.frs.map(f => `${f.requirement} ${f.need || ''}`)
+);
+
+// Convert BR-018 or 18 into 18.
+function brNumber(value) {
+    const match = String(value ?? '').match(/BR-(\d+)/i)
+        || String(value ?? '').match(/^(\d+)$/);
+
+    return match ? Number(match[1]) : null;
+}
+
+// Optional batch boundaries.
+const fromBR = process.env.FROM_BR
+    ? brNumber(process.env.FROM_BR)
+    : null;
+
+const toBR = process.env.TO_BR
+    ? brNumber(process.env.TO_BR)
+    : null;
+
+if (process.env.FROM_BR && fromBR === null) {
+    throw new Error(`Invalid FROM_BR: ${process.env.FROM_BR}`);
+}
+
+if (process.env.TO_BR && toBR === null) {
+    throw new Error(`Invalid TO_BR: ${process.env.TO_BR}`);
+}
+
+if (fromBR !== null && toBR !== null && fromBR > toBR) {
+    throw new Error('FROM_BR cannot be greater than TO_BR.');
+}
+
+// Keep original index positions for similarity lookup.
+let selected = index
+    .map((c, i) => ({ c, i }))
+    .filter(({ c }) => {
+        const number = brNumber(c.business_requirement_id);
+
+        if (number === null) {
+            throw new Error(
+                `Invalid business_requirement_id: ${c.business_requirement_id}`
+            );
+        }
+
+        if (fromBR !== null && number < fromBR) return false;
+        if (toBR !== null && number > toBR) return false;
+
+        return true;
+    });
+
+// LIMIT applies after batch selection.
+if (process.env.LIMIT) {
+    const limit = Number(process.env.LIMIT);
+
+    if (!Number.isInteger(limit) || limit < 1) {
+        throw new Error(`Invalid LIMIT: ${process.env.LIMIT}`);
+    }
+
+    selected = selected.slice(0, limit);
+}
+
+console.log('Total requirements in index:', index.length);
+console.log('Selected requirements:', selected.length);
+console.log('Batch FROM:', fromBR ?? 'START');
+console.log('Batch TO:', toBR ?? 'END');
+console.log('Concurrency:', concurrency());
+
+const existing = selected.filter(({ c }) =>
+    fs.existsSync(workFile(c))
+);
+
+console.log('Already completed:', existing.length);
+console.log('Remaining to process:', selected.length - existing.length);
+
+const toWrite = selected;
+
+const simCache = sim;
+
+let done = 0;
+let failed = 0;
+let skipped = 0;
+
+log(`Writing business requirements with local model (${MODEL}).`);
+
+await runPool(toWrite, concurrency(), async ({ c, i }) => {
+
+    const id = c.business_requirement_id;
+    const file = workFile(c);
+
+    // SAVEPOINT CHECK: Never regenerate an existing BR.
+    if (fs.existsSync(file)) {
+        skipped++;
+
+        log(`${id} SKIPPED — existing savepoint found (${skipped} skipped).`);
+        return;
+    }
+
+    const batchPosition = done + failed + skipped + 1;
+
+    log(`\n========== ${id} STARTING ==========`);
+    log(`Progress position: ${batchPosition}/${toWrite.length}`);
+    log(`Output file: ${file}`);
+
+    try {
+
+        const near = ctx.frs
+            .map((f, j) => ({
+                id: f.id,
+                s: simCache[i][j]
+            }))
+            .filter(x => !c.frs.includes(x.id))
+            .sort((a, b) => b.s - a.s)
+            .slice(0, SETTINGS.extraCandidates)
+            .map(x => x.id);
+
+        const frList = uniq([...c.frs, ...near])
+            .slice(0, SETTINGS.maxCandidates)
+            .map(id => frById.get(id))
+            .filter(Boolean);
+
+        log(`${id} functional requirements supplied: ${frList.length}`);
+        log(`${id} MODEL GENERATION STARTED: ${new Date().toISOString()}`);
 
         const started = Date.now();
-        const result = await ask(c.business_requirement_id, h => writePrompt(ctx, c, frList, h),
-            SETTINGS.writeTokens, j => validateBR(j, known));
-        if (!result) { failed++; log(`${c.business_requirement_id} FAILED; rerun generate to retry.`); return; }
+
+        const result = await ask(
+            id,
+            h => writePrompt(ctx, c, frList, h),
+            SETTINGS.writeTokens,
+            j => validateBR(j, known)
+        );
+
+        log(`${id} MODEL GENERATION AND VALIDATION RETURNED.`);
+        log(`${id} Elapsed: ${((Date.now() - started) / 1000).toFixed(0)} seconds.`);
+
+        if (!result) {
+            failed++;
+            log(`${id} FAILED — empty result.`);
+            return;
+        }
+
+        log(`${id} Preparing stakeholder mapping.`);
 
         const unmatched = [];
+
         result.stakeholders = uniq(result.stakeholders.map(n => {
             const hit = ctx.actors.find(a => same(a, n));
+
             if (!hit) unmatched.push(n);
+
             return hit || n;
         }));
-        fs.writeFileSync(file, JSON.stringify({ result, unmatched_stakeholders: unmatched }, null, 2));
+
+        const output = {
+            result,
+            unmatched_stakeholders: unmatched
+        };
+
+        // ATOMIC SAVEPOINT: write temporary file, then rename.
+        const tempFile = `${file}.tmp`;
+
+        fs.writeFileSync(
+            tempFile,
+            JSON.stringify(output, null, 2),
+            'utf8'
+        );
+
+        fs.renameSync(tempFile, file);
+
         done++;
-        log(`${c.business_requirement_id} done in ${((Date.now() - started) / 1000).toFixed(0)}s (${done}/${toWrite.length})`);
-    });
-    log(`Generate finished. done=${done} failed=${failed}`);
+
+        log(`${id} SAVEPOINT CREATED: ${file}`);
+        log(`${id} COMPLETED in ${((Date.now() - started) / 1000).toFixed(0)}s.`);
+        log(`Progress: done=${done}, failed=${failed}, skipped=${skipped}`);
+
+    } catch (error) {
+
+        failed++;
+
+        console.error(`\n========== ${id} FAILED ==========`);
+        console.error(error.stack || error);
+        console.error('==================================\n');
+
+        log(`${id} FAILED. No completed savepoint was created.`);
+    }
+});
+
+console.log('\n========== GENERATE SUMMARY ==========');
+log(`Selected: ${toWrite.length}`);
+log(`Completed this run: ${done}`);
+log(`Skipped existing savepoints: ${skipped}`);
+log(`Failed: ${failed}`);
+log(`Generate finished: ${new Date().toISOString()}`);
+console.log('======================================');
 }
 
 // ============================================================

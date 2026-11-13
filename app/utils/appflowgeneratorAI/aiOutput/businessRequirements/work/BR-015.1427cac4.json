@@ -1,0 +1,39 @@
+{
+  "result": {
+    "name": "Dynamic Tax Calculation and Collection",
+    "business_requirement": "The business requires the automatic calculation and collection of applicable taxes based on local jurisdiction rules and product types during order processing.",
+    "business_objective": "Ensure strict adherence to financial regulations and mitigate the risk of penalties from tax authorities.",
+    "business_value": "Prevents regulatory fines and maintains financial integrity, while harm arises from non-compliance and potential legal action.",
+    "stakeholders": [
+      "Regulatory Authority",
+      "Payment Provider",
+      "Platform Operator"
+    ],
+    "success_measures": [
+      "100% of transactions processed with correct tax rates",
+      "Zero regulatory penalties or fines within the reporting period",
+      "proposed 99.9% accuracy in tax calculation across all service areas"
+    ],
+    "priority": "Must",
+    "policies_and_constraints": [
+      "Tax rates must be updated in real-time to reflect local jurisdiction changes.",
+      "Calculations must be immutable and auditable for every transaction.",
+      "System must handle varying tax rules for different product categories."
+    ],
+    "assumptions": [
+      "External tax services or internal logic will have access to up-to-date jurisdictional tax data.",
+      "Product catalog data accurately reflects taxable status for all SKUs."
+    ],
+    "risks_and_dependencies": [
+      "Failure to update tax rules promptly leads to non-compliance.",
+      "Dependency on accurate geospatial data for determining applicable jurisdictions.",
+      "Potential system downtime during tax rule updates."
+    ],
+    "linked_functional_requirements": [
+      "FR-040",
+      "FR-030",
+      "FR-042"
+    ]
+  },
+  "unmatched_stakeholders": []
+}
