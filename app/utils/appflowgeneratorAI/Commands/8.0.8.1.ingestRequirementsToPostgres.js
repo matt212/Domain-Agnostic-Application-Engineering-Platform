@@ -46,7 +46,8 @@ const CONFIG = {
             'app/utils/appflowgeneratorAI/aiOutput/functionalRequirements/consolidated-Functional-Requirements-12-11-26_01:11.json',
 
         consolidatedBR:
-            'app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-13-11-26_11:43.json',
+            //'app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-13-11-26_11:43.json',
+'app/utils/appflowgeneratorAI/aiOutput/businessRequirements/business_requirements-14-11-26_00:20.json',
 
         frWork:
             'app/utils/appflowgeneratorAI/aiOutput/functionalRequirements/work',

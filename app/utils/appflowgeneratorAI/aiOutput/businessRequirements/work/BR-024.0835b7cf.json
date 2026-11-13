@@ -68,6 +68,6 @@
       ],
       "assessment_summary": "The requirement addresses a genuine business need for resilience. However, it relies on an unverified assumption regarding the availability of secondary vendors in specific zones and includes a technical latency metric (5 minutes) not supported by the high-level business outcomes."
     },
-    "reused_existing_semantic_assessment": false
+    "reused_existing_semantic_assessment": true
   }
 }

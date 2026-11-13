@@ -1,0 +1,311 @@
+{
+  "functional_requirements_total": 62,
+  "functional_requirements_attached_by_similarity": 13,
+  "business_requirements_without_functional_requirements": [],
+  "business_requirements": [
+    {
+      "business_requirement_id": "BR-001",
+      "origin": "interview",
+      "interview_questions": [
+        "Q01"
+      ],
+      "stakeholders_not_in_knowledge_base": [],
+      "functional_requirements_linked_by_similarity": [],
+      "needs_functional_requirements": false
+    },
+    {
+      "business_requirement_id": "BR-002",
+      "origin": "interview",
+      "interview_questions": [
+        "Q01"
+      ],
+      "stakeholders_not_in_knowledge_base": [],
+      "functional_requirements_linked_by_similarity": [],
+      "needs_functional_requirements": false
+    },
+    {
+      "business_requirement_id": "BR-003",
+      "origin": "interview",
+      "interview_questions": [
+        "Q01"
+      ],
+      "stakeholders_not_in_knowledge_base": [],
+      "functional_requirements_linked_by_similarity": [],
+      "needs_functional_requirements": false
+    },
+    {
+      "business_requirement_id": "BR-004",
+      "origin": "interview",
+      "interview_questions": [
+        "Q02"
+      ],
+      "stakeholders_not_in_knowledge_base": [],
+      "functional_requirements_linked_by_similarity": [],
+      "needs_functional_requirements": false
+    },
+    {
+      "business_requirement_id": "BR-005",
+      "origin": "interview",
+      "interview_questions": [
+        "Q02"
+      ],
+      "stakeholders_not_in_knowledge_base": [],
+      "functional_requirements_linked_by_similarity": [
+        "FR-011",
+        "FR-032",
+        "FR-033"
+      ],
+      "needs_functional_requirements": false
+    },
+    {
+      "business_requirement_id": "BR-006",
+      "origin": "interview",
+      "interview_questions": [
+        "Q02",
+        "Q09"
+      ],
+      "stakeholders_not_in_knowledge_base": [],
+      "functional_requirements_linked_by_similarity": [],
+      "needs_functional_requirements": false
+    },
+    {
+      "business_requirement_id": "BR-007",
+      "origin": "interview",
+      "interview_questions": [
+        "Q03",
+        "Q09"
+      ],
+      "stakeholders_not_in_knowledge_base": [],
+      "functional_requirements_linked_by_similarity": [],
+      "needs_functional_requirements": false
+    },
+    {
+      "business_requirement_id": "BR-008",
+      "origin": "interview",
+      "interview_questions": [
+        "Q03"
+      ],
+      "stakeholders_not_in_knowledge_base": [],
+      "functional_requirements_linked_by_similarity": [],
+      "needs_functional_requirements": false
+    },
+    {
+      "business_requirement_id": "BR-009",
+      "origin": "interview",
+      "interview_questions": [
+        "Q03"
+      ],
+      "stakeholders_not_in_knowledge_base": [],
+      "functional_requirements_linked_by_similarity": [],
+      "needs_functional_requirements": false
+    },
+    {
+      "business_requirement_id": "BR-010",
+      "origin": "interview",
+      "interview_questions": [
+        "Q04",
+        "Q11"
+      ],
+      "stakeholders_not_in_knowledge_base": [],
+      "functional_requirements_linked_by_similarity": [
+        "FR-012"
+      ],
+      "needs_functional_requirements": false
+    },
+    {
+      "business_requirement_id": "BR-011",
+      "origin": "interview",
+      "interview_questions": [
+        "Q04",
+        "Q05",
+        "Q12"
+      ],
+      "stakeholders_not_in_knowledge_base": [],
+      "functional_requirements_linked_by_similarity": [
+        "FR-004",
+        "FR-022",
+        "FR-034",
+        "FR-055"
+      ],
+      "needs_functional_requirements": false
+    },
+    {
+      "business_requirement_id": "BR-012",
+      "origin": "interview",
+      "interview_questions": [
+        "Q04"
+      ],
+      "stakeholders_not_in_knowledge_base": [],
+      "functional_requirements_linked_by_similarity": [],
+      "needs_functional_requirements": false
+    },
+    {
+      "business_requirement_id": "BR-013",
+      "origin": "interview",
+      "interview_questions": [
+        "Q05",
+        "Q06",
+        "Q12"
+      ],
+      "stakeholders_not_in_knowledge_base": [],
+      "functional_requirements_linked_by_similarity": [
+        "FR-023"
+      ],
+      "needs_functional_requirements": false
+    },
+    {
+      "business_requirement_id": "BR-014",
+      "origin": "interview",
+      "interview_questions": [
+        "Q05"
+      ],
+      "stakeholders_not_in_knowledge_base": [],
+      "functional_requirements_linked_by_similarity": [],
+      "needs_functional_requirements": false
+    },
+    {
+      "business_requirement_id": "BR-015",
+      "origin": "interview",
+      "interview_questions": [
+        "Q06",
+        "Q10"
+      ],
+      "stakeholders_not_in_knowledge_base": [],
+      "functional_requirements_linked_by_similarity": [],
+      "needs_functional_requirements": false
+    },
+    {
+      "business_requirement_id": "BR-016",
+      "origin": "interview",
+      "interview_questions": [
+        "Q06"
+      ],
+      "stakeholders_not_in_knowledge_base": [],
+      "functional_requirements_linked_by_similarity": [],
+      "needs_functional_requirements": false
+    },
+    {
+      "business_requirement_id": "BR-017",
+      "origin": "interview",
+      "interview_questions": [
+        "Q07"
+      ],
+      "stakeholders_not_in_knowledge_base": [],
+      "functional_requirements_linked_by_similarity": [],
+      "needs_functional_requirements": false
+    },
+    {
+      "business_requirement_id": "BR-018",
+      "origin": "interview",
+      "interview_questions": [
+        "Q07"
+      ],
+      "stakeholders_not_in_knowledge_base": [],
+      "functional_requirements_linked_by_similarity": [
+        "FR-013",
+        "FR-019"
+      ],
+      "needs_functional_requirements": false
+    },
+    {
+      "business_requirement_id": "BR-019",
+      "origin": "interview",
+      "interview_questions": [
+        "Q07"
+      ],
+      "stakeholders_not_in_knowledge_base": [],
+      "functional_requirements_linked_by_similarity": [],
+      "needs_functional_requirements": false
+    },
+    {
+      "business_requirement_id": "BR-020",
+      "origin": "interview",
+      "interview_questions": [
+        "Q08"
+      ],
+      "stakeholders_not_in_knowledge_base": [],
+      "functional_requirements_linked_by_similarity": [],
+      "needs_functional_requirements": false
+    },
+    {
+      "business_requirement_id": "BR-021",
+      "origin": "interview",
+      "interview_questions": [
+        "Q08"
+      ],
+      "stakeholders_not_in_knowledge_base": [],
+      "functional_requirements_linked_by_similarity": [],
+      "needs_functional_requirements": false
+    },
+    {
+      "business_requirement_id": "BR-022",
+      "origin": "interview",
+      "interview_questions": [
+        "Q08"
+      ],
+      "stakeholders_not_in_knowledge_base": [],
+      "functional_requirements_linked_by_similarity": [
+        "FR-056"
+      ],
+      "needs_functional_requirements": false
+    },
+    {
+      "business_requirement_id": "BR-023",
+      "origin": "interview",
+      "interview_questions": [
+        "Q09"
+      ],
+      "stakeholders_not_in_knowledge_base": [],
+      "functional_requirements_linked_by_similarity": [],
+      "needs_functional_requirements": false
+    },
+    {
+      "business_requirement_id": "BR-024",
+      "origin": "interview",
+      "interview_questions": [
+        "Q10"
+      ],
+      "stakeholders_not_in_knowledge_base": [],
+      "functional_requirements_linked_by_similarity": [],
+      "needs_functional_requirements": false
+    },
+    {
+      "business_requirement_id": "BR-025",
+      "origin": "interview",
+      "interview_questions": [
+        "Q10"
+      ],
+      "stakeholders_not_in_knowledge_base": [],
+      "functional_requirements_linked_by_similarity": [],
+      "needs_functional_requirements": false
+    },
+    {
+      "business_requirement_id": "BR-026",
+      "origin": "interview",
+      "interview_questions": [
+        "Q12"
+      ],
+      "stakeholders_not_in_knowledge_base": [],
+      "functional_requirements_linked_by_similarity": [],
+      "needs_functional_requirements": false
+    },
+    {
+      "business_requirement_id": "BR-027",
+      "origin": "seeded_from_functional_requirements",
+      "interview_questions": [],
+      "stakeholders_not_in_knowledge_base": [],
+      "functional_requirements_linked_by_similarity": [
+        "FR-018"
+      ],
+      "needs_functional_requirements": false
+    },
+    {
+      "business_requirement_id": "BR-028",
+      "origin": "seeded_from_functional_requirements",
+      "interview_questions": [],
+      "stakeholders_not_in_knowledge_base": [],
+      "functional_requirements_linked_by_similarity": [],
+      "needs_functional_requirements": false
+    }
+  ]
+}

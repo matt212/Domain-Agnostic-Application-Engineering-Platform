@@ -63,7 +63,8 @@ const WORK_DIR = path.join(OUTPUT_DIR, 'work');
 
 // Existing consolidated file. Configure here, not through CLI.
 const BR_FINAL_FILE =
-    'business_requirements-13-11-26_11:43.json';
+   // 'business_requirements-13-11-26_11:43.json';
+    'business_requirements-14-11-26_00:20.json';
 
 const FINAL_FILE_PATH =
     path.join(OUTPUT_DIR, BR_FINAL_FILE);

@@ -64,6 +64,6 @@
       ],
       "assessment_summary": "The requirement addresses a valid business need to reduce waste. However, it assumes the existence of accurate real-time data from Store Partners without evidence, and sets a specific waste reduction metric (95%) not found in the business outcomes."
     },
-    "reused_existing_semantic_assessment": false
+    "reused_existing_semantic_assessment": true
   }
 }

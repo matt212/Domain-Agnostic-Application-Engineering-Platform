@@ -60,6 +60,6 @@
       ],
       "assessment_summary": "Requirement is essential for the business to operate legally and sustainably. The business value (avoiding fines/shutdowns) is critical. Assumptions about regulatory stability and partner cooperation are necessary but not confirmed by the provided context."
     },
-    "reused_existing_semantic_assessment": false
+    "reused_existing_semantic_assessment": true
   }
 }

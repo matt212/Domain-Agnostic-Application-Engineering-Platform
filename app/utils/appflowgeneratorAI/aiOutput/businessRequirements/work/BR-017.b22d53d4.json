@@ -67,6 +67,6 @@
       ],
       "assessment_summary": "BR-017 addresses the critical need for system resilience and error containment. While the business need is valid, the requirement relies heavily on specific technical assumptions (specific engine capabilities, partner connectivity) and a proposed metric (5-minute MTTC) that are not supported by the high-level business context. These need verification."
     },
-    "reused_existing_semantic_assessment": false
+    "reused_existing_semantic_assessment": true
   }
 }
