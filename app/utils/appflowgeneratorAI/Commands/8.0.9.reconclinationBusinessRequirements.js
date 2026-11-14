@@ -4,1223 +4,1226 @@
 /**
  * DOMAIN-AGNOSTIC REQUIREMENT RECONCILIATION ENGINE
  *
+ * File:
+ *   8.0.9.reconclinationBusinessRequirements.js
+ *
+ * Behaviour:
+ *   1. Reads consolidated and individual requirement versions.
+ *   2. Identifies source roles using canonical source provenance.
+ *   3. Compares matched requirement payloads recursively.
+ *   4. Ignores array ordering while preserving duplicate elements.
+ *   5. Recognizes additional consolidated relationships as enrichment.
+ *   6. Does not automatically review enrichment-only differences.
+ *   7. Reviews substantive content differences and unexplained removals.
+ *   8. Preserves original payloads and source provenance.
+ *   9. Does not modify database records.
+ *
  * Outputs:
- *   1. requirements_reconciliation_<timestamp>.json
- *      Complete reconciliation report.
+ *   requirements_reconciliation_<timestamp>.json
+ *   requirements_review_required_<timestamp>.json
  *
- *   2. requirements_review_required_<timestamp>.json
- *      Dedicated review report containing all requirements
- *      requiring review, full source payloads, provenance,
- *      field-level differences and recommendations.
+ * Environment:
+ *   RECONCILIATION_REQUIREMENT_TYPE=BR or FR
+ *   DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD
  *
- * Safety:
- *   - PostgreSQL READ ONLY transaction.
- *   - No INSERT, UPDATE, DELETE or schema changes.
- *   - No AI calls.
- *   - No automatic merging, approval or rejection.
- *   - Original payloads are preserved.
+ * No hardcoded requirement IDs, domain names, counts or business rules.
  */
 
-const { Pool } = require('pg');
 const fs = require('fs');
 const path = require('path');
 const crypto = require('crypto');
+const { Pool } = require('pg');
 
 const CONFIG = {
-    requirementType: String(
-        process.env.RECONCILIATION_REQUIREMENT_TYPE || 'BR'
-    ).trim().toUpperCase(),
+  requirementType: String(
+    process.env.RECONCILIATION_REQUIREMENT_TYPE || 'BR'
+  ).trim().toUpperCase(),
 
-    schema: 'requirements',
+  schema: 'requirements',
 
-    outputDirectory: path.resolve(
-        __dirname,
-        '../aiOutput/businessRequirements/reconciliation'
-    ),
+  outputDirectory: path.resolve(
+    __dirname,
+    '../aiOutput/businessRequirements/reconciliation'
+  ),
 
-    database: process.env.DATABASE_URL
-        ? {
-            connectionString: process.env.DATABASE_URL
-        }
-        : {
-            host: process.env.PGHOST || 'localhost',
-            port: Number(process.env.PGPORT || 5432),
-            database: process.env.PGDATABASE || 'demodb',
-            user: process.env.PGUSER || 'postgres',
-            password: process.env.PGPASSWORD,
-            ssl: process.env.PGSSL === 'true'
-                ? { rejectUnauthorized: false }
-                : undefined
-        }
+  database: {
+    host: process.env.DB_HOST || 'localhost',
+    port: Number(process.env.DB_PORT || 5432),
+    database: process.env.DB_NAME || 'demodb',
+    user: process.env.DB_USER || 'postgres',
+    password: process.env.DB_PASSWORD || '',
+    application_name: 'requirement-reconciliation'
+  }
 };
 
-const pool = new Pool({
-    ...CONFIG.database,
-    max: 2,
-    idleTimeoutMillis: 10000,
-    connectionTimeoutMillis: 10000
-});
+const VALID_REQUIREMENT_TYPES = new Set(['BR', 'FR']);
 
-function log(message) {
-    console.log(`[RECONCILIATION] ${message}`);
+if (!VALID_REQUIREMENT_TYPES.has(CONFIG.requirementType)) {
+  throw new Error(
+    `Invalid requirement type: ${CONFIG.requirementType}. Use BR or FR.`
+  );
 }
 
-function parseJson(value) {
-    if (value === null || value === undefined) {
-        return null;
-    }
+const pool = new Pool(CONFIG.database);
 
-    if (typeof value === 'string') {
-        try {
-            return JSON.parse(value);
-        } catch {
-            return value;
-        }
-    }
+/* ============================================================
+   GENERAL UTILITIES
+============================================================ */
 
-    return value;
+function timestamp() {
+  return new Date().toISOString().replace(/:/g, '-');
+}
+
+function deepClone(value) {
+  return value === undefined
+    ? undefined
+    : JSON.parse(JSON.stringify(value));
 }
 
 function isObject(value) {
-    return value !== null &&
-        typeof value === 'object' &&
-        !Array.isArray(value);
+  return value !== null &&
+    typeof value === 'object' &&
+    !Array.isArray(value);
+}
+
+function isRelationshipField(fieldName) {
+  /**
+   * Generic relationship-field recognition.
+   *
+   * Examples:
+   *   linked_functional_requirements
+   *   related_business_objects
+   *   business_relationships
+   *   requirement_references
+   *   traceability_associations
+   *
+   * Ordinary arrays such as assumptions, stakeholders,
+   * policies and success_measures are not enrichment fields.
+   */
+
+  return /^(linked_|related_)|(_relationships?$)|(_references?$)|(_associations?$)|(^relationships?$)|(^references?$)|(^associations?$)|(^traceability$)/i
+    .test(String(fieldName));
+}
+
+function isRelationshipPath(jsonPath) {
+  const parts = String(jsonPath)
+    .replace(/^\$\.?/, '')
+    .split('.')
+    .filter(Boolean);
+
+  return parts.some(part => {
+    const field = part.replace(/\[\d+\]/g, '');
+    return isRelationshipField(field);
+  });
+}
+
+/* ============================================================
+   JSON NORMALIZATION
+============================================================ */
+
+function normalizePayload(payload) {
+  if (!isObject(payload)) {
+    return payload;
+  }
+
+  /**
+   * Individual work files can wrap their actual requirement
+   * inside payload.result.
+   */
+
+  if (
+    isObject(payload.result) &&
+    !Array.isArray(payload.result)
+  ) {
+    return payload.result;
+  }
+
+  return payload;
+}
+
+function removeDatabaseIdentity(payload, requirementId) {
+  const result = deepClone(payload);
+
+  if (!isObject(result)) {
+    return result;
+  }
+
+  for (const key of Object.keys(result)) {
+    if (
+      key === 'requirement_id' ||
+      key.endsWith('_requirement_id')
+    ) {
+      if (String(result[key]) === String(requirementId)) {
+        delete result[key];
+      }
+    }
+  }
+
+  return result;
 }
 
 /**
- * Stable serialization.
- * Object key order is ignored.
- * Array order remains significant.
+ * Canonicalization:
+ *   - Object keys are sorted.
+ *   - Array elements are sorted.
+ *   - Duplicate array elements are preserved.
+ *
+ * Consequently, array ordering is ignored at every depth.
  */
+
+function canonicalize(value) {
+  if (Array.isArray(value)) {
+    return value
+      .map(canonicalize)
+      .sort((a, b) => {
+        const left = JSON.stringify(a);
+        const right = JSON.stringify(b);
+        return left.localeCompare(right);
+      });
+  }
+
+  if (isObject(value)) {
+    const result = {};
+
+    for (const key of Object.keys(value).sort()) {
+      result[key] = canonicalize(value[key]);
+    }
+
+    return result;
+  }
+
+  return value;
+}
+
 function stableStringify(value) {
-    if (Array.isArray(value)) {
-        return `[${value.map(stableStringify).join(',')}]`;
-    }
-
-    if (isObject(value)) {
-        const keys = Object.keys(value).sort();
-
-        return `{${keys.map(key =>
-            `${JSON.stringify(key)}:${stableStringify(value[key])}`
-        ).join(',')}}`;
-    }
-
-    return JSON.stringify(value);
+  return JSON.stringify(canonicalize(value));
 }
 
 function fingerprint(value) {
-    return crypto
-        .createHash('sha256')
-        .update(stableStringify(value))
-        .digest('hex');
+  return crypto
+    .createHash('sha256')
+    .update(stableStringify(value))
+    .digest('hex');
 }
 
-/**
- * Extract common result envelope.
- * Original payload is never overwritten.
- */
-function extractComparablePayload(payload) {
-    const parsed = parseJson(payload);
+/* ============================================================
+   ARRAY COMPARISON
+============================================================ */
 
-    if (
-        isObject(parsed) &&
-        Object.prototype.hasOwnProperty.call(parsed, 'result') &&
-        isObject(parsed.result)
-    ) {
-        return parsed.result;
+function countArrayElements(array) {
+  const counts = new Map();
+
+  for (const item of array) {
+    const key = fingerprint(item);
+
+    const existing = counts.get(key);
+
+    if (existing) {
+      existing.count += 1;
+    } else {
+      counts.set(key, {
+        value: item,
+        count: 1
+      });
     }
+  }
 
-    return parsed;
+  return counts;
 }
 
-/**
- * Exclude duplicated technical identity only when its value
- * exactly matches the database requirement identifier.
- */
-function removeDatabaseIdentity(payload, databaseId) {
-    if (!isObject(payload)) {
-        return payload;
+function compareArrays(left, right, jsonPath, differences) {
+  const leftCounts = countArrayElements(left);
+  const rightCounts = countArrayElements(right);
+
+  const fingerprints = new Set([
+    ...leftCounts.keys(),
+    ...rightCounts.keys()
+  ]);
+
+  for (const key of fingerprints) {
+    const leftEntry = leftCounts.get(key);
+    const rightEntry = rightCounts.get(key);
+
+    const leftCount = leftEntry ? leftEntry.count : 0;
+    const rightCount = rightEntry ? rightEntry.count : 0;
+
+    const delta = leftCount - rightCount;
+
+    if (delta === 0) {
+      continue;
     }
 
-    const result = { ...payload };
+    const value = leftEntry
+      ? leftEntry.value
+      : rightEntry.value;
 
-    for (const key of Object.keys(result)) {
-        const isIdentifier =
-            key === 'requirement_id' ||
-            key.endsWith('_requirement_id');
+    for (let i = 0; i < Math.abs(delta); i++) {
+      if (delta > 0) {
+        /**
+         * An element exists in consolidated but not
+         * in individual.
+         *
+         * Relationship arrays are handled separately
+         * as consolidation enrichment.
+         */
 
-        if (
-            isIdentifier &&
-            String(result[key]) === String(databaseId)
-        ) {
-            delete result[key];
-        }
+        const enrichment = isRelationshipPath(jsonPath);
+
+        differences.push({
+          path: jsonPath,
+
+          classification: enrichment
+            ? 'CONSOLIDATION_ENRICHMENT'
+            : 'ARRAY_ITEM_REMOVED',
+
+          description: enrichment
+            ? 'The consolidated requirement contains an additional relationship introduced during consolidation.'
+            : 'An array element exists in the consolidated version but not in the individual version.',
+
+          left_value: deepClone(value),
+          right_value: null,
+
+          difference_direction: 'CONSOLIDATED_ONLY',
+
+          review_required: !enrichment
+        });
+      } else {
+        /**
+         * An element exists in individual but not
+         * in consolidated.
+         *
+         * This is not automatically enrichment.
+         * It requires review because the consolidated
+         * version does not contain source information.
+         */
+
+        differences.push({
+          path: jsonPath,
+          classification: 'ARRAY_ITEM_ADDED',
+
+          description:
+            'An array element exists in the individual version but not in the consolidated version.',
+
+          left_value: null,
+          right_value: deepClone(value),
+
+          difference_direction: 'INDIVIDUAL_ONLY',
+
+          review_required: true
+        });
+      }
     }
-
-    return result;
+  }
 }
 
-function pushDifference(differences, details) {
-    differences.push({ ...details });
-}
+/* ============================================================
+   RECURSIVE JSON COMPARISON
+============================================================ */
 
-/**
- * Compare arrays without assuming they are sets.
- *
- * Identical elements in different order:
- *   ARRAY_ORDER
- *
- * Different contents:
- *   ARRAY_ITEM_ADDED / ARRAY_ITEM_REMOVED
- *
- * Multiset comparison preserves duplicate counts.
- */
-function compareArrays(left, right, currentPath, differences) {
-    const leftFingerprints = left.map(fingerprint);
-    const rightFingerprints = right.map(fingerprint);
+function compareJson(left, right, jsonPath, differences) {
+  if (stableStringify(left) === stableStringify(right)) {
+    return;
+  }
 
-    const leftCounts = new Map();
-    const rightCounts = new Map();
+  if (Array.isArray(left) && Array.isArray(right)) {
+    compareArrays(left, right, jsonPath, differences);
+    return;
+  }
 
-    for (const item of leftFingerprints) {
-        leftCounts.set(item, (leftCounts.get(item) || 0) + 1);
-    }
+  if (isObject(left) && isObject(right)) {
+    const keys = new Set([
+      ...Object.keys(left),
+      ...Object.keys(right)
+    ]);
 
-    for (const item of rightFingerprints) {
-        rightCounts.set(item, (rightCounts.get(item) || 0) + 1);
-    }
+    for (const key of [...keys].sort()) {
+      const childPath = `${jsonPath}.${key}`;
 
-    const sameElements =
-        leftCounts.size === rightCounts.size &&
-        [...leftCounts.entries()].every(
-            ([key, count]) => rightCounts.get(key) === count
-        );
+      const existsLeft = Object.prototype.hasOwnProperty.call(
+        left,
+        key
+      );
 
-    if (sameElements) {
-        if (stableStringify(left) !== stableStringify(right)) {
-            pushDifference(differences, {
-                path: currentPath,
-                classification: 'ARRAY_ORDER',
-                description:
-                    'Array contains the same elements in a different order.',
-                left_value: left,
-                right_value: right
-            });
-        }
+      const existsRight = Object.prototype.hasOwnProperty.call(
+        right,
+        key
+      );
 
-        return;
-    }
-
-    const remainingRight = new Map(rightCounts);
-
-    for (let index = 0; index < left.length; index++) {
-        const item = left[index];
-        const key = leftFingerprints[index];
-        const available = remainingRight.get(key) || 0;
-
-        if (available > 0) {
-            remainingRight.set(key, available - 1);
-        } else {
-            pushDifference(differences, {
-                path: currentPath,
-                classification: 'ARRAY_ITEM_REMOVED',
-                description:
-                    'An array element exists in the left version but not the right version.',
-                left_value: item,
-                right_value: null,
-                left_index: index
-            });
-        }
-    }
-
-    const remainingLeft = new Map(leftCounts);
-
-    for (let index = 0; index < right.length; index++) {
-        const item = right[index];
-        const key = rightFingerprints[index];
-        const available = remainingLeft.get(key) || 0;
-
-        if (available > 0) {
-            remainingLeft.set(key, available - 1);
-        } else {
-            pushDifference(differences, {
-                path: currentPath,
-                classification: 'ARRAY_ITEM_ADDED',
-                description:
-                    'An array element exists in the right version but not the left version.',
-                left_value: null,
-                right_value: item,
-                right_index: index
-            });
-        }
-    }
-}
-
-/**
- * Recursive comparison of arbitrary JSON.
- */
-function compareJson(left, right, currentPath = '$', differences = []) {
-    if (stableStringify(left) === stableStringify(right)) {
-        return differences;
-    }
-
-    if (isObject(left) && isObject(right)) {
-        const keys = new Set([
-            ...Object.keys(left),
-            ...Object.keys(right)
-        ]);
-
-        for (const key of [...keys].sort()) {
-            const leftHas =
-                Object.prototype.hasOwnProperty.call(left, key);
-
-            const rightHas =
-                Object.prototype.hasOwnProperty.call(right, key);
-
-            const nextPath = `${currentPath}.${key}`;
-
-            if (!leftHas) {
-                pushDifference(differences, {
-                    path: nextPath,
-                    classification: 'FIELD_ADDED',
-                    description:
-                        'Field exists only in the right version.',
-                    left_value: null,
-                    right_value: right[key]
-                });
-
-                continue;
-            }
-
-            if (!rightHas) {
-                pushDifference(differences, {
-                    path: nextPath,
-                    classification: 'FIELD_REMOVED',
-                    description:
-                        'Field exists only in the left version.',
-                    left_value: left[key],
-                    right_value: null
-                });
-
-                continue;
-            }
-
-            compareJson(
-                left[key],
-                right[key],
-                nextPath,
-                differences
-            );
-        }
-
-        return differences;
-    }
-
-    if (Array.isArray(left) && Array.isArray(right)) {
-        compareArrays(left, right, currentPath, differences);
-        return differences;
-    }
-
-    if (
-        (isObject(left) && !isObject(right)) ||
-        (!isObject(left) && isObject(right)) ||
-        (Array.isArray(left) && !Array.isArray(right)) ||
-        (!Array.isArray(left) && Array.isArray(right)) ||
-        (left === null && right !== null) ||
-        (left !== null && right === null)
-    ) {
-        pushDifference(differences, {
-            path: currentPath,
-            classification: 'STRUCTURAL',
-            description:
-                'JSON value types or structures differ.',
-            left_value: left,
-            right_value: right
+      if (!existsLeft) {
+        differences.push({
+          path: childPath,
+          classification: 'FIELD_ADDED',
+          description:
+            'A field exists in the individual version but not in the consolidated version.',
+          left_value: null,
+          right_value: deepClone(right[key]),
+          difference_direction: 'INDIVIDUAL_ONLY',
+          review_required: true
         });
 
-        return differences;
+        continue;
+      }
+
+      if (!existsRight) {
+        const enrichment =
+          Array.isArray(left[key]) &&
+          isRelationshipPath(childPath);
+
+        differences.push({
+          path: childPath,
+
+          classification: enrichment
+            ? 'CONSOLIDATION_ENRICHMENT'
+            : 'FIELD_REMOVED',
+
+          description: enrichment
+            ? 'The consolidated version contains a relationship collection introduced during consolidation.'
+            : 'A field exists in the consolidated version but not in the individual version.',
+
+          left_value: deepClone(left[key]),
+          right_value: null,
+
+          difference_direction: 'CONSOLIDATED_ONLY',
+
+          review_required: !enrichment
+        });
+
+        continue;
+      }
+
+      compareJson(
+        left[key],
+        right[key],
+        childPath,
+        differences
+      );
     }
 
-    pushDifference(differences, {
-        path: currentPath,
-        classification: 'VALUE_CHANGED',
-        description:
-            'The value differs between versions.',
-        left_value: left,
-        right_value: right
+    return;
+  }
+
+  if (left === null || right === null ||
+      typeof left !== typeof right ||
+      Array.isArray(left) !== Array.isArray(right)) {
+    differences.push({
+      path: jsonPath,
+      classification: 'STRUCTURAL',
+      description:
+        'The consolidated and individual values have different structures or types.',
+      left_value: deepClone(left),
+      right_value: deepClone(right),
+      difference_direction: 'CONTENT_DIFFERENCE',
+      review_required: true
     });
 
-    return differences;
+    return;
+  }
+
+  differences.push({
+    path: jsonPath,
+    classification: 'VALUE_CHANGED',
+    description:
+      'The consolidated and individual values contain different values.',
+    left_value: deepClone(left),
+    right_value: deepClone(right),
+    difference_direction: 'CONTENT_DIFFERENCE',
+    review_required: true
+  });
 }
 
-function groupBy(items, getKey) {
-    const result = new Map();
+/* ============================================================
+   COMPARISON CLASSIFICATION
+============================================================ */
 
-    for (const item of items) {
-        const key = getKey(item);
+function summarizeDifferences(differences) {
+  const classifications = {};
+  let reviewRequiredCount = 0;
+  let enrichmentCount = 0;
 
-        if (!result.has(key)) {
-            result.set(key, []);
+  for (const difference of differences) {
+    const classification = difference.classification;
+
+    classifications[classification] =
+      (classifications[classification] || 0) + 1;
+
+    if (difference.classification === 'CONSOLIDATION_ENRICHMENT') {
+      enrichmentCount += 1;
+    }
+
+    if (difference.review_required) {
+      reviewRequiredCount += 1;
+    }
+  }
+
+  return {
+    total_differences: differences.length,
+    review_required_differences: reviewRequiredCount,
+    consolidation_enrichment_count: enrichmentCount,
+    difference_classifications: classifications
+  };
+}
+
+function classifyComparison(differences) {
+  const summary = summarizeDifferences(differences);
+
+  if (differences.length === 0) {
+    return {
+      classification: 'MATCHED_CONTENT',
+      review_required: false,
+      action: 'NO_CONTENT_CHANGE_DETECTED',
+      explanation:
+        'The consolidated and individual requirement payloads are equivalent. Array ordering is ignored.'
+    };
+  }
+
+  if (summary.review_required_differences === 0) {
+    return {
+      classification: 'CONSOLIDATION_ENRICHMENT',
+      review_required: false,
+      action: 'ACCEPT_CONSOLIDATION_ENRICHMENT',
+      explanation:
+        'The consolidated requirement contains additional relationship information. No substantive content differences requiring review were detected.'
+    };
+  }
+
+  return {
+    classification: 'CONTENT_REVIEW_REQUIRED',
+    review_required: true,
+    action: 'HUMAN_CONTENT_REVIEW',
+    explanation:
+      'One or more substantive content or structural differences were detected. Review the differences before deciding whether to retain, revise or remove information.'
+  };
+}
+
+/* ============================================================
+   DATABASE QUERIES
+============================================================ */
+
+async function getCanonicalSourceIds(client) {
+  const table = CONFIG.requirementType === 'BR'
+    ? 'business_requirements'
+    : 'functional_requirements';
+
+  const idColumn = CONFIG.requirementType === 'BR'
+    ? 'business_requirement_pk'
+    : 'functional_requirement_pk';
+
+  const result = await client.query(`
+    SELECT DISTINCT source_file_id
+    FROM ${CONFIG.schema}.${table}
+    WHERE source_file_id IS NOT NULL
+  `);
+
+  return result.rows.map(row => String(row.source_file_id));
+}
+
+async function getRequirementVersions(client) {
+  const result = await client.query(`
+    SELECT
+      rv.requirement_version_id,
+      rv.requirement_type,
+      rv.requirement_id,
+      rv.version_number,
+      rv.source_file_id,
+      rv.payload,
+      rv.version_reason,
+      rv.created_at,
+
+      sf.file_name,
+      sf.file_path,
+      sf.artifact_type,
+      sf.metadata,
+      sf.file_checksum,
+      sf.source_version,
+      sf.source_timestamp
+
+    FROM ${CONFIG.schema}.requirement_versions rv
+
+    LEFT JOIN ${CONFIG.schema}.source_files sf
+      ON sf.source_file_id = rv.source_file_id
+
+    WHERE rv.requirement_type = $1
+
+    ORDER BY
+      rv.requirement_id,
+      rv.version_number,
+      rv.requirement_version_id
+  `, [CONFIG.requirementType]);
+
+  return result.rows;
+}
+
+async function getExistingFindings(client) {
+  if (CONFIG.requirementType !== 'BR') {
+    return [];
+  }
+
+  const result = await client.query(`
+    SELECT *
+    FROM ${CONFIG.schema}.br_consolidation_findings
+    ORDER BY consolidation_finding_id
+  `);
+
+  return result.rows;
+}
+
+async function getExistingOverlapAssessments(client) {
+  if (CONFIG.requirementType !== 'BR') {
+    return [];
+  }
+
+  const result = await client.query(`
+    SELECT *
+    FROM ${CONFIG.schema}.br_overlap_pairs
+    ORDER BY overlap_pair_id
+  `);
+
+  return result.rows;
+}
+
+/* ============================================================
+   SOURCE CLASSIFICATION
+============================================================ */
+
+function buildSourceGroups(versions, canonicalSourceIds) {
+  const canonicalSet = new Set(canonicalSourceIds);
+
+  const consolidated = [];
+  const individual = [];
+
+  for (const version of versions) {
+    const sourceId = String(version.source_file_id);
+
+    const record = {
+      requirement_version_id: String(
+        version.requirement_version_id
+      ),
+
+      requirement_type: version.requirement_type,
+      requirement_id: version.requirement_id,
+
+      version_number: Number(version.version_number),
+      version_reason: version.version_reason,
+
+      source_file_id: sourceId,
+
+      source_file: {
+        file_name: version.file_name,
+        file_path: version.file_path,
+        artifact_type: version.artifact_type,
+        metadata: version.metadata,
+        checksum: version.file_checksum,
+        source_version: version.source_version,
+        source_timestamp: version.source_timestamp
+      },
+
+      created_at: version.created_at,
+
+      original_payload: deepClone(version.payload)
+    };
+
+    if (canonicalSet.has(sourceId)) {
+      consolidated.push(record);
+    } else {
+      individual.push(record);
+    }
+  }
+
+  return {
+    consolidated,
+    individual
+  };
+}
+
+function groupByRequirementId(records) {
+  const groups = new Map();
+
+  for (const record of records) {
+    const id = String(record.requirement_id);
+
+    if (!groups.has(id)) {
+      groups.set(id, []);
+    }
+
+    groups.get(id).push(record);
+  }
+
+  return groups;
+}
+
+/* ============================================================
+   PAYLOAD COMPARISON
+============================================================ */
+
+function getComparablePayload(record) {
+  const payload = normalizePayload(record.original_payload);
+
+  return removeDatabaseIdentity(
+    payload,
+    record.requirement_id
+  );
+}
+
+function compareRequirementVersions(consolidated, individual) {
+  const consolidatedPayload = getComparablePayload(consolidated);
+  const individualPayload = getComparablePayload(individual);
+
+  const differences = [];
+
+  compareJson(
+    consolidatedPayload,
+    individualPayload,
+    '$',
+    differences
+  );
+
+  const recommendation = classifyComparison(differences);
+
+  return {
+    classification: recommendation.classification,
+
+    difference_count: differences.length,
+
+    difference_classifications:
+      summarizeDifferences(differences).difference_classifications,
+
+    recommendation: {
+      action: recommendation.action,
+      review_required: recommendation.review_required,
+      explanation: recommendation.explanation
+    },
+
+    consolidated_source: deepClone(consolidated),
+    individual_source: deepClone(individual),
+
+    comparison: {
+      consolidated_payload: deepClone(consolidatedPayload),
+      individual_payload: deepClone(individualPayload),
+      differences: deepClone(differences)
+    }
+  };
+}
+
+/* ============================================================
+   REQUIREMENT RECONCILIATION
+============================================================ */
+
+function reconcileRequirements(
+  consolidatedRecords,
+  individualRecords
+) {
+  const consolidatedGroups =
+    groupByRequirementId(consolidatedRecords);
+
+  const individualGroups =
+    groupByRequirementId(individualRecords);
+
+  const allIds = new Set([
+    ...consolidatedGroups.keys(),
+    ...individualGroups.keys()
+  ]);
+
+  const requirements = [];
+
+  const matchedIds = [];
+  const consolidatedOnlyIds = [];
+  const individualOnlyIds = [];
+  const duplicateGroups = [];
+
+  for (const requirementId of [...allIds].sort()) {
+    const consolidated =
+      consolidatedGroups.get(requirementId) || [];
+
+    const individual =
+      individualGroups.get(requirementId) || [];
+
+    if (consolidated.length > 1 || individual.length > 1) {
+      duplicateGroups.push({
+        requirement_id: requirementId,
+        consolidated_record_count: consolidated.length,
+        individual_record_count: individual.length
+      });
+    }
+
+    if (consolidated.length === 0) {
+      individualOnlyIds.push(requirementId);
+      continue;
+    }
+
+    if (individual.length === 0) {
+      consolidatedOnlyIds.push(requirementId);
+      continue;
+    }
+
+    matchedIds.push(requirementId);
+
+    const comparisons = [];
+
+    /**
+     * Compare every consolidated version against every
+     * individual version for the same identifier.
+     */
+
+    for (const consolidatedRecord of consolidated) {
+      for (const individualRecord of individual) {
+        comparisons.push(
+          compareRequirementVersions(
+            consolidatedRecord,
+            individualRecord
+          )
+        );
+      }
+    }
+
+    const allDifferences = comparisons.flatMap(
+      comparison => comparison.comparison.differences
+    );
+
+    const reviewRequired = comparisons.some(
+      comparison => comparison.recommendation.review_required
+    );
+
+    const summary = summarizeDifferences(allDifferences);
+
+    let classification;
+
+    if (reviewRequired) {
+      classification = 'CONTENT_REVIEW_REQUIRED';
+    } else if (summary.consolidation_enrichment_count > 0) {
+      classification = 'CONSOLIDATION_ENRICHMENT';
+    } else {
+      classification = 'MATCHED_CONTENT';
+    }
+
+    const recommendation = reviewRequired
+      ? {
+          action: 'HUMAN_CONTENT_REVIEW',
+          review_required: true,
+          explanation:
+            'Substantive content or structural differences require review.'
         }
-
-        result.get(key).push(item);
-    }
-
-    return result;
-}
-
-function countClassifications(differences) {
-    const result = {};
-
-    for (const difference of differences) {
-        const key = difference.classification;
-        result[key] = (result[key] || 0) + 1;
-    }
-
-    return result;
-}
-
-function getRecommendation(classifications, comparisonStatus) {
-    if (comparisonStatus === 'MATCHED_CONTENT') {
-        return {
+      : summary.consolidation_enrichment_count > 0
+        ? {
+            action: 'ACCEPT_CONSOLIDATION_ENRICHMENT',
+            review_required: false,
+            explanation:
+              'Additional consolidated relationships are classified as enrichment and do not independently require content review.'
+          }
+        : {
             action: 'NO_CONTENT_CHANGE_DETECTED',
             review_required: false,
             explanation:
-                'The compared payloads are equivalent.'
-        };
-    }
+              'No substantive content differences were detected. Array ordering is ignored.'
+          };
 
-    const keys = Object.keys(classifications);
+    requirements.push({
+      requirement_id: requirementId,
+      classification,
 
-    if (
-        keys.length === 1 &&
-        keys[0] === 'ARRAY_ORDER'
-    ) {
-        return {
-            action: 'REVIEW_ORDERING',
-            review_required: true,
-            explanation:
-                'The array elements are identical but appear in a different order. Confirm whether order is meaningful.'
-        };
-    }
+      consolidated_record_count: consolidated.length,
+      individual_record_count: individual.length,
 
-    if (keys.every(key => key === 'ARRAY_ORDER')) {
-        return {
-            action: 'REVIEW_ORDERING',
-            review_required: true,
-            explanation:
-                'Only array ordering differences were detected.'
-        };
-    }
+      comparison_count: comparisons.length,
 
-    return {
-        action: 'HUMAN_CONTENT_REVIEW',
-        review_required: true,
-        explanation:
-            'One or more structural, added, removed or changed values require review. Do not automatically merge either version.'
-    };
-}
-
-function summarizeVersion(record) {
-    return {
-        requirement_version_id: record.requirement_version_id,
-        requirement_type: record.requirement_type,
-        requirement_id: record.requirement_id,
-        version_number: record.version_number,
-        version_reason: record.version_reason,
-        source_file_id: record.source_file_id,
-
-        source_file: {
-            file_name: record.file_name,
-            file_path: record.file_path,
-            artifact_type: record.artifact_type,
-            metadata: parseJson(record.source_metadata),
-            checksum: record.file_checksum,
-            source_version: record.source_version,
-            source_timestamp: record.source_timestamp
-        },
-
-        created_at: record.version_created_at,
-        original_payload: parseJson(record.payload)
-    };
-}
-
-function compareRequirement(
-    id,
-    consolidatedRecords,
-    individualRecords
-) {
-    const comparisons = [];
-
-    for (const consolidated of consolidatedRecords) {
-        for (const individual of individualRecords) {
-            const leftOriginal = parseJson(consolidated.payload);
-            const rightOriginal = parseJson(individual.payload);
-
-            const leftComparable = removeDatabaseIdentity(
-                extractComparablePayload(leftOriginal),
-                id
-            );
-
-            const rightComparable = removeDatabaseIdentity(
-                extractComparablePayload(rightOriginal),
-                id
-            );
-
-            const differences = compareJson(
-                leftComparable,
-                rightComparable
-            );
-
-            const classifications =
-                countClassifications(differences);
-
-            const status = differences.length === 0
-                ? 'MATCHED_CONTENT'
-                : 'CONTENT_DIFFERENCES';
-
-            comparisons.push({
-                classification: status,
-                difference_count: differences.length,
-                difference_classifications: classifications,
-
-                recommendation: getRecommendation(
-                    classifications,
-                    status
-                ),
-
-                consolidated_source:
-                    summarizeVersion(consolidated),
-
-                individual_source:
-                    summarizeVersion(individual),
-
-                comparison: {
-                    consolidated_payload: leftComparable,
-                    individual_payload: rightComparable,
-                    differences
-                }
-            });
-        }
-    }
-
-    const allEquivalent =
-        comparisons.length > 0 &&
-        comparisons.every(
-            item => item.classification === 'MATCHED_CONTENT'
-        );
-
-    return {
-        requirement_id: id,
-        consolidated_record_count: consolidatedRecords.length,
-        individual_record_count: individualRecords.length,
-        comparison_count: comparisons.length,
-
-        classification: allEquivalent
-            ? 'MATCHED_CONTENT'
-            : 'CONTENT_REVIEW_REQUIRED',
-
-        comparisons
-    };
-}
-
-function buildSourceGroups(records, consolidatedSourceIds) {
-    const grouped = groupBy(
-        records,
-        record => String(record.source_file_id)
-    );
-
-    return [...grouped.entries()].map(
-        ([sourceFileId, items]) => ({
-            source_file_id: sourceFileId,
-
-            source_role: consolidatedSourceIds.has(sourceFileId)
-                ? 'CONSOLIDATED'
-                : 'INDIVIDUAL',
-
-            file_name: items[0].file_name,
-            file_path: items[0].file_path,
-            artifact_type: items[0].artifact_type,
-            metadata: parseJson(items[0].source_metadata),
-            record_count: items.length,
-
-            requirement_ids: [
-                ...new Set(
-                    items.map(item => String(item.requirement_id))
-                )
-            ]
-        })
-    );
-}
-
-function buildDuplicateGroups(map, role) {
-    const result = [];
-
-    for (const [id, records] of map.entries()) {
-        if (records.length > 1) {
-            result.push({
-                requirement_id: id,
-                source_role: role,
-                record_count: records.length,
-                records: records.map(summarizeVersion)
-            });
-        }
-    }
-
-    return result;
-}
-
-function countBy(items, property) {
-    const counts = {};
-
-    for (const item of items) {
-        const key = String(item[property] ?? 'UNSPECIFIED');
-        counts[key] = (counts[key] || 0) + 1;
-    }
-
-    return counts;
-}
-
-/**
- * Read all required information using a read-only transaction.
- */
-async function readDatabase(client) {
-    log('Discovering consolidated source provenance...');
-
-    const canonicalResult = await client.query(`
-        SELECT DISTINCT source_file_id
-        FROM requirements.business_requirements
-        WHERE source_file_id IS NOT NULL
-    `);
-
-    const consolidatedSourceIds = new Set(
-        canonicalResult.rows.map(
-            row => String(row.source_file_id)
+      review_summary: {
+        ...summary,
+        recommendations: comparisons.map(
+          comparison => comparison.recommendation
         )
-    );
+      },
 
-    if (consolidatedSourceIds.size === 0) {
-        throw new Error(
-            'No consolidated source provenance found in requirements.business_requirements.'
-        );
-    }
+      recommendation,
 
-    log('Reading requirement versions and source provenance...');
+      comparisons,
 
-    const versionsResult = await client.query(
-        `
-        SELECT
-            rv.requirement_version_id,
-            rv.requirement_type,
-            rv.requirement_id,
-            rv.version_number,
-            rv.source_file_id,
-            rv.payload,
-            rv.version_reason,
-            rv.created_at AS version_created_at,
+      differences: allDifferences
+    });
+  }
 
-            sf.artifact_type,
-            sf.file_name,
-            sf.file_path,
-            sf.file_checksum,
-            sf.source_version,
-            sf.source_timestamp,
-            sf.metadata AS source_metadata
-
-        FROM requirements.requirement_versions rv
-
-        INNER JOIN requirements.source_files sf
-            ON sf.source_file_id = rv.source_file_id
-
-        WHERE UPPER(rv.requirement_type) = UPPER($1)
-
-        ORDER BY
-            rv.requirement_id,
-            rv.version_number,
-            rv.created_at,
-            rv.requirement_version_id
-        `,
-        [CONFIG.requirementType]
-    );
-
-    log('Reading existing validation findings...');
-
-    const findingsResult = await client.query(`
-        SELECT *
-        FROM requirements.br_consolidation_findings
-        ORDER BY created_at, consolidation_finding_id
-    `);
-
-    log('Reading existing overlap assessments...');
-
-    const overlapsResult = await client.query(`
-        SELECT *
-        FROM requirements.br_overlap_pairs
-        ORDER BY created_at, overlap_pair_id
-    `);
-
-    return {
-        records: versionsResult.rows,
-        findings: findingsResult.rows,
-        overlapPairs: overlapsResult.rows,
-        consolidatedSourceIds
-    };
+  return {
+    requirements,
+    matchedIds,
+    consolidatedOnlyIds,
+    individualOnlyIds,
+    duplicateGroups
+  };
 }
 
-/**
- * Build the complete reconciliation report.
- */
-function buildReport(data) {
-    const {
-        records,
-        findings,
-        overlapPairs,
-        consolidatedSourceIds
-    } = data;
+/* ============================================================
+   REPORT CONSTRUCTION
+============================================================ */
 
-    if (records.length === 0) {
-        throw new Error(
-            `No requirement versions found for type ${CONFIG.requirementType}.`
-        );
+function buildReport(
+  reconciliation,
+  versions,
+  sourceGroups,
+  findings,
+  overlaps
+) {
+  const requirements = reconciliation.requirements;
+
+  const reviewRequired = requirements.filter(
+    item => item.recommendation.review_required
+  );
+
+  const enrichment = requirements.filter(
+    item => item.classification === 'CONSOLIDATION_ENRICHMENT'
+  );
+
+  const equivalent = requirements.filter(
+    item => item.classification === 'MATCHED_CONTENT'
+  );
+
+  const allDifferences = requirements.flatMap(
+    item => item.differences
+  );
+
+  const differenceSummary =
+    summarizeDifferences(allDifferences);
+
+  const verificationChecks = [
+    {
+      check: 'Requirement versions discovered',
+      count: versions.length,
+      status: versions.length > 0 ? 'PASS' : 'FAIL'
+    },
+    {
+      check: 'Consolidated source records',
+      count: sourceGroups.consolidated.length,
+      status: 'PASS'
+    },
+    {
+      check: 'Individual source records',
+      count: sourceGroups.individual.length,
+      status: 'PASS'
+    },
+    {
+      check: 'Matched identifiers',
+      count: reconciliation.matchedIds.length,
+      status: 'PASS'
+    },
+    {
+      check: 'Consolidated-only identifiers',
+      count: reconciliation.consolidatedOnlyIds.length,
+      status: 'PASS'
+    },
+    {
+      check: 'Individual-only identifiers',
+      count: reconciliation.individualOnlyIds.length,
+      status: 'PASS'
+    },
+    {
+      check: 'Duplicate identifier groups',
+      count: reconciliation.duplicateGroups.length,
+      status: reconciliation.duplicateGroups.length === 0
+        ? 'PASS'
+        : 'REVIEW'
     }
+  ];
+
+  const overallStatus = verificationChecks.some(
+    check => check.status === 'FAIL'
+  )
+    ? 'FAIL'
+    : reviewRequired.length > 0
+      ? 'REVIEW'
+      : 'PASS';
+
+  return {
+    generated_at: new Date().toISOString(),
+
+    requirement_type: CONFIG.requirementType,
+
+    reconciliation_method: {
+      comparison: 'RECURSIVE_JSON_COMPARISON',
+      object_key_order: 'IGNORED',
+      array_order: 'IGNORED',
+      array_duplicates: 'PRESERVED',
+      relationship_enrichment:
+        'CONSOLIDATED_RELATIONSHIP_ADDITIONS_CLASSIFIED_AS_ENRICHMENT',
+      automatic_merge: false,
+      automatic_approval: false,
+      automatic_rejection: false,
+      database_changes: false,
+      ai_processing: false
+    },
+
+    summary: {
+      version_records: versions.length,
+      source_files: new Set(
+        versions.map(version => String(version.source_file_id))
+      ).size,
+
+      consolidated_ids: sourceGroups.consolidated.length,
+      individual_ids: sourceGroups.individual.length,
+
+      matched_ids: reconciliation.matchedIds.length,
+
+      equivalent_content: equivalent.length,
+
+      consolidation_enrichment: enrichment.length,
+
+      review_required: reviewRequired.length,
+
+      consolidated_only:
+        reconciliation.consolidatedOnlyIds.length,
+
+      individual_only:
+        reconciliation.individualOnlyIds.length,
+
+      duplicate_groups:
+        reconciliation.duplicateGroups.length,
+
+      total_differences:
+        differenceSummary.total_differences,
+
+      review_required_differences:
+        differenceSummary.review_required_differences,
+
+      difference_classifications:
+        differenceSummary.difference_classifications
+    },
+
+    verification: {
+      status: overallStatus,
+      checks: verificationChecks
+    },
+
+    identifier_reconciliation: {
+      matched: reconciliation.matchedIds,
+      consolidated_only: reconciliation.consolidatedOnlyIds,
+      individual_only: reconciliation.individualOnlyIds,
+      duplicate_groups: reconciliation.duplicateGroups
+    },
+
+    existing_consolidation_findings: findings,
+    existing_overlap_assessments: overlaps,
+
+    requirements
+  };
+}
+
+function buildReviewReport(report) {
+  const reviewRequired = report.requirements.filter(
+    item => item.recommendation.review_required
+  );
+
+  return {
+    generated_at: report.generated_at,
+
+    requirement_type: report.requirement_type,
+
+    report_type: 'REVIEW_REQUIRED',
+
+    summary: {
+      requirements_exported: reviewRequired.length,
+
+      differences_exported: reviewRequired.reduce(
+        (total, item) => total + item.review_summary.review_required_differences,
+        0
+      ),
+
+      review_classifications: {}
+    },
+
+    requirements: reviewRequired
+  };
+}
+
+/* ============================================================
+   OUTPUT
+============================================================ */
+
+function writeJson(filePath, data) {
+  fs.writeFileSync(
+    filePath,
+    JSON.stringify(data, null, 2),
+    'utf8'
+  );
+}
+
+function printSummary(report, reviewReport, outputFiles) {
+  const summary = report.summary;
+
+  console.log('');
+  console.log('========================================');
+  console.log('RECONCILIATION COMPLETED');
+  console.log('========================================');
+
+  console.log(`Requirement type: ${report.requirement_type}`);
+  console.log(`Version records: ${summary.version_records}`);
+  console.log(`Source files: ${summary.source_files}`);
+
+  console.log(`Consolidated IDs: ${summary.consolidated_ids}`);
+  console.log(`Individual IDs: ${summary.individual_ids}`);
+  console.log(`Matched IDs: ${summary.matched_ids}`);
+
+  console.log(`Equivalent content: ${summary.equivalent_content}`);
+
+  console.log(
+    `Consolidation enrichment: ${summary.consolidation_enrichment}`
+  );
+
+  console.log(`Review required: ${summary.review_required}`);
+
+  console.log(`Consolidated only: ${summary.consolidated_only}`);
+  console.log(`Individual only: ${summary.individual_only}`);
+
+  console.log(`Duplicate groups: ${summary.duplicate_groups}`);
+
+  console.log(`Total differences: ${summary.total_differences}`);
+
+  console.log('');
+  console.log('Difference classifications:');
+
+  for (const [classification, count] of Object.entries(
+    summary.difference_classifications
+  )) {
+    console.log(`${classification}: ${count}`);
+  }
+
+  console.log('');
+  console.log('Verification:');
+
+  for (const check of report.verification.checks) {
+    console.log(
+      `${check.status.padEnd(6)} ${check.check}: ${check.count}`
+    );
+  }
+
+  console.log('');
+  console.log(`Overall status: ${report.verification.status}`);
+
+  console.log('');
+  console.log('Output reports:');
+
+  console.log(path.basename(outputFiles.reconciliation));
+  console.log(path.basename(outputFiles.review));
+
+  console.log('');
+  console.log('Review report summary:');
+
+  console.log(
+    `Requirements exported: ${reviewReport.summary.requirements_exported}`
+  );
+
+  console.log(
+    `Differences exported: ${reviewReport.summary.differences_exported}`
+  );
+
+  console.log('');
+  console.log('DATABASE CHANGES: NONE');
+  console.log('AI PROCESSING: NONE');
+  console.log('ORIGINAL PAYLOADS: PRESERVED');
+  console.log('AUTOMATIC MERGES: NONE');
+  console.log('AUTOMATIC APPROVALS: NONE');
+  console.log('AUTOMATIC REJECTIONS: NONE');
+  console.log('========================================');
+}
+
+/* ============================================================
+   MAIN
+============================================================ */
+
+async function main() {
+  const client = await pool.connect();
+
+  try {
+    console.log(
+      '[RECONCILIATION] Starting domain-agnostic requirement reconciliation.'
+    );
+
+    console.log(
+      `[RECONCILIATION] Requirement type: ${CONFIG.requirementType}`
+    );
+
+    console.log(
+      '[RECONCILIATION] Discovering consolidated source provenance...'
+    );
+
+    const canonicalSourceIds =
+      await getCanonicalSourceIds(client);
+
+    console.log(
+      '[RECONCILIATION] Reading requirement versions and source provenance...'
+    );
+
+    const versions = await getRequirementVersions(client);
+
+    console.log(
+      '[RECONCILIATION] Reading existing validation findings...'
+    );
+
+    const findings = await getExistingFindings(client);
+
+    console.log(
+      '[RECONCILIATION] Reading existing overlap assessments...'
+    );
+
+    const overlaps = await getExistingOverlapAssessments(client);
+
+    console.log(
+      '[RECONCILIATION] Classifying consolidated and individual sources...'
+    );
 
     const sourceGroups = buildSourceGroups(
-        records,
-        consolidatedSourceIds
+      versions,
+      canonicalSourceIds
     );
 
-    const consolidated = new Map();
-    const individual = new Map();
-
-    for (const record of records) {
-        const id = String(record.requirement_id);
-
-        const isConsolidated = consolidatedSourceIds.has(
-            String(record.source_file_id)
-        );
-
-        const target = isConsolidated
-            ? consolidated
-            : individual;
-
-        if (!target.has(id)) {
-            target.set(id, []);
-        }
-
-        target.get(id).push(record);
-    }
-
-    const consolidatedIds = new Set(consolidated.keys());
-    const individualIds = new Set(individual.keys());
-
-    const matchedIds = [...consolidatedIds]
-        .filter(id => individualIds.has(id))
-        .sort();
-
-    const consolidatedOnly = [...consolidatedIds]
-        .filter(id => !individualIds.has(id))
-        .sort();
-
-    const individualOnly = [...individualIds]
-        .filter(id => !consolidatedIds.has(id))
-        .sort();
-
-    log('Comparing matched requirement payloads...');
-
-    const comparisons = matchedIds.map(id =>
-        compareRequirement(
-            id,
-            consolidated.get(id),
-            individual.get(id)
-        )
+    console.log(
+      '[RECONCILIATION] Comparing matched requirement payloads...'
     );
 
-    const equivalent = comparisons.filter(
-        item => item.classification === 'MATCHED_CONTENT'
+    const reconciliation = reconcileRequirements(
+      sourceGroups.consolidated,
+      sourceGroups.individual
     );
 
-    const reviewRequired = comparisons.filter(
-        item => item.classification === 'CONTENT_REVIEW_REQUIRED'
-    );
-
-    const duplicateGroups = [
-        ...buildDuplicateGroups(consolidated, 'CONSOLIDATED'),
-        ...buildDuplicateGroups(individual, 'INDIVIDUAL')
-    ];
-
-    const allDifferences = comparisons.flatMap(item =>
-        item.comparisons.flatMap(comparison =>
-            comparison.comparison.differences
-        )
-    );
-
-    const verification = [
-        {
-            check: 'Requirement versions discovered',
-            actual: records.length,
-            status: records.length > 0 ? 'PASS' : 'FAIL'
-        },
-        {
-            check: 'Consolidated source records',
-            actual: [...consolidated.values()]
-                .reduce((sum, list) => sum + list.length, 0),
-            status: 'PASS'
-        },
-        {
-            check: 'Individual source records',
-            actual: [...individual.values()]
-                .reduce((sum, list) => sum + list.length, 0),
-            status: 'PASS'
-        },
-        {
-            check: 'Matched identifiers',
-            actual: matchedIds.length,
-            status: 'PASS'
-        },
-        {
-            check: 'Consolidated-only identifiers',
-            actual: consolidatedOnly.length,
-            status: 'PASS'
-        },
-        {
-            check: 'Individual-only identifiers',
-            actual: individualOnly.length,
-            status: 'PASS'
-        },
-        {
-            check: 'Duplicate identifier groups',
-            actual: duplicateGroups.length,
-            status: duplicateGroups.length === 0
-                ? 'PASS'
-                : 'REVIEW'
-        }
-    ];
-
-    const requiresReview =
-        reviewRequired.length > 0 ||
-        consolidatedOnly.length > 0 ||
-        individualOnly.length > 0 ||
-        duplicateGroups.length > 0;
-
-    return {
-        report_type:
-            'DOMAIN_AGNOSTIC_REQUIREMENT_RECONCILIATION',
-
-        generated_at: new Date().toISOString(),
-        requirement_type: CONFIG.requirementType,
-
-        method: {
-            source_identification:
-                'SOURCE_FILE_PROVENANCE_REFERENCED_BY_CANONICAL_REQUIREMENT_RECORDS',
-
-            matching: 'DATABASE_REQUIREMENT_IDENTIFIER',
-            comparison: 'RECURSIVE_JSON',
-
-            database_identity:
-                'MATCHING_ROOT_LEVEL_IDENTIFIER_EXCLUDED_FROM_PAYLOAD_COMPARISON',
-
-            object_key_order: 'IGNORED',
-            array_order: 'PRESERVED_AND_DIFFERENCES_CLASSIFIED',
-
-            array_content:
-                'MULTISET_COMPARISON_WITH_DUPLICATE_PRESERVATION',
-
-            ambiguous_array_element_pairing: 'NOT_INFERRED',
-            ai_processing: false,
-            database_mutations: false,
-            automatic_business_decisions: false
-        },
-
-        summary: {
-            version_records: records.length,
-            source_files: sourceGroups.length,
-            source_file_roles: countBy(sourceGroups, 'source_role'),
-
-            consolidated_requirement_ids: consolidatedIds.size,
-            individual_requirement_ids: individualIds.size,
-            matched_requirement_ids: matchedIds.length,
-
-            equivalent_content: equivalent.length,
-            content_review_required: reviewRequired.length,
-
-            consolidated_only: consolidatedOnly.length,
-            individual_only: individualOnly.length,
-
-            duplicate_identifier_groups: duplicateGroups.length,
-
-            total_differences: allDifferences.length,
-
-            difference_classifications:
-                countClassifications(allDifferences),
-
-            existing_validation_findings: findings.length,
-            existing_overlap_assessments: overlapPairs.length
-        },
-
-        source_provenance: {
-            consolidated_source_file_ids:
-                [...consolidatedSourceIds],
-
-            sources: sourceGroups
-        },
-
-        identifier_reconciliation: {
-            matched_ids: matchedIds,
-            consolidated_only_ids: consolidatedOnly,
-            individual_only_ids: individualOnly,
-            duplicate_groups: duplicateGroups
-        },
-
-        content_reconciliation: {
-            equivalent,
-            review_required: reviewRequired
-        },
-
-        existing_validation_findings: findings,
-        existing_overlap_assessments: overlapPairs,
-
-        verification: {
-            status: verification.some(
-                item => item.status === 'FAIL'
-            )
-                ? 'FAIL'
-                : requiresReview
-                    ? 'REVIEW'
-                    : 'PASS',
-
-            checks: verification
-        },
-
-        decision_policy: {
-            automatic_merge: false,
-            automatic_approval: false,
-            automatic_rejection: false,
-            automatic_identifier_change: false,
-            original_payloads_preserved: true,
-            human_review_required_for_differences: true
-        }
-    };
-}
-
-/**
- * Build a separate detailed review report.
- *
- * Includes:
- *   - Every requirement requiring review.
- *   - Full consolidated and individual payloads.
- *   - Source provenance and version information.
- *   - Every field-level difference.
- *   - Difference classification counts.
- *   - Existing recommendations.
- *
- * No decisions are made here.
- */
-function buildReviewReport(report) {
-    const reviewItems =
-        report.content_reconciliation.review_required;
-
-    const records = reviewItems.map(item => {
-        const differences = item.comparisons.flatMap(
-            comparison =>
-                comparison.comparison.differences.map(
-                    difference => ({
-                        ...difference,
-
-                        consolidated_source:
-                            comparison.consolidated_source,
-
-                        individual_source:
-                            comparison.individual_source
-                    })
-                )
-        );
-
-        return {
-            requirement_id: item.requirement_id,
-
-            classification: item.classification,
-
-            consolidated_record_count:
-                item.consolidated_record_count,
-
-            individual_record_count:
-                item.individual_record_count,
-
-            comparison_count: item.comparison_count,
-
-            review_summary: {
-                total_differences: differences.length,
-
-                difference_classifications:
-                    countClassifications(differences),
-
-                recommendations: item.comparisons.map(
-                    comparison => comparison.recommendation
-                )
-            },
-
-            // Includes complete original and comparison payloads.
-            comparisons: item.comparisons,
-
-            // Convenient flattened list of field-level differences.
-            differences
-        };
-    });
-
-    const allDifferences = records.flatMap(
-        item => item.differences
-    );
-
-    return {
-        report_type:
-            'DOMAIN_AGNOSTIC_REQUIREMENT_REVIEW_REQUIRED',
-
-        generated_at: report.generated_at,
-        requirement_type: report.requirement_type,
-
-        source_reconciliation_report: null,
-
-        summary: {
-            requirements_requiring_review: records.length,
-
-            total_differences: allDifferences.length,
-
-            difference_classifications:
-                countClassifications(allDifferences)
-        },
-
-        review_required: records,
-
-        review_index: records.map(item => ({
-            requirement_id: item.requirement_id,
-
-            classification: item.classification,
-
-            total_differences:
-                item.review_summary.total_differences,
-
-            difference_classifications:
-                item.review_summary.difference_classifications
-        })),
-
-        review_policy: {
-            automatic_changes: false,
-            automatic_merges: false,
-            automatic_approvals: false,
-            automatic_rejections: false,
-
-            original_payloads_preserved: true,
-            source_provenance_included: true,
-            human_review_required: true
-        }
-    };
-}
-
-/**
- * Save both reports.
- */
-function writeReports(report) {
-    fs.mkdirSync(CONFIG.outputDirectory, {
-        recursive: true
-    });
-
-    const timestamp = new Date()
-        .toISOString()
-        .replace(/[:.]/g, '-');
-
-    const reconciliationFile = path.join(
-        CONFIG.outputDirectory,
-        `requirements_reconciliation_${timestamp}.json`
-    );
-
-    const reviewFile = path.join(
-        CONFIG.outputDirectory,
-        `requirements_review_required_${timestamp}.json`
+    const report = buildReport(
+      reconciliation,
+      versions,
+      sourceGroups,
+      findings,
+      overlaps
     );
 
     const reviewReport = buildReviewReport(report);
 
-    reviewReport.source_reconciliation_report =
-        path.basename(reconciliationFile);
+    fs.mkdirSync(CONFIG.outputDirectory, {
+      recursive: true
+    });
 
-    fs.writeFileSync(
-        reconciliationFile,
-        JSON.stringify(report, null, 2),
-        'utf8'
-    );
+    const fileTimestamp = timestamp();
 
-    fs.writeFileSync(
-        reviewFile,
-        JSON.stringify(reviewReport, null, 2),
-        'utf8'
-    );
+    const outputFiles = {
+      reconciliation: path.join(
+        CONFIG.outputDirectory,
+        `requirements_reconciliation_${fileTimestamp}.json`
+      ),
 
-    return {
-        reconciliationFile,
-        reviewFile,
-        reviewReport
+      review: path.join(
+        CONFIG.outputDirectory,
+        `requirements_review_required_${fileTimestamp}.json`
+      )
     };
-}
 
-async function main() {
-    let client;
-    let transactionStarted = false;
+    writeJson(outputFiles.reconciliation, report);
+    writeJson(outputFiles.review, reviewReport);
 
-    try {
-        log('Starting domain-agnostic requirement reconciliation.');
-        log(`Requirement type: ${CONFIG.requirementType}`);
+    printSummary(report, reviewReport, outputFiles);
 
-        client = await pool.connect();
+  } catch (error) {
+    console.error('');
+    console.error('[RECONCILIATION] FAILED');
+    console.error(error.stack || error.message);
 
-        await client.query(
-            'BEGIN TRANSACTION ISOLATION LEVEL REPEATABLE READ READ ONLY'
-        );
+    process.exitCode = 1;
 
-        transactionStarted = true;
-
-        const data = await readDatabase(client);
-
-        const report = buildReport(data);
-
-        await client.query('COMMIT');
-        transactionStarted = false;
-
-        // Generate both JSON reports.
-        const outputs = writeReports(report);
-
-        const reviewReport = outputs.reviewReport;
-
-        console.log('\n========================================');
-        console.log('RECONCILIATION COMPLETED');
-        console.log('========================================');
-
-        console.log(`Requirement type: ${CONFIG.requirementType}`);
-
-        console.log(
-            `Version records: ${report.summary.version_records}`
-        );
-
-        console.log(
-            `Source files: ${report.summary.source_files}`
-        );
-
-        console.log(
-            `Consolidated IDs: ${report.summary.consolidated_requirement_ids}`
-        );
-
-        console.log(
-            `Individual IDs: ${report.summary.individual_requirement_ids}`
-        );
-
-        console.log(
-            `Matched IDs: ${report.summary.matched_requirement_ids}`
-        );
-
-        console.log(
-            `Equivalent content: ${report.summary.equivalent_content}`
-        );
-
-        console.log(
-            `Review required: ${report.summary.content_review_required}`
-        );
-
-        console.log(
-            `Consolidated only: ${report.summary.consolidated_only}`
-        );
-
-        console.log(
-            `Individual only: ${report.summary.individual_only}`
-        );
-
-        console.log(
-            `Duplicate groups: ${report.summary.duplicate_identifier_groups}`
-        );
-
-        console.log(
-            `Total differences: ${report.summary.total_differences}`
-        );
-
-        console.log('\nDifference classifications:');
-
-        for (const [classification, count] of Object.entries(
-            report.summary.difference_classifications
-        )) {
-            console.log(`${classification}: ${count}`);
-        }
-
-        console.log('\nVerification:');
-
-        for (const check of report.verification.checks) {
-            console.log(
-                `${check.status.padEnd(6)} ${check.check}: ${check.actual}`
-            );
-        }
-
-        console.log(
-            `\nOverall status: ${report.verification.status}`
-        );
-
-        console.log('\n========================================');
-        console.log('OUTPUT FILES');
-        console.log('========================================');
-
-        console.log(
-            `Full reconciliation report:\n${outputs.reconciliationFile}`
-        );
-
-        console.log(
-            `\nReview-required report:\n${outputs.reviewFile}`
-        );
-
-        console.log('\nReview report summary:');
-
-        console.log(
-            `Requirements exported: ${reviewReport.summary.requirements_requiring_review}`
-        );
-
-        console.log(
-            `Differences exported: ${reviewReport.summary.total_differences}`
-        );
-
-        console.log('\nReview classifications:');
-
-        for (const [classification, count] of Object.entries(
-            reviewReport.summary.difference_classifications
-        )) {
-            console.log(`${classification}: ${count}`);
-        }
-
-        console.log('\nDATABASE CHANGES: NONE');
-        console.log('AI PROCESSING: NONE');
-        console.log('ORIGINAL PAYLOADS: PRESERVED');
-        console.log('AUTOMATIC MERGES: NONE');
-        console.log('AUTOMATIC APPROVALS: NONE');
-        console.log('AUTOMATIC REJECTIONS: NONE');
-
-    } catch (error) {
-        if (client && transactionStarted) {
-            try {
-                await client.query('ROLLBACK');
-            } catch (rollbackError) {
-                console.error(
-                    'Rollback failed:',
-                    rollbackError.message
-                );
-            }
-        }
-
-        console.error('\nRECONCILIATION FAILED.');
-        console.error(error.stack || error.message);
-
-        process.exitCode = 1;
-
-    } finally {
-        if (client) {
-            client.release();
-        }
-
-        await pool.end();
-    }
+  } finally {
+    client.release();
+    await pool.end();
+  }
 }
 
 main();
