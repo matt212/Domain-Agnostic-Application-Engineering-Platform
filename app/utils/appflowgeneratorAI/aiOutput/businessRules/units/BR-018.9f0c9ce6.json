@@ -1,0 +1,133 @@
+{
+  "unit_id": "BR-018",
+  "kind": "business_requirement",
+  "rules": [
+    {
+      "name": "Immediate Dispute Escalation",
+      "statement": "Unresolved financial disputes must be escalated to a senior support tier within a maximum allowed duration.",
+      "type": "Timing",
+      "condition": "when a dispute is flagged during the settlement cycle",
+      "exceptions": [
+        "complex fraud cases requiring external audit"
+      ],
+      "actors": [
+        "Fulfillment Supervisor",
+        "Senior Support Agent",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Dispute Ticket"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "revenue distribution is blocked and regulatory penalties may be applied",
+      "rationale": "delayed resolution erodes partner trust and triggers regulatory scrutiny",
+      "parameters": [
+        {
+          "name": "maximum allowed duration",
+          "description": "time limit for initial dispute triage"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-036"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Fraud-Induced Settlement Halt",
+      "statement": "Settlement processing must not proceed for any transaction flagged with high-risk indicators until manual verification is complete.",
+      "type": "Limit",
+      "condition": "when a transaction is identified as high-risk",
+      "exceptions": [
+        "pre-approved low-value recurring subscriptions"
+      ],
+      "actors": [
+        "Payment Provider",
+        "Fulfillment Supervisor",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Settlement Event"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "revenue leakage occurs and regulatory compliance is breached",
+      "rationale": "prevents financial loss and ensures regulatory adherence during high-volume cycles",
+      "parameters": [
+        {
+          "name": "high-risk threshold",
+          "description": "criteria defining a transaction as high-risk"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-039"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Dispute-Linked Settlement Hold",
+      "statement": "Final settlement status must not transition to 'Completed' until the associated dispute ticket is resolved to a final state.",
+      "type": "State transition",
+      "condition": "when a Financial Transaction Record has an active dispute",
+      "exceptions": [
+        "disputes resolved via automated refund reversal"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Dispute Ticket"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "incorrect funds are distributed leading to reconciliation errors",
+      "rationale": "ensures financial integrity by preventing premature payouts on contested transactions",
+      "parameters": [
+        {
+          "name": "final resolution state",
+          "description": "status indicating dispute is fully closed"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-042"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Immutable Dispute Audit Trail",
+      "statement": "Every dispute event and its resolution action must be recorded in an immutable audit trail.",
+      "type": "Audit and retention",
+      "condition": "when a dispute is created, modified, or resolved",
+      "exceptions": [
+        "none"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Regulatory Authority"
+      ],
+      "objects": [
+        "Dispute Ticket",
+        "Financial Transaction Record"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "inability to prove compliance during regulatory audits",
+      "rationale": "provides verifiable evidence of fair dispute handling for regulatory bodies",
+      "parameters": [
+        {
+          "name": "retention period",
+          "description": "duration for keeping immutable audit logs"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-042",
+        "FR-013"
+      ],
+      "basis": "inferred"
+    }
+  ]
+}

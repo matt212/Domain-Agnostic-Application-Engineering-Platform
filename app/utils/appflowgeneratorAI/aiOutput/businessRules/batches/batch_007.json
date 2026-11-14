@@ -1,0 +1,534 @@
+{
+  "batch": 7,
+  "units": [
+    "BR-025",
+    "BR-026",
+    "BR-027",
+    "BR-028"
+  ],
+  "rules": [
+    {
+      "unit_id": "BR-025",
+      "name": "SLA Breach Penalty Deduction",
+      "statement": "The system must deduct financial penalties from the Store Partner's settlement amount when a verified SLA breach occurs.",
+      "type": "Financial control",
+      "condition": "when a third-party vendor fails to meet guaranteed uptime or response time thresholds defined in the SLA",
+      "exceptions": [
+        "force majeure events explicitly defined in the SLA contract",
+        "breaches occurring during scheduled maintenance windows approved by the vendor"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner",
+        "Third-Party Vendor"
+      ],
+      "objects": [
+        "Service Level Agreement",
+        "Financial Transaction Record",
+        "Settlement Calculation"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "the system automatically reduces the payable settlement amount and logs the deduction reason in the immutable audit trail",
+      "rationale": "to financially incentivize vendors to maintain service quality and mitigate operational downtime",
+      "parameters": [
+        {
+          "name": "penalty_rate",
+          "description": "percentage of transaction value or fixed fee deducted per minute of delay or downtime"
+        },
+        {
+          "name": "threshold_duration",
+          "description": "maximum allowed duration for delivery or response before a breach is triggered"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-050",
+        "FR-005",
+        "FR-028"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-025",
+      "name": "Agreement Version Locking",
+      "statement": "The system must prevent any modification to an active Store Partner Agreement version once a financial settlement has been finalized for that period.",
+      "type": "State transition",
+      "condition": "when a Store Partner Agreement is in 'Active' status and a Financial Transaction Record has been generated for the current settlement cycle",
+      "exceptions": [
+        "no exceptions; finalization triggers an immutable lock"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner",
+        "System"
+      ],
+      "objects": [
+        "Store Partner Agreement",
+        "Financial Transaction Record"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "the system rejects the change request and alerts the Platform Operator of a potential compliance violation",
+      "rationale": "to ensure settlement calculations remain accurate and legally defensible against retroactive changes",
+      "parameters": [
+        {
+          "name": "settlement_cycle_id",
+          "description": "unique identifier for the specific financial period being settled"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-010",
+        "FR-005"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-025",
+      "name": "Vendor Uptime Eligibility",
+      "statement": "A third-party vendor may only be eligible for revenue sharing if their historical uptime meets the minimum threshold defined in the active SLA.",
+      "type": "Eligibility",
+      "condition": "when evaluating a vendor for inclusion in the active marketplace or for processing a new settlement batch",
+      "exceptions": [
+        "vendors under probationary status with a temporary reduced threshold as defined in the contract"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Third-Party Vendor",
+        "System"
+      ],
+      "objects": [
+        "Service Level Agreement",
+        "Vendor Profile",
+        "Order Allocation"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "the system automatically suspends order allocation to the vendor until the next review cycle or manual reinstatement",
+      "rationale": "to prevent revenue loss and reputational damage caused by unreliable external dependencies",
+      "parameters": [
+        {
+          "name": "minimum_uptime_percentage",
+          "description": "required percentage of operational time over the evaluation period"
+        },
+        {
+          "name": "evaluation_window",
+          "description": "timeframe over which uptime is measured (e.g., last 30 days)"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-050",
+        "FR-028"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-025",
+      "name": "Dispute Escalation Trigger",
+      "statement": "The system must escalate a service degradation incident to the Platform Operator for manual review when a vendor breach exceeds the maximum allowable penalty cap.",
+      "type": "Exception handling",
+      "condition": "when a calculated SLA penalty for a specific incident exceeds the maximum financial cap defined in the SLA",
+      "exceptions": [
+        "none"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Third-Party Vendor",
+        "System"
+      ],
+      "objects": [
+        "Service Level Agreement",
+        "Incident Record",
+        "Financial Transaction Record"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "the system pauses automatic penalty deduction and flags the record for manual adjudication by the Platform Operator",
+      "rationale": "to allow human judgment in complex cases where automated penalties might be disproportionate or erroneous",
+      "parameters": [
+        {
+          "name": "max_penalty_cap",
+          "description": "maximum financial amount that can be automatically deducted without manual review"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-050",
+        "FR-031"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-026",
+      "name": "Real-Time Inventory Verification",
+      "statement": "An order must only be assigned to a store if the Real-Time Inventory Snapshot shows available quantity greater than or equal to the requested quantity for all items.",
+      "type": "Validation",
+      "condition": "During order allocation to a Store Partner",
+      "exceptions": [],
+      "actors": [
+        "Order Allocation Engine",
+        "Store Partner"
+      ],
+      "objects": [
+        "Order Request",
+        "Real-Time Inventory Snapshot"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The system must not assign the order and must flag it for manual review",
+      "rationale": "Prevents overselling and ensures order fulfillment accuracy in a high-volume environment",
+      "parameters": [],
+      "related_functional_requirements": [
+        "FR-002"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-026",
+      "name": "Nearest Store Prioritization",
+      "statement": "The system must prioritize the nearest store based on the shortest estimated preparation and dispatch time when multiple stores have sufficient inventory.",
+      "type": "Calculation",
+      "condition": "When allocating an order to multiple eligible stores",
+      "exceptions": [],
+      "actors": [
+        "Order Allocation Engine"
+      ],
+      "objects": [
+        "Order Request",
+        "Store Partner"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system must re-evaluate the allocation logic and notify the operations team",
+      "rationale": "Ensures the business outcome of ultra-fast delivery (typically under 60 minutes) is met",
+      "parameters": [
+        {
+          "name": "estimated_preparation_time",
+          "description": "Time required by the store to pick and pack items (proposed)"
+        },
+        {
+          "name": "estimated_dispatch_time",
+          "description": "Time required for the delivery partner to reach the store (proposed)"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-002",
+        "FR-047"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-026",
+      "name": "Immediate Inventory Lock Release",
+      "statement": "Inventory locks must be released immediately upon confirmation of cancellation before the Fulfillment Task status changes to 'Ready for Dispatch'.",
+      "type": "State transition",
+      "condition": "When an Order Request is cancelled",
+      "exceptions": [
+        "If the Order Request has already been handed over to a Delivery Partner"
+      ],
+      "actors": [
+        "Order Allocation Engine",
+        "Fulfillment System"
+      ],
+      "objects": [
+        "Order Request",
+        "Inventory Lock",
+        "Fulfillment Task"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system must prevent the status change to 'Ready for Dispatch' and alert the store partner",
+      "rationale": "Prevents inventory from being unavailable for other orders while the original order is voided",
+      "parameters": [],
+      "related_functional_requirements": [
+        "FR-034"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-026",
+      "name": "Product Update Audit Trail",
+      "statement": "All product updates must include a timestamp and the identifier of the user making the change.",
+      "type": "Audit and retention",
+      "condition": "Whenever a product entry is created, updated, or archived",
+      "exceptions": [],
+      "actors": [
+        "Merchandiser",
+        "System"
+      ],
+      "objects": [
+        "Product Entry"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The system must reject the update and log the attempt as an audit anomaly",
+      "rationale": "Ensures accountability and traceability for catalog management decisions",
+      "parameters": [],
+      "related_functional_requirements": [
+        "FR-011"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-027",
+      "name": "Nearing Expiry Allocation Priority",
+      "statement": "Perishable items approaching shelf-life limits must be prioritized for allocation to new Order Requests over items with longer remaining shelf life.",
+      "type": "Eligibility",
+      "condition": "When allocating stock for a new Order Request containing perishable goods",
+      "exceptions": [
+        "If the prioritized item is flagged as 'nearing expiry' and the system is configured to reject such orders to prevent waste"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Order Allocation Engine"
+      ],
+      "objects": [
+        "Perishable Inventory",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system must flag the allocation decision for manual review and delay the order assignment",
+      "rationale": "Prioritizing near-expiry items minimizes financial loss from unsellable goods and maintains brand reputation for quality.",
+      "parameters": [
+        {
+          "name": "Shelf-life safety margin",
+          "description": "The percentage or time threshold defining an item as 'nearing expiry'"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-006",
+        "FR-024"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-027",
+      "name": "Expiry-Flagged Item Rejection",
+      "statement": "An Order Request must not be assigned to a Store Partner if the primary fulfillment source contains any item flagged as 'nearing expiry'.",
+      "type": "Validation",
+      "condition": "When validating inventory availability for an Order Request against a Store Partner",
+      "exceptions": [
+        "If the Store Partner explicitly overrides the rejection via a manual quality validation process after confirming the item is still fit for sale"
+      ],
+      "actors": [
+        "Order Allocation Engine",
+        "Store Partner"
+      ],
+      "objects": [
+        "Order Request",
+        "Perishable Inventory"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The system must automatically reject the Order Request and notify the customer of the inability to fulfill the order",
+      "rationale": "Delivering items nearing expiry risks quality failure, customer dissatisfaction, and potential regulatory non-compliance.",
+      "parameters": [
+        {
+          "name": "Nearing expiry threshold",
+          "description": "The specific shelf-life limit that triggers an item flag"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-024",
+        "FR-018"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-027",
+      "name": "Real-Time Inventory Deduction",
+      "statement": "Inventory quantities reserved by an automatic Order Request assignment must be immediately deducted from the Real-Time Inventory Snapshot.",
+      "type": "Calculation",
+      "condition": "Upon successful assignment of an Order Request to a Store Partner",
+      "exceptions": [
+        "If the assignment is subsequently cancelled or the order is rejected before the fulfillment task begins"
+      ],
+      "actors": [
+        "Order Allocation Engine",
+        "Inventory Management System"
+      ],
+      "objects": [
+        "Real-Time Inventory Snapshot",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system must prevent further Order Requests from being assigned to the same inventory units, leading to overselling",
+      "rationale": "Immediate deduction ensures accurate stock visibility and prevents selling items that are already committed to a specific order.",
+      "parameters": [
+        {
+          "name": "Inventory snapshot update latency",
+          "description": "The maximum acceptable time for the deduction to reflect in the snapshot"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-001",
+        "FR-002"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-027",
+      "name": "Expiry Alert Generation",
+      "statement": "The system must generate real-time alerts for inventory items approaching their shelf-life limits to prioritize fulfillment or trigger removal.",
+      "type": "Audit and retention",
+      "condition": "When an item's remaining shelf life falls below the configured safety margin",
+      "exceptions": [
+        "During system maintenance windows where alerting is temporarily suspended"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Fulfillment Supervisor"
+      ],
+      "objects": [
+        "Perishable Inventory",
+        "Alert Notification"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The business loses the opportunity to proactively manage waste, potentially leading to increased loss costs and quality issues",
+      "rationale": "Proactive alerts enable timely decision-making to either sell items before they expire or remove them from the catalog.",
+      "parameters": [
+        {
+          "name": "Alert trigger threshold",
+          "description": "The time or percentage remaining before an alert is generated"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-006"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-028",
+      "name": "Mandatory Status Notification Trigger",
+      "statement": "The system must automatically send a multi-channel notification to the customer when an order status transitions to 'Ready for Delivery' or 'Assigned to Delivery Partner'.",
+      "type": "Timing",
+      "condition": "upon successful state transition to Ready for Delivery or Assigned to Delivery Partner",
+      "exceptions": [
+        "Customer has explicitly opted out of all notifications",
+        "Customer has previously indicated 'Do Not Disturb' preference for this order type"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Customer"
+      ],
+      "objects": [
+        "Order",
+        "Notification Channel",
+        "Customer Preference"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "Customer support inquiries increase and customer retention rates decline due to lack of transparency",
+      "rationale": "Timely transparency reduces customer anxiety and prevents unnecessary support tickets regarding order location.",
+      "parameters": [
+        {
+          "name": "notification_delay_threshold",
+          "description": "maximum allowed time in seconds between status change and notification dispatch"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-052"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-028",
+      "name": "Notification Content Integrity",
+      "statement": "A status notification must only contain the current status, a concise description of the change, and the expected time window for the next action.",
+      "type": "Validation",
+      "condition": "at the moment of notification generation",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Customer"
+      ],
+      "objects": [
+        "Notification Message",
+        "Order Status"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "Customer confusion increases due to ambiguous or incomplete information",
+      "rationale": "Clear, consistent messaging ensures customers understand the delivery progress without needing to contact support.",
+      "parameters": [
+        {
+          "name": "max_message_length",
+          "description": "maximum character count allowed in the notification body"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-052"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-028",
+      "name": "Delivery Partner Assignment Confirmation",
+      "statement": "The system must not trigger an 'Assigned to Delivery Partner' notification until the Delivery Partner has explicitly accepted the task.",
+      "type": "State transition",
+      "condition": "during the order allocation process",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Delivery Partner",
+        "Customer"
+      ],
+      "objects": [
+        "Delivery Task",
+        "Order Assignment"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "Customer receives notification for a task the driver has not yet accepted, leading to false expectations and complaints",
+      "rationale": "Notifications must reflect only confirmed operational states to maintain trust and accuracy.",
+      "parameters": [
+        {
+          "name": "assignment_timeout_duration",
+          "description": "maximum time allowed for a partner to accept a task before auto-rejection"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-003",
+        "FR-033"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-028",
+      "name": "Notification Delivery Reliability",
+      "statement": "The system must ensure that a notification is successfully delivered via at least one configured channel within the maximum allowed duration.",
+      "type": "Limit",
+      "condition": "immediately following the trigger event",
+      "exceptions": [
+        "System-wide service outage declared by the Platform Operator"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Customer"
+      ],
+      "objects": [
+        "Notification Channel",
+        "Delivery Queue"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "Customer remains uninformed despite the status change, negating the value of the notification feature",
+      "rationale": "Reliability is critical; if one channel fails, the customer must still be informed via an alternative method.",
+      "parameters": [
+        {
+          "name": "max_notification_retry_attempts",
+          "description": "number of times the system retries sending the notification before marking it as failed"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-052"
+      ],
+      "basis": "inferred"
+    }
+  ]
+}

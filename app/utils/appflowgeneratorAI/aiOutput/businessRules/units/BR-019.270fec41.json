@@ -1,0 +1,127 @@
+{
+  "unit_id": "BR-019",
+  "kind": "business_requirement",
+  "rules": [
+    {
+      "name": "Immutable Anomaly Logging",
+      "statement": "The system must append every operational anomaly to a cryptographically secured, immutable audit log that cannot be altered or deleted.",
+      "type": "Audit and retention",
+      "condition": "when an operational anomaly occurs during order preparation, allocation, or fulfillment",
+      "exceptions": [],
+      "actors": [
+        "Platform Operator",
+        "Fulfillment Supervisor",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Operational Anomaly Record",
+        "Audit Log"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The business faces regulatory fines, legal liability, and loss of trust due to inability to prove compliance",
+      "rationale": "Regulatory authorities require a tamper-proof record to verify adherence to labor and food safety laws during investigations",
+      "parameters": [
+        {
+          "name": "retention_period",
+          "description": "duration the immutable log must be preserved"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-020",
+        "FR-042"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Anomaly Status Transition Validation",
+      "statement": "A status transition for an anomaly record is valid only if the new status logically follows the previous status in the defined lifecycle.",
+      "type": "State transition",
+      "condition": "when an anomaly record changes state from one lifecycle stage to another",
+      "exceptions": [
+        "manual override by a designated Compliance Officer with dual authorization"
+      ],
+      "actors": [
+        "Fulfillment Supervisor",
+        "Compliance Officer"
+      ],
+      "objects": [
+        "Anomaly Record",
+        "Status Lifecycle"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The audit trail becomes unreliable, leading to potential rejection of compliance evidence by regulators",
+      "rationale": "Logical consistency in state changes ensures the integrity of the root cause analysis timeline",
+      "parameters": [
+        {
+          "name": "max_status_skips",
+          "description": "maximum allowed non-sequential status jumps"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-015"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Anomaly Resolution Evidence Linking",
+      "statement": "An anomaly record may only be marked as 'Resolved' if it is linked to verifiable evidence proving the issue was addressed.",
+      "type": "Validation",
+      "condition": "when an operator attempts to change an anomaly status to 'Resolved'",
+      "exceptions": [],
+      "actors": [
+        "Fulfillment Supervisor",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Anomaly Record",
+        "Evidence Document"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "False closure of anomalies hides recurring risks and violates food safety or labor law mandates",
+      "rationale": "Proof of resolution is essential for accurate root cause analysis and regulatory compliance",
+      "parameters": [
+        {
+          "name": "evidence_types",
+          "description": "list of acceptable evidence formats (e.g., photo, signature, timestamped log)"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-020"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Regulatory License Anomaly Escalation",
+      "statement": "The system must automatically escalate an anomaly related to a Store Partner's license expiration to a Compliance Officer if the expiration date is within 30 days.",
+      "type": "Exception handling",
+      "condition": "when an anomaly is detected regarding a Store Partner's license validity",
+      "exceptions": [],
+      "actors": [
+        "Platform Operator",
+        "Compliance Officer",
+        "Store Partner"
+      ],
+      "objects": [
+        "Store Partner License",
+        "Anomaly Record"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The business risks accepting orders from unlicensed partners, leading to severe legal penalties",
+      "rationale": "Proactive management of license anomalies prevents illegal operations and ensures continuous regulatory compliance",
+      "parameters": [
+        {
+          "name": "escalation_threshold_days",
+          "description": "number of days before expiration triggering escalation"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-008"
+      ],
+      "basis": "inferred"
+    }
+  ]
+}

@@ -1,0 +1,138 @@
+{
+  "unit_id": "BR-021",
+  "kind": "business_requirement",
+  "rules": [
+    {
+      "name": "Automated Dispute Trigger",
+      "statement": "The system must automatically generate a Dispute Ticket immediately upon receipt of a Delivery Proof indicating a delivery exception.",
+      "type": "Validation",
+      "condition": "When a Delivery Proof indicates a delivery exception",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "System",
+        "Customer",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Dispute Ticket",
+        "Delivery Proof",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "Manual intervention delays resolution and increases operational costs",
+      "rationale": "Ensures consistent and immediate response to delivery exceptions without relying on manual oversight",
+      "parameters": [
+        {
+          "name": "trigger_threshold",
+          "description": "Condition defining a delivery exception"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-007"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Refund Precondition",
+      "statement": "Financial adjustments must not be finalized until the Dispute Ticket is marked as Resolved.",
+      "type": "Financial control",
+      "condition": "During the financial settlement phase of a dispute",
+      "exceptions": [
+        "Emergency regulatory override"
+      ],
+      "actors": [
+        "System",
+        "Platform Operator",
+        "Store Partner"
+      ],
+      "objects": [
+        "Dispute Ticket",
+        "Financial Adjustment",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "Revenue leakage or incorrect financial reporting occurs",
+      "rationale": "Prevents premature financial settlement before the dispute outcome is legally and operationally confirmed",
+      "parameters": [
+        {
+          "name": "max_pending_days",
+          "description": "Maximum days a ticket can remain unresolved before escalation"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-031",
+        "FR-032"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Conflict of Interest",
+      "statement": "An actor must not approve a Dispute Ticket where they are the accused party.",
+      "type": "Authorization",
+      "condition": "When an actor is assigned to approve a Dispute Ticket",
+      "exceptions": [
+        "No alternative approver available and authorized by Platform Operator"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner",
+        "Delivery Partner",
+        "Fulfillment Supervisor"
+      ],
+      "objects": [
+        "Dispute Ticket",
+        "Actor"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "Bias in dispute resolution compromises brand reputation and trust",
+      "rationale": "Ensures impartial adjudication of disputes to maintain fairness and service standards",
+      "parameters": [
+        {
+          "name": "escalation_level",
+          "description": "Level of supervisor required for conflict override"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-021"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Quality Dispute Authority",
+      "statement": "Disputes regarding product quality must be approved by the Store Partner.",
+      "type": "Authorization",
+      "condition": "When a Dispute Ticket involves product quality issues",
+      "exceptions": [
+        "Store Partner is unavailable and escalated to Fulfillment Supervisor"
+      ],
+      "actors": [
+        "Store Partner",
+        "Fulfillment Supervisor",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Dispute Ticket",
+        "Product Quality"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "Incorrect quality claims lead to inventory discrepancies or reputational damage",
+      "rationale": "Ensures the entity responsible for fulfillment validates quality-related claims",
+      "parameters": [
+        {
+          "name": "escalation_timeout",
+          "description": "Time limit before escalation to supervisor"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-059"
+      ],
+      "basis": "baseline"
+    }
+  ]
+}

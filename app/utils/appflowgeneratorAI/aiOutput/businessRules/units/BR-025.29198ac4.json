@@ -1,0 +1,151 @@
+{
+  "unit_id": "BR-025",
+  "kind": "business_requirement",
+  "rules": [
+    {
+      "name": "SLA Breach Penalty Deduction",
+      "statement": "The system must deduct financial penalties from the Store Partner's settlement amount when a verified SLA breach occurs.",
+      "type": "Financial control",
+      "condition": "when a third-party vendor fails to meet guaranteed uptime or response time thresholds defined in the SLA",
+      "exceptions": [
+        "force majeure events explicitly defined in the SLA contract",
+        "breaches occurring during scheduled maintenance windows approved by the vendor"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner",
+        "Third-Party Vendor"
+      ],
+      "objects": [
+        "Service Level Agreement",
+        "Financial Transaction Record",
+        "Settlement Calculation"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "the system automatically reduces the payable settlement amount and logs the deduction reason in the immutable audit trail",
+      "rationale": "to financially incentivize vendors to maintain service quality and mitigate operational downtime",
+      "parameters": [
+        {
+          "name": "penalty_rate",
+          "description": "percentage of transaction value or fixed fee deducted per minute of delay or downtime"
+        },
+        {
+          "name": "threshold_duration",
+          "description": "maximum allowed duration for delivery or response before a breach is triggered"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-050",
+        "FR-005",
+        "FR-028"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Agreement Version Locking",
+      "statement": "The system must prevent any modification to an active Store Partner Agreement version once a financial settlement has been finalized for that period.",
+      "type": "State transition",
+      "condition": "when a Store Partner Agreement is in 'Active' status and a Financial Transaction Record has been generated for the current settlement cycle",
+      "exceptions": [
+        "no exceptions; finalization triggers an immutable lock"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner",
+        "System"
+      ],
+      "objects": [
+        "Store Partner Agreement",
+        "Financial Transaction Record"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "the system rejects the change request and alerts the Platform Operator of a potential compliance violation",
+      "rationale": "to ensure settlement calculations remain accurate and legally defensible against retroactive changes",
+      "parameters": [
+        {
+          "name": "settlement_cycle_id",
+          "description": "unique identifier for the specific financial period being settled"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-010",
+        "FR-005"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Vendor Uptime Eligibility",
+      "statement": "A third-party vendor may only be eligible for revenue sharing if their historical uptime meets the minimum threshold defined in the active SLA.",
+      "type": "Eligibility",
+      "condition": "when evaluating a vendor for inclusion in the active marketplace or for processing a new settlement batch",
+      "exceptions": [
+        "vendors under probationary status with a temporary reduced threshold as defined in the contract"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Third-Party Vendor",
+        "System"
+      ],
+      "objects": [
+        "Service Level Agreement",
+        "Vendor Profile",
+        "Order Allocation"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "the system automatically suspends order allocation to the vendor until the next review cycle or manual reinstatement",
+      "rationale": "to prevent revenue loss and reputational damage caused by unreliable external dependencies",
+      "parameters": [
+        {
+          "name": "minimum_uptime_percentage",
+          "description": "required percentage of operational time over the evaluation period"
+        },
+        {
+          "name": "evaluation_window",
+          "description": "timeframe over which uptime is measured (e.g., last 30 days)"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-050",
+        "FR-028"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Dispute Escalation Trigger",
+      "statement": "The system must escalate a service degradation incident to the Platform Operator for manual review when a vendor breach exceeds the maximum allowable penalty cap.",
+      "type": "Exception handling",
+      "condition": "when a calculated SLA penalty for a specific incident exceeds the maximum financial cap defined in the SLA",
+      "exceptions": [
+        "none"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Third-Party Vendor",
+        "System"
+      ],
+      "objects": [
+        "Service Level Agreement",
+        "Incident Record",
+        "Financial Transaction Record"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "the system pauses automatic penalty deduction and flags the record for manual adjudication by the Platform Operator",
+      "rationale": "to allow human judgment in complex cases where automated penalties might be disproportionate or erroneous",
+      "parameters": [
+        {
+          "name": "max_penalty_cap",
+          "description": "maximum financial amount that can be automatically deducted without manual review"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-050",
+        "FR-031"
+      ],
+      "basis": "inferred"
+    }
+  ]
+}

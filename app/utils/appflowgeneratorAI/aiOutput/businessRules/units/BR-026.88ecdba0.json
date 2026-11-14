@@ -1,0 +1,113 @@
+{
+  "unit_id": "BR-026",
+  "kind": "business_requirement",
+  "rules": [
+    {
+      "name": "Real-Time Inventory Verification",
+      "statement": "An order must only be assigned to a store if the Real-Time Inventory Snapshot shows available quantity greater than or equal to the requested quantity for all items.",
+      "type": "Validation",
+      "condition": "During order allocation to a Store Partner",
+      "exceptions": [],
+      "actors": [
+        "Order Allocation Engine",
+        "Store Partner"
+      ],
+      "objects": [
+        "Order Request",
+        "Real-Time Inventory Snapshot"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The system must not assign the order and must flag it for manual review",
+      "rationale": "Prevents overselling and ensures order fulfillment accuracy in a high-volume environment",
+      "parameters": [],
+      "related_functional_requirements": [
+        "FR-002"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Nearest Store Prioritization",
+      "statement": "The system must prioritize the nearest store based on the shortest estimated preparation and dispatch time when multiple stores have sufficient inventory.",
+      "type": "Calculation",
+      "condition": "When allocating an order to multiple eligible stores",
+      "exceptions": [],
+      "actors": [
+        "Order Allocation Engine"
+      ],
+      "objects": [
+        "Order Request",
+        "Store Partner"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system must re-evaluate the allocation logic and notify the operations team",
+      "rationale": "Ensures the business outcome of ultra-fast delivery (typically under 60 minutes) is met",
+      "parameters": [
+        {
+          "name": "estimated_preparation_time",
+          "description": "Time required by the store to pick and pack items (proposed)"
+        },
+        {
+          "name": "estimated_dispatch_time",
+          "description": "Time required for the delivery partner to reach the store (proposed)"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-002",
+        "FR-047"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Immediate Inventory Lock Release",
+      "statement": "Inventory locks must be released immediately upon confirmation of cancellation before the Fulfillment Task status changes to 'Ready for Dispatch'.",
+      "type": "State transition",
+      "condition": "When an Order Request is cancelled",
+      "exceptions": [
+        "If the Order Request has already been handed over to a Delivery Partner"
+      ],
+      "actors": [
+        "Order Allocation Engine",
+        "Fulfillment System"
+      ],
+      "objects": [
+        "Order Request",
+        "Inventory Lock",
+        "Fulfillment Task"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system must prevent the status change to 'Ready for Dispatch' and alert the store partner",
+      "rationale": "Prevents inventory from being unavailable for other orders while the original order is voided",
+      "parameters": [],
+      "related_functional_requirements": [
+        "FR-034"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Product Update Audit Trail",
+      "statement": "All product updates must include a timestamp and the identifier of the user making the change.",
+      "type": "Audit and retention",
+      "condition": "Whenever a product entry is created, updated, or archived",
+      "exceptions": [],
+      "actors": [
+        "Merchandiser",
+        "System"
+      ],
+      "objects": [
+        "Product Entry"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The system must reject the update and log the attempt as an audit anomaly",
+      "rationale": "Ensures accountability and traceability for catalog management decisions",
+      "parameters": [],
+      "related_functional_requirements": [
+        "FR-011"
+      ],
+      "basis": "baseline"
+    }
+  ]
+}

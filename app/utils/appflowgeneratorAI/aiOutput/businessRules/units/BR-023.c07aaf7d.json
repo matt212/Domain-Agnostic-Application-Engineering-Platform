@@ -1,0 +1,137 @@
+{
+  "unit_id": "BR-023",
+  "kind": "business_requirement",
+  "rules": [
+    {
+      "name": "Predictive Demand Threshold Enforcement",
+      "statement": "The system must not allocate inventory to an Order Request if the predictive demand model forecasts a stockout probability exceeding the configured safety margin within the target delivery window.",
+      "type": "Eligibility",
+      "condition": "when allocating inventory for a new Order Request",
+      "exceptions": [
+        "Emergency override by Platform Operator with audit trail"
+      ],
+      "actors": [
+        "Order Allocation Engine",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Order Request",
+        "Predictive Demand Model",
+        "Inventory Snapshot"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The system rejects the allocation and flags the Order Request for manual review to prevent overselling.",
+      "rationale": "Prevents financial loss and reputational damage caused by overselling items that are likely to be unavailable by the promised delivery time.",
+      "parameters": [
+        {
+          "name": "stockout probability threshold",
+          "description": "maximum acceptable probability of running out of stock before delivery"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-058",
+        "FR-046"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Expiry-Driven Allocation Priority",
+      "statement": "The system must prioritize the allocation of 'nearing expiry' items to incoming Order Requests over items with longer remaining shelf life, provided the item is within the configured safety margin.",
+      "type": "Calculation",
+      "condition": "when multiple stores or items can fulfill an Order Request",
+      "exceptions": [
+        "Customer explicitly requests non-expiring items"
+      ],
+      "actors": [
+        "Order Allocation Engine",
+        "Store Partner"
+      ],
+      "objects": [
+        "Inventory Snapshot",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system defaults to standard nearest-store logic, potentially increasing waste and reducing store partner margins.",
+      "rationale": "Optimizes inventory turnover and reduces waste by selling perishable goods before they expire.",
+      "parameters": [
+        {
+          "name": "expiry priority weight",
+          "description": "multiplier applied to allocation score for items nearing expiry"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-006",
+        "FR-055"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Forecast-Adjusted Replenishment Trigger",
+      "statement": "The system must generate a replenishment alert for an item when the projected demand for the next delivery window exceeds the current inventory level by the configured safety stock percentage.",
+      "type": "Calculation",
+      "condition": "when updating inventory forecasts based on real-time sales velocity",
+      "exceptions": [
+        "Manual override by Store Partner"
+      ],
+      "actors": [
+        "Order Allocation Engine",
+        "Store Partner"
+      ],
+      "objects": [
+        "Inventory Snapshot",
+        "Demand Forecast"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The system continues to accept orders for insufficient stock, leading to potential overselling and customer dissatisfaction.",
+      "rationale": "Ensures supply meets predicted demand to maintain high fulfillment accuracy and customer satisfaction.",
+      "parameters": [
+        {
+          "name": "safety stock percentage",
+          "description": "buffer percentage above projected demand required to trigger alert"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-046",
+        "FR-058"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Dynamic Fee Adjustment for Congestion",
+      "statement": "The system must increase delivery fees and commissions for a specific Store Partner if the predictive model indicates network congestion will cause delivery times to exceed the target window.",
+      "type": "Financial control",
+      "condition": "when real-time network data indicates high order volume relative to agent capacity",
+      "exceptions": [
+        "Promotional campaign active"
+      ],
+      "actors": [
+        "Order Allocation Engine",
+        "Platform Operator",
+        "Store Partner"
+      ],
+      "objects": [
+        "Delivery Fee",
+        "Commission Rate",
+        "Network Congestion Metric"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system accepts orders at standard rates, risking SLA breaches and increased operational costs.",
+      "rationale": "Balances revenue streams and cost control by adjusting pricing based on predicted operational strain.",
+      "parameters": [
+        {
+          "name": "congestion threshold",
+          "description": "ratio of incoming orders to available agents that triggers fee adjustment"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-045",
+        "FR-049"
+      ],
+      "basis": "inferred"
+    }
+  ]
+}

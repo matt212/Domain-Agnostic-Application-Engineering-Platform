@@ -1,0 +1,138 @@
+{
+  "unit_id": "BR-024",
+  "kind": "business_requirement",
+  "rules": [
+    {
+      "name": "Primary Provider Failure Fallback",
+      "statement": "The Order Allocation Engine must automatically reassign an order to an alternative logistics provider when the primary external provider fails to confirm availability within the timeout window.",
+      "type": "Exception handling",
+      "condition": "when the primary external logistics provider or mapping service returns an error or timeout during order allocation",
+      "exceptions": [
+        "manual override by a supervisor for strategic reasons"
+      ],
+      "actors": [
+        "Order Allocation Engine",
+        "Platform Operator",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Order",
+        "Logistics Provider",
+        "Mapping Service"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "the system proceeds with a failed allocation, leading to order cancellation and potential revenue loss",
+      "rationale": "to maintain ultra-fast delivery promises and prevent service interruptions during third-party outages",
+      "parameters": [
+        {
+          "name": "timeout_window",
+          "description": "maximum time allowed to wait for primary provider confirmation before triggering fallback"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-028",
+        "FR-029",
+        "FR-033"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Alternative Route Recalculation",
+      "statement": "The system must recalculate the optimal delivery path using an alternative mapping service whenever the primary mapping service data is deemed unreliable or unavailable.",
+      "type": "Calculation",
+      "condition": "when the primary mapping service data is flagged as unreliable or the service connection is lost",
+      "exceptions": [
+        "none"
+      ],
+      "actors": [
+        "Order Allocation Engine",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Delivery Route",
+        "Mapping Service"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "delivery estimates become inaccurate, causing missed delivery windows and customer dissatisfaction",
+      "rationale": "to ensure accurate ETA predictions and efficient routing despite external service failures",
+      "parameters": [
+        {
+          "name": "data_reliability_threshold",
+          "description": "minimum confidence level required for primary mapping data to be considered valid"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-047",
+        "FR-029"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Vendor Diversification Limit",
+      "statement": "The system may only assign an order to a secondary vendor if the total number of active vendors serving that specific order does not exceed the maximum allowed vendor count.",
+      "type": "Limit",
+      "condition": "when initiating a fallback assignment to a secondary vendor",
+      "exceptions": [
+        "emergency disaster recovery scenarios defined in the Business Continuity Plan"
+      ],
+      "actors": [
+        "Order Allocation Engine",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Order",
+        "Vendor"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "the order becomes unmanageable due to conflicting instructions from multiple vendors",
+      "rationale": "to prevent operational chaos and ensure clear accountability during fallback scenarios",
+      "parameters": [
+        {
+          "name": "max_active_vendors",
+          "description": "maximum number of vendors allowed to be active for a single order simultaneously"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-033"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Fallback Settlement Verification",
+      "statement": "Financial settlement for a fallback-assigned order must only proceed after confirming that the new logistics provider has successfully recorded a valid Delivery Proof.",
+      "type": "Financial control",
+      "condition": "when an order has been reassigned to a fallback logistics provider",
+      "exceptions": [
+        "none"
+      ],
+      "actors": [
+        "Settlement Engine",
+        "Logistics Provider",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Delivery Proof",
+        "Order"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "funds are distributed without proof of delivery, resulting in financial loss and fraud risk",
+      "rationale": "to ensure that revenue is only recognized when the fallback delivery is successfully completed",
+      "parameters": [
+        {
+          "name": "delivery_proof_validity",
+          "description": "criteria defining a valid delivery proof for fallback orders"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-005",
+        "FR-027"
+      ],
+      "basis": "inferred"
+    }
+  ]
+}

@@ -1,0 +1,535 @@
+{
+  "batch": 5,
+  "units": [
+    "BR-017",
+    "BR-018",
+    "BR-019",
+    "BR-020"
+  ],
+  "rules": [
+    {
+      "unit_id": "BR-017",
+      "name": "Immediate Order Locking on Failure",
+      "statement": "The system must immediately release all stock locks associated with an Order Request upon detection of a system outage or data corruption event.",
+      "type": "Exception handling",
+      "condition": "when a system failure or data corruption is detected during order preparation or allocation",
+      "exceptions": [
+        "manual override by a senior operations manager for high-value orders"
+      ],
+      "actors": [
+        "System",
+        "Store Personnel",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Order Request",
+        "Stock Inventory"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The business risks overselling inventory, causing order fulfillment failures, and incurring regulatory penalties for inaccurate stock reporting.",
+      "rationale": "Preventing error propagation ensures that corrupted data does not lead to double-booking of perishable goods during critical outages.",
+      "parameters": [
+        {
+          "name": "outage_detection_threshold",
+          "description": "the latency or error rate trigger that defines a system failure"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-001",
+        "FR-024"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-017",
+      "name": "Strict Identity-Contact Consistency",
+      "statement": "A Customer Profile must not be activated if the provided contact details do not exactly match the verified identity document.",
+      "type": "Validation",
+      "condition": "during the Customer Profile activation process",
+      "exceptions": [
+        "none"
+      ],
+      "actors": [
+        "Customer",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Customer Profile",
+        "Identity Document"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The business faces regulatory non-compliance risks and potential fraud due to unverified user identities.",
+      "rationale": "Ensuring data integrity and regulatory adherence by preventing activation of profiles with inconsistent identity information.",
+      "parameters": [
+        {
+          "name": "verification_tolerance_level",
+          "description": "the allowable character difference for name/address matching (proposed)"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-019",
+        "FR-020"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-017",
+      "name": "Immutable Audit Trail for Settlements",
+      "statement": "Every Financial Transaction Record and Settlement event must generate an immutable audit trail that cannot be altered or deleted.",
+      "type": "Audit and retention",
+      "condition": "for every financial transaction and settlement event",
+      "exceptions": [
+        "none"
+      ],
+      "actors": [
+        "System",
+        "Regulatory Authority",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Settlement Event"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The business loses the ability to prove compliance during audits, risking severe legal penalties and loss of trust.",
+      "rationale": "Maintaining an unchangeable record of financial movements is essential for regulatory compliance and dispute resolution.",
+      "parameters": [
+        {
+          "name": "retention_period",
+          "description": "the minimum legal requirement duration for the operating zone (proposed)"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-042",
+        "FR-020"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-017",
+      "name": "Perishable Priority Allocation",
+      "statement": "Perishable items must be prioritized for allocation to Order Requests based on their proximity to the expiration date.",
+      "type": "Calculation",
+      "condition": "when allocating stock to multiple concurrent Order Requests",
+      "exceptions": [
+        "manual override by store manager for high-margin non-perishable substitution"
+      ],
+      "actors": [
+        "System",
+        "Store Personnel"
+      ],
+      "objects": [
+        "Perishable Items",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The business incurs increased waste costs and potential food safety violations due to expired goods being sold.",
+      "rationale": "Minimizing waste and ensuring food safety by selling items closest to expiration first.",
+      "parameters": [
+        {
+          "name": "expiration_priority_weight",
+          "description": "the factor determining priority based on days remaining (proposed)"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-001"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-018",
+      "name": "Immediate Dispute Escalation",
+      "statement": "Unresolved financial disputes must be escalated to a senior support tier within a maximum allowed duration.",
+      "type": "Timing",
+      "condition": "when a dispute is flagged during the settlement cycle",
+      "exceptions": [
+        "complex fraud cases requiring external audit"
+      ],
+      "actors": [
+        "Fulfillment Supervisor",
+        "Senior Support Agent",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Dispute Ticket"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "revenue distribution is blocked and regulatory penalties may be applied",
+      "rationale": "delayed resolution erodes partner trust and triggers regulatory scrutiny",
+      "parameters": [
+        {
+          "name": "maximum allowed duration",
+          "description": "time limit for initial dispute triage"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-036"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-018",
+      "name": "Fraud-Induced Settlement Halt",
+      "statement": "Settlement processing must not proceed for any transaction flagged with high-risk indicators until manual verification is complete.",
+      "type": "Limit",
+      "condition": "when a transaction is identified as high-risk",
+      "exceptions": [
+        "pre-approved low-value recurring subscriptions"
+      ],
+      "actors": [
+        "Payment Provider",
+        "Fulfillment Supervisor",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Settlement Event"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "revenue leakage occurs and regulatory compliance is breached",
+      "rationale": "prevents financial loss and ensures regulatory adherence during high-volume cycles",
+      "parameters": [
+        {
+          "name": "high-risk threshold",
+          "description": "criteria defining a transaction as high-risk"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-039"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-018",
+      "name": "Dispute-Linked Settlement Hold",
+      "statement": "Final settlement status must not transition to 'Completed' until the associated dispute ticket is resolved to a final state.",
+      "type": "State transition",
+      "condition": "when a Financial Transaction Record has an active dispute",
+      "exceptions": [
+        "disputes resolved via automated refund reversal"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Dispute Ticket"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "incorrect funds are distributed leading to reconciliation errors",
+      "rationale": "ensures financial integrity by preventing premature payouts on contested transactions",
+      "parameters": [
+        {
+          "name": "final resolution state",
+          "description": "status indicating dispute is fully closed"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-042"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-018",
+      "name": "Immutable Dispute Audit Trail",
+      "statement": "Every dispute event and its resolution action must be recorded in an immutable audit trail.",
+      "type": "Audit and retention",
+      "condition": "when a dispute is created, modified, or resolved",
+      "exceptions": [
+        "none"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Regulatory Authority"
+      ],
+      "objects": [
+        "Dispute Ticket",
+        "Financial Transaction Record"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "inability to prove compliance during regulatory audits",
+      "rationale": "provides verifiable evidence of fair dispute handling for regulatory bodies",
+      "parameters": [
+        {
+          "name": "retention period",
+          "description": "duration for keeping immutable audit logs"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-042",
+        "FR-013"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-019",
+      "name": "Immutable Anomaly Logging",
+      "statement": "The system must append every operational anomaly to a cryptographically secured, immutable audit log that cannot be altered or deleted.",
+      "type": "Audit and retention",
+      "condition": "when an operational anomaly occurs during order preparation, allocation, or fulfillment",
+      "exceptions": [],
+      "actors": [
+        "Platform Operator",
+        "Fulfillment Supervisor",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Operational Anomaly Record",
+        "Audit Log"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The business faces regulatory fines, legal liability, and loss of trust due to inability to prove compliance",
+      "rationale": "Regulatory authorities require a tamper-proof record to verify adherence to labor and food safety laws during investigations",
+      "parameters": [
+        {
+          "name": "retention_period",
+          "description": "duration the immutable log must be preserved"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-020",
+        "FR-042"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-019",
+      "name": "Anomaly Status Transition Validation",
+      "statement": "A status transition for an anomaly record is valid only if the new status logically follows the previous status in the defined lifecycle.",
+      "type": "State transition",
+      "condition": "when an anomaly record changes state from one lifecycle stage to another",
+      "exceptions": [
+        "manual override by a designated Compliance Officer with dual authorization"
+      ],
+      "actors": [
+        "Fulfillment Supervisor",
+        "Compliance Officer"
+      ],
+      "objects": [
+        "Anomaly Record",
+        "Status Lifecycle"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The audit trail becomes unreliable, leading to potential rejection of compliance evidence by regulators",
+      "rationale": "Logical consistency in state changes ensures the integrity of the root cause analysis timeline",
+      "parameters": [
+        {
+          "name": "max_status_skips",
+          "description": "maximum allowed non-sequential status jumps"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-015"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-019",
+      "name": "Anomaly Resolution Evidence Linking",
+      "statement": "An anomaly record may only be marked as 'Resolved' if it is linked to verifiable evidence proving the issue was addressed.",
+      "type": "Validation",
+      "condition": "when an operator attempts to change an anomaly status to 'Resolved'",
+      "exceptions": [],
+      "actors": [
+        "Fulfillment Supervisor",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Anomaly Record",
+        "Evidence Document"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "False closure of anomalies hides recurring risks and violates food safety or labor law mandates",
+      "rationale": "Proof of resolution is essential for accurate root cause analysis and regulatory compliance",
+      "parameters": [
+        {
+          "name": "evidence_types",
+          "description": "list of acceptable evidence formats (e.g., photo, signature, timestamped log)"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-020"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-019",
+      "name": "Regulatory License Anomaly Escalation",
+      "statement": "The system must automatically escalate an anomaly related to a Store Partner's license expiration to a Compliance Officer if the expiration date is within 30 days.",
+      "type": "Exception handling",
+      "condition": "when an anomaly is detected regarding a Store Partner's license validity",
+      "exceptions": [],
+      "actors": [
+        "Platform Operator",
+        "Compliance Officer",
+        "Store Partner"
+      ],
+      "objects": [
+        "Store Partner License",
+        "Anomaly Record"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The business risks accepting orders from unlicensed partners, leading to severe legal penalties",
+      "rationale": "Proactive management of license anomalies prevents illegal operations and ensures continuous regulatory compliance",
+      "parameters": [
+        {
+          "name": "escalation_threshold_days",
+          "description": "number of days before expiration triggering escalation"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-008"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-020",
+      "name": "Service Area Pre-Activation Validation",
+      "statement": "A Service Area Definition must not be used to validate new Order Requests unless it is in an active state.",
+      "type": "Validation",
+      "condition": "when an Order Request is submitted for a specific geographic zone",
+      "exceptions": [
+        "Emergency override protocols defined in FR-050"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Order Management System"
+      ],
+      "objects": [
+        "Service Area Definition",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The order request is rejected and the customer is notified of service unavailability in that zone",
+      "rationale": "Ensures orders are only processed in zones where operational readiness and logistics support are confirmed",
+      "parameters": [
+        {
+          "name": "active_state_threshold",
+          "description": "The required status for a Service Area to accept orders"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-014",
+        "FR-054"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-020",
+      "name": "Regulatory Zone Boundary Constraint",
+      "statement": "A Service Area Definition may only be created if its geographic boundaries do not overlap with any zone restricted by the Regulatory Authority.",
+      "type": "Compliance",
+      "condition": "during the creation of a new Service Area Definition",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Regulatory Authority"
+      ],
+      "objects": [
+        "Service Area Definition",
+        "Regulatory Zone"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The creation request is automatically rejected and an audit trail is generated for regulatory review",
+      "rationale": "Prevents illegal operations in restricted areas and ensures adherence to local laws",
+      "parameters": [
+        {
+          "name": "restricted_zone_list",
+          "description": "Current list of geographically restricted zones"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-053"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-020",
+      "name": "Dynamic Surge Pricing Eligibility",
+      "statement": "Surge pricing may only be applied when the ratio of active orders to available delivery agents exceeds the configured capacity threshold AND the predicted wait time does not exceed the maximum acceptable delay defined in the Service Area Definition.",
+      "type": "Eligibility",
+      "condition": "when calculating delivery fees during periods of high demand",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Pricing Engine",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Surge Pricing",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The surge pricing calculation is bypassed, and standard rates are applied to maintain customer trust",
+      "rationale": "Balances revenue optimization with the core value proposition of ultra-fast delivery",
+      "parameters": [
+        {
+          "name": "capacity_threshold_ratio",
+          "description": "The minimum order-to-agent ratio required to trigger surge pricing"
+        },
+        {
+          "name": "max_acceptable_delay",
+          "description": "The maximum wait time allowed before surge pricing is prohibited"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-045",
+        "FR-050"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-020",
+      "name": "Real-Time Inventory Synchronization",
+      "statement": "The Real-Time Inventory Snapshot must be updated to mark items as unavailable if the logistics link status indicates a network disruption or route constraint.",
+      "type": "State transition",
+      "condition": "when external network status indicates a route constraint or latency threshold is exceeded",
+      "exceptions": [
+        "Manual override by Store Partner for critical items"
+      ],
+      "actors": [
+        "Inventory Management System",
+        "Logistics Provider"
+      ],
+      "objects": [
+        "Real-Time Inventory Snapshot",
+        "Logistics Link"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "Customers may receive orders that cannot be fulfilled, leading to cancellations and reputational damage",
+      "rationale": "Prevents overselling by ensuring inventory data reflects actual logistical capability",
+      "parameters": [
+        {
+          "name": "network_disruption_threshold",
+          "description": "The latency level considered a network disruption"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-028",
+        "FR-047"
+      ],
+      "basis": "inferred"
+    }
+  ]
+}

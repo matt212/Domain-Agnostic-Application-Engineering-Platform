@@ -1,0 +1,133 @@
+{
+  "unit_id": "BR-022",
+  "kind": "business_requirement",
+  "rules": [
+    {
+      "name": "Settlement Post-Proof Constraint",
+      "statement": "Financial distribution must not occur until a valid Delivery Proof is recorded.",
+      "type": "State transition",
+      "condition": "When initiating revenue distribution for a delivered order",
+      "exceptions": [
+        "Force majeure events declared by the Platform Operator"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Delivery Proof"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The settlement process is automatically halted and flagged for manual review",
+      "rationale": "Prevents payment for goods that were never successfully delivered to the customer",
+      "parameters": [
+        {
+          "name": "valid_delivery_proof_threshold",
+          "description": "The specific proof type required to trigger settlement eligibility"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-005",
+        "FR-043"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Agreement Validity Gate",
+      "statement": "A Financial Transaction Record must not be finalized if no active Store Partner Agreement exists for the involved Store Partner.",
+      "type": "Validation",
+      "condition": "During the finalization phase of a Financial Transaction Record",
+      "exceptions": [
+        "Legacy transactions processed under grandfathered clauses defined in the Store Partner Agreement"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Store Partner Agreement"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The transaction remains in a pending state and cannot be settled",
+      "rationale": "Ensures all revenue shares are calculated according to current, legally binding commercial terms",
+      "parameters": [
+        {
+          "name": "active_agreement_status",
+          "description": "The status flag indicating the agreement is currently effective and not terminated"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-005",
+        "FR-025"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "High-Risk Manual Override",
+      "statement": "Transactions exhibiting high-risk indicators may only proceed to settlement after manual verification by a Fulfillment Supervisor.",
+      "type": "Authorization",
+      "condition": "When a transaction is flagged with high-risk indicators by the system",
+      "exceptions": [
+        "Automated whitelisting for verified low-risk recurring partners"
+      ],
+      "actors": [
+        "Fulfillment Supervisor",
+        "Store Partner"
+      ],
+      "objects": [
+        "Financial Transaction Record"
+      ],
+      "enforcement": "Both",
+      "severity": "High",
+      "if_violated": "The transaction is automatically paused and the settlement cycle is interrupted",
+      "rationale": "Mitigates financial loss from fraud or erroneous transactions before funds are released",
+      "parameters": [
+        {
+          "name": "high_risk_indicator_threshold",
+          "description": "The criteria level that triggers a mandatory manual review"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-044"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Multi-Currency Conversion Accuracy",
+      "statement": "Multi-currency transactions must only be settled using real-time exchange rates provided by the Payment Provider at the moment of settlement.",
+      "type": "Calculation",
+      "condition": "When processing a Financial Transaction Record involving multiple currencies",
+      "exceptions": [
+        "Pre-agreed fixed exchange rates specified in the Store Partner Agreement for specific periods"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Payment Provider",
+        "Store Partner"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Currency"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The settlement amount is recalculated and corrected, potentially triggering a refund or additional charge",
+      "rationale": "Ensures accurate financial reconciliation and prevents currency fluctuation disputes",
+      "parameters": [
+        {
+          "name": "real_time_exchange_rate_source",
+          "description": "The external data feed used to determine the conversion rate"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-041"
+      ],
+      "basis": "inferred"
+    }
+  ]
+}

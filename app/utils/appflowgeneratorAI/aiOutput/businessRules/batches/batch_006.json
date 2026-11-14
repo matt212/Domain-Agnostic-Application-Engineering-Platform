@@ -1,0 +1,549 @@
+{
+  "batch": 6,
+  "units": [
+    "BR-021",
+    "BR-022",
+    "BR-023",
+    "BR-024"
+  ],
+  "rules": [
+    {
+      "unit_id": "BR-021",
+      "name": "Automated Dispute Trigger",
+      "statement": "The system must automatically generate a Dispute Ticket immediately upon receipt of a Delivery Proof indicating a delivery exception.",
+      "type": "Validation",
+      "condition": "When a Delivery Proof indicates a delivery exception",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "System",
+        "Customer",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Dispute Ticket",
+        "Delivery Proof",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "Manual intervention delays resolution and increases operational costs",
+      "rationale": "Ensures consistent and immediate response to delivery exceptions without relying on manual oversight",
+      "parameters": [
+        {
+          "name": "trigger_threshold",
+          "description": "Condition defining a delivery exception"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-007"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-021",
+      "name": "Refund Precondition",
+      "statement": "Financial adjustments must not be finalized until the Dispute Ticket is marked as Resolved.",
+      "type": "Financial control",
+      "condition": "During the financial settlement phase of a dispute",
+      "exceptions": [
+        "Emergency regulatory override"
+      ],
+      "actors": [
+        "System",
+        "Platform Operator",
+        "Store Partner"
+      ],
+      "objects": [
+        "Dispute Ticket",
+        "Financial Adjustment",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "Revenue leakage or incorrect financial reporting occurs",
+      "rationale": "Prevents premature financial settlement before the dispute outcome is legally and operationally confirmed",
+      "parameters": [
+        {
+          "name": "max_pending_days",
+          "description": "Maximum days a ticket can remain unresolved before escalation"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-031",
+        "FR-032"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-021",
+      "name": "Conflict of Interest",
+      "statement": "An actor must not approve a Dispute Ticket where they are the accused party.",
+      "type": "Authorization",
+      "condition": "When an actor is assigned to approve a Dispute Ticket",
+      "exceptions": [
+        "No alternative approver available and authorized by Platform Operator"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner",
+        "Delivery Partner",
+        "Fulfillment Supervisor"
+      ],
+      "objects": [
+        "Dispute Ticket",
+        "Actor"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "Bias in dispute resolution compromises brand reputation and trust",
+      "rationale": "Ensures impartial adjudication of disputes to maintain fairness and service standards",
+      "parameters": [
+        {
+          "name": "escalation_level",
+          "description": "Level of supervisor required for conflict override"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-021"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-021",
+      "name": "Quality Dispute Authority",
+      "statement": "Disputes regarding product quality must be approved by the Store Partner.",
+      "type": "Authorization",
+      "condition": "When a Dispute Ticket involves product quality issues",
+      "exceptions": [
+        "Store Partner is unavailable and escalated to Fulfillment Supervisor"
+      ],
+      "actors": [
+        "Store Partner",
+        "Fulfillment Supervisor",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Dispute Ticket",
+        "Product Quality"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "Incorrect quality claims lead to inventory discrepancies or reputational damage",
+      "rationale": "Ensures the entity responsible for fulfillment validates quality-related claims",
+      "parameters": [
+        {
+          "name": "escalation_timeout",
+          "description": "Time limit before escalation to supervisor"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-059"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-022",
+      "name": "Settlement Post-Proof Constraint",
+      "statement": "Financial distribution must not occur until a valid Delivery Proof is recorded.",
+      "type": "State transition",
+      "condition": "When initiating revenue distribution for a delivered order",
+      "exceptions": [
+        "Force majeure events declared by the Platform Operator"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Delivery Proof"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The settlement process is automatically halted and flagged for manual review",
+      "rationale": "Prevents payment for goods that were never successfully delivered to the customer",
+      "parameters": [
+        {
+          "name": "valid_delivery_proof_threshold",
+          "description": "The specific proof type required to trigger settlement eligibility"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-005",
+        "FR-043"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-022",
+      "name": "Agreement Validity Gate",
+      "statement": "A Financial Transaction Record must not be finalized if no active Store Partner Agreement exists for the involved Store Partner.",
+      "type": "Validation",
+      "condition": "During the finalization phase of a Financial Transaction Record",
+      "exceptions": [
+        "Legacy transactions processed under grandfathered clauses defined in the Store Partner Agreement"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Store Partner Agreement"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The transaction remains in a pending state and cannot be settled",
+      "rationale": "Ensures all revenue shares are calculated according to current, legally binding commercial terms",
+      "parameters": [
+        {
+          "name": "active_agreement_status",
+          "description": "The status flag indicating the agreement is currently effective and not terminated"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-005",
+        "FR-025"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-022",
+      "name": "High-Risk Manual Override",
+      "statement": "Transactions exhibiting high-risk indicators may only proceed to settlement after manual verification by a Fulfillment Supervisor.",
+      "type": "Authorization",
+      "condition": "When a transaction is flagged with high-risk indicators by the system",
+      "exceptions": [
+        "Automated whitelisting for verified low-risk recurring partners"
+      ],
+      "actors": [
+        "Fulfillment Supervisor",
+        "Store Partner"
+      ],
+      "objects": [
+        "Financial Transaction Record"
+      ],
+      "enforcement": "Both",
+      "severity": "High",
+      "if_violated": "The transaction is automatically paused and the settlement cycle is interrupted",
+      "rationale": "Mitigates financial loss from fraud or erroneous transactions before funds are released",
+      "parameters": [
+        {
+          "name": "high_risk_indicator_threshold",
+          "description": "The criteria level that triggers a mandatory manual review"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-044"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-022",
+      "name": "Multi-Currency Conversion Accuracy",
+      "statement": "Multi-currency transactions must only be settled using real-time exchange rates provided by the Payment Provider at the moment of settlement.",
+      "type": "Calculation",
+      "condition": "When processing a Financial Transaction Record involving multiple currencies",
+      "exceptions": [
+        "Pre-agreed fixed exchange rates specified in the Store Partner Agreement for specific periods"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Payment Provider",
+        "Store Partner"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Currency"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The settlement amount is recalculated and corrected, potentially triggering a refund or additional charge",
+      "rationale": "Ensures accurate financial reconciliation and prevents currency fluctuation disputes",
+      "parameters": [
+        {
+          "name": "real_time_exchange_rate_source",
+          "description": "The external data feed used to determine the conversion rate"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-041"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-023",
+      "name": "Predictive Demand Threshold Enforcement",
+      "statement": "The system must not allocate inventory to an Order Request if the predictive demand model forecasts a stockout probability exceeding the configured safety margin within the target delivery window.",
+      "type": "Eligibility",
+      "condition": "when allocating inventory for a new Order Request",
+      "exceptions": [
+        "Emergency override by Platform Operator with audit trail"
+      ],
+      "actors": [
+        "Order Allocation Engine",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Order Request",
+        "Predictive Demand Model",
+        "Inventory Snapshot"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The system rejects the allocation and flags the Order Request for manual review to prevent overselling.",
+      "rationale": "Prevents financial loss and reputational damage caused by overselling items that are likely to be unavailable by the promised delivery time.",
+      "parameters": [
+        {
+          "name": "stockout probability threshold",
+          "description": "maximum acceptable probability of running out of stock before delivery"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-058",
+        "FR-046"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-023",
+      "name": "Expiry-Driven Allocation Priority",
+      "statement": "The system must prioritize the allocation of 'nearing expiry' items to incoming Order Requests over items with longer remaining shelf life, provided the item is within the configured safety margin.",
+      "type": "Calculation",
+      "condition": "when multiple stores or items can fulfill an Order Request",
+      "exceptions": [
+        "Customer explicitly requests non-expiring items"
+      ],
+      "actors": [
+        "Order Allocation Engine",
+        "Store Partner"
+      ],
+      "objects": [
+        "Inventory Snapshot",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system defaults to standard nearest-store logic, potentially increasing waste and reducing store partner margins.",
+      "rationale": "Optimizes inventory turnover and reduces waste by selling perishable goods before they expire.",
+      "parameters": [
+        {
+          "name": "expiry priority weight",
+          "description": "multiplier applied to allocation score for items nearing expiry"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-006",
+        "FR-055"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-023",
+      "name": "Forecast-Adjusted Replenishment Trigger",
+      "statement": "The system must generate a replenishment alert for an item when the projected demand for the next delivery window exceeds the current inventory level by the configured safety stock percentage.",
+      "type": "Calculation",
+      "condition": "when updating inventory forecasts based on real-time sales velocity",
+      "exceptions": [
+        "Manual override by Store Partner"
+      ],
+      "actors": [
+        "Order Allocation Engine",
+        "Store Partner"
+      ],
+      "objects": [
+        "Inventory Snapshot",
+        "Demand Forecast"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The system continues to accept orders for insufficient stock, leading to potential overselling and customer dissatisfaction.",
+      "rationale": "Ensures supply meets predicted demand to maintain high fulfillment accuracy and customer satisfaction.",
+      "parameters": [
+        {
+          "name": "safety stock percentage",
+          "description": "buffer percentage above projected demand required to trigger alert"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-046",
+        "FR-058"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-023",
+      "name": "Dynamic Fee Adjustment for Congestion",
+      "statement": "The system must increase delivery fees and commissions for a specific Store Partner if the predictive model indicates network congestion will cause delivery times to exceed the target window.",
+      "type": "Financial control",
+      "condition": "when real-time network data indicates high order volume relative to agent capacity",
+      "exceptions": [
+        "Promotional campaign active"
+      ],
+      "actors": [
+        "Order Allocation Engine",
+        "Platform Operator",
+        "Store Partner"
+      ],
+      "objects": [
+        "Delivery Fee",
+        "Commission Rate",
+        "Network Congestion Metric"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system accepts orders at standard rates, risking SLA breaches and increased operational costs.",
+      "rationale": "Balances revenue streams and cost control by adjusting pricing based on predicted operational strain.",
+      "parameters": [
+        {
+          "name": "congestion threshold",
+          "description": "ratio of incoming orders to available agents that triggers fee adjustment"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-045",
+        "FR-049"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-024",
+      "name": "Primary Provider Failure Fallback",
+      "statement": "The Order Allocation Engine must automatically reassign an order to an alternative logistics provider when the primary external provider fails to confirm availability within the timeout window.",
+      "type": "Exception handling",
+      "condition": "when the primary external logistics provider or mapping service returns an error or timeout during order allocation",
+      "exceptions": [
+        "manual override by a supervisor for strategic reasons"
+      ],
+      "actors": [
+        "Order Allocation Engine",
+        "Platform Operator",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Order",
+        "Logistics Provider",
+        "Mapping Service"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "the system proceeds with a failed allocation, leading to order cancellation and potential revenue loss",
+      "rationale": "to maintain ultra-fast delivery promises and prevent service interruptions during third-party outages",
+      "parameters": [
+        {
+          "name": "timeout_window",
+          "description": "maximum time allowed to wait for primary provider confirmation before triggering fallback"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-028",
+        "FR-029",
+        "FR-033"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-024",
+      "name": "Alternative Route Recalculation",
+      "statement": "The system must recalculate the optimal delivery path using an alternative mapping service whenever the primary mapping service data is deemed unreliable or unavailable.",
+      "type": "Calculation",
+      "condition": "when the primary mapping service data is flagged as unreliable or the service connection is lost",
+      "exceptions": [
+        "none"
+      ],
+      "actors": [
+        "Order Allocation Engine",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Delivery Route",
+        "Mapping Service"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "delivery estimates become inaccurate, causing missed delivery windows and customer dissatisfaction",
+      "rationale": "to ensure accurate ETA predictions and efficient routing despite external service failures",
+      "parameters": [
+        {
+          "name": "data_reliability_threshold",
+          "description": "minimum confidence level required for primary mapping data to be considered valid"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-047",
+        "FR-029"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-024",
+      "name": "Vendor Diversification Limit",
+      "statement": "The system may only assign an order to a secondary vendor if the total number of active vendors serving that specific order does not exceed the maximum allowed vendor count.",
+      "type": "Limit",
+      "condition": "when initiating a fallback assignment to a secondary vendor",
+      "exceptions": [
+        "emergency disaster recovery scenarios defined in the Business Continuity Plan"
+      ],
+      "actors": [
+        "Order Allocation Engine",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Order",
+        "Vendor"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "the order becomes unmanageable due to conflicting instructions from multiple vendors",
+      "rationale": "to prevent operational chaos and ensure clear accountability during fallback scenarios",
+      "parameters": [
+        {
+          "name": "max_active_vendors",
+          "description": "maximum number of vendors allowed to be active for a single order simultaneously"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-033"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-024",
+      "name": "Fallback Settlement Verification",
+      "statement": "Financial settlement for a fallback-assigned order must only proceed after confirming that the new logistics provider has successfully recorded a valid Delivery Proof.",
+      "type": "Financial control",
+      "condition": "when an order has been reassigned to a fallback logistics provider",
+      "exceptions": [
+        "none"
+      ],
+      "actors": [
+        "Settlement Engine",
+        "Logistics Provider",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Delivery Proof",
+        "Order"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "funds are distributed without proof of delivery, resulting in financial loss and fraud risk",
+      "rationale": "to ensure that revenue is only recognized when the fallback delivery is successfully completed",
+      "parameters": [
+        {
+          "name": "delivery_proof_validity",
+          "description": "criteria defining a valid delivery proof for fallback orders"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-005",
+        "FR-027"
+      ],
+      "basis": "inferred"
+    }
+  ]
+}

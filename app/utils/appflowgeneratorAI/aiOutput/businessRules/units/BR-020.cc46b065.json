@@ -1,0 +1,137 @@
+{
+  "unit_id": "BR-020",
+  "kind": "business_requirement",
+  "rules": [
+    {
+      "name": "Service Area Pre-Activation Validation",
+      "statement": "A Service Area Definition must not be used to validate new Order Requests unless it is in an active state.",
+      "type": "Validation",
+      "condition": "when an Order Request is submitted for a specific geographic zone",
+      "exceptions": [
+        "Emergency override protocols defined in FR-050"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Order Management System"
+      ],
+      "objects": [
+        "Service Area Definition",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The order request is rejected and the customer is notified of service unavailability in that zone",
+      "rationale": "Ensures orders are only processed in zones where operational readiness and logistics support are confirmed",
+      "parameters": [
+        {
+          "name": "active_state_threshold",
+          "description": "The required status for a Service Area to accept orders"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-014",
+        "FR-054"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Regulatory Zone Boundary Constraint",
+      "statement": "A Service Area Definition may only be created if its geographic boundaries do not overlap with any zone restricted by the Regulatory Authority.",
+      "type": "Compliance",
+      "condition": "during the creation of a new Service Area Definition",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Regulatory Authority"
+      ],
+      "objects": [
+        "Service Area Definition",
+        "Regulatory Zone"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The creation request is automatically rejected and an audit trail is generated for regulatory review",
+      "rationale": "Prevents illegal operations in restricted areas and ensures adherence to local laws",
+      "parameters": [
+        {
+          "name": "restricted_zone_list",
+          "description": "Current list of geographically restricted zones"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-053"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Dynamic Surge Pricing Eligibility",
+      "statement": "Surge pricing may only be applied when the ratio of active orders to available delivery agents exceeds the configured capacity threshold AND the predicted wait time does not exceed the maximum acceptable delay defined in the Service Area Definition.",
+      "type": "Eligibility",
+      "condition": "when calculating delivery fees during periods of high demand",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Pricing Engine",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Surge Pricing",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The surge pricing calculation is bypassed, and standard rates are applied to maintain customer trust",
+      "rationale": "Balances revenue optimization with the core value proposition of ultra-fast delivery",
+      "parameters": [
+        {
+          "name": "capacity_threshold_ratio",
+          "description": "The minimum order-to-agent ratio required to trigger surge pricing"
+        },
+        {
+          "name": "max_acceptable_delay",
+          "description": "The maximum wait time allowed before surge pricing is prohibited"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-045",
+        "FR-050"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Real-Time Inventory Synchronization",
+      "statement": "The Real-Time Inventory Snapshot must be updated to mark items as unavailable if the logistics link status indicates a network disruption or route constraint.",
+      "type": "State transition",
+      "condition": "when external network status indicates a route constraint or latency threshold is exceeded",
+      "exceptions": [
+        "Manual override by Store Partner for critical items"
+      ],
+      "actors": [
+        "Inventory Management System",
+        "Logistics Provider"
+      ],
+      "objects": [
+        "Real-Time Inventory Snapshot",
+        "Logistics Link"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "Customers may receive orders that cannot be fulfilled, leading to cancellations and reputational damage",
+      "rationale": "Prevents overselling by ensuring inventory data reflects actual logistical capability",
+      "parameters": [
+        {
+          "name": "network_disruption_threshold",
+          "description": "The latency level considered a network disruption"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-028",
+        "FR-047"
+      ],
+      "basis": "inferred"
+    }
+  ]
+}

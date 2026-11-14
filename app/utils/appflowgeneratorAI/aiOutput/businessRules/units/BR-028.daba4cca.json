@@ -1,0 +1,134 @@
+{
+  "unit_id": "BR-028",
+  "kind": "business_requirement",
+  "rules": [
+    {
+      "name": "Mandatory Status Notification Trigger",
+      "statement": "The system must automatically send a multi-channel notification to the customer when an order status transitions to 'Ready for Delivery' or 'Assigned to Delivery Partner'.",
+      "type": "Timing",
+      "condition": "upon successful state transition to Ready for Delivery or Assigned to Delivery Partner",
+      "exceptions": [
+        "Customer has explicitly opted out of all notifications",
+        "Customer has previously indicated 'Do Not Disturb' preference for this order type"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Customer"
+      ],
+      "objects": [
+        "Order",
+        "Notification Channel",
+        "Customer Preference"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "Customer support inquiries increase and customer retention rates decline due to lack of transparency",
+      "rationale": "Timely transparency reduces customer anxiety and prevents unnecessary support tickets regarding order location.",
+      "parameters": [
+        {
+          "name": "notification_delay_threshold",
+          "description": "maximum allowed time in seconds between status change and notification dispatch"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-052"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Notification Content Integrity",
+      "statement": "A status notification must only contain the current status, a concise description of the change, and the expected time window for the next action.",
+      "type": "Validation",
+      "condition": "at the moment of notification generation",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Customer"
+      ],
+      "objects": [
+        "Notification Message",
+        "Order Status"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "Customer confusion increases due to ambiguous or incomplete information",
+      "rationale": "Clear, consistent messaging ensures customers understand the delivery progress without needing to contact support.",
+      "parameters": [
+        {
+          "name": "max_message_length",
+          "description": "maximum character count allowed in the notification body"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-052"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Delivery Partner Assignment Confirmation",
+      "statement": "The system must not trigger an 'Assigned to Delivery Partner' notification until the Delivery Partner has explicitly accepted the task.",
+      "type": "State transition",
+      "condition": "during the order allocation process",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Delivery Partner",
+        "Customer"
+      ],
+      "objects": [
+        "Delivery Task",
+        "Order Assignment"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "Customer receives notification for a task the driver has not yet accepted, leading to false expectations and complaints",
+      "rationale": "Notifications must reflect only confirmed operational states to maintain trust and accuracy.",
+      "parameters": [
+        {
+          "name": "assignment_timeout_duration",
+          "description": "maximum time allowed for a partner to accept a task before auto-rejection"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-003",
+        "FR-033"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Notification Delivery Reliability",
+      "statement": "The system must ensure that a notification is successfully delivered via at least one configured channel within the maximum allowed duration.",
+      "type": "Limit",
+      "condition": "immediately following the trigger event",
+      "exceptions": [
+        "System-wide service outage declared by the Platform Operator"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Customer"
+      ],
+      "objects": [
+        "Notification Channel",
+        "Delivery Queue"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "Customer remains uninformed despite the status change, negating the value of the notification feature",
+      "rationale": "Reliability is critical; if one channel fails, the customer must still be informed via an alternative method.",
+      "parameters": [
+        {
+          "name": "max_notification_retry_attempts",
+          "description": "number of times the system retries sending the notification before marking it as failed"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-052"
+      ],
+      "basis": "inferred"
+    }
+  ]
+}
