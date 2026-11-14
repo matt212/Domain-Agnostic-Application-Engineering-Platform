@@ -4,30 +4,21 @@
 /**
  * DOMAIN-AGNOSTIC REQUIREMENT RECONCILIATION ENGINE
  *
- * Scope:
- *   - Reconciles requirement versions stored in PostgreSQL.
- *   - Uses database provenance to distinguish consolidated and
- *     individual source records.
- *   - Compares arbitrary JSON structures recursively.
- *   - Preserves original payloads and source provenance.
- *   - Produces human-review recommendations.
+ * Outputs:
+ *   1. requirements_reconciliation_<timestamp>.json
+ *      Complete reconciliation report.
+ *
+ *   2. requirements_review_required_<timestamp>.json
+ *      Dedicated review report containing all requirements
+ *      requiring review, full source payloads, provenance,
+ *      field-level differences and recommendations.
  *
  * Safety:
- *   - READ ONLY PostgreSQL transaction.
- *   - No AI calls.
+ *   - PostgreSQL READ ONLY transaction.
  *   - No INSERT, UPDATE, DELETE or schema changes.
+ *   - No AI calls.
  *   - No automatic merging, approval or rejection.
- *
- * Comparison rules:
- *   - Object key ordering is ignored.
- *   - Matching database identity duplicated in root JSON is excluded.
- *   - Arrays are not sorted.
- *   - Same array elements in a different order are classified as
- *     ARRAY_ORDER.
- *   - Different array contents are reported as additions/removals.
- *   - Unmatched array objects are not speculatively paired.
- *   - Scalar value changes are classified as VALUE_CHANGED.
- *   - Different JSON types are classified as STRUCTURAL.
+ *   - Original payloads are preserved.
  */
 
 const { Pool } = require('pg');
@@ -97,9 +88,9 @@ function isObject(value) {
 }
 
 /**
- * Stable serialization:
- * - Object key order does not affect fingerprints.
- * - Array order remains significant.
+ * Stable serialization.
+ * Object key order is ignored.
+ * Array order remains significant.
  */
 function stableStringify(value) {
     if (Array.isArray(value)) {
@@ -125,10 +116,8 @@ function fingerprint(value) {
 }
 
 /**
- * Extract a common result envelope.
- *
- * The original payload is never overwritten.
- * This only determines which object is used for comparison.
+ * Extract common result envelope.
+ * Original payload is never overwritten.
  */
 function extractComparablePayload(payload) {
     const parsed = parseJson(payload);
@@ -145,11 +134,8 @@ function extractComparablePayload(payload) {
 }
 
 /**
- * Exclude a duplicated technical identity only when:
- * 1. It is a root-level identifier property.
- * 2. Its value exactly matches the database requirement identifier.
- *
- * No business attributes are excluded.
+ * Exclude duplicated technical identity only when its value
+ * exactly matches the database requirement identifier.
  */
 function removeDatabaseIdentity(payload, databaseId) {
     if (!isObject(payload)) {
@@ -175,18 +161,16 @@ function removeDatabaseIdentity(payload, databaseId) {
 }
 
 function pushDifference(differences, details) {
-    differences.push({
-        ...details
-    });
+    differences.push({ ...details });
 }
 
 /**
  * Compare arrays without assuming they are sets.
  *
- * If their elements are identical but ordered differently:
+ * Identical elements in different order:
  *   ARRAY_ORDER
  *
- * If their contents differ:
+ * Different contents:
  *   ARRAY_ITEM_ADDED / ARRAY_ITEM_REMOVED
  *
  * Multiset comparison preserves duplicate counts.
@@ -217,7 +201,8 @@ function compareArrays(left, right, currentPath, differences) {
             pushDifference(differences, {
                 path: currentPath,
                 classification: 'ARRAY_ORDER',
-                description: 'Array contains the same elements in a different order.',
+                description:
+                    'Array contains the same elements in a different order.',
                 left_value: left,
                 right_value: right
             });
@@ -239,7 +224,8 @@ function compareArrays(left, right, currentPath, differences) {
             pushDifference(differences, {
                 path: currentPath,
                 classification: 'ARRAY_ITEM_REMOVED',
-                description: 'An array element exists in the left version but not the right version.',
+                description:
+                    'An array element exists in the left version but not the right version.',
                 left_value: item,
                 right_value: null,
                 left_index: index
@@ -249,28 +235,23 @@ function compareArrays(left, right, currentPath, differences) {
 
     const remainingLeft = new Map(leftCounts);
 
-    for (const [key, count] of rightCounts.entries()) {
-        const leftCount = remainingLeft.get(key) || 0;
+    for (let index = 0; index < right.length; index++) {
+        const item = right[index];
+        const key = rightFingerprints[index];
+        const available = remainingLeft.get(key) || 0;
 
-        if (count > leftCount) {
-            const numberAdded = count - leftCount;
-
-            for (let occurrence = 0; occurrence < numberAdded; occurrence++) {
-                const index = rightFingerprints.findIndex(
-                    (value, position) =>
-                        value === key &&
-                        position >= 0
-                );
-
-                pushDifference(differences, {
-                    path: currentPath,
-                    classification: 'ARRAY_ITEM_ADDED',
-                    description: 'An array element exists in the right version but not the left version.',
-                    left_value: null,
-                    right_value: right[index],
-                    right_index: index
-                });
-            }
+        if (available > 0) {
+            remainingLeft.set(key, available - 1);
+        } else {
+            pushDifference(differences, {
+                path: currentPath,
+                classification: 'ARRAY_ITEM_ADDED',
+                description:
+                    'An array element exists in the right version but not the left version.',
+                left_value: null,
+                right_value: item,
+                right_index: index
+            });
         }
     }
 }
@@ -290,8 +271,11 @@ function compareJson(left, right, currentPath = '$', differences = []) {
         ]);
 
         for (const key of [...keys].sort()) {
-            const leftHas = Object.prototype.hasOwnProperty.call(left, key);
-            const rightHas = Object.prototype.hasOwnProperty.call(right, key);
+            const leftHas =
+                Object.prototype.hasOwnProperty.call(left, key);
+
+            const rightHas =
+                Object.prototype.hasOwnProperty.call(right, key);
 
             const nextPath = `${currentPath}.${key}`;
 
@@ -299,7 +283,8 @@ function compareJson(left, right, currentPath = '$', differences = []) {
                 pushDifference(differences, {
                     path: nextPath,
                     classification: 'FIELD_ADDED',
-                    description: 'Field exists only in the right version.',
+                    description:
+                        'Field exists only in the right version.',
                     left_value: null,
                     right_value: right[key]
                 });
@@ -311,7 +296,8 @@ function compareJson(left, right, currentPath = '$', differences = []) {
                 pushDifference(differences, {
                     path: nextPath,
                     classification: 'FIELD_REMOVED',
-                    description: 'Field exists only in the left version.',
+                    description:
+                        'Field exists only in the left version.',
                     left_value: left[key],
                     right_value: null
                 });
@@ -346,7 +332,8 @@ function compareJson(left, right, currentPath = '$', differences = []) {
         pushDifference(differences, {
             path: currentPath,
             classification: 'STRUCTURAL',
-            description: 'JSON value types or structures differ.',
+            description:
+                'JSON value types or structures differ.',
             left_value: left,
             right_value: right
         });
@@ -357,7 +344,8 @@ function compareJson(left, right, currentPath = '$', differences = []) {
     pushDifference(differences, {
         path: currentPath,
         classification: 'VALUE_CHANGED',
-        description: 'The value differs between versions.',
+        description:
+            'The value differs between versions.',
         left_value: left,
         right_value: right
     });
@@ -397,34 +385,39 @@ function getRecommendation(classifications, comparisonStatus) {
         return {
             action: 'NO_CONTENT_CHANGE_DETECTED',
             review_required: false,
-            explanation: 'The compared payloads are equivalent.'
+            explanation:
+                'The compared payloads are equivalent.'
         };
     }
 
     const keys = Object.keys(classifications);
 
-    if (keys.length === 1 && keys[0] === 'ARRAY_ORDER') {
+    if (
+        keys.length === 1 &&
+        keys[0] === 'ARRAY_ORDER'
+    ) {
         return {
             action: 'REVIEW_ORDERING',
             review_required: true,
-            explanation: 'The array elements are identical but appear in a different order. Confirm whether order is meaningful.'
+            explanation:
+                'The array elements are identical but appear in a different order. Confirm whether order is meaningful.'
         };
     }
 
-    if (keys.every(key =>
-        key === 'ARRAY_ORDER'
-    )) {
+    if (keys.every(key => key === 'ARRAY_ORDER')) {
         return {
             action: 'REVIEW_ORDERING',
             review_required: true,
-            explanation: 'Only array ordering differences were detected.'
+            explanation:
+                'Only array ordering differences were detected.'
         };
     }
 
     return {
         action: 'HUMAN_CONTENT_REVIEW',
         review_required: true,
-        explanation: 'One or more structural, added, removed or changed values require review. Do not automatically merge either version.'
+        explanation:
+            'One or more structural, added, removed or changed values require review. Do not automatically merge either version.'
     };
 }
 
@@ -436,6 +429,7 @@ function summarizeVersion(record) {
         version_number: record.version_number,
         version_reason: record.version_reason,
         source_file_id: record.source_file_id,
+
         source_file: {
             file_name: record.file_name,
             file_path: record.file_path,
@@ -445,12 +439,17 @@ function summarizeVersion(record) {
             source_version: record.source_version,
             source_timestamp: record.source_timestamp
         },
+
         created_at: record.version_created_at,
         original_payload: parseJson(record.payload)
     };
 }
 
-function compareRequirement(id, consolidatedRecords, individualRecords) {
+function compareRequirement(
+    id,
+    consolidatedRecords,
+    individualRecords
+) {
     const comparisons = [];
 
     for (const consolidated of consolidatedRecords) {
@@ -473,7 +472,8 @@ function compareRequirement(id, consolidatedRecords, individualRecords) {
                 rightComparable
             );
 
-            const classifications = countClassifications(differences);
+            const classifications =
+                countClassifications(differences);
 
             const status = differences.length === 0
                 ? 'MATCHED_CONTENT'
@@ -483,13 +483,17 @@ function compareRequirement(id, consolidatedRecords, individualRecords) {
                 classification: status,
                 difference_count: differences.length,
                 difference_classifications: classifications,
+
                 recommendation: getRecommendation(
                     classifications,
                     status
                 ),
 
-                consolidated_source: summarizeVersion(consolidated),
-                individual_source: summarizeVersion(individual),
+                consolidated_source:
+                    summarizeVersion(consolidated),
+
+                individual_source:
+                    summarizeVersion(individual),
 
                 comparison: {
                     consolidated_payload: leftComparable,
@@ -511,9 +515,11 @@ function compareRequirement(id, consolidatedRecords, individualRecords) {
         consolidated_record_count: consolidatedRecords.length,
         individual_record_count: individualRecords.length,
         comparison_count: comparisons.length,
+
         classification: allEquivalent
             ? 'MATCHED_CONTENT'
             : 'CONTENT_REVIEW_REQUIRED',
+
         comparisons
     };
 }
@@ -524,20 +530,27 @@ function buildSourceGroups(records, consolidatedSourceIds) {
         record => String(record.source_file_id)
     );
 
-    return [...grouped.entries()].map(([sourceFileId, items]) => ({
-        source_file_id: sourceFileId,
-        source_role: consolidatedSourceIds.has(sourceFileId)
-            ? 'CONSOLIDATED'
-            : 'INDIVIDUAL',
-        file_name: items[0].file_name,
-        file_path: items[0].file_path,
-        artifact_type: items[0].artifact_type,
-        metadata: parseJson(items[0].source_metadata),
-        record_count: items.length,
-        requirement_ids: [
-            ...new Set(items.map(item => String(item.requirement_id)))
-        ]
-    }));
+    return [...grouped.entries()].map(
+        ([sourceFileId, items]) => ({
+            source_file_id: sourceFileId,
+
+            source_role: consolidatedSourceIds.has(sourceFileId)
+                ? 'CONSOLIDATED'
+                : 'INDIVIDUAL',
+
+            file_name: items[0].file_name,
+            file_path: items[0].file_path,
+            artifact_type: items[0].artifact_type,
+            metadata: parseJson(items[0].source_metadata),
+            record_count: items.length,
+
+            requirement_ids: [
+                ...new Set(
+                    items.map(item => String(item.requirement_id))
+                )
+            ]
+        })
+    );
 }
 
 function buildDuplicateGroups(map, role) {
@@ -568,6 +581,9 @@ function countBy(items, property) {
     return counts;
 }
 
+/**
+ * Read all required information using a read-only transaction.
+ */
 async function readDatabase(client) {
     log('Discovering consolidated source provenance...');
 
@@ -578,7 +594,9 @@ async function readDatabase(client) {
     `);
 
     const consolidatedSourceIds = new Set(
-        canonicalResult.rows.map(row => String(row.source_file_id))
+        canonicalResult.rows.map(
+            row => String(row.source_file_id)
+        )
     );
 
     if (consolidatedSourceIds.size === 0) {
@@ -649,6 +667,9 @@ async function readDatabase(client) {
     };
 }
 
+/**
+ * Build the complete reconciliation report.
+ */
 function buildReport(data) {
     const {
         records,
@@ -769,7 +790,9 @@ function buildReport(data) {
         {
             check: 'Duplicate identifier groups',
             actual: duplicateGroups.length,
-            status: duplicateGroups.length === 0 ? 'PASS' : 'REVIEW'
+            status: duplicateGroups.length === 0
+                ? 'PASS'
+                : 'REVIEW'
         }
     ];
 
@@ -780,27 +803,29 @@ function buildReport(data) {
         duplicateGroups.length > 0;
 
     return {
-        report_type: 'DOMAIN_AGNOSTIC_REQUIREMENT_RECONCILIATION',
+        report_type:
+            'DOMAIN_AGNOSTIC_REQUIREMENT_RECONCILIATION',
+
         generated_at: new Date().toISOString(),
         requirement_type: CONFIG.requirementType,
 
         method: {
             source_identification:
                 'SOURCE_FILE_PROVENANCE_REFERENCED_BY_CANONICAL_REQUIREMENT_RECORDS',
-            matching:
-                'DATABASE_REQUIREMENT_IDENTIFIER',
-            comparison:
-                'RECURSIVE_JSON',
+
+            matching: 'DATABASE_REQUIREMENT_IDENTIFIER',
+            comparison: 'RECURSIVE_JSON',
+
             database_identity:
                 'MATCHING_ROOT_LEVEL_IDENTIFIER_EXCLUDED_FROM_PAYLOAD_COMPARISON',
-            object_key_order:
-                'IGNORED',
-            array_order:
-                'PRESERVED_AND_DIFFERENCES_CLASSIFIED',
+
+            object_key_order: 'IGNORED',
+            array_order: 'PRESERVED_AND_DIFFERENCES_CLASSIFIED',
+
             array_content:
                 'MULTISET_COMPARISON_WITH_DUPLICATE_PRESERVATION',
-            ambiguous_array_element_pairing:
-                'NOT_INFERRED',
+
+            ambiguous_array_element_pairing: 'NOT_INFERRED',
             ai_processing: false,
             database_mutations: false,
             automatic_business_decisions: false
@@ -824,6 +849,7 @@ function buildReport(data) {
             duplicate_identifier_groups: duplicateGroups.length,
 
             total_differences: allDifferences.length,
+
             difference_classifications:
                 countClassifications(allDifferences),
 
@@ -832,7 +858,9 @@ function buildReport(data) {
         },
 
         source_provenance: {
-            consolidated_source_file_ids: [...consolidatedSourceIds],
+            consolidated_source_file_ids:
+                [...consolidatedSourceIds],
+
             sources: sourceGroups
         },
 
@@ -844,7 +872,7 @@ function buildReport(data) {
         },
 
         content_reconciliation: {
-            equivalent: equivalent,
+            equivalent,
             review_required: reviewRequired
         },
 
@@ -852,11 +880,14 @@ function buildReport(data) {
         existing_overlap_assessments: overlapPairs,
 
         verification: {
-            status: verification.some(item => item.status === 'FAIL')
+            status: verification.some(
+                item => item.status === 'FAIL'
+            )
                 ? 'FAIL'
                 : requiresReview
                     ? 'REVIEW'
                     : 'PASS',
+
             checks: verification
         },
 
@@ -868,6 +899,166 @@ function buildReport(data) {
             original_payloads_preserved: true,
             human_review_required_for_differences: true
         }
+    };
+}
+
+/**
+ * Build a separate detailed review report.
+ *
+ * Includes:
+ *   - Every requirement requiring review.
+ *   - Full consolidated and individual payloads.
+ *   - Source provenance and version information.
+ *   - Every field-level difference.
+ *   - Difference classification counts.
+ *   - Existing recommendations.
+ *
+ * No decisions are made here.
+ */
+function buildReviewReport(report) {
+    const reviewItems =
+        report.content_reconciliation.review_required;
+
+    const records = reviewItems.map(item => {
+        const differences = item.comparisons.flatMap(
+            comparison =>
+                comparison.comparison.differences.map(
+                    difference => ({
+                        ...difference,
+
+                        consolidated_source:
+                            comparison.consolidated_source,
+
+                        individual_source:
+                            comparison.individual_source
+                    })
+                )
+        );
+
+        return {
+            requirement_id: item.requirement_id,
+
+            classification: item.classification,
+
+            consolidated_record_count:
+                item.consolidated_record_count,
+
+            individual_record_count:
+                item.individual_record_count,
+
+            comparison_count: item.comparison_count,
+
+            review_summary: {
+                total_differences: differences.length,
+
+                difference_classifications:
+                    countClassifications(differences),
+
+                recommendations: item.comparisons.map(
+                    comparison => comparison.recommendation
+                )
+            },
+
+            // Includes complete original and comparison payloads.
+            comparisons: item.comparisons,
+
+            // Convenient flattened list of field-level differences.
+            differences
+        };
+    });
+
+    const allDifferences = records.flatMap(
+        item => item.differences
+    );
+
+    return {
+        report_type:
+            'DOMAIN_AGNOSTIC_REQUIREMENT_REVIEW_REQUIRED',
+
+        generated_at: report.generated_at,
+        requirement_type: report.requirement_type,
+
+        source_reconciliation_report: null,
+
+        summary: {
+            requirements_requiring_review: records.length,
+
+            total_differences: allDifferences.length,
+
+            difference_classifications:
+                countClassifications(allDifferences)
+        },
+
+        review_required: records,
+
+        review_index: records.map(item => ({
+            requirement_id: item.requirement_id,
+
+            classification: item.classification,
+
+            total_differences:
+                item.review_summary.total_differences,
+
+            difference_classifications:
+                item.review_summary.difference_classifications
+        })),
+
+        review_policy: {
+            automatic_changes: false,
+            automatic_merges: false,
+            automatic_approvals: false,
+            automatic_rejections: false,
+
+            original_payloads_preserved: true,
+            source_provenance_included: true,
+            human_review_required: true
+        }
+    };
+}
+
+/**
+ * Save both reports.
+ */
+function writeReports(report) {
+    fs.mkdirSync(CONFIG.outputDirectory, {
+        recursive: true
+    });
+
+    const timestamp = new Date()
+        .toISOString()
+        .replace(/[:.]/g, '-');
+
+    const reconciliationFile = path.join(
+        CONFIG.outputDirectory,
+        `requirements_reconciliation_${timestamp}.json`
+    );
+
+    const reviewFile = path.join(
+        CONFIG.outputDirectory,
+        `requirements_review_required_${timestamp}.json`
+    );
+
+    const reviewReport = buildReviewReport(report);
+
+    reviewReport.source_reconciliation_report =
+        path.basename(reconciliationFile);
+
+    fs.writeFileSync(
+        reconciliationFile,
+        JSON.stringify(report, null, 2),
+        'utf8'
+    );
+
+    fs.writeFileSync(
+        reviewFile,
+        JSON.stringify(reviewReport, null, 2),
+        'utf8'
+    );
+
+    return {
+        reconciliationFile,
+        reviewFile,
+        reviewReport
     };
 }
 
@@ -888,46 +1079,66 @@ async function main() {
         transactionStarted = true;
 
         const data = await readDatabase(client);
+
         const report = buildReport(data);
 
         await client.query('COMMIT');
         transactionStarted = false;
 
-        fs.mkdirSync(CONFIG.outputDirectory, {
-            recursive: true
-        });
+        // Generate both JSON reports.
+        const outputs = writeReports(report);
 
-        const timestamp = new Date()
-            .toISOString()
-            .replace(/[:.]/g, '-');
-
-        const outputFile = path.join(
-            CONFIG.outputDirectory,
-            `requirements_reconciliation_${timestamp}.json`
-        );
-
-        fs.writeFileSync(
-            outputFile,
-            JSON.stringify(report, null, 2),
-            'utf8'
-        );
+        const reviewReport = outputs.reviewReport;
 
         console.log('\n========================================');
         console.log('RECONCILIATION COMPLETED');
         console.log('========================================');
 
         console.log(`Requirement type: ${CONFIG.requirementType}`);
-        console.log(`Version records: ${report.summary.version_records}`);
-        console.log(`Source files: ${report.summary.source_files}`);
-        console.log(`Consolidated IDs: ${report.summary.consolidated_requirement_ids}`);
-        console.log(`Individual IDs: ${report.summary.individual_requirement_ids}`);
-        console.log(`Matched IDs: ${report.summary.matched_requirement_ids}`);
-        console.log(`Equivalent content: ${report.summary.equivalent_content}`);
-        console.log(`Review required: ${report.summary.content_review_required}`);
-        console.log(`Consolidated only: ${report.summary.consolidated_only}`);
-        console.log(`Individual only: ${report.summary.individual_only}`);
-        console.log(`Duplicate groups: ${report.summary.duplicate_identifier_groups}`);
-        console.log(`Total differences: ${report.summary.total_differences}`);
+
+        console.log(
+            `Version records: ${report.summary.version_records}`
+        );
+
+        console.log(
+            `Source files: ${report.summary.source_files}`
+        );
+
+        console.log(
+            `Consolidated IDs: ${report.summary.consolidated_requirement_ids}`
+        );
+
+        console.log(
+            `Individual IDs: ${report.summary.individual_requirement_ids}`
+        );
+
+        console.log(
+            `Matched IDs: ${report.summary.matched_requirement_ids}`
+        );
+
+        console.log(
+            `Equivalent content: ${report.summary.equivalent_content}`
+        );
+
+        console.log(
+            `Review required: ${report.summary.content_review_required}`
+        );
+
+        console.log(
+            `Consolidated only: ${report.summary.consolidated_only}`
+        );
+
+        console.log(
+            `Individual only: ${report.summary.individual_only}`
+        );
+
+        console.log(
+            `Duplicate groups: ${report.summary.duplicate_identifier_groups}`
+        );
+
+        console.log(
+            `Total differences: ${report.summary.total_differences}`
+        );
 
         console.log('\nDifference classifications:');
 
@@ -945,14 +1156,46 @@ async function main() {
             );
         }
 
-        console.log(`\nOverall status: ${report.verification.status}`);
-        console.log(`Report: ${outputFile}`);
+        console.log(
+            `\nOverall status: ${report.verification.status}`
+        );
+
+        console.log('\n========================================');
+        console.log('OUTPUT FILES');
+        console.log('========================================');
+
+        console.log(
+            `Full reconciliation report:\n${outputs.reconciliationFile}`
+        );
+
+        console.log(
+            `\nReview-required report:\n${outputs.reviewFile}`
+        );
+
+        console.log('\nReview report summary:');
+
+        console.log(
+            `Requirements exported: ${reviewReport.summary.requirements_requiring_review}`
+        );
+
+        console.log(
+            `Differences exported: ${reviewReport.summary.total_differences}`
+        );
+
+        console.log('\nReview classifications:');
+
+        for (const [classification, count] of Object.entries(
+            reviewReport.summary.difference_classifications
+        )) {
+            console.log(`${classification}: ${count}`);
+        }
 
         console.log('\nDATABASE CHANGES: NONE');
         console.log('AI PROCESSING: NONE');
         console.log('ORIGINAL PAYLOADS: PRESERVED');
         console.log('AUTOMATIC MERGES: NONE');
         console.log('AUTOMATIC APPROVALS: NONE');
+        console.log('AUTOMATIC REJECTIONS: NONE');
 
     } catch (error) {
         if (client && transactionStarted) {
