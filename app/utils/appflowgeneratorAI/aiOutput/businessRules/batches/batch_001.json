@@ -1,0 +1,552 @@
+{
+  "batch": 1,
+  "units": [
+    "BR-001",
+    "BR-002",
+    "BR-003",
+    "BR-004"
+  ],
+  "rules": [
+    {
+      "unit_id": "BR-001",
+      "name": "Perishable Allocation Priority",
+      "statement": "The system must prioritize allocation of perishable items to new Order Requests based on their proximity to the expiration date.",
+      "type": "Eligibility",
+      "condition": "When allocating inventory for an Order Request containing fresh perishables",
+      "exceptions": [
+        "Items flagged as expired are excluded from allocation"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Inventory Management System"
+      ],
+      "objects": [
+        "Perishable Items",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system rejects the allocation request and flags the inventory management process for review",
+      "rationale": "Prioritizing near-expiry items reduces waste and ensures fresh goods reach customers first",
+      "parameters": [
+        {
+          "name": "expiry_proximity_threshold",
+          "description": "The time window defining 'proximity to expiration' for prioritization"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-006"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-001",
+      "name": "Expired Item Order Rejection",
+      "statement": "An Order Request must not be successfully created if it contains any item where the current date is later than the item's defined expiry date.",
+      "type": "Validation",
+      "condition": "During the Order Request creation or validation phase",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Customer",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Order Request",
+        "Product Catalog"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The system automatically rejects the Order Request and notifies the customer that the item is unavailable",
+      "rationale": "Preventing the sale of expired goods protects customer health and maintains brand reputation",
+      "parameters": [
+        {
+          "name": "expiry_date_field",
+          "description": "The specific date field defining the item's shelf life limit"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-024"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-001",
+      "name": "Stock Lock Release Timeout",
+      "statement": "Locked stock must be automatically released if the Order Request is not confirmed within the allocated time window.",
+      "type": "Timing",
+      "condition": "When an Order Request remains in a 'pending confirmation' state",
+      "exceptions": [
+        "Manual override by a Store Partner for specific high-value orders"
+      ],
+      "actors": [
+        "Inventory Management System",
+        "Store Partner"
+      ],
+      "objects": [
+        "Stock Quantity",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system releases the stock back to general availability, potentially causing overselling if not monitored",
+      "rationale": "Prevents inventory hoarding and ensures stock availability for other customers during peak demand",
+      "parameters": [
+        {
+          "name": "confirmation_timeout_duration",
+          "description": "The maximum time allowed for order confirmation before stock release"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-001"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-001",
+      "name": "Sync Discrepancy Flagging",
+      "statement": "The system must flag a synchronization discrepancy if the data link latency exceeds the defined threshold or if a sync failure is detected.",
+      "type": "Compliance",
+      "condition": "During real-time inventory synchronization cycles",
+      "exceptions": [
+        "Scheduled maintenance windows where sync is paused"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Inventory Management System"
+      ],
+      "objects": [
+        "Product Catalog",
+        "Store Inventory"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The system halts order processing for affected stores and alerts the operations team",
+      "rationale": "Ensures inventory data integrity to prevent overselling and allocation errors",
+      "parameters": [
+        {
+          "name": "latency_threshold_seconds",
+          "description": "The maximum acceptable delay for data synchronization"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-001"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-002",
+      "name": "Real-Time Inventory Consistency",
+      "statement": "The system must not assign an order to a Store Partner if the Real-Time Inventory Snapshot indicates insufficient quantity for any item in the request.",
+      "type": "Validation",
+      "condition": "During order allocation when a customer submits a request with multiple items",
+      "exceptions": [
+        "Items marked as 'Back in Stock' with a confirmed ETA within the delivery window"
+      ],
+      "actors": [
+        "System",
+        "Store Partner",
+        "Customer"
+      ],
+      "objects": [
+        "Order",
+        "Inventory Snapshot",
+        "Store Partner"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The order remains unassigned and is flagged for manual review to prevent overselling and customer dissatisfaction",
+      "rationale": "Prevents overselling which leads to order cancellations, financial loss, and eroded customer trust",
+      "parameters": [
+        {
+          "name": "minimum_available_quantity",
+          "description": "The quantity required for each item in the order"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-002",
+        "FR-054"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-002",
+      "name": "Delivery Proof Integrity",
+      "statement": "Funds must not be released to the Store Partner until a valid delivery proof containing a timestamp and signature is recorded in the system.",
+      "type": "Financial control",
+      "condition": "At the moment of Financial Settlement Handover confirmation",
+      "exceptions": [
+        "Customer explicitly waives proof requirement via verified settings",
+        "Dispute resolution overrides automatic hold"
+      ],
+      "actors": [
+        "System",
+        "Store Partner",
+        "Customer",
+        "Payment Provider"
+      ],
+      "objects": [
+        "Financial Transaction",
+        "Delivery Proof",
+        "Settlement"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The transaction is automatically reversed and funds are held in escrow pending manual verification",
+      "rationale": "Ensures the platform only pays for successfully delivered goods, mitigating fraud and operational risk",
+      "parameters": [
+        {
+          "name": "required_proof_elements",
+          "description": "List of mandatory fields like timestamp and signature"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-025",
+        "FR-027",
+        "FR-004"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-002",
+      "name": "Regulatory License Validity",
+      "statement": "The system must block order allocation to a Store Partner if their primary operating license is flagged as invalid or expired.",
+      "type": "Compliance",
+      "condition": "During order allocation and at the start of each business day",
+      "exceptions": [
+        "Temporary suspension due to administrative review with an approved override code"
+      ],
+      "actors": [
+        "System",
+        "Store Partner",
+        "Regulatory Authority"
+      ],
+      "objects": [
+        "Store Partner",
+        "Operating License",
+        "Order Allocation"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The Store Partner is immediately suspended from receiving orders until compliance is restored",
+      "rationale": "Maintains legal compliance and protects the platform from liability associated with unlicensed operations",
+      "parameters": [
+        {
+          "name": "license_expiry_threshold",
+          "description": "Days before expiry to trigger a warning"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-008"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-002",
+      "name": "External Proof Verification Standard",
+      "statement": "Delivery proof retrieved via external API must be treated with the same verification standards as locally captured proof.",
+      "type": "Validation",
+      "condition": "When validating delivery proof regardless of source",
+      "exceptions": [
+        "API returns a specific 'pending verification' status defined in the integration contract"
+      ],
+      "actors": [
+        "System",
+        "Logistics Partner",
+        "Store Partner"
+      ],
+      "objects": [
+        "Delivery Proof",
+        "External API",
+        "Delivery Assignment"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The delivery proof is rejected and the order status remains 'In Transit' or 'Pending Proof'",
+      "rationale": "Ensures data integrity and prevents fraud by standardizing verification logic across all data sources",
+      "parameters": [
+        {
+          "name": "verification_algorithm_id",
+          "description": "Identifier for the standard verification logic applied"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-004"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-003",
+      "name": "Real-Time Inventory Locking",
+      "statement": "The system must deduct reserved quantities from the Real-Time Inventory Snapshot immediately upon order assignment to prevent overselling.",
+      "type": "Limit",
+      "condition": "When an order is automatically assigned to a store partner",
+      "exceptions": [
+        "System outage preventing database write"
+      ],
+      "actors": [
+        "Order Allocation Engine",
+        "Store Partner"
+      ],
+      "objects": [
+        "Order",
+        "Inventory Snapshot"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The business risks selling items that are not in stock, leading to order cancellations and customer dissatisfaction",
+      "rationale": "Prevents overselling in a high-volume, low-latency environment",
+      "parameters": [
+        {
+          "name": "reservation_timeout",
+          "description": "Duration the inventory is held before release if order fails"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-002",
+        "FR-055"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-003",
+      "name": "Dynamic Route Recalculation",
+      "statement": "The system must recalculate estimated arrival times and delivery paths if live traffic patterns change significantly after initial assignment.",
+      "type": "Calculation",
+      "condition": "When live traffic data indicates a significant deviation from the initial route estimate",
+      "exceptions": [
+        "Traffic change is within acceptable variance threshold"
+      ],
+      "actors": [
+        "Order Allocation Engine",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Delivery Route",
+        "Estimated Arrival Time"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "Delivery times exceed the 60-minute target, risking service failure and penalties",
+      "rationale": "Ensures the ultra-fast delivery promise is met despite real-world conditions",
+      "parameters": [
+        {
+          "name": "traffic_variance_threshold",
+          "description": "Percentage deviation in traffic speed triggering a recalculation"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-047"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-003",
+      "name": "Agent Capacity Enforcement",
+      "statement": "The system must not assign a new delivery slot to an agent if their current workload exceeds the maximum capacity defined for their service zone.",
+      "type": "Validation",
+      "condition": "When the Order Allocation Engine attempts to assign a new order to a gig worker",
+      "exceptions": [
+        "Emergency override by Platform Operator with documented reason"
+      ],
+      "actors": [
+        "Order Allocation Engine",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Delivery Slot",
+        "Agent Workload"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "Agent becomes overloaded, leading to delayed deliveries and potential order abandonment",
+      "rationale": "Maintains service quality and agent performance by preventing overloading",
+      "parameters": [
+        {
+          "name": "max_zone_capacity",
+          "description": "Maximum number of concurrent deliveries allowed per service zone"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-028"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-003",
+      "name": "Service Area Boundary Compliance",
+      "statement": "Orders originating from addresses outside the active Service Area Definition must be rejected by the Order Allocation Engine.",
+      "type": "Validation",
+      "condition": "When an incoming order request is received for delivery",
+      "exceptions": [
+        "Manual override for VIP customers or special promotions"
+      ],
+      "actors": [
+        "Order Allocation Engine",
+        "Customer"
+      ],
+      "objects": [
+        "Order Request",
+        "Service Area Definition"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The business incurs costs for deliveries outside its operational scope and risks regulatory non-compliance",
+      "rationale": "Ensures operations remain within defined, optimized geographic boundaries",
+      "parameters": [
+        {
+          "name": "active_service_area_version",
+          "description": "Identifier for the current valid geospatial definition"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-012"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-004",
+      "name": "Target Timeframe Adherence",
+      "statement": "The system must classify an order as fulfilled only if the total elapsed time from Order Request creation to Delivery Proof confirmation does not exceed the committed target window.",
+      "type": "Validation",
+      "condition": "When an order reaches the Delivery Proof confirmation stage",
+      "exceptions": [
+        "Force majeure events declared by the Regulatory Authority",
+        "Customer-initiated order cancellation prior to handover"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Delivery Partner",
+        "Customer"
+      ],
+      "objects": [
+        "Order Request",
+        "Delivery Proof",
+        "Service Area Definition"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The order is flagged as 'Late' and triggers a service credit workflow for the Customer and a penalty assessment for the Delivery Partner",
+      "rationale": "This ensures the core value proposition of ultra-fast delivery is maintained and SLAs are met",
+      "parameters": [
+        {
+          "name": "committed_target_window",
+          "description": "The maximum allowed duration in minutes for order fulfillment"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-054",
+        "FR-059"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-004",
+      "name": "Service Area Activation Prerequisite",
+      "statement": "The system must prevent the creation of a new Order Request if the associated Service Area Definition is not in an active state.",
+      "type": "Validation",
+      "condition": "When a customer or partner initiates an Order Request",
+      "exceptions": [
+        "Emergency override protocols authorized by the Platform Operator",
+        "System maintenance windows explicitly approved by the Regulatory Authority"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Customer",
+        "Store Partner"
+      ],
+      "objects": [
+        "Order Request",
+        "Service Area Definition"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The Order Request is rejected immediately and the user is notified that the service zone is unavailable",
+      "rationale": "This prevents orders from being accepted in zones where logistics or regulatory compliance are not verified",
+      "parameters": [
+        {
+          "name": "active_state",
+          "description": "The status indicating the Service Area Definition is operational"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-014"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-004",
+      "name": "Delivery Partner Performance Threshold",
+      "statement": "The system must suspend a Delivery Partner's ability to accept new assignments if their on-time delivery rate falls below the minimum acceptable threshold within a rolling evaluation period.",
+      "type": "Eligibility",
+      "condition": "When a Delivery Partner completes a batch of deliveries",
+      "exceptions": [
+        "Temporary suspension due to verified force majeure events",
+        "New partner probationary period grace window defined in contract"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Delivery Partner",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The Delivery Partner is automatically removed from the active pool and must undergo a re-qualification audit",
+      "rationale": "This maintains service quality standards and protects the brand reputation for speed",
+      "parameters": [
+        {
+          "name": "minimum_acceptable_threshold",
+          "description": "The minimum percentage of on-time deliveries required to remain active"
+        },
+        {
+          "name": "rolling_evaluation_period",
+          "description": "The time window used to calculate the delivery performance rate"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-059"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-004",
+      "name": "Real-Time Inventory Consistency",
+      "statement": "The system must invalidate an Order Request if the real-time inventory snapshot indicates that any selected item is unavailable at the assigned Store Partner.",
+      "type": "Validation",
+      "condition": "When an Order Request is submitted for processing",
+      "exceptions": [
+        "Manual override by a Store Partner manager for high-priority customer orders",
+        "System latency tolerance window defined in the SLA agreement"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner",
+        "Customer"
+      ],
+      "objects": [
+        "Order Request",
+        "Inventory Snapshot",
+        "Store Partner"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The Order Request is rejected to prevent overselling and subsequent refund disputes",
+      "rationale": "This ensures accurate inventory synchronization and prevents fulfillment failures due to stock discrepancies",
+      "parameters": [
+        {
+          "name": "real_time_inventory_snapshot",
+          "description": "The current stock level data for all items in the order"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-046",
+        "FR-054"
+      ],
+      "basis": "inferred"
+    }
+  ]
+}

@@ -1,0 +1,3391 @@
+[
+  {
+    "unit_id": "BR-001",
+    "kind": "business_requirement",
+    "title": "Ultra-fast delivery of fresh perishables",
+    "brief": [
+      "Requirement: The business requires the capability to guarantee delivery of fresh perishables and daily essentials to customers within a 60-minute window.",
+      "Objective: This serves the core goal of meeting customer expectations for immediate gratification and reducing the friction of traditional grocery shopping.",
+      "Value: Meeting this requirement drives repeat usage and high ratings, while failure results in lost revenue and reputational damage due to spoiled goods or late arrivals.",
+      "Stakeholders: Customer, Delivery Partner, Store Partner, Platform Operator"
+    ],
+    "statements": [
+      {
+        "id": "S-001",
+        "text": "Stock quantities must be locked exclusively to a single Order Request until the fulfillment task is completed or the order is cancelled.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-002",
+        "text": "Perishable items must be prioritized for allocation to orders based on their proximity to the expiration date.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-003",
+        "text": "The system must flag a synchronization discrepancy if the data link latency exceeds the defined threshold or if a sync failure is detected.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-004",
+        "text": "Locked stock must be automatically released if the Order Request is not confirmed within the allocated time window.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-022",
+        "text": "An item is considered 'nearing expiry' if its remaining shelf life is less than the configured safety margin.",
+        "origin": "FR-006"
+      },
+      {
+        "id": "S-023",
+        "text": "New Order Requests must be rejected if the primary fulfillment source contains items flagged as 'nearing expiry'.",
+        "origin": "FR-006"
+      },
+      {
+        "id": "S-024",
+        "text": "The system must update the Product Catalog status immediately upon detecting an expiry alert.",
+        "origin": "FR-006"
+      },
+      {
+        "id": "S-025",
+        "text": "All expiry alerts must be logged with a timestamp and the specific item identifier.",
+        "origin": "FR-006"
+      },
+      {
+        "id": "S-093",
+        "text": "An item is considered expired if the current date is later than the item's defined expiry date.",
+        "origin": "FR-024"
+      },
+      {
+        "id": "S-094",
+        "text": "An Order Request must contain zero expired items to be successfully created.",
+        "origin": "FR-024"
+      }
+    ],
+    "frs": [
+      "FR-001",
+      "FR-006",
+      "FR-046",
+      "FR-037",
+      "FR-054",
+      "FR-029",
+      "FR-024",
+      "FR-052"
+    ],
+    "br": "BR-001",
+    "actors": [
+      "Customer",
+      "Delivery Partner",
+      "Store Partner",
+      "Platform Operator"
+    ],
+    "objects": [],
+    "batch": 1
+  },
+  {
+    "unit_id": "BR-002",
+    "kind": "business_requirement",
+    "title": "Unified Digital Marketplace Interface",
+    "brief": [
+      "Requirement: The business requires a unified digital interface that aggregates fragmented inventory from multiple store partners to present a comprehensive assortment to customers.",
+      "Objective: This serves the goal of simplifying the shopping experience and enabling monetization through transaction commissions and advertising on a consolidated marketplace.",
+      "Value: Meeting this requirement increases customer retention and revenue; failure results in a fragmented user experience and lost sales opportunities.",
+      "Stakeholders: Customer, Store Partner, Platform Operator"
+    ],
+    "statements": [
+      {
+        "id": "S-005",
+        "text": "An order must only be assigned to a store if the Real-Time Inventory Snapshot shows available quantity greater than or equal to the requested quantity for all items.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-006",
+        "text": "If no store has sufficient inventory for the complete order, the system must not assign the order and must flag it for manual review.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-007",
+        "text": "The system must prioritize the nearest store based on the shortest estimated preparation and dispatch time.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-008",
+        "text": "Inventory quantities reserved by an automatic assignment must be immediately deducted from the Real-Time Inventory Snapshot to prevent overselling.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-013",
+        "text": "Funds shall not be released until a valid delivery proof is recorded in the system.",
+        "origin": "FR-004"
+      },
+      {
+        "id": "S-014",
+        "text": "Proof retrieved via external API shall be treated with the same verification standards as locally captured proof.",
+        "origin": "FR-004"
+      },
+      {
+        "id": "S-015",
+        "text": "A Dispute Ticket shall be created if the delivery proof lacks a timestamp or valid signature.",
+        "origin": "FR-004"
+      },
+      {
+        "id": "S-016",
+        "text": "The system shall reject delivery proof if the associated Delivery Assignment is marked as cancelled.",
+        "origin": "FR-004"
+      },
+      {
+        "id": "S-030",
+        "text": "A Store Partner must have a valid and non-expired food safety certificate to accept new orders.",
+        "origin": "FR-008"
+      },
+      {
+        "id": "S-031",
+        "text": "The system must block order allocation to a Store Partner if their primary operating license is flagged as invalid.",
+        "origin": "FR-008"
+      }
+    ],
+    "frs": [
+      "FR-054",
+      "FR-062",
+      "FR-025",
+      "FR-027",
+      "FR-004",
+      "FR-002",
+      "FR-059",
+      "FR-008"
+    ],
+    "br": "BR-002",
+    "actors": [
+      "Customer",
+      "Store Partner",
+      "Platform Operator"
+    ],
+    "objects": [],
+    "batch": 1
+  },
+  {
+    "unit_id": "BR-003",
+    "kind": "business_requirement",
+    "title": "Optimize last-mile logistics via algorithmic routing",
+    "brief": [
+      "Requirement: The business requires an automated system to dynamically assign orders to gig workers and calculate optimal delivery paths to ensure efficient fulfillment and cost control.",
+      "Objective: Maintain profitability in a low-margin model while meeting strict time commitments required to satisfy the quick commerce promise.",
+      "Value: Meeting delivery targets ensures customer satisfaction and repeat usage, while dynamic routing minimizes operational costs and prevents order failures.",
+      "Stakeholders: Delivery Partner, Platform Operator, Order Allocation Engine"
+    ],
+    "statements": [
+      {
+        "id": "S-005",
+        "text": "An order must only be assigned to a store if the Real-Time Inventory Snapshot shows available quantity greater than or equal to the requested quantity for all items.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-006",
+        "text": "If no store has sufficient inventory for the complete order, the system must not assign the order and must flag it for manual review.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-007",
+        "text": "The system must prioritize the nearest store based on the shortest estimated preparation and dispatch time.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-008",
+        "text": "Inventory quantities reserved by an automatic assignment must be immediately deducted from the Real-Time Inventory Snapshot to prevent overselling.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-009",
+        "text": "A delivery slot cannot be assigned to an agent if their current workload exceeds the maximum capacity defined for their service zone.",
+        "origin": "FR-003"
+      },
+      {
+        "id": "S-010",
+        "text": "An agent must explicitly accept a delivery assignment before the system confirms the slot as active.",
+        "origin": "FR-003"
+      },
+      {
+        "id": "S-011",
+        "text": "Dynamic reassignment of a delivery task is only permitted if the original agent rejects the task or exceeds capacity limits.",
+        "origin": "FR-003"
+      },
+      {
+        "id": "S-012",
+        "text": "The system must recalculate estimated arrival times if traffic patterns change significantly after the initial assignment.",
+        "origin": "FR-003"
+      },
+      {
+        "id": "S-046",
+        "text": "A new version of a Service Area Definition must supersede the previous active version immediately upon publication.",
+        "origin": "FR-012"
+      },
+      {
+        "id": "S-047",
+        "text": "Orders originating from addresses outside the active Service Area Definition must be rejected by the Order Allocation Engine.",
+        "origin": "FR-012"
+      }
+    ],
+    "frs": [
+      "FR-003",
+      "FR-028",
+      "FR-047",
+      "FR-002",
+      "FR-022",
+      "FR-055",
+      "FR-061",
+      "FR-012"
+    ],
+    "br": "BR-003",
+    "actors": [
+      "Delivery Partner",
+      "Platform Operator"
+    ],
+    "objects": [],
+    "batch": 1
+  },
+  {
+    "unit_id": "BR-004",
+    "kind": "business_requirement",
+    "title": "Measure orders fulfilled within target timeframes",
+    "brief": [
+      "Requirement: The business requires the Platform Operator to calculate and report the percentage of orders successfully delivered within the committed target window to validate service speed.",
+      "Objective: This requirement supports the core value proposition of ultra-fast delivery to drive customer retention and repeat usage.",
+      "Value: Meeting this metric ensures operational efficiency and maintains trust, while failure risks high churn and regulatory non-compliance regarding service level agreements.",
+      "Stakeholders: Platform Operator, Customer, Delivery Partner, Store Partner"
+    ],
+    "statements": [
+      {
+        "id": "S-054",
+        "text": "A Service Area Definition must be in an active state before it can be used to validate new Order Requests.",
+        "origin": "FR-014"
+      },
+      {
+        "id": "S-055",
+        "text": "Any modification to an active Service Area Definition must be logged with the reason for change and the identity of the operator.",
+        "origin": "FR-014"
+      },
+      {
+        "id": "S-056",
+        "text": "Deactivation of a Service Area Definition must immediately prevent the acceptance of new orders originating from that zone.",
+        "origin": "FR-014"
+      },
+      {
+        "id": "S-057",
+        "text": "A Service Area Definition cannot be created if its geographic boundaries overlap with a restricted zone defined by the Regulatory Authority.",
+        "origin": "FR-014"
+      },
+      {
+        "id": "S-117",
+        "text": "The system shall not finalize an Order Request if the calculated tax rate exceeds the maximum threshold defined by the Regulatory Authority.",
+        "origin": "FR-030"
+      },
+      {
+        "id": "S-118",
+        "text": "The system shall automatically generate a Dispute Ticket whenever a tax calculation error is detected during the Financial Transaction Record generation.",
+        "origin": "FR-030"
+      },
+      {
+        "id": "S-119",
+        "text": "The system shall only apply tax rates from jurisdictions where the Service Area Definition confirms operational authorization.",
+        "origin": "FR-030"
+      },
+      {
+        "id": "S-120",
+        "text": "The system shall update the Financial Transaction Record immediately upon receiving a new tax rate update from the external service.",
+        "origin": "FR-030"
+      },
+      {
+        "id": "S-125",
+        "text": "A partial refund shall only be triggered if the discrepancy is confirmed by a Delivery Proof or a Real-Time Inventory Snapshot indicating unavailability.",
+        "origin": "FR-032"
+      },
+      {
+        "id": "S-126",
+        "text": "The refund amount shall strictly equal the sum of the unit prices for the specific missing or damaged items, excluding any taxes or delivery fees.",
+        "origin": "FR-032"
+      }
+    ],
+    "frs": [
+      "FR-054",
+      "FR-059",
+      "FR-046",
+      "FR-032",
+      "FR-051",
+      "FR-014",
+      "FR-030",
+      "FR-053"
+    ],
+    "br": "BR-004",
+    "actors": [
+      "Platform Operator",
+      "Customer",
+      "Delivery Partner",
+      "Store Partner"
+    ],
+    "objects": [],
+    "batch": 1
+  },
+  {
+    "unit_id": "BR-005",
+    "kind": "business_requirement",
+    "title": "Track inventory discrepancies and overselling incidents",
+    "brief": [
+      "Requirement: The business requires continuous monitoring of inventory discrepancy rates and overselling incidents to ensure data accuracy and minimize order failures.",
+      "Objective: Maintain customer trust and prevent revenue loss from failed deliveries in a high-velocity environment.",
+      "Value: Accurate availability data reduces failed deliveries and protects revenue, while harm occurs if overselling leads to customer dissatisfaction and financial loss.",
+      "Stakeholders: Platform Operator, Store Partner, Customer, Fulfillment Supervisor"
+    ],
+    "statements": [
+      {
+        "id": "S-001",
+        "text": "Stock quantities must be locked exclusively to a single Order Request until the fulfillment task is completed or the order is cancelled.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-002",
+        "text": "Perishable items must be prioritized for allocation to orders based on their proximity to the expiration date.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-003",
+        "text": "The system must flag a synchronization discrepancy if the data link latency exceeds the defined threshold or if a sync failure is detected.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-004",
+        "text": "Locked stock must be automatically released if the Order Request is not confirmed within the allocated time window.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-005",
+        "text": "An order must only be assigned to a store if the Real-Time Inventory Snapshot shows available quantity greater than or equal to the requested quantity for all items.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-006",
+        "text": "If no store has sufficient inventory for the complete order, the system must not assign the order and must flag it for manual review.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-007",
+        "text": "The system must prioritize the nearest store based on the shortest estimated preparation and dispatch time.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-008",
+        "text": "Inventory quantities reserved by an automatic assignment must be immediately deducted from the Real-Time Inventory Snapshot to prevent overselling.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-026",
+        "text": "A Dispute Ticket must be created immediately upon receipt of a Delivery Proof indicating a delivery exception.",
+        "origin": "FR-007"
+      },
+      {
+        "id": "S-027",
+        "text": "The Dispute Ticket status must transition from 'Open' to 'Resolved' only after a final decision is recorded.",
+        "origin": "FR-007"
+      }
+    ],
+    "frs": [
+      "FR-001",
+      "FR-007",
+      "FR-011",
+      "FR-032",
+      "FR-033",
+      "FR-039",
+      "FR-002",
+      "FR-046"
+    ],
+    "br": "BR-005",
+    "actors": [
+      "Platform Operator",
+      "Store Partner",
+      "Customer",
+      "Fulfillment Supervisor"
+    ],
+    "objects": [],
+    "batch": 2
+  },
+  {
+    "unit_id": "BR-006",
+    "kind": "business_requirement",
+    "title": "Monitor revenue efficiency against operational costs",
+    "brief": [
+      "Requirement: The business requires a mechanism to continuously monitor the ratio of transaction commissions and delivery fees against operational costs to ensure profitability.",
+      "Objective: Sustaining the gig-economy logistics model requires rigorous cost control and optimization of multiple monetization channels to achieve positive unit economics.",
+      "Value: Ensures financial sustainability by identifying unprofitable orders or routes, while failure leads to eroding margins and potential service collapse.",
+      "Stakeholders: Platform Operator, Payment Provider, Delivery Partner"
+    ],
+    "statements": [
+      {
+        "id": "S-017",
+        "text": "Financial distribution shall only occur after a valid Delivery Proof is recorded.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-018",
+        "text": "The sum of all distributed amounts must equal the total value of the Financial Transaction Record.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-019",
+        "text": "Transactions involving high-risk indicators must be paused for manual verification before settlement.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-020",
+        "text": "Settlement calculations must strictly adhere to the terms defined in the Store Partner Agreement.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-021",
+        "text": "A Financial Transaction Record must be generated for every completed delivery regardless of outcome.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-086",
+        "text": "An Order Request cannot be submitted if the sum of item prices is strictly less than the minimum order value defined in the Store Partner Agreement.",
+        "origin": "FR-022"
+      },
+      {
+        "id": "S-087",
+        "text": "An Order Request can be submitted if the sum of item prices is equal to or greater than the minimum order value defined in the Store Partner Agreement.",
+        "origin": "FR-022"
+      },
+      {
+        "id": "S-088",
+        "text": "The minimum order value must be dynamically retrieved from the Store Partner Agreement at the time of validation.",
+        "origin": "FR-022"
+      },
+      {
+        "id": "S-089",
+        "text": "The system must display a clear error message to the Customer when the minimum order value is not met.",
+        "origin": "FR-022"
+      },
+      {
+        "id": "S-097",
+        "text": "The system shall use the commission rate from the most recently active Store Partner Agreement for any given transaction.",
+        "origin": "FR-025"
+      }
+    ],
+    "frs": [
+      "FR-005",
+      "FR-025",
+      "FR-045",
+      "FR-047",
+      "FR-022",
+      "FR-028",
+      "FR-039",
+      "FR-033"
+    ],
+    "br": "BR-006",
+    "actors": [
+      "Platform Operator",
+      "Payment Provider",
+      "Delivery Partner"
+    ],
+    "objects": [],
+    "batch": 2
+  },
+  {
+    "unit_id": "BR-007",
+    "kind": "business_requirement",
+    "title": "Real-time Store Partner Performance Dashboard",
+    "brief": [
+      "Requirement: The business requires a transparent dashboard for Store Partners to view real-time order volume, revenue splits, and performance metrics.",
+      "Objective: Enable Store Partners to optimize staffing and inventory by understanding their individual financial contribution and operational performance.",
+      "Value: Improved partner retention and operational efficiency through data-driven decision-making; failure risks partner churn and inventory mismanagement.",
+      "Stakeholders: Store Partner, Platform Operator, Fulfillment Supervisor"
+    ],
+    "statements": [
+      {
+        "id": "S-005",
+        "text": "An order must only be assigned to a store if the Real-Time Inventory Snapshot shows available quantity greater than or equal to the requested quantity for all items.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-006",
+        "text": "If no store has sufficient inventory for the complete order, the system must not assign the order and must flag it for manual review.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-007",
+        "text": "The system must prioritize the nearest store based on the shortest estimated preparation and dispatch time.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-008",
+        "text": "Inventory quantities reserved by an automatic assignment must be immediately deducted from the Real-Time Inventory Snapshot to prevent overselling.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-009",
+        "text": "A delivery slot cannot be assigned to an agent if their current workload exceeds the maximum capacity defined for their service zone.",
+        "origin": "FR-003"
+      },
+      {
+        "id": "S-010",
+        "text": "An agent must explicitly accept a delivery assignment before the system confirms the slot as active.",
+        "origin": "FR-003"
+      },
+      {
+        "id": "S-011",
+        "text": "Dynamic reassignment of a delivery task is only permitted if the original agent rejects the task or exceeds capacity limits.",
+        "origin": "FR-003"
+      },
+      {
+        "id": "S-012",
+        "text": "The system must recalculate estimated arrival times if traffic patterns change significantly after the initial assignment.",
+        "origin": "FR-003"
+      },
+      {
+        "id": "S-017",
+        "text": "Financial distribution shall only occur after a valid Delivery Proof is recorded.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-018",
+        "text": "The sum of all distributed amounts must equal the total value of the Financial Transaction Record.",
+        "origin": "FR-005"
+      }
+    ],
+    "frs": [
+      "FR-005",
+      "FR-039",
+      "FR-059",
+      "FR-049",
+      "FR-002",
+      "FR-003",
+      "FR-008",
+      "FR-025"
+    ],
+    "br": "BR-007",
+    "actors": [
+      "Store Partner",
+      "Platform Operator",
+      "Fulfillment Supervisor"
+    ],
+    "objects": [],
+    "batch": 2
+  },
+  {
+    "unit_id": "BR-008",
+    "kind": "business_requirement",
+    "title": "Delivery Partner Financial Transparency Portal",
+    "brief": [
+      "Requirement: The business requires the platform to provide Delivery Partners with direct, secure access to their historical earnings summaries, payout schedules, and tax documents within the application interface.",
+      "Objective: This requirement supports the business goal of ensuring gig-economy worker financial compliance and trust, distinct from internal platform audit logging.",
+      "Value: Meeting this need reduces administrative friction for workers managing personal finances and mitigates reputational risk associated with tax non-compliance; failure to provide this harms worker retention and regulatory standing.",
+      "Stakeholders: Delivery Partner, Platform Operator, Payment Provider, Regulatory Authority"
+    ],
+    "statements": [
+      {
+        "id": "S-038",
+        "text": "An amendment to an active agreement must immediately create a new version number while marking the previous version as historical.",
+        "origin": "FR-010"
+      },
+      {
+        "id": "S-039",
+        "text": "A Store Partner Agreement must be marked as 'Active' before any associated Order Requests can be allocated to that partner.",
+        "origin": "FR-010"
+      },
+      {
+        "id": "S-040",
+        "text": "Access to edit an agreement version is restricted to the Platform Operator and the Store Partner associated with that agreement.",
+        "origin": "FR-010"
+      },
+      {
+        "id": "S-041",
+        "text": "The system must prevent the deletion of any agreement version once it has been created.",
+        "origin": "FR-010"
+      },
+      {
+        "id": "S-050",
+        "text": "A financial transaction record must include item costs, delivery fees, taxes, platform commissions, and net settlement amounts to be considered complete.",
+        "origin": "FR-013"
+      },
+      {
+        "id": "S-051",
+        "text": "The system must link a financial transaction record to verifiable evidence of delivery before finalizing the settlement status.",
+        "origin": "FR-013"
+      },
+      {
+        "id": "S-052",
+        "text": "Any deviation from the standard process must be recorded with the nature of the issue and the current resolution status.",
+        "origin": "FR-013"
+      },
+      {
+        "id": "S-053",
+        "text": "Contractual details including commission rates and payout schedules must be archived alongside the financial transaction record.",
+        "origin": "FR-013"
+      },
+      {
+        "id": "S-062",
+        "text": "An actor may only perform an action if their assigned role includes the specific permission for that action.",
+        "origin": "FR-016"
+      },
+      {
+        "id": "S-063",
+        "text": "Access attempts by actors without the required permission must be denied and recorded in an audit log.",
+        "origin": "FR-016"
+      }
+    ],
+    "frs": [
+      "FR-016",
+      "FR-017",
+      "FR-043",
+      "FR-039",
+      "FR-010",
+      "FR-013",
+      "FR-042",
+      "FR-053"
+    ],
+    "br": "BR-008",
+    "actors": [
+      "Delivery Partner",
+      "Platform Operator",
+      "Payment Provider",
+      "Regulatory Authority"
+    ],
+    "objects": [],
+    "batch": 2
+  },
+  {
+    "unit_id": "BR-009",
+    "kind": "business_requirement",
+    "title": "Customer Self-Service Loyalty and Subscription Portal",
+    "brief": [
+      "Requirement: The business requires a dedicated customer-facing portal enabling users to manage subscription preferences, view detailed delivery history, and access personalized loyalty rewards.",
+      "Objective: This requirement serves the goal of enhancing customer retention and increasing lifetime value through improved engagement and transparency.",
+      "Value: Meeting this need increases customer loyalty and reduces churn, while failure results in lower retention rates and diminished competitive advantage.",
+      "Stakeholders: Customer, Platform Operator"
+    ],
+    "statements": [
+      {
+        "id": "S-034",
+        "text": "A Customer Profile must contain a unique identifier before any Order Request can be associated with it.",
+        "origin": "FR-009"
+      },
+      {
+        "id": "S-035",
+        "text": "Contact details within a Customer Profile must be verified before the profile status is set to active.",
+        "origin": "FR-009"
+      },
+      {
+        "id": "S-036",
+        "text": "Archived Customer Profiles must retain all historical data and cannot be modified after the archival action is confirmed.",
+        "origin": "FR-009"
+      },
+      {
+        "id": "S-037",
+        "text": "Any modification to a Customer Profile must be timestamped and attributed to the actor performing the change.",
+        "origin": "FR-009"
+      },
+      {
+        "id": "S-066",
+        "text": "Access is granted only when both the primary credential and the secondary verification code are valid and match.",
+        "origin": "FR-017"
+      },
+      {
+        "id": "S-067",
+        "text": "A failed authentication attempt triggers an immediate lockout if the total number of consecutive failures exceeds the system threshold.",
+        "origin": "FR-017"
+      },
+      {
+        "id": "S-068",
+        "text": "The secondary verification code expires after a short duration to prevent reuse.",
+        "origin": "FR-017"
+      },
+      {
+        "id": "S-069",
+        "text": "Authentication logs must be immutable and retained for the duration of the regulatory compliance period.",
+        "origin": "FR-017"
+      },
+      {
+        "id": "S-105",
+        "text": "A financial transaction cannot be finalized until the Payment Provider validates the payer's solvency.",
+        "origin": "FR-027"
+      },
+      {
+        "id": "S-106",
+        "text": "Refunds or reversals must be initiated only after a valid request is received from an authorized actor.",
+        "origin": "FR-027"
+      }
+    ],
+    "frs": [
+      "FR-009",
+      "FR-048",
+      "FR-051",
+      "FR-054",
+      "FR-017",
+      "FR-037",
+      "FR-062",
+      "FR-027"
+    ],
+    "br": "BR-009",
+    "actors": [
+      "Customer",
+      "Platform Operator"
+    ],
+    "objects": [],
+    "batch": 3
+  },
+  {
+    "unit_id": "BR-010",
+    "kind": "business_requirement",
+    "title": "Dynamic Pricing Engine for Demand-Based Fees",
+    "brief": [
+      "Requirement: The business requires a dynamic pricing mechanism that adjusts delivery fees and commissions in real-time based on demand, weather, and traffic conditions.",
+      "Objective: This serves the goal of revenue optimization and Service Level Agreement (SLA) adherence during supply-demand fluctuations.",
+      "Value: Meeting this requirement maximizes revenue during peak times and ensures timely deliveries; failure results in lost revenue and breached delivery promises.",
+      "Stakeholders: Platform Operator, Customer, Delivery Partner, Store Partner"
+    ],
+    "statements": [
+      {
+        "id": "S-009",
+        "text": "A delivery slot cannot be assigned to an agent if their current workload exceeds the maximum capacity defined for their service zone.",
+        "origin": "FR-003"
+      },
+      {
+        "id": "S-010",
+        "text": "An agent must explicitly accept a delivery assignment before the system confirms the slot as active.",
+        "origin": "FR-003"
+      },
+      {
+        "id": "S-011",
+        "text": "Dynamic reassignment of a delivery task is only permitted if the original agent rejects the task or exceeds capacity limits.",
+        "origin": "FR-003"
+      },
+      {
+        "id": "S-012",
+        "text": "The system must recalculate estimated arrival times if traffic patterns change significantly after the initial assignment.",
+        "origin": "FR-003"
+      },
+      {
+        "id": "S-046",
+        "text": "A new version of a Service Area Definition must supersede the previous active version immediately upon publication.",
+        "origin": "FR-012"
+      },
+      {
+        "id": "S-047",
+        "text": "Orders originating from addresses outside the active Service Area Definition must be rejected by the Order Allocation Engine.",
+        "origin": "FR-012"
+      },
+      {
+        "id": "S-048",
+        "text": "Travel time matrices must be recalculated whenever a Service Area Definition is modified to reflect updated route constraints.",
+        "origin": "FR-012"
+      },
+      {
+        "id": "S-049",
+        "text": "All modifications to Service Area Definitions must be logged with a timestamp and the identity of the Platform Operator.",
+        "origin": "FR-012"
+      },
+      {
+        "id": "S-097",
+        "text": "The system shall use the commission rate from the most recently active Store Partner Agreement for any given transaction.",
+        "origin": "FR-025"
+      },
+      {
+        "id": "S-098",
+        "text": "The system shall prevent the finalization of a Financial Transaction Record if no valid Store Partner Agreement exists for the involved Store Partner.",
+        "origin": "FR-025"
+      }
+    ],
+    "frs": [
+      "FR-012",
+      "FR-029",
+      "FR-045",
+      "FR-047",
+      "FR-058",
+      "FR-028",
+      "FR-003",
+      "FR-025"
+    ],
+    "br": "BR-010",
+    "actors": [
+      "Platform Operator",
+      "Customer",
+      "Delivery Partner",
+      "Store Partner"
+    ],
+    "objects": [],
+    "batch": 3
+  },
+  {
+    "unit_id": "BR-011",
+    "kind": "business_requirement",
+    "title": "Real-Time Inventory Reconciliation",
+    "brief": [
+      "Requirement: The business requires automated, real-time synchronization between physical store POS systems and the digital platform to prevent overselling and revenue leakage.",
+      "Objective: Ensure accurate inventory availability to maintain high customer satisfaction and prevent financial loss from uncollectible orders.",
+      "Value: Prevents failed deliveries and revenue leakage while ensuring regulatory compliance and operational efficiency.",
+      "Stakeholders: Store Partner, Platform Operator, Customer, Payment Provider"
+    ],
+    "statements": [
+      {
+        "id": "S-001",
+        "text": "Stock quantities must be locked exclusively to a single Order Request until the fulfillment task is completed or the order is cancelled.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-002",
+        "text": "Perishable items must be prioritized for allocation to orders based on their proximity to the expiration date.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-003",
+        "text": "The system must flag a synchronization discrepancy if the data link latency exceeds the defined threshold or if a sync failure is detected.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-004",
+        "text": "Locked stock must be automatically released if the Order Request is not confirmed within the allocated time window.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-005",
+        "text": "An order must only be assigned to a store if the Real-Time Inventory Snapshot shows available quantity greater than or equal to the requested quantity for all items.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-006",
+        "text": "If no store has sufficient inventory for the complete order, the system must not assign the order and must flag it for manual review.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-007",
+        "text": "The system must prioritize the nearest store based on the shortest estimated preparation and dispatch time.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-008",
+        "text": "Inventory quantities reserved by an automatic assignment must be immediately deducted from the Real-Time Inventory Snapshot to prevent overselling.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-013",
+        "text": "Funds shall not be released until a valid delivery proof is recorded in the system.",
+        "origin": "FR-004"
+      },
+      {
+        "id": "S-014",
+        "text": "Proof retrieved via external API shall be treated with the same verification standards as locally captured proof.",
+        "origin": "FR-004"
+      }
+    ],
+    "frs": [
+      "FR-001",
+      "FR-002",
+      "FR-004",
+      "FR-022",
+      "FR-034",
+      "FR-039",
+      "FR-055",
+      "FR-046"
+    ],
+    "br": "BR-011",
+    "actors": [
+      "Store Partner",
+      "Platform Operator",
+      "Customer",
+      "Payment Provider"
+    ],
+    "objects": [],
+    "batch": 3
+  },
+  {
+    "unit_id": "BR-012",
+    "kind": "business_requirement",
+    "title": "Continuous Financial Risk Mitigation",
+    "brief": [
+      "Requirement: The business requires continuous monitoring and mitigation of financial risks including fraud, chargebacks, and payment failures to protect cash flow and ensure settlement reliability.",
+      "Objective: This requirement serves the goal of operational sustainability and regulatory compliance in a high-volume, low-margin transaction model.",
+      "Value: Meeting this requirement prevents significant revenue loss and maintains trust, while failure leads to cash flow disruption and potential regulatory penalties.",
+      "Stakeholders: Payment Provider, Platform Operator, Store Partner, Customer, Regulatory Authority"
+    ],
+    "statements": [
+      {
+        "id": "S-017",
+        "text": "Financial distribution shall only occur after a valid Delivery Proof is recorded.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-018",
+        "text": "The sum of all distributed amounts must equal the total value of the Financial Transaction Record.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-019",
+        "text": "Transactions involving high-risk indicators must be paused for manual verification before settlement.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-020",
+        "text": "Settlement calculations must strictly adhere to the terms defined in the Store Partner Agreement.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-021",
+        "text": "A Financial Transaction Record must be generated for every completed delivery regardless of outcome.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-030",
+        "text": "A Store Partner must have a valid and non-expired food safety certificate to accept new orders.",
+        "origin": "FR-008"
+      },
+      {
+        "id": "S-031",
+        "text": "The system must block order allocation to a Store Partner if their primary operating license is flagged as invalid.",
+        "origin": "FR-008"
+      },
+      {
+        "id": "S-032",
+        "text": "Regulatory compliance status must be updated within 24 hours of receiving new data from external sources.",
+        "origin": "FR-008"
+      },
+      {
+        "id": "S-033",
+        "text": "A Store Partner must be notified immediately if their license expiration date is within 30 days.",
+        "origin": "FR-008"
+      },
+      {
+        "id": "S-101",
+        "text": "An order must be flagged for manual review if the calculated risk score exceeds the high-risk threshold.",
+        "origin": "FR-026"
+      }
+    ],
+    "frs": [
+      "FR-026",
+      "FR-027",
+      "FR-038",
+      "FR-039",
+      "FR-044",
+      "FR-008",
+      "FR-042",
+      "FR-005"
+    ],
+    "br": "BR-012",
+    "actors": [
+      "Payment Provider",
+      "Platform Operator",
+      "Store Partner",
+      "Customer",
+      "Regulatory Authority"
+    ],
+    "objects": [],
+    "batch": 3
+  },
+  {
+    "unit_id": "BR-013",
+    "kind": "business_requirement",
+    "title": "Regulatory Compliance for Food Safety and Labor Laws",
+    "brief": [
+      "Requirement: The business requires strict adherence to external food safety standards and gig-economy labor laws to mitigate legal liability and operational risk.",
+      "Objective: Ensure the platform operates within legal boundaries to prevent fines, shutdowns, and reputational damage.",
+      "Value: Meeting this requirement protects the business from immediate legal action and ensures sustainable operations; failure results in severe financial penalties and loss of license.",
+      "Stakeholders: Regulatory Authority, Platform Operator, Store Partner, Delivery Partner"
+    ],
+    "statements": [
+      {
+        "id": "S-030",
+        "text": "A Store Partner must have a valid and non-expired food safety certificate to accept new orders.",
+        "origin": "FR-008"
+      },
+      {
+        "id": "S-031",
+        "text": "The system must block order allocation to a Store Partner if their primary operating license is flagged as invalid.",
+        "origin": "FR-008"
+      },
+      {
+        "id": "S-032",
+        "text": "Regulatory compliance status must be updated within 24 hours of receiving new data from external sources.",
+        "origin": "FR-008"
+      },
+      {
+        "id": "S-033",
+        "text": "A Store Partner must be notified immediately if their license expiration date is within 30 days.",
+        "origin": "FR-008"
+      },
+      {
+        "id": "S-054",
+        "text": "A Service Area Definition must be in an active state before it can be used to validate new Order Requests.",
+        "origin": "FR-014"
+      },
+      {
+        "id": "S-055",
+        "text": "Any modification to an active Service Area Definition must be logged with the reason for change and the identity of the operator.",
+        "origin": "FR-014"
+      },
+      {
+        "id": "S-056",
+        "text": "Deactivation of a Service Area Definition must immediately prevent the acceptance of new orders originating from that zone.",
+        "origin": "FR-014"
+      },
+      {
+        "id": "S-057",
+        "text": "A Service Area Definition cannot be created if its geographic boundaries overlap with a restricted zone defined by the Regulatory Authority.",
+        "origin": "FR-014"
+      },
+      {
+        "id": "S-066",
+        "text": "Access is granted only when both the primary credential and the secondary verification code are valid and match.",
+        "origin": "FR-017"
+      },
+      {
+        "id": "S-067",
+        "text": "A failed authentication attempt triggers an immediate lockout if the total number of consecutive failures exceeds the system threshold.",
+        "origin": "FR-017"
+      }
+    ],
+    "frs": [
+      "FR-008",
+      "FR-017",
+      "FR-020",
+      "FR-023",
+      "FR-053",
+      "FR-040",
+      "FR-030",
+      "FR-014"
+    ],
+    "br": "BR-013",
+    "actors": [
+      "Regulatory Authority",
+      "Platform Operator",
+      "Store Partner",
+      "Delivery Partner"
+    ],
+    "objects": [],
+    "batch": 4
+  },
+  {
+    "unit_id": "BR-014",
+    "kind": "business_requirement",
+    "title": "Proactive Risk Analytics for Brand Protection",
+    "brief": [
+      "Requirement: The business requires a predictive analytics capability that correlates delivery delays, inventory errors, and customer sentiment to proactively identify and mitigate threats to brand reputation and SLA performance.",
+      "Objective: This serves the goal of maintaining customer trust and retention in a low-margin, high-volume environment by shifting from reactive to proactive operational management.",
+      "Value: Meeting this requirement prevents brand equity erosion and customer churn caused by unaddressed operational friction, while failure results in reputational damage and lost revenue.",
+      "Stakeholders: Platform Operator, Customer, Store Partner, Delivery Partner"
+    ],
+    "statements": [
+      {
+        "id": "S-001",
+        "text": "Stock quantities must be locked exclusively to a single Order Request until the fulfillment task is completed or the order is cancelled.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-002",
+        "text": "Perishable items must be prioritized for allocation to orders based on their proximity to the expiration date.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-003",
+        "text": "The system must flag a synchronization discrepancy if the data link latency exceeds the defined threshold or if a sync failure is detected.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-004",
+        "text": "Locked stock must be automatically released if the Order Request is not confirmed within the allocated time window.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-145",
+        "text": "A notification must be sent immediately upon any change in the refund request status.",
+        "origin": "FR-037"
+      },
+      {
+        "id": "S-146",
+        "text": "Notifications must only be sent if the new status differs from the status of the most recent notification.",
+        "origin": "FR-037"
+      },
+      {
+        "id": "S-147",
+        "text": "The notification content must accurately reflect the current state of the Financial Transaction Record.",
+        "origin": "FR-037"
+      },
+      {
+        "id": "S-148",
+        "text": "The system must verify the active communication channel exists before attempting to send a notification.",
+        "origin": "FR-037"
+      },
+      {
+        "id": "S-182",
+        "text": "An alert must only be generated for items classified as high-velocity in the Product Catalog.",
+        "origin": "FR-046"
+      },
+      {
+        "id": "S-183",
+        "text": "An alert is triggered only when the projected demand exceeds the current inventory by a defined safety margin.",
+        "origin": "FR-046"
+      }
+    ],
+    "frs": [
+      "FR-050",
+      "FR-051",
+      "FR-059",
+      "FR-060",
+      "FR-061",
+      "FR-037",
+      "FR-001",
+      "FR-046"
+    ],
+    "br": "BR-014",
+    "actors": [
+      "Platform Operator",
+      "Customer",
+      "Store Partner",
+      "Delivery Partner"
+    ],
+    "objects": [],
+    "batch": 4
+  },
+  {
+    "unit_id": "BR-015",
+    "kind": "business_requirement",
+    "title": "Dynamic Tax Calculation and Collection",
+    "brief": [
+      "Requirement: The business requires the automatic calculation and collection of applicable taxes based on local jurisdiction rules and product types during order processing.",
+      "Objective: Ensure strict adherence to financial regulations and mitigate the risk of penalties from tax authorities.",
+      "Value: Prevents regulatory fines and maintains financial integrity, while harm arises from non-compliance and potential legal action.",
+      "Stakeholders: Regulatory Authority, Payment Provider, Platform Operator"
+    ],
+    "statements": [
+      {
+        "id": "S-086",
+        "text": "An Order Request cannot be submitted if the sum of item prices is strictly less than the minimum order value defined in the Store Partner Agreement.",
+        "origin": "FR-022"
+      },
+      {
+        "id": "S-087",
+        "text": "An Order Request can be submitted if the sum of item prices is equal to or greater than the minimum order value defined in the Store Partner Agreement.",
+        "origin": "FR-022"
+      },
+      {
+        "id": "S-088",
+        "text": "The minimum order value must be dynamically retrieved from the Store Partner Agreement at the time of validation.",
+        "origin": "FR-022"
+      },
+      {
+        "id": "S-089",
+        "text": "The system must display a clear error message to the Customer when the minimum order value is not met.",
+        "origin": "FR-022"
+      },
+      {
+        "id": "S-101",
+        "text": "An order must be flagged for manual review if the calculated risk score exceeds the high-risk threshold.",
+        "origin": "FR-026"
+      },
+      {
+        "id": "S-102",
+        "text": "The system must consume the third-party fraud detection service response before allowing any financial transaction to proceed.",
+        "origin": "FR-026"
+      },
+      {
+        "id": "S-103",
+        "text": "High-risk orders must remain in a pending state until a Payment Provider explicitly approves or rejects them.",
+        "origin": "FR-026"
+      },
+      {
+        "id": "S-104",
+        "text": "All risk assessment events must be recorded with a timestamp and the specific indicators that triggered the score.",
+        "origin": "FR-026"
+      },
+      {
+        "id": "S-117",
+        "text": "The system shall not finalize an Order Request if the calculated tax rate exceeds the maximum threshold defined by the Regulatory Authority.",
+        "origin": "FR-030"
+      },
+      {
+        "id": "S-118",
+        "text": "The system shall automatically generate a Dispute Ticket whenever a tax calculation error is detected during the Financial Transaction Record generation.",
+        "origin": "FR-030"
+      }
+    ],
+    "frs": [
+      "FR-030",
+      "FR-040",
+      "FR-042",
+      "FR-057",
+      "FR-026",
+      "FR-041",
+      "FR-036",
+      "FR-022"
+    ],
+    "br": "BR-015",
+    "actors": [
+      "Regulatory Authority",
+      "Payment Provider",
+      "Platform Operator"
+    ],
+    "objects": [],
+    "batch": 4
+  },
+  {
+    "unit_id": "BR-016",
+    "kind": "business_requirement",
+    "title": "Mandatory Partner Compliance Validation",
+    "brief": [
+      "Requirement: The business requires a strict pre-onboarding validation process for all Store and Delivery Partners to verify regulatory licenses and contractual terms before operational access is granted.",
+      "Objective: This requirement ensures operational readiness by mitigating legal liability and supply chain disruptions caused by unverified partners.",
+      "Value: Meeting this requirement protects the business from regulatory fines and reputational harm, while non-compliance risks immediate service suspension and legal action.",
+      "Stakeholders: Regulatory Authority, Store Partner, Delivery Partner, Platform Operator"
+    ],
+    "statements": [
+      {
+        "id": "S-030",
+        "text": "A Store Partner must have a valid and non-expired food safety certificate to accept new orders.",
+        "origin": "FR-008"
+      },
+      {
+        "id": "S-031",
+        "text": "The system must block order allocation to a Store Partner if their primary operating license is flagged as invalid.",
+        "origin": "FR-008"
+      },
+      {
+        "id": "S-032",
+        "text": "Regulatory compliance status must be updated within 24 hours of receiving new data from external sources.",
+        "origin": "FR-008"
+      },
+      {
+        "id": "S-033",
+        "text": "A Store Partner must be notified immediately if their license expiration date is within 30 days.",
+        "origin": "FR-008"
+      },
+      {
+        "id": "S-038",
+        "text": "An amendment to an active agreement must immediately create a new version number while marking the previous version as historical.",
+        "origin": "FR-010"
+      },
+      {
+        "id": "S-039",
+        "text": "A Store Partner Agreement must be marked as 'Active' before any associated Order Requests can be allocated to that partner.",
+        "origin": "FR-010"
+      },
+      {
+        "id": "S-040",
+        "text": "Access to edit an agreement version is restricted to the Platform Operator and the Store Partner associated with that agreement.",
+        "origin": "FR-010"
+      },
+      {
+        "id": "S-041",
+        "text": "The system must prevent the deletion of any agreement version once it has been created.",
+        "origin": "FR-010"
+      },
+      {
+        "id": "S-066",
+        "text": "Access is granted only when both the primary credential and the secondary verification code are valid and match.",
+        "origin": "FR-017"
+      },
+      {
+        "id": "S-067",
+        "text": "A failed authentication attempt triggers an immediate lockout if the total number of consecutive failures exceeds the system threshold.",
+        "origin": "FR-017"
+      }
+    ],
+    "frs": [
+      "FR-008",
+      "FR-010",
+      "FR-020",
+      "FR-053",
+      "FR-017",
+      "FR-019",
+      "FR-031",
+      "FR-043"
+    ],
+    "br": "BR-016",
+    "actors": [
+      "Regulatory Authority",
+      "Store Partner",
+      "Delivery Partner",
+      "Platform Operator"
+    ],
+    "objects": [],
+    "batch": 4
+  },
+  {
+    "unit_id": "BR-017",
+    "kind": "business_requirement",
+    "title": "Rapid Isolation of System Outages",
+    "brief": [
+      "Requirement: The business requires the immediate containment of system failures or data corruption to prevent error propagation across the order lifecycle and protect revenue integrity.",
+      "Objective: This requirement serves the goal of maintaining high service availability and ensuring regulatory compliance during critical operational disruptions.",
+      "Value: Meeting this requirement prevents missed delivery windows, customer churn, and potential regulatory breaches, while failing to do so risks significant financial loss and reputational damage.",
+      "Stakeholders: Platform Operator, Regulatory Authority, Customer"
+    ],
+    "statements": [
+      {
+        "id": "S-001",
+        "text": "Stock quantities must be locked exclusively to a single Order Request until the fulfillment task is completed or the order is cancelled.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-002",
+        "text": "Perishable items must be prioritized for allocation to orders based on their proximity to the expiration date.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-003",
+        "text": "The system must flag a synchronization discrepancy if the data link latency exceeds the defined threshold or if a sync failure is detected.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-004",
+        "text": "Locked stock must be automatically released if the Order Request is not confirmed within the allocated time window.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-073",
+        "text": "A Customer Profile cannot be activated until identity verification is successful.",
+        "origin": "FR-019"
+      },
+      {
+        "id": "S-074",
+        "text": "Contact details must match the name and address on the verified identity document.",
+        "origin": "FR-019"
+      },
+      {
+        "id": "S-075",
+        "text": "Any failed verification attempt must generate a Dispute Ticket for manual review.",
+        "origin": "FR-019"
+      },
+      {
+        "id": "S-076",
+        "text": "The system must flag accounts with inconsistent contact details for further investigation.",
+        "origin": "FR-019"
+      },
+      {
+        "id": "S-077",
+        "text": "Every log entry must be immutable and tamper-evident.",
+        "origin": "FR-020"
+      },
+      {
+        "id": "S-078",
+        "text": "Audit logs must be retained for a period not shorter than the minimum legal requirement for the operating zone.",
+        "origin": "FR-020"
+      }
+    ],
+    "frs": [
+      "FR-001",
+      "FR-020",
+      "FR-031",
+      "FR-042",
+      "FR-028",
+      "FR-024",
+      "FR-019",
+      "FR-060"
+    ],
+    "br": "BR-017",
+    "actors": [
+      "Platform Operator",
+      "Regulatory Authority",
+      "Customer"
+    ],
+    "objects": [],
+    "batch": 5
+  },
+  {
+    "unit_id": "BR-018",
+    "kind": "business_requirement",
+    "title": "Guarantee immediate dispute resolution and fraud mitigation",
+    "brief": [
+      "Requirement: The business requires the immediate and transparent resolution of financial disputes and fraud attempts to maintain trust with Store Partners and Customers while minimizing revenue leakage.",
+      "Objective: Ensure financial integrity and regulatory compliance during high-volume micro-transaction settlement cycles.",
+      "Value: Failure to resolve disputes quickly erodes partner confidence and triggers regulatory scrutiny, leading to revenue loss and reputational damage.",
+      "Stakeholders: Payment Provider, Fulfillment Supervisor, Platform Operator, Customer, Store Partner, Regulatory Authority"
+    ],
+    "statements": [
+      {
+        "id": "S-017",
+        "text": "Financial distribution shall only occur after a valid Delivery Proof is recorded.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-018",
+        "text": "The sum of all distributed amounts must equal the total value of the Financial Transaction Record.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-019",
+        "text": "Transactions involving high-risk indicators must be paused for manual verification before settlement.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-020",
+        "text": "Settlement calculations must strictly adhere to the terms defined in the Store Partner Agreement.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-021",
+        "text": "A Financial Transaction Record must be generated for every completed delivery regardless of outcome.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-050",
+        "text": "A financial transaction record must include item costs, delivery fees, taxes, platform commissions, and net settlement amounts to be considered complete.",
+        "origin": "FR-013"
+      },
+      {
+        "id": "S-051",
+        "text": "The system must link a financial transaction record to verifiable evidence of delivery before finalizing the settlement status.",
+        "origin": "FR-013"
+      },
+      {
+        "id": "S-052",
+        "text": "Any deviation from the standard process must be recorded with the nature of the issue and the current resolution status.",
+        "origin": "FR-013"
+      },
+      {
+        "id": "S-053",
+        "text": "Contractual details including commission rates and payout schedules must be archived alongside the financial transaction record.",
+        "origin": "FR-013"
+      },
+      {
+        "id": "S-073",
+        "text": "A Customer Profile cannot be activated until identity verification is successful.",
+        "origin": "FR-019"
+      }
+    ],
+    "frs": [
+      "FR-036",
+      "FR-043",
+      "FR-042",
+      "FR-005",
+      "FR-019",
+      "FR-061",
+      "FR-039",
+      "FR-013"
+    ],
+    "br": "BR-018",
+    "actors": [
+      "Payment Provider",
+      "Fulfillment Supervisor",
+      "Platform Operator",
+      "Customer",
+      "Store Partner",
+      "Regulatory Authority"
+    ],
+    "objects": [],
+    "batch": 5
+  },
+  {
+    "unit_id": "BR-019",
+    "kind": "business_requirement",
+    "title": "Immutable Audit Trail for Operational Anomalies",
+    "brief": [
+      "Requirement: The business requires a tamper-proof, immutable record of all operational anomalies to satisfy Regulatory Authority mandates and enable accurate root cause analysis during high-stakes investigations.",
+      "Objective: Mitigate legal liability and prove compliance regarding gig-worker labor laws and food safety standards.",
+      "Value: Failure to provide a verifiable record exposes the business to regulatory fines, legal action, and reputational damage, while success ensures operational transparency and trust.",
+      "Stakeholders: Regulatory Authority, Platform Operator, Fulfillment Supervisor, Delivery Partner"
+    ],
+    "statements": [
+      {
+        "id": "S-030",
+        "text": "A Store Partner must have a valid and non-expired food safety certificate to accept new orders.",
+        "origin": "FR-008"
+      },
+      {
+        "id": "S-031",
+        "text": "The system must block order allocation to a Store Partner if their primary operating license is flagged as invalid.",
+        "origin": "FR-008"
+      },
+      {
+        "id": "S-032",
+        "text": "Regulatory compliance status must be updated within 24 hours of receiving new data from external sources.",
+        "origin": "FR-008"
+      },
+      {
+        "id": "S-033",
+        "text": "A Store Partner must be notified immediately if their license expiration date is within 30 days.",
+        "origin": "FR-008"
+      },
+      {
+        "id": "S-050",
+        "text": "A financial transaction record must include item costs, delivery fees, taxes, platform commissions, and net settlement amounts to be considered complete.",
+        "origin": "FR-013"
+      },
+      {
+        "id": "S-051",
+        "text": "The system must link a financial transaction record to verifiable evidence of delivery before finalizing the settlement status.",
+        "origin": "FR-013"
+      },
+      {
+        "id": "S-052",
+        "text": "Any deviation from the standard process must be recorded with the nature of the issue and the current resolution status.",
+        "origin": "FR-013"
+      },
+      {
+        "id": "S-053",
+        "text": "Contractual details including commission rates and payout schedules must be archived alongside the financial transaction record.",
+        "origin": "FR-013"
+      },
+      {
+        "id": "S-058",
+        "text": "A status transition is only valid if the new status logically follows the previous status in the defined lifecycle.",
+        "origin": "FR-015"
+      },
+      {
+        "id": "S-059",
+        "text": "The system must record a status entry for every state change, regardless of whether the change was manual or automated.",
+        "origin": "FR-015"
+      }
+    ],
+    "frs": [
+      "FR-015",
+      "FR-020",
+      "FR-042",
+      "FR-008",
+      "FR-013",
+      "FR-017",
+      "FR-019",
+      "FR-059"
+    ],
+    "br": "BR-019",
+    "actors": [
+      "Regulatory Authority",
+      "Platform Operator",
+      "Fulfillment Supervisor",
+      "Delivery Partner"
+    ],
+    "objects": [],
+    "batch": 5
+  },
+  {
+    "unit_id": "BR-020",
+    "kind": "business_requirement",
+    "title": "Dynamic Micro-Fulfillment Network Scaling",
+    "brief": [
+      "Requirement: The business requires the capability to dynamically scale its micro-fulfillment network and partner onboarding processes to maintain ultra-fast delivery SLAs during geographic expansion.",
+      "Objective: This requirement ensures that network complexity does not degrade the core value proposition of speed and reliability as the business enters new markets.",
+      "Value: Meeting this need prevents customer churn caused by service degradation, while failure risks losing market share to competitors with superior reliability.",
+      "Stakeholders: Platform Operator, Store Partner, Delivery Partner, Regulatory Authority"
+    ],
+    "statements": [
+      {
+        "id": "S-054",
+        "text": "A Service Area Definition must be in an active state before it can be used to validate new Order Requests.",
+        "origin": "FR-014"
+      },
+      {
+        "id": "S-055",
+        "text": "Any modification to an active Service Area Definition must be logged with the reason for change and the identity of the operator.",
+        "origin": "FR-014"
+      },
+      {
+        "id": "S-056",
+        "text": "Deactivation of a Service Area Definition must immediately prevent the acceptance of new orders originating from that zone.",
+        "origin": "FR-014"
+      },
+      {
+        "id": "S-057",
+        "text": "A Service Area Definition cannot be created if its geographic boundaries overlap with a restricted zone defined by the Regulatory Authority.",
+        "origin": "FR-014"
+      },
+      {
+        "id": "S-109",
+        "text": "The system shall treat a data link latency exceeding the defined threshold as a network disruption.",
+        "origin": "FR-028"
+      },
+      {
+        "id": "S-110",
+        "text": "The system shall invalidate an Assigned Delivery Slot if the external network status indicates a route constraint.",
+        "origin": "FR-028"
+      },
+      {
+        "id": "S-111",
+        "text": "The system shall update the Real-Time Inventory Snapshot to mark items as unavailable if the logistics link is down.",
+        "origin": "FR-028"
+      },
+      {
+        "id": "S-112",
+        "text": "The system shall prioritize agents with lower workload status when assigning tasks during network congestion.",
+        "origin": "FR-028"
+      },
+      {
+        "id": "S-178",
+        "text": "Surge pricing must only be applied when the ratio of active orders to available delivery agents exceeds the configured capacity threshold.",
+        "origin": "FR-045"
+      },
+      {
+        "id": "S-179",
+        "text": "The system must not apply surge pricing if the predicted wait time for the customer exceeds the maximum acceptable delay defined in the Service Area Definition.",
+        "origin": "FR-045"
+      }
+    ],
+    "frs": [
+      "FR-014",
+      "FR-050",
+      "FR-053",
+      "FR-045",
+      "FR-028",
+      "FR-049",
+      "FR-047",
+      "FR-054"
+    ],
+    "br": "BR-020",
+    "actors": [
+      "Platform Operator",
+      "Store Partner",
+      "Delivery Partner",
+      "Regulatory Authority"
+    ],
+    "objects": [],
+    "batch": 5
+  },
+  {
+    "unit_id": "BR-021",
+    "kind": "business_requirement",
+    "title": "Automated Quality Assurance and Dispute Resolution",
+    "brief": [
+      "Requirement: The business requires scalable, automated workflows to validate order quality and resolve disputes without manual intervention, ensuring consistent service standards as volume grows.",
+      "Objective: Protect brand reputation and maintain high customer satisfaction levels during periods of rapid order volume expansion.",
+      "Value: Prevents revenue loss from unresolved disputes and ensures consistent delivery quality, while reducing operational bottlenecks caused by manual oversight.",
+      "Stakeholders: Platform Operator, Customer, Delivery Partner, Store Partner, Fulfillment Supervisor"
+    ],
+    "statements": [
+      {
+        "id": "S-026",
+        "text": "A Dispute Ticket must be created immediately upon receipt of a Delivery Proof indicating a delivery exception.",
+        "origin": "FR-007"
+      },
+      {
+        "id": "S-027",
+        "text": "The Dispute Ticket status must transition from 'Open' to 'Resolved' only after a final decision is recorded.",
+        "origin": "FR-007"
+      },
+      {
+        "id": "S-028",
+        "text": "A Dispute Ticket must remain linked to the original Order Request for the duration of the resolution process.",
+        "origin": "FR-007"
+      },
+      {
+        "id": "S-029",
+        "text": "Financial adjustments cannot be finalized until the Dispute Ticket is marked as Resolved.",
+        "origin": "FR-007"
+      },
+      {
+        "id": "S-081",
+        "text": "An actor cannot approve a Dispute Ticket where they are the accused party.",
+        "origin": "FR-021"
+      },
+      {
+        "id": "S-082",
+        "text": "Disputes involving financial refunds must be approved by the Platform Operator.",
+        "origin": "FR-021"
+      },
+      {
+        "id": "S-083",
+        "text": "Disputes regarding product quality must be approved by the Store Partner.",
+        "origin": "FR-021"
+      },
+      {
+        "id": "S-084",
+        "text": "Disputes regarding delivery performance must be approved by the Delivery Partner.",
+        "origin": "FR-021"
+      },
+      {
+        "id": "S-085",
+        "text": "Unresolved Dispute Tickets must be escalated to a Fulfillment Supervisor after the initial assignment deadline.",
+        "origin": "FR-021"
+      },
+      {
+        "id": "S-121",
+        "text": "A refund must be initiated only after a dispute ticket is marked as validated or a delivery failure is explicitly confirmed.",
+        "origin": "FR-031"
+      }
+    ],
+    "frs": [
+      "FR-007",
+      "FR-021",
+      "FR-049",
+      "FR-057",
+      "FR-059",
+      "FR-061",
+      "FR-031",
+      "FR-032"
+    ],
+    "br": "BR-021",
+    "actors": [
+      "Platform Operator",
+      "Customer",
+      "Delivery Partner",
+      "Store Partner",
+      "Fulfillment Supervisor"
+    ],
+    "objects": [],
+    "batch": 6
+  },
+  {
+    "unit_id": "BR-022",
+    "kind": "business_requirement",
+    "title": "Flexible Revenue and Settlement Management",
+    "brief": [
+      "Requirement: The business requires a dynamic financial framework that supports diverse partner commission structures, multi-currency transactions, and real-time reconciliation to sustain ecosystem profitability.",
+      "Objective: Enable scalable monetization and accurate financial settlement across a heterogeneous network of store and delivery partners.",
+      "Value: Ensures revenue integrity and partner trust while adapting to volatile market conditions and varying partner agreements.",
+      "Stakeholders: Payment Provider, Store Partner, Platform Operator, Fulfillment Supervisor"
+    ],
+    "statements": [
+      {
+        "id": "S-017",
+        "text": "Financial distribution shall only occur after a valid Delivery Proof is recorded.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-018",
+        "text": "The sum of all distributed amounts must equal the total value of the Financial Transaction Record.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-019",
+        "text": "Transactions involving high-risk indicators must be paused for manual verification before settlement.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-020",
+        "text": "Settlement calculations must strictly adhere to the terms defined in the Store Partner Agreement.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-021",
+        "text": "A Financial Transaction Record must be generated for every completed delivery regardless of outcome.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-097",
+        "text": "The system shall use the commission rate from the most recently active Store Partner Agreement for any given transaction.",
+        "origin": "FR-025"
+      },
+      {
+        "id": "S-098",
+        "text": "The system shall prevent the finalization of a Financial Transaction Record if no valid Store Partner Agreement exists for the involved Store Partner.",
+        "origin": "FR-025"
+      },
+      {
+        "id": "S-099",
+        "text": "The system shall calculate the net settlement amount by subtracting the calculated commission from the gross revenue.",
+        "origin": "FR-025"
+      },
+      {
+        "id": "S-100",
+        "text": "The system shall treat a Store Partner Agreement as inactive if its effective end date has passed or if it is explicitly marked as terminated.",
+        "origin": "FR-025"
+      },
+      {
+        "id": "S-105",
+        "text": "A financial transaction cannot be finalized until the Payment Provider validates the payer's solvency.",
+        "origin": "FR-027"
+      }
+    ],
+    "frs": [
+      "FR-005",
+      "FR-025",
+      "FR-027",
+      "FR-039",
+      "FR-041",
+      "FR-043",
+      "FR-056",
+      "FR-044"
+    ],
+    "br": "BR-022",
+    "actors": [
+      "Payment Provider",
+      "Store Partner",
+      "Platform Operator",
+      "Fulfillment Supervisor"
+    ],
+    "objects": [],
+    "batch": 6
+  },
+  {
+    "unit_id": "BR-023",
+    "kind": "business_requirement",
+    "title": "Predictive Analytics for Demand and Inventory Optimization",
+    "brief": [
+      "Requirement: The business requires predictive analytics reports on demand patterns and inventory turnover to optimize resource allocation and reduce overselling incidents.",
+      "Objective: This requirement serves the goal of balancing supply with fluctuating demand to minimize operational waste and ensure high fulfillment accuracy.",
+      "Value: Meeting this need reduces inventory shrinkage and waste while improving customer satisfaction through accurate stock availability; failure results in overselling, financial loss, and reputational damage.",
+      "Stakeholders: Platform Operator, Store Partner, Order Allocation Engine"
+    ],
+    "statements": [
+      {
+        "id": "S-001",
+        "text": "Stock quantities must be locked exclusively to a single Order Request until the fulfillment task is completed or the order is cancelled.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-002",
+        "text": "Perishable items must be prioritized for allocation to orders based on their proximity to the expiration date.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-003",
+        "text": "The system must flag a synchronization discrepancy if the data link latency exceeds the defined threshold or if a sync failure is detected.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-004",
+        "text": "Locked stock must be automatically released if the Order Request is not confirmed within the allocated time window.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-005",
+        "text": "An order must only be assigned to a store if the Real-Time Inventory Snapshot shows available quantity greater than or equal to the requested quantity for all items.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-006",
+        "text": "If no store has sufficient inventory for the complete order, the system must not assign the order and must flag it for manual review.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-007",
+        "text": "The system must prioritize the nearest store based on the shortest estimated preparation and dispatch time.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-008",
+        "text": "Inventory quantities reserved by an automatic assignment must be immediately deducted from the Real-Time Inventory Snapshot to prevent overselling.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-022",
+        "text": "An item is considered 'nearing expiry' if its remaining shelf life is less than the configured safety margin.",
+        "origin": "FR-006"
+      },
+      {
+        "id": "S-023",
+        "text": "New Order Requests must be rejected if the primary fulfillment source contains items flagged as 'nearing expiry'.",
+        "origin": "FR-006"
+      }
+    ],
+    "frs": [
+      "FR-001",
+      "FR-046",
+      "FR-058",
+      "FR-045",
+      "FR-002",
+      "FR-055",
+      "FR-006",
+      "FR-049"
+    ],
+    "br": "BR-023",
+    "actors": [
+      "Platform Operator",
+      "Store Partner"
+    ],
+    "objects": [],
+    "batch": 6
+  },
+  {
+    "unit_id": "BR-024",
+    "kind": "business_requirement",
+    "title": "Automated fallback routing and vendor diversification",
+    "brief": [
+      "Requirement: The business requires resilient order allocation capabilities that automatically switch to alternative logistics providers or mapping services when primary external dependencies fail.",
+      "Objective: This serves the goal of maintaining ultra-fast delivery promises and preventing revenue loss during third-party outages.",
+      "Value: If met, the business ensures continuous operations and customer trust; if not, service interruptions will lead to order cancellations and regulatory non-compliance.",
+      "Stakeholders: Platform Operator, Delivery Partner, Customer, Order Allocation Engine"
+    ],
+    "statements": [
+      {
+        "id": "S-005",
+        "text": "An order must only be assigned to a store if the Real-Time Inventory Snapshot shows available quantity greater than or equal to the requested quantity for all items.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-006",
+        "text": "If no store has sufficient inventory for the complete order, the system must not assign the order and must flag it for manual review.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-007",
+        "text": "The system must prioritize the nearest store based on the shortest estimated preparation and dispatch time.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-008",
+        "text": "Inventory quantities reserved by an automatic assignment must be immediately deducted from the Real-Time Inventory Snapshot to prevent overselling.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-017",
+        "text": "Financial distribution shall only occur after a valid Delivery Proof is recorded.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-018",
+        "text": "The sum of all distributed amounts must equal the total value of the Financial Transaction Record.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-019",
+        "text": "Transactions involving high-risk indicators must be paused for manual verification before settlement.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-020",
+        "text": "Settlement calculations must strictly adhere to the terms defined in the Store Partner Agreement.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-021",
+        "text": "A Financial Transaction Record must be generated for every completed delivery regardless of outcome.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-101",
+        "text": "An order must be flagged for manual review if the calculated risk score exceeds the high-risk threshold.",
+        "origin": "FR-026"
+      }
+    ],
+    "frs": [
+      "FR-028",
+      "FR-029",
+      "FR-047",
+      "FR-026",
+      "FR-005",
+      "FR-033",
+      "FR-027",
+      "FR-002"
+    ],
+    "br": "BR-024",
+    "actors": [
+      "Platform Operator",
+      "Delivery Partner",
+      "Customer"
+    ],
+    "objects": [],
+    "batch": 6
+  },
+  {
+    "unit_id": "BR-025",
+    "kind": "business_requirement",
+    "title": "Third-Party Vendor SLA Enforcement",
+    "brief": [
+      "Requirement: The business requires legally binding Service Level Agreements with critical third-party vendors that mandate guaranteed uptime, rapid incident response, and financial penalties for service degradation.",
+      "Objective: Mitigate operational downtime and reputational damage caused by failures in external dependencies beyond the platform's direct control.",
+      "Value: Ensures service continuity and protects brand reputation by holding vendors accountable for performance, while preventing revenue loss from unavailability.",
+      "Stakeholders: Platform Operator, Payment Provider, Delivery Partner, Store Partner"
+    ],
+    "statements": [
+      {
+        "id": "S-017",
+        "text": "Financial distribution shall only occur after a valid Delivery Proof is recorded.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-018",
+        "text": "The sum of all distributed amounts must equal the total value of the Financial Transaction Record.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-019",
+        "text": "Transactions involving high-risk indicators must be paused for manual verification before settlement.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-020",
+        "text": "Settlement calculations must strictly adhere to the terms defined in the Store Partner Agreement.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-021",
+        "text": "A Financial Transaction Record must be generated for every completed delivery regardless of outcome.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-038",
+        "text": "An amendment to an active agreement must immediately create a new version number while marking the previous version as historical.",
+        "origin": "FR-010"
+      },
+      {
+        "id": "S-039",
+        "text": "A Store Partner Agreement must be marked as 'Active' before any associated Order Requests can be allocated to that partner.",
+        "origin": "FR-010"
+      },
+      {
+        "id": "S-040",
+        "text": "Access to edit an agreement version is restricted to the Platform Operator and the Store Partner associated with that agreement.",
+        "origin": "FR-010"
+      },
+      {
+        "id": "S-041",
+        "text": "The system must prevent the deletion of any agreement version once it has been created.",
+        "origin": "FR-010"
+      },
+      {
+        "id": "S-058",
+        "text": "A status transition is only valid if the new status logically follows the previous status in the defined lifecycle.",
+        "origin": "FR-015"
+      }
+    ],
+    "frs": [
+      "FR-050",
+      "FR-053",
+      "FR-026",
+      "FR-005",
+      "FR-015",
+      "FR-010",
+      "FR-031",
+      "FR-028"
+    ],
+    "br": "BR-025",
+    "actors": [
+      "Platform Operator",
+      "Payment Provider",
+      "Delivery Partner",
+      "Store Partner"
+    ],
+    "objects": [],
+    "batch": 7
+  },
+  {
+    "unit_id": "BR-026",
+    "kind": "business_requirement",
+    "title": "Defer Advanced Predictive Inventory Models",
+    "brief": [
+      "Requirement: The business requires a strategic decision to postpone the development of advanced predictive inventory replenishment and complex demand forecasting models until sufficient historical transaction data is collected.",
+      "Objective: This serves the goal of minimizing initial development costs and technical debt while ensuring the platform launches with core, reliable functionality.",
+      "Value: Benefit includes faster time-to-market and reduced resource allocation; harm includes potential inefficiency in early inventory management if models are not yet mature.",
+      "Stakeholders: Platform Operator, Order Allocation Engine, Store Partner"
+    ],
+    "statements": [
+      {
+        "id": "S-005",
+        "text": "An order must only be assigned to a store if the Real-Time Inventory Snapshot shows available quantity greater than or equal to the requested quantity for all items.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-006",
+        "text": "If no store has sufficient inventory for the complete order, the system must not assign the order and must flag it for manual review.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-007",
+        "text": "The system must prioritize the nearest store based on the shortest estimated preparation and dispatch time.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-008",
+        "text": "Inventory quantities reserved by an automatic assignment must be immediately deducted from the Real-Time Inventory Snapshot to prevent overselling.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-042",
+        "text": "A product entry cannot be updated if it is in an archived state.",
+        "origin": "FR-011"
+      },
+      {
+        "id": "S-043",
+        "text": "All product updates must include a timestamp and the identifier of the user making the change.",
+        "origin": "FR-011"
+      },
+      {
+        "id": "S-044",
+        "text": "Required fields such as product name and price must be populated before a new entry is created.",
+        "origin": "FR-011"
+      },
+      {
+        "id": "S-045",
+        "text": "Previous versions of a product must be retained and marked as archived when a new version is published.",
+        "origin": "FR-011"
+      },
+      {
+        "id": "S-133",
+        "text": "Inventory locks must be released immediately upon confirmation of cancellation before the Fulfillment Task status changes to 'Ready for Dispatch'.",
+        "origin": "FR-034"
+      },
+      {
+        "id": "S-134",
+        "text": "Financial reservations must be reversed only if the Order Request has not yet been handed over to a Delivery Partner.",
+        "origin": "FR-034"
+      }
+    ],
+    "frs": [
+      "FR-002",
+      "FR-057",
+      "FR-046",
+      "FR-058",
+      "FR-047",
+      "FR-011",
+      "FR-040",
+      "FR-034"
+    ],
+    "br": "BR-026",
+    "actors": [
+      "Platform Operator",
+      "Store Partner"
+    ],
+    "objects": [],
+    "batch": 7
+  },
+  {
+    "unit_id": "BR-027",
+    "kind": "business_requirement",
+    "title": "Proactive Perishable Inventory Management",
+    "brief": [
+      "Requirement: The business requires a mechanism to proactively manage perishable stock by generating real-time alerts for items approaching shelf-life limits to prioritize fulfillment or trigger removal.",
+      "Objective: This requirement serves the goal of minimizing product waste and maintaining quality standards to protect brand reputation and reduce loss costs.",
+      "Value: If met, the business reduces financial loss from unsellable goods and ensures customer satisfaction through high-quality deliveries; if not met, waste increases and customer trust erodes.",
+      "Stakeholders: Store Partner, Fulfillment Supervisor, Platform Operator"
+    ],
+    "statements": [
+      {
+        "id": "S-001",
+        "text": "Stock quantities must be locked exclusively to a single Order Request until the fulfillment task is completed or the order is cancelled.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-002",
+        "text": "Perishable items must be prioritized for allocation to orders based on their proximity to the expiration date.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-003",
+        "text": "The system must flag a synchronization discrepancy if the data link latency exceeds the defined threshold or if a sync failure is detected.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-004",
+        "text": "Locked stock must be automatically released if the Order Request is not confirmed within the allocated time window.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-005",
+        "text": "An order must only be assigned to a store if the Real-Time Inventory Snapshot shows available quantity greater than or equal to the requested quantity for all items.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-006",
+        "text": "If no store has sufficient inventory for the complete order, the system must not assign the order and must flag it for manual review.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-007",
+        "text": "The system must prioritize the nearest store based on the shortest estimated preparation and dispatch time.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-008",
+        "text": "Inventory quantities reserved by an automatic assignment must be immediately deducted from the Real-Time Inventory Snapshot to prevent overselling.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-022",
+        "text": "An item is considered 'nearing expiry' if its remaining shelf life is less than the configured safety margin.",
+        "origin": "FR-006"
+      },
+      {
+        "id": "S-023",
+        "text": "New Order Requests must be rejected if the primary fulfillment source contains items flagged as 'nearing expiry'.",
+        "origin": "FR-006"
+      }
+    ],
+    "frs": [
+      "FR-006",
+      "FR-018",
+      "FR-024",
+      "FR-001",
+      "FR-046",
+      "FR-002",
+      "FR-058",
+      "FR-014"
+    ],
+    "br": "BR-027",
+    "actors": [
+      "Store Partner",
+      "Fulfillment Supervisor",
+      "Platform Operator"
+    ],
+    "objects": [],
+    "batch": 7
+  },
+  {
+    "unit_id": "BR-028",
+    "kind": "business_requirement",
+    "title": "Multi-channel delivery status notifications",
+    "brief": [
+      "Requirement: The business requires the Platform Operator to automatically send timely updates via SMS, email, or app push when an order status changes to Ready for Delivery or Assigned to a Delivery Partner.",
+      "Objective: This serves the goal of reducing support inquiries and improving the overall customer delivery experience through transparency.",
+      "Value: Meeting this requirement reduces customer frustration and support costs, while failure leads to increased complaints and lower retention.",
+      "Stakeholders: Customer, Platform Operator, Delivery Partner"
+    ],
+    "statements": [
+      {
+        "id": "S-009",
+        "text": "A delivery slot cannot be assigned to an agent if their current workload exceeds the maximum capacity defined for their service zone.",
+        "origin": "FR-003"
+      },
+      {
+        "id": "S-010",
+        "text": "An agent must explicitly accept a delivery assignment before the system confirms the slot as active.",
+        "origin": "FR-003"
+      },
+      {
+        "id": "S-011",
+        "text": "Dynamic reassignment of a delivery task is only permitted if the original agent rejects the task or exceeds capacity limits.",
+        "origin": "FR-003"
+      },
+      {
+        "id": "S-012",
+        "text": "The system must recalculate estimated arrival times if traffic patterns change significantly after the initial assignment.",
+        "origin": "FR-003"
+      },
+      {
+        "id": "S-017",
+        "text": "Financial distribution shall only occur after a valid Delivery Proof is recorded.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-018",
+        "text": "The sum of all distributed amounts must equal the total value of the Financial Transaction Record.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-019",
+        "text": "Transactions involving high-risk indicators must be paused for manual verification before settlement.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-020",
+        "text": "Settlement calculations must strictly adhere to the terms defined in the Store Partner Agreement.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-021",
+        "text": "A Financial Transaction Record must be generated for every completed delivery regardless of outcome.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-058",
+        "text": "A status transition is only valid if the new status logically follows the previous status in the defined lifecycle.",
+        "origin": "FR-015"
+      }
+    ],
+    "frs": [
+      "FR-052",
+      "FR-037",
+      "FR-003",
+      "FR-005",
+      "FR-047",
+      "FR-015",
+      "FR-033",
+      "FR-017"
+    ],
+    "br": "BR-028",
+    "actors": [
+      "Customer",
+      "Platform Operator",
+      "Delivery Partner"
+    ],
+    "objects": [],
+    "batch": 7
+  },
+  {
+    "unit_id": "OBJ-001",
+    "kind": "business_object",
+    "title": "Delivery Assignment",
+    "brief": [
+      "Purpose: Links a specific order to a specific delivery agent and vehicle.",
+      "Role in the lifecycle: Trigger for the physical movement of goods.",
+      "Depends on: Fulfillment Task, Assigned Delivery Slot",
+      "Used in activities: Last-Mile Logistics Execution; Delivery Handover and Proof Generation; Order Fulfillment and Preparation"
+    ],
+    "statements": [
+      {
+        "id": "S-010",
+        "text": "An agent must explicitly accept a delivery assignment before the system confirms the slot as active.",
+        "origin": "FR-003"
+      },
+      {
+        "id": "S-016",
+        "text": "The system shall reject delivery proof if the associated Delivery Assignment is marked as cancelled.",
+        "origin": "FR-004"
+      },
+      {
+        "id": "S-123",
+        "text": "No new Delivery Assignment can be created for the same Order Request while a refund is in progress.",
+        "origin": "FR-031"
+      },
+      {
+        "id": "S-240",
+        "text": "A Feedback Record must be linked to a specific Delivery Assignment to validate the context of the quality issue.",
+        "origin": "FR-060"
+      },
+      {
+        "id": "S-247",
+        "text": "Feedback records must be linked to a specific Delivery Assignment to attribute performance to the correct partner.",
+        "origin": "FR-062"
+      },
+      {
+        "id": "S-342",
+        "text": "Status must reflect the live location and speed of all agents.",
+        "origin": "IR Real-Time Logistics Network Status"
+      },
+      {
+        "id": "S-343",
+        "text": "Capacity metrics must be updated continuously as agents move.",
+        "origin": "IR Real-Time Logistics Network Status"
+      },
+      {
+        "id": "S-344",
+        "text": "Congestion alerts must be triggered when demand exceeds supply.",
+        "origin": "IR Real-Time Logistics Network Status"
+      },
+      {
+        "id": "S-345",
+        "text": "Network status must be shared with all relevant stakeholders.",
+        "origin": "IR Real-Time Logistics Network Status"
+      },
+      {
+        "id": "S-346",
+        "text": "Agent availability must be monitored to optimize dispatch times.",
+        "origin": "IR Real-Time Logistics Network Status"
+      }
+    ],
+    "frs": [
+      "FR-056",
+      "FR-003",
+      "FR-016",
+      "FR-002",
+      "FR-033",
+      "FR-052",
+      "FR-047",
+      "FR-004"
+    ],
+    "br": null,
+    "actors": [],
+    "objects": [
+      "Delivery Assignment"
+    ],
+    "batch": 8
+  },
+  {
+    "unit_id": "OBJ-002",
+    "kind": "business_object",
+    "title": "Store Partner Agreement",
+    "brief": [
+      "Purpose: Defines the commercial and operational relationship between the platform and the physical retail store.",
+      "Role in the lifecycle: Enabler for catalog synchronization and inventory access.",
+      "Depends on: Service Area Definition",
+      "Used in activities: Market Entry and Partner Onboarding; Product Catalog Curation and Strategy"
+    ],
+    "statements": [
+      {
+        "id": "S-020",
+        "text": "Settlement calculations must strictly adhere to the terms defined in the Store Partner Agreement.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-039",
+        "text": "A Store Partner Agreement must be marked as 'Active' before any associated Order Requests can be allocated to that partner.",
+        "origin": "FR-010"
+      },
+      {
+        "id": "S-086",
+        "text": "An Order Request cannot be submitted if the sum of item prices is strictly less than the minimum order value defined in the Store Partner Agreement.",
+        "origin": "FR-022"
+      },
+      {
+        "id": "S-087",
+        "text": "An Order Request can be submitted if the sum of item prices is equal to or greater than the minimum order value defined in the Store Partner Agreement.",
+        "origin": "FR-022"
+      },
+      {
+        "id": "S-088",
+        "text": "The minimum order value must be dynamically retrieved from the Store Partner Agreement at the time of validation.",
+        "origin": "FR-022"
+      },
+      {
+        "id": "S-097",
+        "text": "The system shall use the commission rate from the most recently active Store Partner Agreement for any given transaction.",
+        "origin": "FR-025"
+      },
+      {
+        "id": "S-098",
+        "text": "The system shall prevent the finalization of a Financial Transaction Record if no valid Store Partner Agreement exists for the involved Store Partner.",
+        "origin": "FR-025"
+      },
+      {
+        "id": "S-100",
+        "text": "The system shall treat a Store Partner Agreement as inactive if its effective end date has passed or if it is explicitly marked as terminated.",
+        "origin": "FR-025"
+      },
+      {
+        "id": "S-144",
+        "text": "The escalation path must strictly follow the hierarchy defined in the Store Partner Agreement.",
+        "origin": "FR-036"
+      },
+      {
+        "id": "S-155",
+        "text": "Revenue share calculations must strictly adhere to the commission rates defined in the active Store Partner Agreement.",
+        "origin": "FR-039"
+      }
+    ],
+    "frs": [
+      "FR-010",
+      "FR-039",
+      "FR-025",
+      "FR-055",
+      "FR-053",
+      "FR-022",
+      "FR-005",
+      "FR-059"
+    ],
+    "br": null,
+    "actors": [],
+    "objects": [
+      "Store Partner Agreement"
+    ],
+    "batch": 8
+  },
+  {
+    "unit_id": "OBJ-003",
+    "kind": "business_object",
+    "title": "Product Catalog",
+    "brief": [
+      "Purpose: Represents the structured list of sellable items, including descriptions, prices, images, and category hierarchies.",
+      "Role in the lifecycle: Source of truth for customer selection and order composition.",
+      "Depends on: Store Partner Agreement",
+      "Used in activities: Inventory Synchronization and Validation; Product Catalog Curation and Strategy; Order Initiation and Demand Capture"
+    ],
+    "statements": [
+      {
+        "id": "S-024",
+        "text": "The system must update the Product Catalog status immediately upon detecting an expiry alert.",
+        "origin": "FR-006"
+      },
+      {
+        "id": "S-128",
+        "text": "The system shall prevent a partial refund calculation if the item in question is marked as permanently discontinued in the Product Catalog.",
+        "origin": "FR-032"
+      },
+      {
+        "id": "S-160",
+        "text": "The tax calculation must be reproducible using the same Order Request, Product Catalog, and Delivery Zone Map data.",
+        "origin": "FR-040"
+      },
+      {
+        "id": "S-182",
+        "text": "An alert must only be generated for items classified as high-velocity in the Product Catalog.",
+        "origin": "FR-046"
+      },
+      {
+        "id": "S-332",
+        "text": "Stock counts must reflect actual inventory at the specific store location.",
+        "origin": "IR Real-Time Stock Availability and Status"
+      },
+      {
+        "id": "S-333",
+        "text": "Availability status must update immediately upon any physical inventory change.",
+        "origin": "IR Real-Time Stock Availability and Status"
+      },
+      {
+        "id": "S-334",
+        "text": "Orders cannot be allocated for SKUs showing zero or negative availability.",
+        "origin": "IR Real-Time Stock Availability and Status"
+      },
+      {
+        "id": "S-335",
+        "text": "Partial stock must clearly indicate available quantity versus total quantity.",
+        "origin": "IR Real-Time Stock Availability and Status"
+      },
+      {
+        "id": "S-336",
+        "text": "Stock validity expires if not picked within a defined operational window.",
+        "origin": "IR Real-Time Stock Availability and Status"
+      },
+      {
+        "id": "S-337",
+        "text": "Expiry dates must be tracked for all perishable items.",
+        "origin": "IR Product Expiry and Shelf-Life Data"
+      }
+    ],
+    "frs": [
+      "FR-001",
+      "FR-006",
+      "FR-011",
+      "FR-024",
+      "FR-032",
+      "FR-040",
+      "FR-046",
+      "FR-054"
+    ],
+    "br": null,
+    "actors": [],
+    "objects": [
+      "Product Catalog"
+    ],
+    "batch": 8
+  },
+  {
+    "unit_id": "OBJ-004",
+    "kind": "business_object",
+    "title": "Delivery Zone Map",
+    "brief": [
+      "Purpose: Defines the specific geographic boundaries and travel time estimates for a store to its customers.",
+      "Role in the lifecycle: Input for fee calculation and delivery promise setting.",
+      "Depends on: Service Area Definition, Store Partner Agreement",
+      "Used in activities: Order Validation and Resource Allocation"
+    ],
+    "statements": [
+      {
+        "id": "S-160",
+        "text": "The tax calculation must be reproducible using the same Order Request, Product Catalog, and Delivery Zone Map data.",
+        "origin": "FR-040"
+      },
+      {
+        "id": "S-215",
+        "text": "Delivery fees must be calculated based on the distance between the Store Partner and the delivery address within the Delivery Zone Map.",
+        "origin": "FR-054"
+      },
+      {
+        "id": "S-382",
+        "text": "Travel times must be calculated dynamically based on real-time traffic.",
+        "origin": "IR Delivery Zone Travel Time and Distance M..."
+      },
+      {
+        "id": "S-383",
+        "text": "Distance estimates must account for physical road constraints.",
+        "origin": "IR Delivery Zone Travel Time and Distance M..."
+      },
+      {
+        "id": "S-384",
+        "text": "Matrix data must be updated regularly to reflect route changes.",
+        "origin": "IR Delivery Zone Travel Time and Distance M..."
+      },
+      {
+        "id": "S-385",
+        "text": "Times must be consistent with the defined delivery SLAs.",
+        "origin": "IR Delivery Zone Travel Time and Distance M..."
+      },
+      {
+        "id": "S-386",
+        "text": "Data must be accurate to prevent false delivery expectations.",
+        "origin": "IR Delivery Zone Travel Time and Distance M..."
+      },
+      {
+        "id": "S-412",
+        "text": "Service boundaries must cover all authorized physical stores to enable aggregation.",
+        "origin": "IR Geospatial Service Boundary Definition"
+      },
+      {
+        "id": "S-413",
+        "text": "Delivery zones must be geographically enclosed polygons or radii with clear boundaries.",
+        "origin": "IR Geospatial Service Boundary Definition"
+      },
+      {
+        "id": "S-414",
+        "text": "Service areas must be legally validated by regulatory authorities before activation.",
+        "origin": "IR Geospatial Service Boundary Definition"
+      }
+    ],
+    "frs": [
+      "FR-003",
+      "FR-012",
+      "FR-014",
+      "FR-028",
+      "FR-033",
+      "FR-040",
+      "FR-045",
+      "FR-054"
+    ],
+    "br": null,
+    "actors": [],
+    "objects": [
+      "Delivery Zone Map"
+    ],
+    "batch": 8
+  },
+  {
+    "unit_id": "OBJ-005",
+    "kind": "business_object",
+    "title": "Feedback Record",
+    "brief": [
+      "Purpose: Captures customer satisfaction ratings and textual comments regarding the order and delivery.",
+      "Role in the lifecycle: Input for quality improvement and agent performance evaluation.",
+      "Depends on: Delivery Proof",
+      "Used in activities: Dispute Resolution and Exception Handling; Post-Transaction Review and Feedback Collection"
+    ],
+    "statements": [
+      {
+        "id": "S-202",
+        "text": "A retention offer must only be generated if the customer has at least one negative Feedback Record or an open Dispute Ticket.",
+        "origin": "FR-051"
+      },
+      {
+        "id": "S-205",
+        "text": "The system must capture the specific reason code from the Feedback Record to determine the type of incentive offered.",
+        "origin": "FR-051"
+      },
+      {
+        "id": "S-226",
+        "text": "A Feedback Record can only be created after a Delivery Proof exists for the associated Order Request.",
+        "origin": "FR-057"
+      },
+      {
+        "id": "S-227",
+        "text": "The system must link the Feedback Record to the specific Delivery Proof to validate the context of the review.",
+        "origin": "FR-057"
+      },
+      {
+        "id": "S-235",
+        "text": "Negative feedback records regarding product quality must reduce the overall quality score.",
+        "origin": "FR-059"
+      },
+      {
+        "id": "S-236",
+        "text": "The quality score must be recalculated whenever a new Feedback Record is submitted for a completed task.",
+        "origin": "FR-059"
+      },
+      {
+        "id": "S-238",
+        "text": "An alert is generated only if the same issue type appears in multiple Feedback Records within the defined time window.",
+        "origin": "FR-060"
+      },
+      {
+        "id": "S-240",
+        "text": "A Feedback Record must be linked to a specific Delivery Assignment to validate the context of the quality issue.",
+        "origin": "FR-060"
+      },
+      {
+        "id": "S-242",
+        "text": "A Feedback Record must be routed to a Fulfillment Supervisor if the rating is below the defined acceptable level.",
+        "origin": "FR-061"
+      },
+      {
+        "id": "S-244",
+        "text": "The system must prevent the closure of a Feedback Record if the associated Dispute Ticket is still active.",
+        "origin": "FR-061"
+      }
+    ],
+    "frs": [
+      "FR-057",
+      "FR-062",
+      "FR-059",
+      "FR-049",
+      "FR-050",
+      "FR-061",
+      "FR-035",
+      "FR-052"
+    ],
+    "br": null,
+    "actors": [],
+    "objects": [
+      "Feedback Record"
+    ],
+    "batch": 9
+  },
+  {
+    "unit_id": "OBJ-006",
+    "kind": "business_object",
+    "title": "Order Request",
+    "brief": [
+      "Purpose: Captures the customer's specific selection of items, quantities, and delivery instructions.",
+      "Role in the lifecycle: Trigger for the fulfillment workflow.",
+      "Depends on: Product Catalog, Customer Profile",
+      "Used in activities: Order Validation and Resource Allocation; Order Initiation and Demand Capture"
+    ],
+    "statements": [
+      {
+        "id": "S-001",
+        "text": "Stock quantities must be locked exclusively to a single Order Request until the fulfillment task is completed or the order is cancelled.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-004",
+        "text": "Locked stock must be automatically released if the Order Request is not confirmed within the allocated time window.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-023",
+        "text": "New Order Requests must be rejected if the primary fulfillment source contains items flagged as 'nearing expiry'.",
+        "origin": "FR-006"
+      },
+      {
+        "id": "S-028",
+        "text": "A Dispute Ticket must remain linked to the original Order Request for the duration of the resolution process.",
+        "origin": "FR-007"
+      },
+      {
+        "id": "S-034",
+        "text": "A Customer Profile must contain a unique identifier before any Order Request can be associated with it.",
+        "origin": "FR-009"
+      },
+      {
+        "id": "S-039",
+        "text": "A Store Partner Agreement must be marked as 'Active' before any associated Order Requests can be allocated to that partner.",
+        "origin": "FR-010"
+      },
+      {
+        "id": "S-054",
+        "text": "A Service Area Definition must be in an active state before it can be used to validate new Order Requests.",
+        "origin": "FR-014"
+      },
+      {
+        "id": "S-072",
+        "text": "The system must display the Real-Time Inventory Snapshot alongside the Order Request to facilitate accurate physical verification.",
+        "origin": "FR-018"
+      },
+      {
+        "id": "S-086",
+        "text": "An Order Request cannot be submitted if the sum of item prices is strictly less than the minimum order value defined in the Store Partner Agreement.",
+        "origin": "FR-022"
+      },
+      {
+        "id": "S-087",
+        "text": "An Order Request can be submitted if the sum of item prices is equal to or greater than the minimum order value defined in the Store Partner Agreement.",
+        "origin": "FR-022"
+      }
+    ],
+    "frs": [
+      "FR-054",
+      "FR-032",
+      "FR-018",
+      "FR-007",
+      "FR-052",
+      "FR-047",
+      "FR-006",
+      "FR-024"
+    ],
+    "br": null,
+    "actors": [],
+    "objects": [
+      "Order Request"
+    ],
+    "batch": 9
+  },
+  {
+    "unit_id": "OBJ-007",
+    "kind": "business_object",
+    "title": "Fulfillment Task",
+    "brief": [
+      "Purpose: Represents the internal operations required to pick, pack, and dispatch the order.",
+      "Role in the lifecycle: Workflow orchestrator for store staff.",
+      "Depends on: Order Request, Real-Time Inventory Snapshot",
+      "Used in activities: Last-Mile Logistics Execution; Order Validation and Resource Allocation; Order Fulfillment and Preparation"
+    ],
+    "statements": [
+      {
+        "id": "S-001",
+        "text": "Stock quantities must be locked exclusively to a single Order Request until the fulfillment task is completed or the order is cancelled.",
+        "origin": "FR-001"
+      },
+      {
+        "id": "S-070",
+        "text": "A Fulfillment Task cannot transition to a 'Ready for Dispatch' status unless a quality verification record exists for every item.",
+        "origin": "FR-018"
+      },
+      {
+        "id": "S-071",
+        "text": "If a quality check fails for any item, the system must flag the Fulfillment Task as 'Requires Correction' and block dispatch.",
+        "origin": "FR-018"
+      },
+      {
+        "id": "S-133",
+        "text": "Inventory locks must be released immediately upon confirmation of cancellation before the Fulfillment Task status changes to 'Ready for Dispatch'.",
+        "origin": "FR-034"
+      },
+      {
+        "id": "S-218",
+        "text": "A Fulfillment Task must only be generated if the selected Store Partner has sufficient inventory for all items in the Order Request.",
+        "origin": "FR-055"
+      },
+      {
+        "id": "S-220",
+        "text": "Stock reserved for a Fulfillment Task must be immediately reflected in the Real-Time Inventory Snapshot to prevent overselling.",
+        "origin": "FR-055"
+      },
+      {
+        "id": "S-222",
+        "text": "A Fulfillment Task cannot be marked as completed without a valid Delivery Proof record.",
+        "origin": "FR-056"
+      },
+      {
+        "id": "S-234",
+        "text": "A Store Partner's quality score must be calculated only after at least three completed Fulfillment Tasks.",
+        "origin": "FR-059"
+      },
+      {
+        "id": "S-357",
+        "text": "Tasks must be allocated to the nearest store partner geographically.",
+        "origin": "IR Fulfillment Task Allocation and Routing"
+      },
+      {
+        "id": "S-358",
+        "text": "Time windows must align with the store's operational hours.",
+        "origin": "IR Fulfillment Task Allocation and Routing"
+      }
+    ],
+    "frs": [
+      "FR-055",
+      "FR-034",
+      "FR-059",
+      "FR-002",
+      "FR-018",
+      "FR-001",
+      "FR-047",
+      "FR-046"
+    ],
+    "br": null,
+    "actors": [],
+    "objects": [
+      "Fulfillment Task"
+    ],
+    "batch": 9
+  },
+  {
+    "unit_id": "OBJ-008",
+    "kind": "business_object",
+    "title": "Dispute Ticket",
+    "brief": [
+      "Purpose: Tracks unresolved issues such as missing items, damaged goods, or failed deliveries.",
+      "Role in the lifecycle: Exception handling mechanism for order closure.",
+      "Depends on: Feedback Record, Financial Transaction Record",
+      "Used in activities: Dispute Resolution and Exception Handling"
+    ],
+    "statements": [
+      {
+        "id": "S-015",
+        "text": "A Dispute Ticket shall be created if the delivery proof lacks a timestamp or valid signature.",
+        "origin": "FR-004"
+      },
+      {
+        "id": "S-026",
+        "text": "A Dispute Ticket must be created immediately upon receipt of a Delivery Proof indicating a delivery exception.",
+        "origin": "FR-007"
+      },
+      {
+        "id": "S-027",
+        "text": "The Dispute Ticket status must transition from 'Open' to 'Resolved' only after a final decision is recorded.",
+        "origin": "FR-007"
+      },
+      {
+        "id": "S-028",
+        "text": "A Dispute Ticket must remain linked to the original Order Request for the duration of the resolution process.",
+        "origin": "FR-007"
+      },
+      {
+        "id": "S-029",
+        "text": "Financial adjustments cannot be finalized until the Dispute Ticket is marked as Resolved.",
+        "origin": "FR-007"
+      },
+      {
+        "id": "S-075",
+        "text": "Any failed verification attempt must generate a Dispute Ticket for manual review.",
+        "origin": "FR-019"
+      },
+      {
+        "id": "S-081",
+        "text": "An actor cannot approve a Dispute Ticket where they are the accused party.",
+        "origin": "FR-021"
+      },
+      {
+        "id": "S-085",
+        "text": "Unresolved Dispute Tickets must be escalated to a Fulfillment Supervisor after the initial assignment deadline.",
+        "origin": "FR-021"
+      },
+      {
+        "id": "S-118",
+        "text": "The system shall automatically generate a Dispute Ticket whenever a tax calculation error is detected during the Financial Transaction Record generation.",
+        "origin": "FR-030"
+      },
+      {
+        "id": "S-121",
+        "text": "A refund must be initiated only after a dispute ticket is marked as validated or a delivery failure is explicitly confirmed.",
+        "origin": "FR-031"
+      }
+    ],
+    "frs": [
+      "FR-007",
+      "FR-035",
+      "FR-021",
+      "FR-031",
+      "FR-036",
+      "FR-050",
+      "FR-019",
+      "FR-053"
+    ],
+    "br": null,
+    "actors": [],
+    "objects": [
+      "Dispute Ticket"
+    ],
+    "batch": 9
+  },
+  {
+    "unit_id": "OBJ-009",
+    "kind": "business_object",
+    "title": "Customer Profile",
+    "brief": [
+      "Purpose: Holds user identification, address details, payment methods, and preference history.",
+      "Role in the lifecycle: Identifier for order ownership and delivery routing.",
+      "Depends on: Store Partner Agreement",
+      "Used in activities: Payment Processing and Financial Settlement; Order Initiation and Demand Capture"
+    ],
+    "statements": [
+      {
+        "id": "S-034",
+        "text": "A Customer Profile must contain a unique identifier before any Order Request can be associated with it.",
+        "origin": "FR-009"
+      },
+      {
+        "id": "S-035",
+        "text": "Contact details within a Customer Profile must be verified before the profile status is set to active.",
+        "origin": "FR-009"
+      },
+      {
+        "id": "S-036",
+        "text": "Archived Customer Profiles must retain all historical data and cannot be modified after the archival action is confirmed.",
+        "origin": "FR-009"
+      },
+      {
+        "id": "S-037",
+        "text": "Any modification to a Customer Profile must be timestamped and attributed to the actor performing the change.",
+        "origin": "FR-009"
+      },
+      {
+        "id": "S-073",
+        "text": "A Customer Profile cannot be activated until identity verification is successful.",
+        "origin": "FR-019"
+      },
+      {
+        "id": "S-181",
+        "text": "Pricing adjustments must be communicated to the Customer Profile before the Order Request is finalized.",
+        "origin": "FR-045"
+      },
+      {
+        "id": "S-190",
+        "text": "A loyalty benefit cannot be applied if the Customer Profile indicates the account is suspended or flagged for fraud.",
+        "origin": "FR-048"
+      },
+      {
+        "id": "S-193",
+        "text": "The Customer Profile must be updated within the same transaction session to ensure the deducted balance is immediately reflected.",
+        "origin": "FR-048"
+      },
+      {
+        "id": "S-207",
+        "text": "The notification channel must match the primary contact method defined in the Customer Profile.",
+        "origin": "FR-052"
+      },
+      {
+        "id": "S-352",
+        "text": "Each order must be linked to a unique, verified customer profile.",
+        "origin": "IR Customer Identity and Contact Informatio..."
+      }
+    ],
+    "frs": [
+      "FR-009",
+      "FR-019",
+      "FR-054",
+      "FR-023",
+      "FR-015",
+      "FR-027",
+      "FR-026",
+      "FR-061"
+    ],
+    "br": null,
+    "actors": [],
+    "objects": [
+      "Customer Profile"
+    ],
+    "batch": 10
+  },
+  {
+    "unit_id": "OBJ-010",
+    "kind": "business_object",
+    "title": "Service Area Definition",
+    "brief": [
+      "Purpose: Geographically delimits the zones where hyperlocal delivery is currently supported.",
+      "Role in the lifecycle: Configuration parameter for Store and Delivery Partner onboarding.",
+      "Used in activities: Market Entry and Partner Onboarding"
+    ],
+    "statements": [
+      {
+        "id": "S-046",
+        "text": "A new version of a Service Area Definition must supersede the previous active version immediately upon publication.",
+        "origin": "FR-012"
+      },
+      {
+        "id": "S-047",
+        "text": "Orders originating from addresses outside the active Service Area Definition must be rejected by the Order Allocation Engine.",
+        "origin": "FR-012"
+      },
+      {
+        "id": "S-048",
+        "text": "Travel time matrices must be recalculated whenever a Service Area Definition is modified to reflect updated route constraints.",
+        "origin": "FR-012"
+      },
+      {
+        "id": "S-049",
+        "text": "All modifications to Service Area Definitions must be logged with a timestamp and the identity of the Platform Operator.",
+        "origin": "FR-012"
+      },
+      {
+        "id": "S-054",
+        "text": "A Service Area Definition must be in an active state before it can be used to validate new Order Requests.",
+        "origin": "FR-014"
+      },
+      {
+        "id": "S-055",
+        "text": "Any modification to an active Service Area Definition must be logged with the reason for change and the identity of the operator.",
+        "origin": "FR-014"
+      },
+      {
+        "id": "S-056",
+        "text": "Deactivation of a Service Area Definition must immediately prevent the acceptance of new orders originating from that zone.",
+        "origin": "FR-014"
+      },
+      {
+        "id": "S-057",
+        "text": "A Service Area Definition cannot be created if its geographic boundaries overlap with a restricted zone defined by the Regulatory Authority.",
+        "origin": "FR-014"
+      },
+      {
+        "id": "S-090",
+        "text": "An order must not be created if the delivery address is geographically outside all active Service Area Definitions.",
+        "origin": "FR-023"
+      },
+      {
+        "id": "S-091",
+        "text": "A Service Area Definition must be marked as active to allow order placement within its boundaries.",
+        "origin": "FR-023"
+      }
+    ],
+    "frs": [
+      "FR-012",
+      "FR-014",
+      "FR-023",
+      "FR-029",
+      "FR-030",
+      "FR-053",
+      "FR-058",
+      "FR-056"
+    ],
+    "br": null,
+    "actors": [],
+    "objects": [
+      "Service Area Definition"
+    ],
+    "batch": 10
+  },
+  {
+    "unit_id": "OBJ-011",
+    "kind": "business_object",
+    "title": "Financial Transaction Record",
+    "brief": [
+      "Purpose: Documents the exchange of value, including item costs, fees, taxes, and payment status.",
+      "Role in the lifecycle: Proof of payment and settlement trigger.",
+      "Depends on: Order Request, Delivery Assignment",
+      "Used in activities: Payment Processing and Financial Settlement; Dispute Resolution and Exception Handling"
+    ],
+    "statements": [
+      {
+        "id": "S-018",
+        "text": "The sum of all distributed amounts must equal the total value of the Financial Transaction Record.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-021",
+        "text": "A Financial Transaction Record must be generated for every completed delivery regardless of outcome.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-050",
+        "text": "A financial transaction record must include item costs, delivery fees, taxes, platform commissions, and net settlement amounts to be considered complete.",
+        "origin": "FR-013"
+      },
+      {
+        "id": "S-051",
+        "text": "The system must link a financial transaction record to verifiable evidence of delivery before finalizing the settlement status.",
+        "origin": "FR-013"
+      },
+      {
+        "id": "S-053",
+        "text": "Contractual details including commission rates and payout schedules must be archived alongside the financial transaction record.",
+        "origin": "FR-013"
+      },
+      {
+        "id": "S-098",
+        "text": "The system shall prevent the finalization of a Financial Transaction Record if no valid Store Partner Agreement exists for the involved Store Partner.",
+        "origin": "FR-025"
+      },
+      {
+        "id": "S-118",
+        "text": "The system shall automatically generate a Dispute Ticket whenever a tax calculation error is detected during the Financial Transaction Record generation.",
+        "origin": "FR-030"
+      },
+      {
+        "id": "S-120",
+        "text": "The system shall update the Financial Transaction Record immediately upon receiving a new tax rate update from the external service.",
+        "origin": "FR-030"
+      },
+      {
+        "id": "S-147",
+        "text": "The notification content must accurately reflect the current state of the Financial Transaction Record.",
+        "origin": "FR-037"
+      },
+      {
+        "id": "S-156",
+        "text": "Settlement amounts must include all applicable taxes, delivery fees, and platform commissions as per the Financial Transaction Record.",
+        "origin": "FR-039"
+      }
+    ],
+    "frs": [
+      "FR-027",
+      "FR-042",
+      "FR-005",
+      "FR-013",
+      "FR-026",
+      "FR-030",
+      "FR-043",
+      "FR-041"
+    ],
+    "br": null,
+    "actors": [],
+    "objects": [
+      "Financial Transaction Record"
+    ],
+    "batch": 10
+  },
+  {
+    "unit_id": "OBJ-012",
+    "kind": "business_object",
+    "title": "Delivery Proof",
+    "brief": [
+      "Purpose: Verifies that the goods were physically transferred to the customer.",
+      "Role in the lifecycle: Closure condition for the logistics workflow.",
+      "Depends on: Delivery Assignment, Customer Profile",
+      "Used in activities: Delivery Handover and Proof Generation"
+    ],
+    "statements": [
+      {
+        "id": "S-013",
+        "text": "Funds shall not be released until a valid delivery proof is recorded in the system.",
+        "origin": "FR-004"
+      },
+      {
+        "id": "S-015",
+        "text": "A Dispute Ticket shall be created if the delivery proof lacks a timestamp or valid signature.",
+        "origin": "FR-004"
+      },
+      {
+        "id": "S-016",
+        "text": "The system shall reject delivery proof if the associated Delivery Assignment is marked as cancelled.",
+        "origin": "FR-004"
+      },
+      {
+        "id": "S-017",
+        "text": "Financial distribution shall only occur after a valid Delivery Proof is recorded.",
+        "origin": "FR-005"
+      },
+      {
+        "id": "S-026",
+        "text": "A Dispute Ticket must be created immediately upon receipt of a Delivery Proof indicating a delivery exception.",
+        "origin": "FR-007"
+      },
+      {
+        "id": "S-108",
+        "text": "Final settlement amounts are contingent upon the verification of the Delivery Proof.",
+        "origin": "FR-027"
+      },
+      {
+        "id": "S-125",
+        "text": "A partial refund shall only be triggered if the discrepancy is confirmed by a Delivery Proof or a Real-Time Inventory Snapshot indicating unavailability.",
+        "origin": "FR-032"
+      },
+      {
+        "id": "S-152",
+        "text": "The impact analysis must be recalculated if new delivery proof or customer verification data becomes available.",
+        "origin": "FR-038"
+      },
+      {
+        "id": "S-169",
+        "text": "A settlement batch must only include Order Requests where the Delivery Proof status is verified as successful.",
+        "origin": "FR-043"
+      },
+      {
+        "id": "S-194",
+        "text": "A Delivery Partner's performance score must be updated immediately upon the submission of a Delivery Proof record.",
+        "origin": "FR-049"
+      }
+    ],
+    "frs": [
+      "FR-056",
+      "FR-015",
+      "FR-004",
+      "FR-057",
+      "FR-047",
+      "FR-032",
+      "FR-007",
+      "FR-028"
+    ],
+    "br": null,
+    "actors": [],
+    "objects": [
+      "Delivery Proof"
+    ],
+    "batch": 10
+  },
+  {
+    "unit_id": "OBJ-013",
+    "kind": "business_object",
+    "title": "Real-Time Inventory Snapshot",
+    "brief": [
+      "Purpose: Records the current available quantity and status of each SKU at a specific store location.",
+      "Role in the lifecycle: Constraint for order allocation and validation.",
+      "Depends on: Product Catalog, Store Partner Agreement",
+      "Used in activities: Inventory Synchronization and Validation; Order Validation and Resource Allocation"
+    ],
+    "statements": [
+      {
+        "id": "S-005",
+        "text": "An order must only be assigned to a store if the Real-Time Inventory Snapshot shows available quantity greater than or equal to the requested quantity for all items.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-008",
+        "text": "Inventory quantities reserved by an automatic assignment must be immediately deducted from the Real-Time Inventory Snapshot to prevent overselling.",
+        "origin": "FR-002"
+      },
+      {
+        "id": "S-072",
+        "text": "The system must display the Real-Time Inventory Snapshot alongside the Order Request to facilitate accurate physical verification.",
+        "origin": "FR-018"
+      },
+      {
+        "id": "S-111",
+        "text": "The system shall update the Real-Time Inventory Snapshot to mark items as unavailable if the logistics link is down.",
+        "origin": "FR-028"
+      },
+      {
+        "id": "S-125",
+        "text": "A partial refund shall only be triggered if the discrepancy is confirmed by a Delivery Proof or a Real-Time Inventory Snapshot indicating unavailability.",
+        "origin": "FR-032"
+      },
+      {
+        "id": "S-184",
+        "text": "Alerts must not be generated for items marked as temporarily unavailable in the Real-Time Inventory Snapshot.",
+        "origin": "FR-046"
+      },
+      {
+        "id": "S-185",
+        "text": "The system must recalculate forecasts daily based on the latest Real-Time Inventory Snapshot.",
+        "origin": "FR-046"
+      },
+      {
+        "id": "S-214",
+        "text": "An Order Request cannot be submitted if any selected item is out of stock in the Real-Time Inventory Snapshot.",
+        "origin": "FR-054"
+      },
+      {
+        "id": "S-220",
+        "text": "Stock reserved for a Fulfillment Task must be immediately reflected in the Real-Time Inventory Snapshot to prevent overselling.",
+        "origin": "FR-055"
+      },
+      {
+        "id": "S-332",
+        "text": "Stock counts must reflect actual inventory at the specific store location.",
+        "origin": "IR Real-Time Stock Availability and Status"
+      }
+    ],
+    "frs": [
+      "FR-002",
+      "FR-032",
+      "FR-028",
+      "FR-033",
+      "FR-034",
+      "FR-046",
+      "FR-018",
+      "FR-058"
+    ],
+    "br": null,
+    "actors": [],
+    "objects": [
+      "Real-Time Inventory Snapshot"
+    ],
+    "batch": 11
+  },
+  {
+    "unit_id": "OBJ-014",
+    "kind": "business_object",
+    "title": "Assigned Delivery Slot",
+    "brief": [
+      "Purpose: Secures a specific time window for the delivery agent to execute the last-mile delivery.",
+      "Role in the lifecycle: Constraint for logistics scheduling.",
+      "Depends on: Fulfillment Task, Delivery Zone Map",
+      "Used in activities: Order Validation and Resource Allocation; Order Initiation and Demand Capture"
+    ],
+    "statements": [
+      {
+        "id": "S-110",
+        "text": "The system shall invalidate an Assigned Delivery Slot if the external network status indicates a route constraint.",
+        "origin": "FR-028"
+      },
+      {
+        "id": "S-342",
+        "text": "Status must reflect the live location and speed of all agents.",
+        "origin": "IR Real-Time Logistics Network Status"
+      },
+      {
+        "id": "S-343",
+        "text": "Capacity metrics must be updated continuously as agents move.",
+        "origin": "IR Real-Time Logistics Network Status"
+      },
+      {
+        "id": "S-344",
+        "text": "Congestion alerts must be triggered when demand exceeds supply.",
+        "origin": "IR Real-Time Logistics Network Status"
+      },
+      {
+        "id": "S-345",
+        "text": "Network status must be shared with all relevant stakeholders.",
+        "origin": "IR Real-Time Logistics Network Status"
+      },
+      {
+        "id": "S-346",
+        "text": "Agent availability must be monitored to optimize dispatch times.",
+        "origin": "IR Real-Time Logistics Network Status"
+      },
+      {
+        "id": "S-352",
+        "text": "Each order must be linked to a unique, verified customer profile.",
+        "origin": "IR Customer Identity and Contact Informatio..."
+      },
+      {
+        "id": "S-353",
+        "text": "Delivery addresses must be residential or commercial locations with access.",
+        "origin": "IR Customer Identity and Contact Informatio..."
+      },
+      {
+        "id": "S-354",
+        "text": "Contact information must be current for urgent communication needs.",
+        "origin": "IR Customer Identity and Contact Informatio..."
+      },
+      {
+        "id": "S-355",
+        "text": "Customer consent must be obtained for data collection and usage.",
+        "origin": "IR Customer Identity and Contact Informatio..."
+      }
+    ],
+    "frs": [
+      "FR-002",
+      "FR-003",
+      "FR-028",
+      "FR-047",
+      "FR-056",
+      "FR-033",
+      "FR-012",
+      "FR-043"
+    ],
+    "br": null,
+    "actors": [],
+    "objects": [
+      "Assigned Delivery Slot"
+    ],
+    "batch": 11
+  }
+]

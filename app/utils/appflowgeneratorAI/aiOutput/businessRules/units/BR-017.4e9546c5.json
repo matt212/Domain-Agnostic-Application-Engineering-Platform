@@ -1,0 +1,135 @@
+{
+  "unit_id": "BR-017",
+  "kind": "business_requirement",
+  "rules": [
+    {
+      "name": "Immediate Order Locking on Failure",
+      "statement": "The system must immediately release all stock locks associated with an Order Request upon detection of a system outage or data corruption event.",
+      "type": "Exception handling",
+      "condition": "when a system failure or data corruption is detected during order preparation or allocation",
+      "exceptions": [
+        "manual override by a senior operations manager for high-value orders"
+      ],
+      "actors": [
+        "System",
+        "Store Personnel",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Order Request",
+        "Stock Inventory"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The business risks overselling inventory, causing order fulfillment failures, and incurring regulatory penalties for inaccurate stock reporting.",
+      "rationale": "Preventing error propagation ensures that corrupted data does not lead to double-booking of perishable goods during critical outages.",
+      "parameters": [
+        {
+          "name": "outage_detection_threshold",
+          "description": "the latency or error rate trigger that defines a system failure"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-001",
+        "FR-024"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Strict Identity-Contact Consistency",
+      "statement": "A Customer Profile must not be activated if the provided contact details do not exactly match the verified identity document.",
+      "type": "Validation",
+      "condition": "during the Customer Profile activation process",
+      "exceptions": [
+        "none"
+      ],
+      "actors": [
+        "Customer",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Customer Profile",
+        "Identity Document"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The business faces regulatory non-compliance risks and potential fraud due to unverified user identities.",
+      "rationale": "Ensuring data integrity and regulatory adherence by preventing activation of profiles with inconsistent identity information.",
+      "parameters": [
+        {
+          "name": "verification_tolerance_level",
+          "description": "the allowable character difference for name/address matching (proposed)"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-019",
+        "FR-020"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Immutable Audit Trail for Settlements",
+      "statement": "Every Financial Transaction Record and Settlement event must generate an immutable audit trail that cannot be altered or deleted.",
+      "type": "Audit and retention",
+      "condition": "for every financial transaction and settlement event",
+      "exceptions": [
+        "none"
+      ],
+      "actors": [
+        "System",
+        "Regulatory Authority",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Settlement Event"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The business loses the ability to prove compliance during audits, risking severe legal penalties and loss of trust.",
+      "rationale": "Maintaining an unchangeable record of financial movements is essential for regulatory compliance and dispute resolution.",
+      "parameters": [
+        {
+          "name": "retention_period",
+          "description": "the minimum legal requirement duration for the operating zone (proposed)"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-042",
+        "FR-020"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Perishable Priority Allocation",
+      "statement": "Perishable items must be prioritized for allocation to Order Requests based on their proximity to the expiration date.",
+      "type": "Calculation",
+      "condition": "when allocating stock to multiple concurrent Order Requests",
+      "exceptions": [
+        "manual override by store manager for high-margin non-perishable substitution"
+      ],
+      "actors": [
+        "System",
+        "Store Personnel"
+      ],
+      "objects": [
+        "Perishable Items",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The business incurs increased waste costs and potential food safety violations due to expired goods being sold.",
+      "rationale": "Minimizing waste and ensuring food safety by selling items closest to expiration first.",
+      "parameters": [
+        {
+          "name": "expiration_priority_weight",
+          "description": "the factor determining priority based on days remaining (proposed)"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-001"
+      ],
+      "basis": "baseline"
+    }
+  ]
+}

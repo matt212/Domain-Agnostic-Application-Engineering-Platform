@@ -1,0 +1,129 @@
+{
+  "unit_id": "BR-007",
+  "kind": "business_requirement",
+  "rules": [
+    {
+      "name": "Real-Time Inventory Deduction",
+      "statement": "The system must immediately deduct reserved quantities from the Real-Time Inventory Snapshot upon automatic order assignment.",
+      "type": "Limit",
+      "condition": "when an order is automatically assigned to a Store Partner",
+      "exceptions": [],
+      "actors": [
+        "System",
+        "Store Partner"
+      ],
+      "objects": [
+        "Order",
+        "Inventory Snapshot"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The business risks overselling items and incurring immediate refund liabilities.",
+      "rationale": "Preventing overselling ensures accurate inventory representation and protects customer trust.",
+      "parameters": [
+        {
+          "name": "reservation_timeout",
+          "description": "maximum duration a reservation holds inventory before release"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-002"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Revenue Share Accuracy",
+      "statement": "The system must calculate the revenue share percentage for a Financial Transaction Record using the pre-defined commission rate applicable to the specific Store Partner category.",
+      "type": "Calculation",
+      "condition": "when finalizing a Financial Transaction Record",
+      "exceptions": [],
+      "actors": [
+        "System",
+        "Platform Operator",
+        "Store Partner"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Revenue Share"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The business faces financial disputes, regulatory non-compliance, and partner churn.",
+      "rationale": "Ensuring precise financial distribution maintains trust and adheres to contractual obligations.",
+      "parameters": [
+        {
+          "name": "commission_rate",
+          "description": "percentage of transaction value allocated to the Platform Operator"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-005",
+        "FR-025",
+        "FR-039"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Performance Metric Threshold",
+      "statement": "A Store Partner may only maintain active status if their calculated quality score remains above the minimum acceptable threshold.",
+      "type": "Eligibility",
+      "condition": "when generating the Real-Time Store Partner Performance Dashboard",
+      "exceptions": [
+        "Temporary suspension for investigation"
+      ],
+      "actors": [
+        "System",
+        "Store Partner",
+        "Fulfillment Supervisor"
+      ],
+      "objects": [
+        "Quality Score",
+        "Store Partner Status"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The partner is restricted from receiving new orders until performance improves.",
+      "rationale": "Maintains service quality standards and protects the customer experience.",
+      "parameters": [
+        {
+          "name": "minimum_quality_score",
+          "description": "lowest acceptable score to retain active status"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-059"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Settlement Timing",
+      "statement": "Financial settlement funds must not be transferred to the Store Partner until a valid Delivery Proof is recorded and verified.",
+      "type": "Timing",
+      "condition": "when initiating the Financial Settlement Handover confirmation",
+      "exceptions": [],
+      "actors": [
+        "System",
+        "Platform Operator",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Financial Settlement",
+        "Delivery Proof"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The business risks paying for undelivered goods and losing revenue control.",
+      "rationale": "Ensures funds are only released upon successful fulfillment of the service obligation.",
+      "parameters": [
+        {
+          "name": "settlement_delay_window",
+          "description": "maximum time allowed between proof verification and fund transfer"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-005"
+      ],
+      "basis": "baseline"
+    }
+  ]
+}

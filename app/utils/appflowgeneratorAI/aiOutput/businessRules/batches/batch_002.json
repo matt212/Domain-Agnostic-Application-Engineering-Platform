@@ -1,0 +1,530 @@
+{
+  "batch": 2,
+  "units": [
+    "BR-005",
+    "BR-006",
+    "BR-007",
+    "BR-008"
+  ],
+  "rules": [
+    {
+      "unit_id": "BR-005",
+      "name": "Real-time Inventory Consistency",
+      "statement": "The system must prevent any order assignment if the Real-Time Inventory Snapshot indicates insufficient quantity for all requested items.",
+      "type": "Validation",
+      "condition": "during order allocation to a store",
+      "exceptions": [],
+      "actors": [
+        "System",
+        "Store Partner"
+      ],
+      "objects": [
+        "Order Request",
+        "Real-Time Inventory Snapshot"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The order is rejected and flagged for manual review to prevent overselling and revenue loss.",
+      "rationale": "Overselling leads to failed deliveries, customer dissatisfaction, and financial penalties.",
+      "parameters": [
+        {
+          "name": "minimum_available_quantity",
+          "description": "the required stock level for each item in the order"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-002",
+        "FR-001"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-005",
+      "name": "Discrepancy Investigation Threshold",
+      "statement": "The system must automatically trigger a Discrepancy Alert when the difference between physical stock counts and system records exceeds the configured tolerance limit.",
+      "type": "Limit",
+      "condition": "during periodic inventory reconciliation or upon manual count upload",
+      "exceptions": [
+        "scheduled maintenance windows"
+      ],
+      "actors": [
+        "Fulfillment Supervisor",
+        "System"
+      ],
+      "objects": [
+        "Inventory Record",
+        "Physical Stock"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The discrepancy is logged, and the store partner is notified to initiate a physical audit before further sales of that SKU.",
+      "rationale": "Early detection of data drift prevents compounding errors and ensures accurate availability data.",
+      "parameters": [
+        {
+          "name": "tolerance_limit",
+          "description": "the maximum allowed variance between physical and digital counts"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-001"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-005",
+      "name": "Overselling Incident Escalation",
+      "statement": "The system must escalate any confirmed overselling incident to the Compliance Officer immediately, regardless of the order status.",
+      "type": "State transition",
+      "condition": "when an overselling event is confirmed via audit or customer dispute",
+      "exceptions": [],
+      "actors": [
+        "System",
+        "Compliance Officer",
+        "Store Partner"
+      ],
+      "objects": [
+        "Order Request",
+        "Dispute Ticket"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The incident is recorded as a compliance breach, and the store partner's settlement is held pending investigation.",
+      "rationale": "Overselling represents a critical failure of trust and regulatory risk that requires immediate senior oversight.",
+      "parameters": [
+        {
+          "name": "escalation_priority",
+          "description": "the urgency level assigned to the incident"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-007",
+        "FR-032"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-005",
+      "name": "Partial Fulfillment Restriction",
+      "statement": "The system must not allow an order to proceed with partial fulfillment unless the customer explicitly consents to a split shipment.",
+      "type": "Authorization",
+      "condition": "when inventory is insufficient for the full order but sufficient for some items",
+      "exceptions": [
+        "customer opt-in for split shipment"
+      ],
+      "actors": [
+        "Customer",
+        "System",
+        "Store Partner"
+      ],
+      "objects": [
+        "Order Request",
+        "Inventory Snapshot"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The order is held in a pending state until full inventory is available or the customer cancels.",
+      "rationale": "Splitting orders without consent creates confusion, delays, and potential revenue loss due to partial cancellations.",
+      "parameters": [
+        {
+          "name": "split_shipment_threshold",
+          "description": "the minimum percentage of items required to trigger a split option"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-032"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-006",
+      "name": "Unit Economics Threshold",
+      "statement": "The system must prevent the initiation of a new delivery route or order batch if the projected unit economics (revenue minus operational costs) falls below the minimum profitability threshold.",
+      "type": "Financial control",
+      "condition": "when calculating projected profitability for a route or order batch",
+      "exceptions": [
+        "Emergency humanitarian aid orders",
+        "Regulatory mandated minimum service levels"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Financial Controller"
+      ],
+      "objects": [
+        "Delivery Route",
+        "Order Batch",
+        "Unit Economics Model"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The system blocks the allocation of orders to that route and alerts the Financial Controller for manual review and threshold adjustment.",
+      "rationale": "To prevent the accumulation of losses on specific routes that could erode overall platform margins and threaten financial sustainability.",
+      "parameters": [
+        {
+          "name": "minimum_profitability_threshold",
+          "description": "The minimum acceptable profit margin or absolute profit per unit/order"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-005",
+        "FR-025",
+        "FR-045"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-006",
+      "name": "Commission Cap Enforcement",
+      "statement": "The system must not apply a transaction commission rate that exceeds the maximum cap defined in the active Store Partner Agreement for that specific merchant category.",
+      "type": "Compliance",
+      "condition": "when calculating revenue share for a transaction",
+      "exceptions": [
+        "Force majeure events requiring temporary rate renegotiation"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner",
+        "Payment Provider"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Store Partner Agreement",
+        "Commission Rate"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The transaction settlement is automatically halted, and the system flags the calculation for immediate manual audit and correction.",
+      "rationale": "To ensure strict adherence to contractual obligations and prevent legal disputes or loss of merchant trust due to overcharging.",
+      "parameters": [
+        {
+          "name": "maximum_commission_cap",
+          "description": "The highest allowable commission percentage for a specific merchant category"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-005",
+        "FR-025",
+        "FR-039"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-006",
+      "name": "Real-Time Cost Variance Alert",
+      "statement": "The system must generate an immediate high-priority alert whenever the actual operational cost of a completed delivery deviates from the estimated cost by more than the allowed variance percentage.",
+      "type": "Audit and retention",
+      "condition": "upon finalization of a delivery and reconciliation of actual costs",
+      "exceptions": [
+        "System-wide fuel price surges declared by the logistics provider"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Logistics Coordinator"
+      ],
+      "objects": [
+        "Delivery Proof",
+        "Financial Transaction Record",
+        "Operational Cost Report"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The system logs the anomaly, suspends further automated settlements for that specific delivery partner until the variance is explained, and notifies the Logistics Coordinator.",
+      "rationale": "To enable rapid identification of inefficiencies, fraud, or routing errors that impact the cost structure of the gig-economy model.",
+      "parameters": [
+        {
+          "name": "allowed_variance_percentage",
+          "description": "The maximum acceptable percentage difference between estimated and actual costs"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-028",
+        "FR-039"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-006",
+      "name": "Minimum Order Value Validation",
+      "statement": "The system must reject an Order Request submission if the sum of item prices is strictly less than the minimum order value dynamically retrieved from the Store Partner Agreement.",
+      "type": "Validation",
+      "condition": "at the moment of Order Request submission",
+      "exceptions": [
+        "Promotional codes explicitly overriding the minimum order value in the agreement"
+      ],
+      "actors": [
+        "Customer",
+        "System",
+        "Store Partner"
+      ],
+      "objects": [
+        "Order Request",
+        "Cart Total",
+        "Store Partner Agreement"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system displays a clear error message to the Customer and prevents the Order Request from being submitted to the store.",
+      "rationale": "To ensure orders are economically viable for the store partner and cover the baseline operational costs of picking and packing.",
+      "parameters": [
+        {
+          "name": "minimum_order_value",
+          "description": "The lowest total value allowed for an order before submission"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-022"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-007",
+      "name": "Real-Time Inventory Deduction",
+      "statement": "The system must immediately deduct reserved quantities from the Real-Time Inventory Snapshot upon automatic order assignment.",
+      "type": "Limit",
+      "condition": "when an order is automatically assigned to a Store Partner",
+      "exceptions": [],
+      "actors": [
+        "System",
+        "Store Partner"
+      ],
+      "objects": [
+        "Order",
+        "Inventory Snapshot"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The business risks overselling items and incurring immediate refund liabilities.",
+      "rationale": "Preventing overselling ensures accurate inventory representation and protects customer trust.",
+      "parameters": [
+        {
+          "name": "reservation_timeout",
+          "description": "maximum duration a reservation holds inventory before release"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-002"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-007",
+      "name": "Revenue Share Accuracy",
+      "statement": "The system must calculate the revenue share percentage for a Financial Transaction Record using the pre-defined commission rate applicable to the specific Store Partner category.",
+      "type": "Calculation",
+      "condition": "when finalizing a Financial Transaction Record",
+      "exceptions": [],
+      "actors": [
+        "System",
+        "Platform Operator",
+        "Store Partner"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Revenue Share"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The business faces financial disputes, regulatory non-compliance, and partner churn.",
+      "rationale": "Ensuring precise financial distribution maintains trust and adheres to contractual obligations.",
+      "parameters": [
+        {
+          "name": "commission_rate",
+          "description": "percentage of transaction value allocated to the Platform Operator"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-005",
+        "FR-025",
+        "FR-039"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-007",
+      "name": "Performance Metric Threshold",
+      "statement": "A Store Partner may only maintain active status if their calculated quality score remains above the minimum acceptable threshold.",
+      "type": "Eligibility",
+      "condition": "when generating the Real-Time Store Partner Performance Dashboard",
+      "exceptions": [
+        "Temporary suspension for investigation"
+      ],
+      "actors": [
+        "System",
+        "Store Partner",
+        "Fulfillment Supervisor"
+      ],
+      "objects": [
+        "Quality Score",
+        "Store Partner Status"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The partner is restricted from receiving new orders until performance improves.",
+      "rationale": "Maintains service quality standards and protects the customer experience.",
+      "parameters": [
+        {
+          "name": "minimum_quality_score",
+          "description": "lowest acceptable score to retain active status"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-059"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-007",
+      "name": "Settlement Timing",
+      "statement": "Financial settlement funds must not be transferred to the Store Partner until a valid Delivery Proof is recorded and verified.",
+      "type": "Timing",
+      "condition": "when initiating the Financial Settlement Handover confirmation",
+      "exceptions": [],
+      "actors": [
+        "System",
+        "Platform Operator",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Financial Settlement",
+        "Delivery Proof"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The business risks paying for undelivered goods and losing revenue control.",
+      "rationale": "Ensures funds are only released upon successful fulfillment of the service obligation.",
+      "parameters": [
+        {
+          "name": "settlement_delay_window",
+          "description": "maximum time allowed between proof verification and fund transfer"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-005"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-008",
+      "name": "Settlement Accuracy Requirement",
+      "statement": "A financial settlement record must include item costs, delivery fees, taxes, platform commissions, and net settlement amounts to be considered complete.",
+      "type": "Financial control",
+      "condition": "when a delivery transaction is finalized for payout",
+      "exceptions": [],
+      "actors": [
+        "Delivery Partner",
+        "Platform Operator",
+        "Payment Provider"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Settlement Record"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The settlement is rejected and the payout process is halted until discrepancies are resolved",
+      "rationale": "Ensures accurate compensation and prevents financial disputes between the platform and workers",
+      "parameters": [
+        {
+          "name": "required_settlement_components",
+          "description": "List of mandatory financial fields including costs, fees, taxes, commissions, and net amounts"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-043",
+        "FR-039"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-008",
+      "name": "Delivery Verification Mandate",
+      "statement": "A financial transaction record must be linked to verifiable evidence of delivery before finalizing the settlement status.",
+      "type": "Validation",
+      "condition": "when an order is marked as delivered for payment processing",
+      "exceptions": [
+        "Force majeure events documented by the Delivery Partner"
+      ],
+      "actors": [
+        "Delivery Partner",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Delivery Evidence"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The settlement status remains 'Pending' and funds are withheld until valid proof is uploaded",
+      "rationale": "Prevents payment for undelivered goods and ensures integrity of the gig-economy logistics model",
+      "parameters": [
+        {
+          "name": "acceptable_evidence_types",
+          "description": "Types of proof accepted such as GPS coordinates, photo timestamps, or signature logs"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-042"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-008",
+      "name": "Historical Earnings Transparency",
+      "statement": "A Delivery Partner may only view their historical earnings summary if the data is derived from finalized settlement records.",
+      "type": "Authorization",
+      "condition": "when a Delivery Partner accesses the financial transparency portal",
+      "exceptions": [],
+      "actors": [
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Earnings Summary",
+        "Settlement Record"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "Access to the earnings view is denied to prevent unauthorized data manipulation or premature viewing",
+      "rationale": "Ensures workers see only accurate, finalized financial data to maintain trust and compliance",
+      "parameters": [
+        {
+          "name": "data_finalization_threshold",
+          "description": "The state a transaction must reach (e.g., 'Settled') before earnings data is visible"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-016"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-008",
+      "name": "Payout Schedule Adherence",
+      "statement": "A payout schedule must be generated based on the contractual agreement version active at the time of the transaction.",
+      "type": "Calculation",
+      "condition": "when calculating the amount due for a specific delivery batch",
+      "exceptions": [],
+      "actors": [
+        "Platform Operator",
+        "Payment Provider"
+      ],
+      "objects": [
+        "Payout Schedule",
+        "Store Partner Agreement"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The payout calculation is invalidated and the batch is re-queued for recalculation using the correct contract version",
+      "rationale": "Ensures financial compliance with the specific commission rates and terms agreed upon at the time of service",
+      "parameters": [
+        {
+          "name": "active_agreement_version",
+          "description": "The specific version of the agreement valid for the transaction date"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-043",
+        "FR-039"
+      ],
+      "basis": "inferred"
+    }
+  ]
+}

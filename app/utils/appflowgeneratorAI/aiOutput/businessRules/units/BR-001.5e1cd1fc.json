@@ -1,0 +1,130 @@
+{
+  "unit_id": "BR-001",
+  "kind": "business_requirement",
+  "rules": [
+    {
+      "name": "Perishable Allocation Priority",
+      "statement": "The system must prioritize allocation of perishable items to new Order Requests based on their proximity to the expiration date.",
+      "type": "Eligibility",
+      "condition": "When allocating inventory for an Order Request containing fresh perishables",
+      "exceptions": [
+        "Items flagged as expired are excluded from allocation"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Inventory Management System"
+      ],
+      "objects": [
+        "Perishable Items",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system rejects the allocation request and flags the inventory management process for review",
+      "rationale": "Prioritizing near-expiry items reduces waste and ensures fresh goods reach customers first",
+      "parameters": [
+        {
+          "name": "expiry_proximity_threshold",
+          "description": "The time window defining 'proximity to expiration' for prioritization"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-006"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Expired Item Order Rejection",
+      "statement": "An Order Request must not be successfully created if it contains any item where the current date is later than the item's defined expiry date.",
+      "type": "Validation",
+      "condition": "During the Order Request creation or validation phase",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Customer",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Order Request",
+        "Product Catalog"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The system automatically rejects the Order Request and notifies the customer that the item is unavailable",
+      "rationale": "Preventing the sale of expired goods protects customer health and maintains brand reputation",
+      "parameters": [
+        {
+          "name": "expiry_date_field",
+          "description": "The specific date field defining the item's shelf life limit"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-024"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Stock Lock Release Timeout",
+      "statement": "Locked stock must be automatically released if the Order Request is not confirmed within the allocated time window.",
+      "type": "Timing",
+      "condition": "When an Order Request remains in a 'pending confirmation' state",
+      "exceptions": [
+        "Manual override by a Store Partner for specific high-value orders"
+      ],
+      "actors": [
+        "Inventory Management System",
+        "Store Partner"
+      ],
+      "objects": [
+        "Stock Quantity",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system releases the stock back to general availability, potentially causing overselling if not monitored",
+      "rationale": "Prevents inventory hoarding and ensures stock availability for other customers during peak demand",
+      "parameters": [
+        {
+          "name": "confirmation_timeout_duration",
+          "description": "The maximum time allowed for order confirmation before stock release"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-001"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Sync Discrepancy Flagging",
+      "statement": "The system must flag a synchronization discrepancy if the data link latency exceeds the defined threshold or if a sync failure is detected.",
+      "type": "Compliance",
+      "condition": "During real-time inventory synchronization cycles",
+      "exceptions": [
+        "Scheduled maintenance windows where sync is paused"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Inventory Management System"
+      ],
+      "objects": [
+        "Product Catalog",
+        "Store Inventory"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The system halts order processing for affected stores and alerts the operations team",
+      "rationale": "Ensures inventory data integrity to prevent overselling and allocation errors",
+      "parameters": [
+        {
+          "name": "latency_threshold_seconds",
+          "description": "The maximum acceptable delay for data synchronization"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-001"
+      ],
+      "basis": "baseline"
+    }
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "unit_id": "BR-009",
+  "kind": "business_requirement",
+  "rules": [
+    {
+      "name": "Subscription Auto-Renewal Consent",
+      "statement": "A customer may only have a subscription automatically renewed if they have explicitly opted in to recurring billing within the portal.",
+      "type": "Authorization",
+      "condition": "when a subscription term is approaching expiration",
+      "exceptions": [
+        "Customer explicitly cancels before the renewal window closes"
+      ],
+      "actors": [
+        "Customer",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Subscription",
+        "Customer Profile"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system blocks the renewal transaction and notifies the customer that the service will lapse at the end of the current term.",
+      "rationale": "To prevent unauthorized recurring charges and ensure customer trust in the self-service portal.",
+      "parameters": [
+        {
+          "name": "renewal_window_days",
+          "description": "days before expiry when opt-in is required"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-048"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Loyalty Point Redemption Cap",
+      "statement": "A customer must not redeem loyalty points for a single order if the points value exceeds the maximum allowed discount percentage for that order total.",
+      "type": "Limit",
+      "condition": "when a customer attempts to apply loyalty points during checkout",
+      "exceptions": [
+        "Promotional events explicitly override standard caps"
+      ],
+      "actors": [
+        "Customer",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Order Request",
+        "Loyalty Points"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The system rejects the redemption request and displays the maximum allowable discount amount.",
+      "rationale": "To prevent revenue leakage and ensure profitability on high-value orders while maintaining reward value.",
+      "parameters": [
+        {
+          "name": "max_discount_percentage",
+          "description": "maximum percentage of order value redeemable via points"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-048"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Profile Data Archival Integrity",
+      "statement": "Archived customer profiles must retain all historical order and interaction data and must never be modified after the archival status is confirmed.",
+      "type": "State transition",
+      "condition": "when a customer profile is moved to an archived state",
+      "exceptions": [
+        "System recovery operations initiated by senior administrators with dual authorization"
+      ],
+      "actors": [
+        "Customer",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Customer Profile",
+        "Order History"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The system rejects the archival command and logs the attempt as a compliance violation.",
+      "rationale": "To ensure audit trails remain immutable for regulatory compliance and dispute resolution.",
+      "parameters": [
+        {
+          "name": "retention_period_years",
+          "description": "years data must be retained post-archival"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-009"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Subscription Tier Downgrade Restriction",
+      "statement": "A customer may only downgrade their subscription tier immediately after the current billing cycle concludes, not mid-cycle.",
+      "type": "Timing",
+      "condition": "when a customer requests a change to their active subscription plan",
+      "exceptions": [
+        "Platform-initiated service termination due to non-payment or policy breach"
+      ],
+      "actors": [
+        "Customer",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Subscription",
+        "Billing Cycle"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The system queues the downgrade request to take effect at the start of the next billing period.",
+      "rationale": "To protect revenue stability and prevent customers from exploiting mid-cycle price differences.",
+      "parameters": [
+        {
+          "name": "billing_cycle_frequency",
+          "description": "frequency of the billing cycle (e.g., monthly, yearly)"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-048"
+      ],
+      "basis": "inferred"
+    }
+  ]
+}

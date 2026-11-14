@@ -1,0 +1,131 @@
+{
+  "unit_id": "BR-003",
+  "kind": "business_requirement",
+  "rules": [
+    {
+      "name": "Real-Time Inventory Locking",
+      "statement": "The system must deduct reserved quantities from the Real-Time Inventory Snapshot immediately upon order assignment to prevent overselling.",
+      "type": "Limit",
+      "condition": "When an order is automatically assigned to a store partner",
+      "exceptions": [
+        "System outage preventing database write"
+      ],
+      "actors": [
+        "Order Allocation Engine",
+        "Store Partner"
+      ],
+      "objects": [
+        "Order",
+        "Inventory Snapshot"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The business risks selling items that are not in stock, leading to order cancellations and customer dissatisfaction",
+      "rationale": "Prevents overselling in a high-volume, low-latency environment",
+      "parameters": [
+        {
+          "name": "reservation_timeout",
+          "description": "Duration the inventory is held before release if order fails"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-002",
+        "FR-055"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Dynamic Route Recalculation",
+      "statement": "The system must recalculate estimated arrival times and delivery paths if live traffic patterns change significantly after initial assignment.",
+      "type": "Calculation",
+      "condition": "When live traffic data indicates a significant deviation from the initial route estimate",
+      "exceptions": [
+        "Traffic change is within acceptable variance threshold"
+      ],
+      "actors": [
+        "Order Allocation Engine",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Delivery Route",
+        "Estimated Arrival Time"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "Delivery times exceed the 60-minute target, risking service failure and penalties",
+      "rationale": "Ensures the ultra-fast delivery promise is met despite real-world conditions",
+      "parameters": [
+        {
+          "name": "traffic_variance_threshold",
+          "description": "Percentage deviation in traffic speed triggering a recalculation"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-047"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Agent Capacity Enforcement",
+      "statement": "The system must not assign a new delivery slot to an agent if their current workload exceeds the maximum capacity defined for their service zone.",
+      "type": "Validation",
+      "condition": "When the Order Allocation Engine attempts to assign a new order to a gig worker",
+      "exceptions": [
+        "Emergency override by Platform Operator with documented reason"
+      ],
+      "actors": [
+        "Order Allocation Engine",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Delivery Slot",
+        "Agent Workload"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "Agent becomes overloaded, leading to delayed deliveries and potential order abandonment",
+      "rationale": "Maintains service quality and agent performance by preventing overloading",
+      "parameters": [
+        {
+          "name": "max_zone_capacity",
+          "description": "Maximum number of concurrent deliveries allowed per service zone"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-028"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Service Area Boundary Compliance",
+      "statement": "Orders originating from addresses outside the active Service Area Definition must be rejected by the Order Allocation Engine.",
+      "type": "Validation",
+      "condition": "When an incoming order request is received for delivery",
+      "exceptions": [
+        "Manual override for VIP customers or special promotions"
+      ],
+      "actors": [
+        "Order Allocation Engine",
+        "Customer"
+      ],
+      "objects": [
+        "Order Request",
+        "Service Area Definition"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The business incurs costs for deliveries outside its operational scope and risks regulatory non-compliance",
+      "rationale": "Ensures operations remain within defined, optimized geographic boundaries",
+      "parameters": [
+        {
+          "name": "active_service_area_version",
+          "description": "Identifier for the current valid geospatial definition"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-012"
+      ],
+      "basis": "baseline"
+    }
+  ]
+}

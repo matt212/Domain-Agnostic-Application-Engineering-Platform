@@ -1,0 +1,134 @@
+{
+  "unit_id": "BR-016",
+  "kind": "business_requirement",
+  "rules": [
+    {
+      "name": "Pre-Onboarding License Verification",
+      "statement": "A Store Partner must not be granted operational access until all required regulatory licenses and food safety certificates are validated as current and authentic.",
+      "type": "Eligibility",
+      "condition": "during the new partner onboarding process",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner",
+        "Regulatory Authority"
+      ],
+      "objects": [
+        "Store Partner",
+        "Regulatory License",
+        "Food Safety Certificate"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The onboarding process is terminated and the partner is barred from the marketplace until compliance is achieved.",
+      "rationale": "To prevent legal liability and supply chain disruptions caused by unverified or non-compliant partners.",
+      "parameters": [
+        {
+          "name": "required_license_types",
+          "description": "List of specific licenses mandated by local jurisdiction"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-053",
+        "FR-008"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Agreement Activation Gate",
+      "statement": "An Order Request may only be allocated to a Store Partner if the associated Partner Agreement is explicitly marked as 'Active' in the system.",
+      "type": "State transition",
+      "condition": "when an order is routed to a specific store",
+      "exceptions": [
+        "Emergency manual override by Platform Operator with audit trail"
+      ],
+      "actors": [
+        "Order Orchestration System",
+        "Store Partner",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Order Request",
+        "Partner Agreement"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The order allocation is rejected and returned to the pool for re-routing.",
+      "rationale": "To ensure that only partners with valid, active contractual terms can fulfill customer orders.",
+      "parameters": [
+        {
+          "name": "agreement_status_threshold",
+          "description": "The specific status value required to allow allocation"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-010"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "License Expiration Warning Threshold",
+      "statement": "A Store Partner must be notified immediately if their primary operating license expiration date is within a configurable warning period.",
+      "type": "Timing",
+      "condition": "when the system detects an upcoming license expiration",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Store Partner",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Operating License"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The partner's ability to accept new orders is automatically suspended until the license is renewed.",
+      "rationale": "To mitigate the risk of operating with invalid licenses and facing regulatory fines.",
+      "parameters": [
+        {
+          "name": "warning_period_days",
+          "description": "Number of days before expiration to trigger notification"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-008"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Immutable Agreement Versioning",
+      "statement": "An amendment to an active Partner Agreement must immediately create a new version number while marking the previous version as historical and read-only.",
+      "type": "State transition",
+      "condition": "when a Partner Agreement is amended",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner"
+      ],
+      "objects": [
+        "Partner Agreement",
+        "Agreement Version"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The system rejects the amendment request and logs the error for manual review.",
+      "rationale": "To maintain a complete, non-destructive audit trail of contractual changes for compliance and dispute resolution.",
+      "parameters": [
+        {
+          "name": "version_increment_rule",
+          "description": "Logic determining the next version number"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-010",
+        "FR-020"
+      ],
+      "basis": "baseline"
+    }
+  ]
+}

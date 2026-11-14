@@ -1,0 +1,142 @@
+{
+  "unit_id": "BR-006",
+  "kind": "business_requirement",
+  "rules": [
+    {
+      "name": "Unit Economics Threshold",
+      "statement": "The system must prevent the initiation of a new delivery route or order batch if the projected unit economics (revenue minus operational costs) falls below the minimum profitability threshold.",
+      "type": "Financial control",
+      "condition": "when calculating projected profitability for a route or order batch",
+      "exceptions": [
+        "Emergency humanitarian aid orders",
+        "Regulatory mandated minimum service levels"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Financial Controller"
+      ],
+      "objects": [
+        "Delivery Route",
+        "Order Batch",
+        "Unit Economics Model"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The system blocks the allocation of orders to that route and alerts the Financial Controller for manual review and threshold adjustment.",
+      "rationale": "To prevent the accumulation of losses on specific routes that could erode overall platform margins and threaten financial sustainability.",
+      "parameters": [
+        {
+          "name": "minimum_profitability_threshold",
+          "description": "The minimum acceptable profit margin or absolute profit per unit/order"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-005",
+        "FR-025",
+        "FR-045"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Commission Cap Enforcement",
+      "statement": "The system must not apply a transaction commission rate that exceeds the maximum cap defined in the active Store Partner Agreement for that specific merchant category.",
+      "type": "Compliance",
+      "condition": "when calculating revenue share for a transaction",
+      "exceptions": [
+        "Force majeure events requiring temporary rate renegotiation"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner",
+        "Payment Provider"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Store Partner Agreement",
+        "Commission Rate"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The transaction settlement is automatically halted, and the system flags the calculation for immediate manual audit and correction.",
+      "rationale": "To ensure strict adherence to contractual obligations and prevent legal disputes or loss of merchant trust due to overcharging.",
+      "parameters": [
+        {
+          "name": "maximum_commission_cap",
+          "description": "The highest allowable commission percentage for a specific merchant category"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-005",
+        "FR-025",
+        "FR-039"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Real-Time Cost Variance Alert",
+      "statement": "The system must generate an immediate high-priority alert whenever the actual operational cost of a completed delivery deviates from the estimated cost by more than the allowed variance percentage.",
+      "type": "Audit and retention",
+      "condition": "upon finalization of a delivery and reconciliation of actual costs",
+      "exceptions": [
+        "System-wide fuel price surges declared by the logistics provider"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Logistics Coordinator"
+      ],
+      "objects": [
+        "Delivery Proof",
+        "Financial Transaction Record",
+        "Operational Cost Report"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The system logs the anomaly, suspends further automated settlements for that specific delivery partner until the variance is explained, and notifies the Logistics Coordinator.",
+      "rationale": "To enable rapid identification of inefficiencies, fraud, or routing errors that impact the cost structure of the gig-economy model.",
+      "parameters": [
+        {
+          "name": "allowed_variance_percentage",
+          "description": "The maximum acceptable percentage difference between estimated and actual costs"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-028",
+        "FR-039"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Minimum Order Value Validation",
+      "statement": "The system must reject an Order Request submission if the sum of item prices is strictly less than the minimum order value dynamically retrieved from the Store Partner Agreement.",
+      "type": "Validation",
+      "condition": "at the moment of Order Request submission",
+      "exceptions": [
+        "Promotional codes explicitly overriding the minimum order value in the agreement"
+      ],
+      "actors": [
+        "Customer",
+        "System",
+        "Store Partner"
+      ],
+      "objects": [
+        "Order Request",
+        "Cart Total",
+        "Store Partner Agreement"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system displays a clear error message to the Customer and prevents the Order Request from being submitted to the store.",
+      "rationale": "To ensure orders are economically viable for the store partner and cover the baseline operational costs of picking and packing.",
+      "parameters": [
+        {
+          "name": "minimum_order_value",
+          "description": "The lowest total value allowed for an order before submission"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-022"
+      ],
+      "basis": "baseline"
+    }
+  ]
+}

@@ -1,0 +1,130 @@
+{
+  "unit_id": "BR-005",
+  "kind": "business_requirement",
+  "rules": [
+    {
+      "name": "Real-time Inventory Consistency",
+      "statement": "The system must prevent any order assignment if the Real-Time Inventory Snapshot indicates insufficient quantity for all requested items.",
+      "type": "Validation",
+      "condition": "during order allocation to a store",
+      "exceptions": [],
+      "actors": [
+        "System",
+        "Store Partner"
+      ],
+      "objects": [
+        "Order Request",
+        "Real-Time Inventory Snapshot"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The order is rejected and flagged for manual review to prevent overselling and revenue loss.",
+      "rationale": "Overselling leads to failed deliveries, customer dissatisfaction, and financial penalties.",
+      "parameters": [
+        {
+          "name": "minimum_available_quantity",
+          "description": "the required stock level for each item in the order"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-002",
+        "FR-001"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Discrepancy Investigation Threshold",
+      "statement": "The system must automatically trigger a Discrepancy Alert when the difference between physical stock counts and system records exceeds the configured tolerance limit.",
+      "type": "Limit",
+      "condition": "during periodic inventory reconciliation or upon manual count upload",
+      "exceptions": [
+        "scheduled maintenance windows"
+      ],
+      "actors": [
+        "Fulfillment Supervisor",
+        "System"
+      ],
+      "objects": [
+        "Inventory Record",
+        "Physical Stock"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The discrepancy is logged, and the store partner is notified to initiate a physical audit before further sales of that SKU.",
+      "rationale": "Early detection of data drift prevents compounding errors and ensures accurate availability data.",
+      "parameters": [
+        {
+          "name": "tolerance_limit",
+          "description": "the maximum allowed variance between physical and digital counts"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-001"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Overselling Incident Escalation",
+      "statement": "The system must escalate any confirmed overselling incident to the Compliance Officer immediately, regardless of the order status.",
+      "type": "State transition",
+      "condition": "when an overselling event is confirmed via audit or customer dispute",
+      "exceptions": [],
+      "actors": [
+        "System",
+        "Compliance Officer",
+        "Store Partner"
+      ],
+      "objects": [
+        "Order Request",
+        "Dispute Ticket"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The incident is recorded as a compliance breach, and the store partner's settlement is held pending investigation.",
+      "rationale": "Overselling represents a critical failure of trust and regulatory risk that requires immediate senior oversight.",
+      "parameters": [
+        {
+          "name": "escalation_priority",
+          "description": "the urgency level assigned to the incident"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-007",
+        "FR-032"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Partial Fulfillment Restriction",
+      "statement": "The system must not allow an order to proceed with partial fulfillment unless the customer explicitly consents to a split shipment.",
+      "type": "Authorization",
+      "condition": "when inventory is insufficient for the full order but sufficient for some items",
+      "exceptions": [
+        "customer opt-in for split shipment"
+      ],
+      "actors": [
+        "Customer",
+        "System",
+        "Store Partner"
+      ],
+      "objects": [
+        "Order Request",
+        "Inventory Snapshot"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The order is held in a pending state until full inventory is available or the customer cancels.",
+      "rationale": "Splitting orders without consent creates confusion, delays, and potential revenue loss due to partial cancellations.",
+      "parameters": [
+        {
+          "name": "split_shipment_threshold",
+          "description": "the minimum percentage of items required to trigger a split option"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-032"
+      ],
+      "basis": "inferred"
+    }
+  ]
+}

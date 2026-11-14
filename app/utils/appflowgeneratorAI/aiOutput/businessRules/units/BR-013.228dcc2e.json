@@ -1,0 +1,135 @@
+{
+  "unit_id": "BR-013",
+  "kind": "business_requirement",
+  "rules": [
+    {
+      "name": "Food Safety Certificate Validity",
+      "statement": "A Store Partner must not accept new orders unless their food safety certificate is valid and non-expired.",
+      "type": "Compliance",
+      "condition": "When processing an order request for a specific Store Partner",
+      "exceptions": [
+        "Certificate renewal grace period defined by local law (proposed)"
+      ],
+      "actors": [
+        "Store Partner",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Store Partner",
+        "Food Safety Certificate",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The system automatically blocks the order and flags the partner for immediate review",
+      "rationale": "To prevent the sale of unsafe food and avoid severe regulatory fines and license revocation",
+      "parameters": [
+        {
+          "name": "certificate_validity_period",
+          "description": "Duration for which a certificate remains valid before requiring renewal"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-008",
+        "FR-053"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Labor Law Compliance Verification",
+      "statement": "A Delivery Partner may only be assigned to a gig-economy task if their labor law compliance status is verified and active.",
+      "type": "Compliance",
+      "condition": "When allocating a delivery task to a Delivery Partner",
+      "exceptions": [
+        "Emergency override with documented regulatory waiver (proposed)"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Delivery Partner",
+        "Regulatory Authority"
+      ],
+      "objects": [
+        "Delivery Partner",
+        "Labor Law Compliance Status",
+        "Delivery Task"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The allocation request is rejected and the partner is suspended pending compliance review",
+      "rationale": "To mitigate legal liability and ensure adherence to gig-economy labor regulations",
+      "parameters": [
+        {
+          "name": "compliance_verification_frequency",
+          "description": "How often labor compliance status must be re-verified"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-017"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Restricted Zone Service Area Validation",
+      "statement": "A Service Area Definition must not be created or activated if its geographic boundaries overlap with a zone restricted by the Regulatory Authority.",
+      "type": "Compliance",
+      "condition": "When creating or modifying a Service Area Definition",
+      "exceptions": [
+        "Manual override by senior compliance officer with written approval (proposed)"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Regulatory Authority"
+      ],
+      "objects": [
+        "Service Area Definition",
+        "Restricted Zone"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system rejects the definition creation or deactivates the area immediately",
+      "rationale": "To ensure operations strictly adhere to external regulatory geographic restrictions",
+      "parameters": [
+        {
+          "name": "overlap_tolerance_threshold",
+          "description": "Maximum allowable geographic overlap percentage before triggering a block"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-014",
+        "FR-023"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Regulatory Data Update Latency",
+      "statement": "Regulatory compliance status must be updated within a maximum allowed duration of receiving new data from external sources.",
+      "type": "Timing",
+      "condition": "When external regulatory data sources provide updates",
+      "exceptions": [
+        "System downtime or network failure with automatic retry logic (proposed)"
+      ],
+      "actors": [
+        "Platform Operator",
+        "External Data Source"
+      ],
+      "objects": [
+        "Regulatory Compliance Status",
+        "External Data Source"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system generates a compliance alert and escalates to the operations team for manual intervention",
+      "rationale": "To ensure real-time accuracy of compliance status and prevent operating on outdated legal information",
+      "parameters": [
+        {
+          "name": "max_update_latency_hours",
+          "description": "Maximum time allowed between receiving external data and updating internal status"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-008"
+      ],
+      "basis": "baseline"
+    }
+  ]
+}

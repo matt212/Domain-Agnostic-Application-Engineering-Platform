@@ -1,0 +1,152 @@
+{
+  "unit_id": "BR-010",
+  "kind": "business_requirement",
+  "rules": [
+    {
+      "name": "Demand-Based Fee Adjustment",
+      "statement": "The system must adjust delivery fees and commissions in real-time based on current demand, weather, and traffic conditions.",
+      "type": "Calculation",
+      "condition": "during order allocation and confirmation phases",
+      "exceptions": [
+        "emergency service tiers with fixed pricing"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Customer",
+        "Delivery Partner",
+        "Store Partner"
+      ],
+      "objects": [
+        "Delivery Fee",
+        "Commission Rate",
+        "Order"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "revenue is sub-optimized during peak times and SLA adherence risks increase",
+      "rationale": "dynamic pricing maximizes revenue and ensures timely deliveries during supply-demand fluctuations",
+      "parameters": [
+        {
+          "name": "demand_multiplier",
+          "description": "scaling factor applied to base fees based on order volume density"
+        },
+        {
+          "name": "weather_adjustment_factor",
+          "description": "coefficient applied to fees based on adverse weather conditions"
+        },
+        {
+          "name": "traffic_congestion_threshold",
+          "description": "traffic level at which fees begin to increase"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-045",
+        "FR-047",
+        "FR-058"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Service Area Compliance",
+      "statement": "Orders originating from addresses outside the active Service Area Definition must be rejected by the Order Allocation Engine.",
+      "type": "Validation",
+      "condition": "at the moment of order submission",
+      "exceptions": [
+        "manual override by Platform Operator for verified high-value customers"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Customer",
+        "Order Allocation Engine"
+      ],
+      "objects": [
+        "Order",
+        "Service Area Definition",
+        "Address"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "the order is not processed and the customer receives a rejection notification",
+      "rationale": "prevents logistical failures and ensures accurate inventory and routing availability",
+      "parameters": [
+        {
+          "name": "active_service_area_id",
+          "description": "identifier of the currently valid geospatial boundary"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-012",
+        "FR-029"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Travel Time Matrix Recalculation",
+      "statement": "The system must recalculate estimated arrival times and optimal delivery paths whenever a Service Area Definition is modified.",
+      "type": "Calculation",
+      "condition": "immediately upon publication of a new Service Area Definition version",
+      "exceptions": [
+        "scheduled maintenance windows with pre-calculated buffers"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Order Allocation Engine",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Service Area Definition",
+        "Travel Time Matrix",
+        "Delivery Path"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "delivery estimates become inaccurate leading to SLA breaches and customer dissatisfaction",
+      "rationale": "ensures route constraints and travel times reflect the latest operational geography",
+      "parameters": [
+        {
+          "name": "recalculation_trigger_event",
+          "description": "event type that initiates the matrix update process"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-012",
+        "FR-029",
+        "FR-047"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Financial Settlement Validation",
+      "statement": "The system must prevent the finalization of a Financial Transaction Record if no valid Store Partner Agreement exists for the involved Store Partner.",
+      "type": "Validation",
+      "condition": "during the financial settlement handover phase",
+      "exceptions": [
+        "manual dispute resolution initiated by the Platform Operator"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner",
+        "Financial Settlement Engine"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Store Partner Agreement"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "the transaction fails to settle, resulting in revenue loss and potential legal liability",
+      "rationale": "ensures revenue share calculations are based on current contractual terms",
+      "parameters": [
+        {
+          "name": "agreement_validity_status",
+          "description": "boolean flag indicating if the agreement is active and unexpired"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-025",
+        "FR-028"
+      ],
+      "basis": "baseline"
+    }
+  ]
+}

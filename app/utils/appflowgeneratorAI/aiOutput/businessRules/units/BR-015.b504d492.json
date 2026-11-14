@@ -1,0 +1,135 @@
+{
+  "unit_id": "BR-015",
+  "kind": "business_requirement",
+  "rules": [
+    {
+      "name": "Jurisdictional Tax Rate Cap",
+      "statement": "The system must not finalize an Order Request if the calculated tax rate exceeds the maximum threshold defined by the Regulatory Authority.",
+      "type": "Compliance",
+      "condition": "during Order Request validation",
+      "exceptions": [
+        "Manual override by Compliance Officer for documented regulatory changes"
+      ],
+      "actors": [
+        "System",
+        "Regulatory Authority",
+        "Store Partner"
+      ],
+      "objects": [
+        "Order Request",
+        "Tax Calculation"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The Order Request is rejected and the customer is notified of the non-compliance risk",
+      "rationale": "Exceeding statutory tax rates creates immediate legal liability and financial penalties for the platform.",
+      "parameters": [
+        {
+          "name": "maximum_allowed_tax_rate",
+          "description": "The highest tax percentage permitted by local law for the specific jurisdiction"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-030",
+        "FR-040"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Dynamic Tax Jurisdiction Mapping",
+      "statement": "The system must only apply tax rules corresponding to the precise delivery address jurisdiction, not the store location or user profile.",
+      "type": "Validation",
+      "condition": "at the moment of Order Request submission",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "System",
+        "Customer"
+      ],
+      "objects": [
+        "Order Request",
+        "Delivery Address",
+        "Tax Rule"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The Order Request is rejected to prevent incorrect tax collection and regulatory non-compliance",
+      "rationale": "Tax liability is determined by the location of consumption (delivery), not the origin of the goods.",
+      "parameters": [
+        {
+          "name": "delivery_jurisdiction_code",
+          "description": "The unique identifier for the tax region where the order is delivered"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-040"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Real-Time Tax Rate Synchronization",
+      "statement": "The system may only calculate taxes using the most current tax rates retrieved from the external tax service at the exact moment of Order Request processing.",
+      "type": "Calculation",
+      "condition": "during Order Request processing",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "System",
+        "Tax Service Provider"
+      ],
+      "objects": [
+        "Order Request",
+        "Tax Rate"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The Order Request is rejected to ensure accurate financial settlement and avoid revenue leakage or overcharging",
+      "rationale": "Tax rates fluctuate frequently; using stale data leads to financial discrepancies and compliance breaches.",
+      "parameters": [
+        {
+          "name": "tax_rate_refresh_interval",
+          "description": "The frequency at which the system queries the external tax service for updates"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-030",
+        "FR-040"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Tax Dispute Auto-Trigger",
+      "statement": "The system must automatically generate a Dispute Ticket whenever a discrepancy is detected between the calculated tax amount and the amount collected during Financial Transaction Record generation.",
+      "type": "Exception handling",
+      "condition": "during Financial Transaction Record generation",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "System",
+        "Support Team"
+      ],
+      "objects": [
+        "Dispute Ticket",
+        "Financial Transaction Record"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "A formal dispute record is created to initiate a reconciliation process between the platform and the tax authority",
+      "rationale": "Automated detection of tax calculation errors ensures rapid remediation and maintains audit integrity.",
+      "parameters": [
+        {
+          "name": "dispute_threshold_variance",
+          "description": "The percentage difference that triggers an automatic dispute ticket"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-042",
+        "FR-036"
+      ],
+      "basis": "baseline"
+    }
+  ]
+}

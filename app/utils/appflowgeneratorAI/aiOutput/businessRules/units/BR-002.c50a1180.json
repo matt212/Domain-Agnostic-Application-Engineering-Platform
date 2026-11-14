@@ -1,0 +1,143 @@
+{
+  "unit_id": "BR-002",
+  "kind": "business_requirement",
+  "rules": [
+    {
+      "name": "Real-Time Inventory Consistency",
+      "statement": "The system must not assign an order to a Store Partner if the Real-Time Inventory Snapshot indicates insufficient quantity for any item in the request.",
+      "type": "Validation",
+      "condition": "During order allocation when a customer submits a request with multiple items",
+      "exceptions": [
+        "Items marked as 'Back in Stock' with a confirmed ETA within the delivery window"
+      ],
+      "actors": [
+        "System",
+        "Store Partner",
+        "Customer"
+      ],
+      "objects": [
+        "Order",
+        "Inventory Snapshot",
+        "Store Partner"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The order remains unassigned and is flagged for manual review to prevent overselling and customer dissatisfaction",
+      "rationale": "Prevents overselling which leads to order cancellations, financial loss, and eroded customer trust",
+      "parameters": [
+        {
+          "name": "minimum_available_quantity",
+          "description": "The quantity required for each item in the order"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-002",
+        "FR-054"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Delivery Proof Integrity",
+      "statement": "Funds must not be released to the Store Partner until a valid delivery proof containing a timestamp and signature is recorded in the system.",
+      "type": "Financial control",
+      "condition": "At the moment of Financial Settlement Handover confirmation",
+      "exceptions": [
+        "Customer explicitly waives proof requirement via verified settings",
+        "Dispute resolution overrides automatic hold"
+      ],
+      "actors": [
+        "System",
+        "Store Partner",
+        "Customer",
+        "Payment Provider"
+      ],
+      "objects": [
+        "Financial Transaction",
+        "Delivery Proof",
+        "Settlement"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The transaction is automatically reversed and funds are held in escrow pending manual verification",
+      "rationale": "Ensures the platform only pays for successfully delivered goods, mitigating fraud and operational risk",
+      "parameters": [
+        {
+          "name": "required_proof_elements",
+          "description": "List of mandatory fields like timestamp and signature"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-025",
+        "FR-027",
+        "FR-004"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Regulatory License Validity",
+      "statement": "The system must block order allocation to a Store Partner if their primary operating license is flagged as invalid or expired.",
+      "type": "Compliance",
+      "condition": "During order allocation and at the start of each business day",
+      "exceptions": [
+        "Temporary suspension due to administrative review with an approved override code"
+      ],
+      "actors": [
+        "System",
+        "Store Partner",
+        "Regulatory Authority"
+      ],
+      "objects": [
+        "Store Partner",
+        "Operating License",
+        "Order Allocation"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The Store Partner is immediately suspended from receiving orders until compliance is restored",
+      "rationale": "Maintains legal compliance and protects the platform from liability associated with unlicensed operations",
+      "parameters": [
+        {
+          "name": "license_expiry_threshold",
+          "description": "Days before expiry to trigger a warning"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-008"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "External Proof Verification Standard",
+      "statement": "Delivery proof retrieved via external API must be treated with the same verification standards as locally captured proof.",
+      "type": "Validation",
+      "condition": "When validating delivery proof regardless of source",
+      "exceptions": [
+        "API returns a specific 'pending verification' status defined in the integration contract"
+      ],
+      "actors": [
+        "System",
+        "Logistics Partner",
+        "Store Partner"
+      ],
+      "objects": [
+        "Delivery Proof",
+        "External API",
+        "Delivery Assignment"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The delivery proof is rejected and the order status remains 'In Transit' or 'Pending Proof'",
+      "rationale": "Ensures data integrity and prevents fraud by standardizing verification logic across all data sources",
+      "parameters": [
+        {
+          "name": "verification_algorithm_id",
+          "description": "Identifier for the standard verification logic applied"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-004"
+      ],
+      "basis": "baseline"
+    }
+  ]
+}

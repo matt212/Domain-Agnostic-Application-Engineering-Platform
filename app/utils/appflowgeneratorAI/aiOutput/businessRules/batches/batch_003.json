@@ -1,0 +1,553 @@
+{
+  "batch": 3,
+  "units": [
+    "BR-009",
+    "BR-010",
+    "BR-011",
+    "BR-012"
+  ],
+  "rules": [
+    {
+      "unit_id": "BR-009",
+      "name": "Subscription Auto-Renewal Consent",
+      "statement": "A customer may only have a subscription automatically renewed if they have explicitly opted in to recurring billing within the portal.",
+      "type": "Authorization",
+      "condition": "when a subscription term is approaching expiration",
+      "exceptions": [
+        "Customer explicitly cancels before the renewal window closes"
+      ],
+      "actors": [
+        "Customer",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Subscription",
+        "Customer Profile"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system blocks the renewal transaction and notifies the customer that the service will lapse at the end of the current term.",
+      "rationale": "To prevent unauthorized recurring charges and ensure customer trust in the self-service portal.",
+      "parameters": [
+        {
+          "name": "renewal_window_days",
+          "description": "days before expiry when opt-in is required"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-048"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-009",
+      "name": "Loyalty Point Redemption Cap",
+      "statement": "A customer must not redeem loyalty points for a single order if the points value exceeds the maximum allowed discount percentage for that order total.",
+      "type": "Limit",
+      "condition": "when a customer attempts to apply loyalty points during checkout",
+      "exceptions": [
+        "Promotional events explicitly override standard caps"
+      ],
+      "actors": [
+        "Customer",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Order Request",
+        "Loyalty Points"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The system rejects the redemption request and displays the maximum allowable discount amount.",
+      "rationale": "To prevent revenue leakage and ensure profitability on high-value orders while maintaining reward value.",
+      "parameters": [
+        {
+          "name": "max_discount_percentage",
+          "description": "maximum percentage of order value redeemable via points"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-048"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-009",
+      "name": "Profile Data Archival Integrity",
+      "statement": "Archived customer profiles must retain all historical order and interaction data and must never be modified after the archival status is confirmed.",
+      "type": "State transition",
+      "condition": "when a customer profile is moved to an archived state",
+      "exceptions": [
+        "System recovery operations initiated by senior administrators with dual authorization"
+      ],
+      "actors": [
+        "Customer",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Customer Profile",
+        "Order History"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The system rejects the archival command and logs the attempt as a compliance violation.",
+      "rationale": "To ensure audit trails remain immutable for regulatory compliance and dispute resolution.",
+      "parameters": [
+        {
+          "name": "retention_period_years",
+          "description": "years data must be retained post-archival"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-009"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-009",
+      "name": "Subscription Tier Downgrade Restriction",
+      "statement": "A customer may only downgrade their subscription tier immediately after the current billing cycle concludes, not mid-cycle.",
+      "type": "Timing",
+      "condition": "when a customer requests a change to their active subscription plan",
+      "exceptions": [
+        "Platform-initiated service termination due to non-payment or policy breach"
+      ],
+      "actors": [
+        "Customer",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Subscription",
+        "Billing Cycle"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The system queues the downgrade request to take effect at the start of the next billing period.",
+      "rationale": "To protect revenue stability and prevent customers from exploiting mid-cycle price differences.",
+      "parameters": [
+        {
+          "name": "billing_cycle_frequency",
+          "description": "frequency of the billing cycle (e.g., monthly, yearly)"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-048"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-010",
+      "name": "Demand-Based Fee Adjustment",
+      "statement": "The system must adjust delivery fees and commissions in real-time based on current demand, weather, and traffic conditions.",
+      "type": "Calculation",
+      "condition": "during order allocation and confirmation phases",
+      "exceptions": [
+        "emergency service tiers with fixed pricing"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Customer",
+        "Delivery Partner",
+        "Store Partner"
+      ],
+      "objects": [
+        "Delivery Fee",
+        "Commission Rate",
+        "Order"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "revenue is sub-optimized during peak times and SLA adherence risks increase",
+      "rationale": "dynamic pricing maximizes revenue and ensures timely deliveries during supply-demand fluctuations",
+      "parameters": [
+        {
+          "name": "demand_multiplier",
+          "description": "scaling factor applied to base fees based on order volume density"
+        },
+        {
+          "name": "weather_adjustment_factor",
+          "description": "coefficient applied to fees based on adverse weather conditions"
+        },
+        {
+          "name": "traffic_congestion_threshold",
+          "description": "traffic level at which fees begin to increase"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-045",
+        "FR-047",
+        "FR-058"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-010",
+      "name": "Service Area Compliance",
+      "statement": "Orders originating from addresses outside the active Service Area Definition must be rejected by the Order Allocation Engine.",
+      "type": "Validation",
+      "condition": "at the moment of order submission",
+      "exceptions": [
+        "manual override by Platform Operator for verified high-value customers"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Customer",
+        "Order Allocation Engine"
+      ],
+      "objects": [
+        "Order",
+        "Service Area Definition",
+        "Address"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "the order is not processed and the customer receives a rejection notification",
+      "rationale": "prevents logistical failures and ensures accurate inventory and routing availability",
+      "parameters": [
+        {
+          "name": "active_service_area_id",
+          "description": "identifier of the currently valid geospatial boundary"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-012",
+        "FR-029"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-010",
+      "name": "Travel Time Matrix Recalculation",
+      "statement": "The system must recalculate estimated arrival times and optimal delivery paths whenever a Service Area Definition is modified.",
+      "type": "Calculation",
+      "condition": "immediately upon publication of a new Service Area Definition version",
+      "exceptions": [
+        "scheduled maintenance windows with pre-calculated buffers"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Order Allocation Engine",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Service Area Definition",
+        "Travel Time Matrix",
+        "Delivery Path"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "delivery estimates become inaccurate leading to SLA breaches and customer dissatisfaction",
+      "rationale": "ensures route constraints and travel times reflect the latest operational geography",
+      "parameters": [
+        {
+          "name": "recalculation_trigger_event",
+          "description": "event type that initiates the matrix update process"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-012",
+        "FR-029",
+        "FR-047"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-010",
+      "name": "Financial Settlement Validation",
+      "statement": "The system must prevent the finalization of a Financial Transaction Record if no valid Store Partner Agreement exists for the involved Store Partner.",
+      "type": "Validation",
+      "condition": "during the financial settlement handover phase",
+      "exceptions": [
+        "manual dispute resolution initiated by the Platform Operator"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner",
+        "Financial Settlement Engine"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Store Partner Agreement"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "the transaction fails to settle, resulting in revenue loss and potential legal liability",
+      "rationale": "ensures revenue share calculations are based on current contractual terms",
+      "parameters": [
+        {
+          "name": "agreement_validity_status",
+          "description": "boolean flag indicating if the agreement is active and unexpired"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-025",
+        "FR-028"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-011",
+      "name": "Atomic Inventory Locking",
+      "statement": "A specific inventory unit must be locked exclusively to a single Order Request until the fulfillment task is completed or the order is cancelled.",
+      "type": "Limit",
+      "condition": "When an Order Request is created and assigned to a Store Partner",
+      "exceptions": [],
+      "actors": [
+        "Platform Operator",
+        "Store Partner"
+      ],
+      "objects": [
+        "Inventory Unit",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The system rejects the order assignment and flags the inventory for manual audit",
+      "rationale": "Prevents overselling and revenue leakage by ensuring one unit serves only one customer at a time",
+      "parameters": [
+        {
+          "name": "lock_duration",
+          "description": "Maximum time a unit can remain locked before auto-release"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-001",
+        "FR-034"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-011",
+      "name": "Perishable Priority Allocation",
+      "statement": "Inventory units for perishable items must be prioritized for allocation to orders based on their proximity to the expiration date.",
+      "type": "Eligibility",
+      "condition": "When allocating inventory for perishable goods across multiple eligible orders",
+      "exceptions": [
+        "Customer explicitly requests older stock"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner"
+      ],
+      "objects": [
+        "Perishable Inventory",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system skips the allocation and flags the order for manual review to prevent waste",
+      "rationale": "Minimizes food waste and ensures regulatory compliance regarding food safety and shelf-life",
+      "parameters": [
+        {
+          "name": "expiry_threshold",
+          "description": "Time window defining 'proximity to expiration' for prioritization"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-002",
+        "FR-055"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-011",
+      "name": "Real-Time Sync Discrepancy Flagging",
+      "statement": "The system must flag a synchronization discrepancy if the data link latency exceeds the defined threshold or if a sync failure is detected.",
+      "type": "Validation",
+      "condition": "During continuous reconciliation between POS systems and the digital platform",
+      "exceptions": [
+        "Scheduled maintenance window"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner"
+      ],
+      "objects": [
+        "Inventory Snapshot",
+        "POS System"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system halts new order assignments and triggers an immediate alert for manual intervention",
+      "rationale": "Ensures data integrity and prevents financial loss due to unrecorded inventory changes",
+      "parameters": [
+        {
+          "name": "latency_threshold",
+          "description": "Maximum acceptable delay in seconds for data synchronization"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-001",
+        "FR-039"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-011",
+      "name": "Automatic Lock Release on Timeout",
+      "statement": "Locked stock must be automatically released if the Order Request is not confirmed within the allocated time window.",
+      "type": "State transition",
+      "condition": "When an Order Request remains in a pending confirmation state",
+      "exceptions": [
+        "Manual override by Store Partner"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner"
+      ],
+      "objects": [
+        "Inventory Unit",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The inventory remains locked, causing potential overselling and blocking other valid orders",
+      "rationale": "Prevents inventory hoarding and ensures availability for other customers during peak times",
+      "parameters": [
+        {
+          "name": "confirmation_window",
+          "description": "Maximum time allowed for order confirmation before lock release"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-034"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-012",
+      "name": "Settlement-After-Delivery-Proof",
+      "statement": "Financial distribution must only occur after a valid Delivery Proof is recorded.",
+      "type": "Limit",
+      "condition": "When calculating settlement amounts for a completed delivery order",
+      "exceptions": [
+        "Force majeure events where delivery proof is technically impossible but legally accepted via alternative verification"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Delivery Proof"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The system must block the settlement transaction and flag the event for manual audit review",
+      "rationale": "Prevents revenue leakage by ensuring goods were actually delivered before funds are released",
+      "parameters": [
+        {
+          "name": "valid_delivery_proof_status",
+          "description": "The specific status value indicating successful delivery verification"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-005",
+        "FR-039"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-012",
+      "name": "High-Risk-Transaction-Pause",
+      "statement": "Transactions involving high-risk indicators must be paused for manual verification before settlement.",
+      "type": "Eligibility",
+      "condition": "When a transaction risk score exceeds the high-risk threshold defined in the risk model",
+      "exceptions": [
+        "Customer explicitly waives verification for low-value transactions under a specific trust tier"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Customer",
+        "Store Partner"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Risk Score"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system must automatically reverse the pending settlement and initiate a fraud investigation workflow",
+      "rationale": "Mitigates financial loss from fraud and chargebacks in a high-volume, low-margin environment",
+      "parameters": [
+        {
+          "name": "high_risk_threshold",
+          "description": "The numerical score value that triggers a manual review pause"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-026",
+        "FR-044"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-012",
+      "name": "Revenue-Reconciliation-Continuity",
+      "statement": "Platform revenue shares must be reconciled against store partner settlements in real-time.",
+      "type": "Calculation",
+      "condition": "During every financial settlement cycle for a transaction",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner",
+        "Payment Provider"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Revenue Share"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system must halt further settlements for the affected store partner until the discrepancy is resolved",
+      "rationale": "Ensures accurate financial distribution and prevents overpayment or underpayment between parties",
+      "parameters": [
+        {
+          "name": "reconciliation_tolerance",
+          "description": "The maximum allowable variance percentage between calculated and actual shares"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-039",
+        "FR-005"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-012",
+      "name": "Immutable-Audit-Trail-Generation",
+      "statement": "An immutable audit trail must be generated for every Financial Transaction Record and Settlement event.",
+      "type": "Audit and retention",
+      "condition": "Immediately upon creation or modification of any financial transaction record",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Regulatory Authority",
+        "Store Partner"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Settlement Event"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The system must reject the transaction and log a critical error for compliance investigation",
+      "rationale": "Provides a non-repudiable record for regulatory compliance and dispute resolution",
+      "parameters": [
+        {
+          "name": "audit_retention_period",
+          "description": "The minimum duration the audit trail must be stored securely"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-042"
+      ],
+      "basis": "inferred"
+    }
+  ]
+}

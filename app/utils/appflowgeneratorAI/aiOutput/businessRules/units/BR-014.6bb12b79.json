@@ -1,0 +1,145 @@
+{
+  "unit_id": "BR-014",
+  "kind": "business_requirement",
+  "rules": [
+    {
+      "name": "Proactive Risk Alert Triggering",
+      "statement": "The system must generate a proactive risk alert when correlated data indicates a high probability of SLA breach or inventory error within the defined prediction window.",
+      "type": "Exception handling",
+      "condition": "when predictive analytics correlate delivery delays, inventory errors, and customer sentiment to indicate imminent brand or SLA risk",
+      "exceptions": [
+        "during scheduled system maintenance windows",
+        "when the risk probability falls below the configured threshold"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Risk Management Team"
+      ],
+      "objects": [
+        "Risk Alert Record",
+        "SLA Performance Metric",
+        "Inventory Status Record"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "the system fails to notify stakeholders of impending operational failures, leading to unmitigated reputational damage and potential order loss",
+      "rationale": "shifting from reactive to proactive management prevents brand equity erosion before customer dissatisfaction becomes irreversible",
+      "parameters": [
+        {
+          "name": "prediction_window",
+          "description": "time horizon in minutes for forecasting risk events"
+        },
+        {
+          "name": "risk_threshold",
+          "description": "minimum probability score required to trigger an alert"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-050",
+        "FR-051",
+        "FR-060",
+        "FR-061"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "High-Velocity Inventory Safety Margin",
+      "statement": "The system must only flag a synchronization discrepancy for high-velocity items when the projected demand exceeds current inventory by the defined safety margin.",
+      "type": "Validation",
+      "condition": "when calculating inventory availability for high-velocity products against projected demand",
+      "exceptions": [
+        "during manual inventory adjustment processes",
+        "for items explicitly marked as 'non-critical' in the product catalog"
+      ],
+      "actors": [
+        "Inventory Management System",
+        "Store Partner"
+      ],
+      "objects": [
+        "Product Catalog",
+        "Inventory Record",
+        "Demand Forecast"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "the system may oversell critical stock or fail to alert on genuine shortages, causing order cancellations and customer churn",
+      "rationale": "focusing alerts on high-velocity items ensures resources are directed toward preventing the most impactful stockouts",
+      "parameters": [
+        {
+          "name": "safety_margin",
+          "description": "percentage buffer required between projected demand and available stock"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-001",
+        "FR-046"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "SLA Breach Notification Deduplication",
+      "statement": "The system must only send a notification regarding a status change if the new status differs from the status of the most recent notification for that specific transaction.",
+      "type": "Validation",
+      "condition": "when processing a status update for an order or refund request",
+      "exceptions": [
+        "when the notification channel has been explicitly overridden by a supervisor",
+        "during emergency broadcast scenarios"
+      ],
+      "actors": [
+        "Customer",
+        "Support Agent"
+      ],
+      "objects": [
+        "Notification Record",
+        "Financial Transaction Record",
+        "Order Status"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "the customer receives redundant or conflicting messages, causing confusion and eroding trust in the platform's communication reliability",
+      "rationale": "ensures clear, non-repetitive communication to maintain a professional customer experience",
+      "parameters": [
+        {
+          "name": "notification_frequency_limit",
+          "description": "maximum number of status updates allowed per transaction cycle"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-037"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Refund Status Content Integrity",
+      "statement": "The system must verify that the content of any notification accurately reflects the current state of the Financial Transaction Record before transmission.",
+      "type": "Validation",
+      "condition": "when composing a notification message triggered by a refund status change",
+      "exceptions": [
+        "during system rollback procedures initiated by engineering",
+        "when the Financial Transaction Record is temporarily locked for audit"
+      ],
+      "actors": [
+        "Customer",
+        "Finance Team"
+      ],
+      "objects": [
+        "Notification Message",
+        "Financial Transaction Record"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "the customer receives incorrect financial information, leading to disputes, chargebacks, and regulatory compliance issues",
+      "rationale": "financial accuracy in communications is non-negotiable to prevent disputes and maintain regulatory adherence",
+      "parameters": [
+        {
+          "name": "validation_latency",
+          "description": "maximum time allowed to fetch the latest financial record before sending"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-037"
+      ],
+      "basis": "baseline"
+    }
+  ]
+}

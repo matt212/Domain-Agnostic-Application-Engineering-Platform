@@ -1,0 +1,137 @@
+{
+  "unit_id": "BR-012",
+  "kind": "business_requirement",
+  "rules": [
+    {
+      "name": "Settlement-After-Delivery-Proof",
+      "statement": "Financial distribution must only occur after a valid Delivery Proof is recorded.",
+      "type": "Limit",
+      "condition": "When calculating settlement amounts for a completed delivery order",
+      "exceptions": [
+        "Force majeure events where delivery proof is technically impossible but legally accepted via alternative verification"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Delivery Proof"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The system must block the settlement transaction and flag the event for manual audit review",
+      "rationale": "Prevents revenue leakage by ensuring goods were actually delivered before funds are released",
+      "parameters": [
+        {
+          "name": "valid_delivery_proof_status",
+          "description": "The specific status value indicating successful delivery verification"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-005",
+        "FR-039"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "High-Risk-Transaction-Pause",
+      "statement": "Transactions involving high-risk indicators must be paused for manual verification before settlement.",
+      "type": "Eligibility",
+      "condition": "When a transaction risk score exceeds the high-risk threshold defined in the risk model",
+      "exceptions": [
+        "Customer explicitly waives verification for low-value transactions under a specific trust tier"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Customer",
+        "Store Partner"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Risk Score"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system must automatically reverse the pending settlement and initiate a fraud investigation workflow",
+      "rationale": "Mitigates financial loss from fraud and chargebacks in a high-volume, low-margin environment",
+      "parameters": [
+        {
+          "name": "high_risk_threshold",
+          "description": "The numerical score value that triggers a manual review pause"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-026",
+        "FR-044"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Revenue-Reconciliation-Continuity",
+      "statement": "Platform revenue shares must be reconciled against store partner settlements in real-time.",
+      "type": "Calculation",
+      "condition": "During every financial settlement cycle for a transaction",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner",
+        "Payment Provider"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Revenue Share"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system must halt further settlements for the affected store partner until the discrepancy is resolved",
+      "rationale": "Ensures accurate financial distribution and prevents overpayment or underpayment between parties",
+      "parameters": [
+        {
+          "name": "reconciliation_tolerance",
+          "description": "The maximum allowable variance percentage between calculated and actual shares"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-039",
+        "FR-005"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Immutable-Audit-Trail-Generation",
+      "statement": "An immutable audit trail must be generated for every Financial Transaction Record and Settlement event.",
+      "type": "Audit and retention",
+      "condition": "Immediately upon creation or modification of any financial transaction record",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Regulatory Authority",
+        "Store Partner"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Settlement Event"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The system must reject the transaction and log a critical error for compliance investigation",
+      "rationale": "Provides a non-repudiable record for regulatory compliance and dispute resolution",
+      "parameters": [
+        {
+          "name": "audit_retention_period",
+          "description": "The minimum duration the audit trail must be stored securely"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-042"
+      ],
+      "basis": "inferred"
+    }
+  ]
+}

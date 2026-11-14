@@ -1,0 +1,145 @@
+{
+  "unit_id": "BR-004",
+  "kind": "business_requirement",
+  "rules": [
+    {
+      "name": "Target Timeframe Adherence",
+      "statement": "The system must classify an order as fulfilled only if the total elapsed time from Order Request creation to Delivery Proof confirmation does not exceed the committed target window.",
+      "type": "Validation",
+      "condition": "When an order reaches the Delivery Proof confirmation stage",
+      "exceptions": [
+        "Force majeure events declared by the Regulatory Authority",
+        "Customer-initiated order cancellation prior to handover"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Delivery Partner",
+        "Customer"
+      ],
+      "objects": [
+        "Order Request",
+        "Delivery Proof",
+        "Service Area Definition"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The order is flagged as 'Late' and triggers a service credit workflow for the Customer and a penalty assessment for the Delivery Partner",
+      "rationale": "This ensures the core value proposition of ultra-fast delivery is maintained and SLAs are met",
+      "parameters": [
+        {
+          "name": "committed_target_window",
+          "description": "The maximum allowed duration in minutes for order fulfillment"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-054",
+        "FR-059"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Service Area Activation Prerequisite",
+      "statement": "The system must prevent the creation of a new Order Request if the associated Service Area Definition is not in an active state.",
+      "type": "Validation",
+      "condition": "When a customer or partner initiates an Order Request",
+      "exceptions": [
+        "Emergency override protocols authorized by the Platform Operator",
+        "System maintenance windows explicitly approved by the Regulatory Authority"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Customer",
+        "Store Partner"
+      ],
+      "objects": [
+        "Order Request",
+        "Service Area Definition"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The Order Request is rejected immediately and the user is notified that the service zone is unavailable",
+      "rationale": "This prevents orders from being accepted in zones where logistics or regulatory compliance are not verified",
+      "parameters": [
+        {
+          "name": "active_state",
+          "description": "The status indicating the Service Area Definition is operational"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-014"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Delivery Partner Performance Threshold",
+      "statement": "The system must suspend a Delivery Partner's ability to accept new assignments if their on-time delivery rate falls below the minimum acceptable threshold within a rolling evaluation period.",
+      "type": "Eligibility",
+      "condition": "When a Delivery Partner completes a batch of deliveries",
+      "exceptions": [
+        "Temporary suspension due to verified force majeure events",
+        "New partner probationary period grace window defined in contract"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Delivery Partner",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The Delivery Partner is automatically removed from the active pool and must undergo a re-qualification audit",
+      "rationale": "This maintains service quality standards and protects the brand reputation for speed",
+      "parameters": [
+        {
+          "name": "minimum_acceptable_threshold",
+          "description": "The minimum percentage of on-time deliveries required to remain active"
+        },
+        {
+          "name": "rolling_evaluation_period",
+          "description": "The time window used to calculate the delivery performance rate"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-059"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Real-Time Inventory Consistency",
+      "statement": "The system must invalidate an Order Request if the real-time inventory snapshot indicates that any selected item is unavailable at the assigned Store Partner.",
+      "type": "Validation",
+      "condition": "When an Order Request is submitted for processing",
+      "exceptions": [
+        "Manual override by a Store Partner manager for high-priority customer orders",
+        "System latency tolerance window defined in the SLA agreement"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner",
+        "Customer"
+      ],
+      "objects": [
+        "Order Request",
+        "Inventory Snapshot",
+        "Store Partner"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The Order Request is rejected to prevent overselling and subsequent refund disputes",
+      "rationale": "This ensures accurate inventory synchronization and prevents fulfillment failures due to stock discrepancies",
+      "parameters": [
+        {
+          "name": "real_time_inventory_snapshot",
+          "description": "The current stock level data for all items in the order"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-046",
+        "FR-054"
+      ],
+      "basis": "inferred"
+    }
+  ]
+}

@@ -1,0 +1,126 @@
+{
+  "unit_id": "BR-008",
+  "kind": "business_requirement",
+  "rules": [
+    {
+      "name": "Settlement Accuracy Requirement",
+      "statement": "A financial settlement record must include item costs, delivery fees, taxes, platform commissions, and net settlement amounts to be considered complete.",
+      "type": "Financial control",
+      "condition": "when a delivery transaction is finalized for payout",
+      "exceptions": [],
+      "actors": [
+        "Delivery Partner",
+        "Platform Operator",
+        "Payment Provider"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Settlement Record"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The settlement is rejected and the payout process is halted until discrepancies are resolved",
+      "rationale": "Ensures accurate compensation and prevents financial disputes between the platform and workers",
+      "parameters": [
+        {
+          "name": "required_settlement_components",
+          "description": "List of mandatory financial fields including costs, fees, taxes, commissions, and net amounts"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-043",
+        "FR-039"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Delivery Verification Mandate",
+      "statement": "A financial transaction record must be linked to verifiable evidence of delivery before finalizing the settlement status.",
+      "type": "Validation",
+      "condition": "when an order is marked as delivered for payment processing",
+      "exceptions": [
+        "Force majeure events documented by the Delivery Partner"
+      ],
+      "actors": [
+        "Delivery Partner",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Delivery Evidence"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The settlement status remains 'Pending' and funds are withheld until valid proof is uploaded",
+      "rationale": "Prevents payment for undelivered goods and ensures integrity of the gig-economy logistics model",
+      "parameters": [
+        {
+          "name": "acceptable_evidence_types",
+          "description": "Types of proof accepted such as GPS coordinates, photo timestamps, or signature logs"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-042"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Historical Earnings Transparency",
+      "statement": "A Delivery Partner may only view their historical earnings summary if the data is derived from finalized settlement records.",
+      "type": "Authorization",
+      "condition": "when a Delivery Partner accesses the financial transparency portal",
+      "exceptions": [],
+      "actors": [
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Earnings Summary",
+        "Settlement Record"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "Access to the earnings view is denied to prevent unauthorized data manipulation or premature viewing",
+      "rationale": "Ensures workers see only accurate, finalized financial data to maintain trust and compliance",
+      "parameters": [
+        {
+          "name": "data_finalization_threshold",
+          "description": "The state a transaction must reach (e.g., 'Settled') before earnings data is visible"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-016"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Payout Schedule Adherence",
+      "statement": "A payout schedule must be generated based on the contractual agreement version active at the time of the transaction.",
+      "type": "Calculation",
+      "condition": "when calculating the amount due for a specific delivery batch",
+      "exceptions": [],
+      "actors": [
+        "Platform Operator",
+        "Payment Provider"
+      ],
+      "objects": [
+        "Payout Schedule",
+        "Store Partner Agreement"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The payout calculation is invalidated and the batch is re-queued for recalculation using the correct contract version",
+      "rationale": "Ensures financial compliance with the specific commission rates and terms agreed upon at the time of service",
+      "parameters": [
+        {
+          "name": "active_agreement_version",
+          "description": "The specific version of the agreement valid for the transaction date"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-043",
+        "FR-039"
+      ],
+      "basis": "inferred"
+    }
+  ]
+}

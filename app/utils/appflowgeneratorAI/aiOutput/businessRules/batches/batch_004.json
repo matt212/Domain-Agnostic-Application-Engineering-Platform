@@ -1,0 +1,552 @@
+{
+  "batch": 4,
+  "units": [
+    "BR-013",
+    "BR-014",
+    "BR-015",
+    "BR-016"
+  ],
+  "rules": [
+    {
+      "unit_id": "BR-013",
+      "name": "Food Safety Certificate Validity",
+      "statement": "A Store Partner must not accept new orders unless their food safety certificate is valid and non-expired.",
+      "type": "Compliance",
+      "condition": "When processing an order request for a specific Store Partner",
+      "exceptions": [
+        "Certificate renewal grace period defined by local law (proposed)"
+      ],
+      "actors": [
+        "Store Partner",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Store Partner",
+        "Food Safety Certificate",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The system automatically blocks the order and flags the partner for immediate review",
+      "rationale": "To prevent the sale of unsafe food and avoid severe regulatory fines and license revocation",
+      "parameters": [
+        {
+          "name": "certificate_validity_period",
+          "description": "Duration for which a certificate remains valid before requiring renewal"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-008",
+        "FR-053"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-013",
+      "name": "Labor Law Compliance Verification",
+      "statement": "A Delivery Partner may only be assigned to a gig-economy task if their labor law compliance status is verified and active.",
+      "type": "Compliance",
+      "condition": "When allocating a delivery task to a Delivery Partner",
+      "exceptions": [
+        "Emergency override with documented regulatory waiver (proposed)"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Delivery Partner",
+        "Regulatory Authority"
+      ],
+      "objects": [
+        "Delivery Partner",
+        "Labor Law Compliance Status",
+        "Delivery Task"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The allocation request is rejected and the partner is suspended pending compliance review",
+      "rationale": "To mitigate legal liability and ensure adherence to gig-economy labor regulations",
+      "parameters": [
+        {
+          "name": "compliance_verification_frequency",
+          "description": "How often labor compliance status must be re-verified"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-017"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-013",
+      "name": "Restricted Zone Service Area Validation",
+      "statement": "A Service Area Definition must not be created or activated if its geographic boundaries overlap with a zone restricted by the Regulatory Authority.",
+      "type": "Compliance",
+      "condition": "When creating or modifying a Service Area Definition",
+      "exceptions": [
+        "Manual override by senior compliance officer with written approval (proposed)"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Regulatory Authority"
+      ],
+      "objects": [
+        "Service Area Definition",
+        "Restricted Zone"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system rejects the definition creation or deactivates the area immediately",
+      "rationale": "To ensure operations strictly adhere to external regulatory geographic restrictions",
+      "parameters": [
+        {
+          "name": "overlap_tolerance_threshold",
+          "description": "Maximum allowable geographic overlap percentage before triggering a block"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-014",
+        "FR-023"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-013",
+      "name": "Regulatory Data Update Latency",
+      "statement": "Regulatory compliance status must be updated within a maximum allowed duration of receiving new data from external sources.",
+      "type": "Timing",
+      "condition": "When external regulatory data sources provide updates",
+      "exceptions": [
+        "System downtime or network failure with automatic retry logic (proposed)"
+      ],
+      "actors": [
+        "Platform Operator",
+        "External Data Source"
+      ],
+      "objects": [
+        "Regulatory Compliance Status",
+        "External Data Source"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system generates a compliance alert and escalates to the operations team for manual intervention",
+      "rationale": "To ensure real-time accuracy of compliance status and prevent operating on outdated legal information",
+      "parameters": [
+        {
+          "name": "max_update_latency_hours",
+          "description": "Maximum time allowed between receiving external data and updating internal status"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-008"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-014",
+      "name": "Proactive Risk Alert Triggering",
+      "statement": "The system must generate a proactive risk alert when correlated data indicates a high probability of SLA breach or inventory error within the defined prediction window.",
+      "type": "Exception handling",
+      "condition": "when predictive analytics correlate delivery delays, inventory errors, and customer sentiment to indicate imminent brand or SLA risk",
+      "exceptions": [
+        "during scheduled system maintenance windows",
+        "when the risk probability falls below the configured threshold"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Risk Management Team"
+      ],
+      "objects": [
+        "Risk Alert Record",
+        "SLA Performance Metric",
+        "Inventory Status Record"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "the system fails to notify stakeholders of impending operational failures, leading to unmitigated reputational damage and potential order loss",
+      "rationale": "shifting from reactive to proactive management prevents brand equity erosion before customer dissatisfaction becomes irreversible",
+      "parameters": [
+        {
+          "name": "prediction_window",
+          "description": "time horizon in minutes for forecasting risk events"
+        },
+        {
+          "name": "risk_threshold",
+          "description": "minimum probability score required to trigger an alert"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-050",
+        "FR-051",
+        "FR-060",
+        "FR-061"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-014",
+      "name": "High-Velocity Inventory Safety Margin",
+      "statement": "The system must only flag a synchronization discrepancy for high-velocity items when the projected demand exceeds current inventory by the defined safety margin.",
+      "type": "Validation",
+      "condition": "when calculating inventory availability for high-velocity products against projected demand",
+      "exceptions": [
+        "during manual inventory adjustment processes",
+        "for items explicitly marked as 'non-critical' in the product catalog"
+      ],
+      "actors": [
+        "Inventory Management System",
+        "Store Partner"
+      ],
+      "objects": [
+        "Product Catalog",
+        "Inventory Record",
+        "Demand Forecast"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "the system may oversell critical stock or fail to alert on genuine shortages, causing order cancellations and customer churn",
+      "rationale": "focusing alerts on high-velocity items ensures resources are directed toward preventing the most impactful stockouts",
+      "parameters": [
+        {
+          "name": "safety_margin",
+          "description": "percentage buffer required between projected demand and available stock"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-001",
+        "FR-046"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-014",
+      "name": "SLA Breach Notification Deduplication",
+      "statement": "The system must only send a notification regarding a status change if the new status differs from the status of the most recent notification for that specific transaction.",
+      "type": "Validation",
+      "condition": "when processing a status update for an order or refund request",
+      "exceptions": [
+        "when the notification channel has been explicitly overridden by a supervisor",
+        "during emergency broadcast scenarios"
+      ],
+      "actors": [
+        "Customer",
+        "Support Agent"
+      ],
+      "objects": [
+        "Notification Record",
+        "Financial Transaction Record",
+        "Order Status"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "the customer receives redundant or conflicting messages, causing confusion and eroding trust in the platform's communication reliability",
+      "rationale": "ensures clear, non-repetitive communication to maintain a professional customer experience",
+      "parameters": [
+        {
+          "name": "notification_frequency_limit",
+          "description": "maximum number of status updates allowed per transaction cycle"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-037"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-014",
+      "name": "Refund Status Content Integrity",
+      "statement": "The system must verify that the content of any notification accurately reflects the current state of the Financial Transaction Record before transmission.",
+      "type": "Validation",
+      "condition": "when composing a notification message triggered by a refund status change",
+      "exceptions": [
+        "during system rollback procedures initiated by engineering",
+        "when the Financial Transaction Record is temporarily locked for audit"
+      ],
+      "actors": [
+        "Customer",
+        "Finance Team"
+      ],
+      "objects": [
+        "Notification Message",
+        "Financial Transaction Record"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "the customer receives incorrect financial information, leading to disputes, chargebacks, and regulatory compliance issues",
+      "rationale": "financial accuracy in communications is non-negotiable to prevent disputes and maintain regulatory adherence",
+      "parameters": [
+        {
+          "name": "validation_latency",
+          "description": "maximum time allowed to fetch the latest financial record before sending"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-037"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-015",
+      "name": "Jurisdictional Tax Rate Cap",
+      "statement": "The system must not finalize an Order Request if the calculated tax rate exceeds the maximum threshold defined by the Regulatory Authority.",
+      "type": "Compliance",
+      "condition": "during Order Request validation",
+      "exceptions": [
+        "Manual override by Compliance Officer for documented regulatory changes"
+      ],
+      "actors": [
+        "System",
+        "Regulatory Authority",
+        "Store Partner"
+      ],
+      "objects": [
+        "Order Request",
+        "Tax Calculation"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The Order Request is rejected and the customer is notified of the non-compliance risk",
+      "rationale": "Exceeding statutory tax rates creates immediate legal liability and financial penalties for the platform.",
+      "parameters": [
+        {
+          "name": "maximum_allowed_tax_rate",
+          "description": "The highest tax percentage permitted by local law for the specific jurisdiction"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-030",
+        "FR-040"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-015",
+      "name": "Dynamic Tax Jurisdiction Mapping",
+      "statement": "The system must only apply tax rules corresponding to the precise delivery address jurisdiction, not the store location or user profile.",
+      "type": "Validation",
+      "condition": "at the moment of Order Request submission",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "System",
+        "Customer"
+      ],
+      "objects": [
+        "Order Request",
+        "Delivery Address",
+        "Tax Rule"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The Order Request is rejected to prevent incorrect tax collection and regulatory non-compliance",
+      "rationale": "Tax liability is determined by the location of consumption (delivery), not the origin of the goods.",
+      "parameters": [
+        {
+          "name": "delivery_jurisdiction_code",
+          "description": "The unique identifier for the tax region where the order is delivered"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-040"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-015",
+      "name": "Real-Time Tax Rate Synchronization",
+      "statement": "The system may only calculate taxes using the most current tax rates retrieved from the external tax service at the exact moment of Order Request processing.",
+      "type": "Calculation",
+      "condition": "during Order Request processing",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "System",
+        "Tax Service Provider"
+      ],
+      "objects": [
+        "Order Request",
+        "Tax Rate"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The Order Request is rejected to ensure accurate financial settlement and avoid revenue leakage or overcharging",
+      "rationale": "Tax rates fluctuate frequently; using stale data leads to financial discrepancies and compliance breaches.",
+      "parameters": [
+        {
+          "name": "tax_rate_refresh_interval",
+          "description": "The frequency at which the system queries the external tax service for updates"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-030",
+        "FR-040"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-015",
+      "name": "Tax Dispute Auto-Trigger",
+      "statement": "The system must automatically generate a Dispute Ticket whenever a discrepancy is detected between the calculated tax amount and the amount collected during Financial Transaction Record generation.",
+      "type": "Exception handling",
+      "condition": "during Financial Transaction Record generation",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "System",
+        "Support Team"
+      ],
+      "objects": [
+        "Dispute Ticket",
+        "Financial Transaction Record"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "A formal dispute record is created to initiate a reconciliation process between the platform and the tax authority",
+      "rationale": "Automated detection of tax calculation errors ensures rapid remediation and maintains audit integrity.",
+      "parameters": [
+        {
+          "name": "dispute_threshold_variance",
+          "description": "The percentage difference that triggers an automatic dispute ticket"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-042",
+        "FR-036"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-016",
+      "name": "Pre-Onboarding License Verification",
+      "statement": "A Store Partner must not be granted operational access until all required regulatory licenses and food safety certificates are validated as current and authentic.",
+      "type": "Eligibility",
+      "condition": "during the new partner onboarding process",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner",
+        "Regulatory Authority"
+      ],
+      "objects": [
+        "Store Partner",
+        "Regulatory License",
+        "Food Safety Certificate"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The onboarding process is terminated and the partner is barred from the marketplace until compliance is achieved.",
+      "rationale": "To prevent legal liability and supply chain disruptions caused by unverified or non-compliant partners.",
+      "parameters": [
+        {
+          "name": "required_license_types",
+          "description": "List of specific licenses mandated by local jurisdiction"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-053",
+        "FR-008"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "BR-016",
+      "name": "Agreement Activation Gate",
+      "statement": "An Order Request may only be allocated to a Store Partner if the associated Partner Agreement is explicitly marked as 'Active' in the system.",
+      "type": "State transition",
+      "condition": "when an order is routed to a specific store",
+      "exceptions": [
+        "Emergency manual override by Platform Operator with audit trail"
+      ],
+      "actors": [
+        "Order Orchestration System",
+        "Store Partner",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Order Request",
+        "Partner Agreement"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The order allocation is rejected and returned to the pool for re-routing.",
+      "rationale": "To ensure that only partners with valid, active contractual terms can fulfill customer orders.",
+      "parameters": [
+        {
+          "name": "agreement_status_threshold",
+          "description": "The specific status value required to allow allocation"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-010"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-016",
+      "name": "License Expiration Warning Threshold",
+      "statement": "A Store Partner must be notified immediately if their primary operating license expiration date is within a configurable warning period.",
+      "type": "Timing",
+      "condition": "when the system detects an upcoming license expiration",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Store Partner",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Operating License"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The partner's ability to accept new orders is automatically suspended until the license is renewed.",
+      "rationale": "To mitigate the risk of operating with invalid licenses and facing regulatory fines.",
+      "parameters": [
+        {
+          "name": "warning_period_days",
+          "description": "Number of days before expiration to trigger notification"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-008"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "BR-016",
+      "name": "Immutable Agreement Versioning",
+      "statement": "An amendment to an active Partner Agreement must immediately create a new version number while marking the previous version as historical and read-only.",
+      "type": "State transition",
+      "condition": "when a Partner Agreement is amended",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner"
+      ],
+      "objects": [
+        "Partner Agreement",
+        "Agreement Version"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The system rejects the amendment request and logs the error for manual review.",
+      "rationale": "To maintain a complete, non-destructive audit trail of contractual changes for compliance and dispute resolution.",
+      "parameters": [
+        {
+          "name": "version_increment_rule",
+          "description": "Logic determining the next version number"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-010",
+        "FR-020"
+      ],
+      "basis": "baseline"
+    }
+  ]
+}

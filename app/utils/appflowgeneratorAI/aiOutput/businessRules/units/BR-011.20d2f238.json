@@ -1,0 +1,131 @@
+{
+  "unit_id": "BR-011",
+  "kind": "business_requirement",
+  "rules": [
+    {
+      "name": "Atomic Inventory Locking",
+      "statement": "A specific inventory unit must be locked exclusively to a single Order Request until the fulfillment task is completed or the order is cancelled.",
+      "type": "Limit",
+      "condition": "When an Order Request is created and assigned to a Store Partner",
+      "exceptions": [],
+      "actors": [
+        "Platform Operator",
+        "Store Partner"
+      ],
+      "objects": [
+        "Inventory Unit",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The system rejects the order assignment and flags the inventory for manual audit",
+      "rationale": "Prevents overselling and revenue leakage by ensuring one unit serves only one customer at a time",
+      "parameters": [
+        {
+          "name": "lock_duration",
+          "description": "Maximum time a unit can remain locked before auto-release"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-001",
+        "FR-034"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Perishable Priority Allocation",
+      "statement": "Inventory units for perishable items must be prioritized for allocation to orders based on their proximity to the expiration date.",
+      "type": "Eligibility",
+      "condition": "When allocating inventory for perishable goods across multiple eligible orders",
+      "exceptions": [
+        "Customer explicitly requests older stock"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner"
+      ],
+      "objects": [
+        "Perishable Inventory",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system skips the allocation and flags the order for manual review to prevent waste",
+      "rationale": "Minimizes food waste and ensures regulatory compliance regarding food safety and shelf-life",
+      "parameters": [
+        {
+          "name": "expiry_threshold",
+          "description": "Time window defining 'proximity to expiration' for prioritization"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-002",
+        "FR-055"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Real-Time Sync Discrepancy Flagging",
+      "statement": "The system must flag a synchronization discrepancy if the data link latency exceeds the defined threshold or if a sync failure is detected.",
+      "type": "Validation",
+      "condition": "During continuous reconciliation between POS systems and the digital platform",
+      "exceptions": [
+        "Scheduled maintenance window"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner"
+      ],
+      "objects": [
+        "Inventory Snapshot",
+        "POS System"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system halts new order assignments and triggers an immediate alert for manual intervention",
+      "rationale": "Ensures data integrity and prevents financial loss due to unrecorded inventory changes",
+      "parameters": [
+        {
+          "name": "latency_threshold",
+          "description": "Maximum acceptable delay in seconds for data synchronization"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-001",
+        "FR-039"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Automatic Lock Release on Timeout",
+      "statement": "Locked stock must be automatically released if the Order Request is not confirmed within the allocated time window.",
+      "type": "State transition",
+      "condition": "When an Order Request remains in a pending confirmation state",
+      "exceptions": [
+        "Manual override by Store Partner"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Store Partner"
+      ],
+      "objects": [
+        "Inventory Unit",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The inventory remains locked, causing potential overselling and blocking other valid orders",
+      "rationale": "Prevents inventory hoarding and ensures availability for other customers during peak times",
+      "parameters": [
+        {
+          "name": "confirmation_window",
+          "description": "Maximum time allowed for order confirmation before lock release"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-034"
+      ],
+      "basis": "baseline"
+    }
+  ]
+}
