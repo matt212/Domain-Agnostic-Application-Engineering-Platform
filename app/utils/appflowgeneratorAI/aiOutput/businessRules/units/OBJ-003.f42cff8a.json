@@ -1,0 +1,135 @@
+{
+  "unit_id": "OBJ-003",
+  "kind": "business_object",
+  "rules": [
+    {
+      "name": "Perishable Expiry Enforcement",
+      "statement": "The system must prevent any Product Catalog item with an active expiry alert from being added to an Order Request.",
+      "type": "Validation",
+      "condition": "when an Order Request is composed or updated",
+      "exceptions": [
+        "items with a 'Sale' status explicitly allowing expired stock for clearance"
+      ],
+      "actors": [
+        "Order Management System",
+        "Merchandiser"
+      ],
+      "objects": [
+        "Product Catalog",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The system rejects the Order Request and logs a compliance error for the user",
+      "rationale": "To ensure food safety and regulatory compliance by preventing the sale of expired perishables",
+      "parameters": [
+        {
+          "name": "expiry_threshold_hours",
+          "description": "time window before expiry triggering an alert"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-006",
+        "FR-024"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Discontinued Item Blocking",
+      "statement": "The system must not allow the inclusion of any Product Catalog item marked as permanently discontinued in a new Order Request.",
+      "type": "Validation",
+      "condition": "when a customer or agent attempts to add an item to an order",
+      "exceptions": [
+        "manual override by a senior administrator for inventory write-off purposes"
+      ],
+      "actors": [
+        "Customer",
+        "Delivery Agent",
+        "System"
+      ],
+      "objects": [
+        "Product Catalog",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system blocks the item selection and displays a 'Product Unavailable' message",
+      "rationale": "To prevent revenue leakage and customer disputes regarding non-existent inventory",
+      "parameters": [
+        {
+          "name": "discontinuation_status",
+          "description": "flag indicating permanent removal from sale"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-024",
+        "FR-032"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Tax Reproducibility Mandate",
+      "statement": "The system must calculate tax liabilities deterministically using the exact same Order Request, Product Catalog snapshot, and Delivery Zone Map data.",
+      "type": "Compliance",
+      "condition": "during financial settlement and audit review",
+      "exceptions": [
+        "none"
+      ],
+      "actors": [
+        "Finance Team",
+        "Auditor",
+        "System"
+      ],
+      "objects": [
+        "Order Request",
+        "Product Catalog",
+        "Delivery Zone Map"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The transaction is flagged for manual reconciliation and potential regulatory penalty",
+      "rationale": "To ensure financial integrity and enable reproducible tax audits across jurisdictions",
+      "parameters": [
+        {
+          "name": "calculation_snapshot_id",
+          "description": "unique identifier for the data state used in calculation"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-040"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "High-Velocity Alert Scope",
+      "statement": "The system may only generate predictive inventory replenishment alerts for items explicitly classified as high-velocity in the Product Catalog.",
+      "type": "Limit",
+      "condition": "when running inventory forecasting algorithms",
+      "exceptions": [
+        "none"
+      ],
+      "actors": [
+        "Inventory Management System",
+        "Merchandiser"
+      ],
+      "objects": [
+        "Product Catalog",
+        "Inventory Alert"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "Alert fatigue occurs, causing critical stockouts for key items to be missed",
+      "rationale": "To focus limited operational attention on items with the highest turnover and risk of stockout",
+      "parameters": [
+        {
+          "name": "velocity_classification",
+          "description": "categorization of item demand speed"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-046"
+      ],
+      "basis": "inferred"
+    }
+  ]
+}

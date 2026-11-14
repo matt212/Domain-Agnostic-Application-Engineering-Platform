@@ -1,0 +1,131 @@
+{
+  "unit_id": "OBJ-005",
+  "kind": "business_object",
+  "rules": [
+    {
+      "name": "Feedback Creation Timing Constraint",
+      "statement": "A Feedback Record must only be created after a Delivery Proof exists for the associated Order Request.",
+      "type": "Validation",
+      "condition": "When a customer attempts to submit a review for a completed order",
+      "exceptions": [],
+      "actors": [
+        "Customer",
+        "System"
+      ],
+      "objects": [
+        "Feedback Record",
+        "Delivery Proof",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The submission request is rejected and the customer is prompted to complete delivery first",
+      "rationale": "Prevents reviews based on incomplete or unverified deliveries, ensuring data integrity",
+      "parameters": [
+        {
+          "name": "required_delivery_proof_status",
+          "description": "Status indicating delivery has been physically verified and proof uploaded"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-057"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Feedback Closure Dependency",
+      "statement": "A Feedback Record must not be closed if the associated Dispute Ticket is still active.",
+      "type": "State transition",
+      "condition": "When a user or agent attempts to close a feedback record",
+      "exceptions": [
+        "Dispute Ticket explicitly marked as resolved prior to closure attempt"
+      ],
+      "actors": [
+        "Customer",
+        "Support Agent",
+        "System"
+      ],
+      "objects": [
+        "Feedback Record",
+        "Dispute Ticket"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The closure action is blocked and the user is notified that the dispute must be resolved first",
+      "rationale": "Ensures unresolved customer grievances are not hidden from the support workflow",
+      "parameters": [
+        {
+          "name": "active_dispute_status",
+          "description": "Boolean flag indicating an open dispute ticket exists for the order"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-057"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Quality Score Impact Rule",
+      "statement": "A Feedback Record with a negative rating regarding product quality must reduce the overall quality score of the Store Partner.",
+      "type": "Calculation",
+      "condition": "When a new Feedback Record is submitted for a completed task",
+      "exceptions": [
+        "Feedback explicitly marked as 'not applicable' to quality"
+      ],
+      "actors": [
+        "System",
+        "Store Partner"
+      ],
+      "objects": [
+        "Feedback Record",
+        "Quality Score",
+        "Store Partner"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The quality score calculation is skipped for this record, potentially inflating the partner's score",
+      "rationale": "Ensures accurate performance tracking and fair compensation for store partners",
+      "parameters": [
+        {
+          "name": "quality_deduction_factor",
+          "description": "Percentage or points deducted from the score per negative quality record"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-059"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Supervisor Routing Threshold",
+      "statement": "A Feedback Record with a rating below the defined acceptable level must be routed to a Fulfillment Supervisor for investigation.",
+      "type": "Authorization",
+      "condition": "Immediately after a Feedback Record is successfully submitted",
+      "exceptions": [
+        "Rating falls within the acceptable threshold range"
+      ],
+      "actors": [
+        "System",
+        "Fulfillment Supervisor"
+      ],
+      "objects": [
+        "Feedback Record",
+        "Fulfillment Supervisor"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The record remains in the general queue, delaying necessary quality intervention",
+      "rationale": "Ensures low-rated experiences are reviewed by management to prevent recurrence",
+      "parameters": [
+        {
+          "name": "acceptable_rating_threshold",
+          "description": "Minimum rating score required to avoid supervisor escalation"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-061"
+      ],
+      "basis": "baseline"
+    }
+  ]
+}

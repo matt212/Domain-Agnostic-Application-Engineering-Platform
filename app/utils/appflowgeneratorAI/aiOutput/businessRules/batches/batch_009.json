@@ -1,0 +1,511 @@
+{
+  "batch": 9,
+  "units": [
+    "OBJ-005",
+    "OBJ-006",
+    "OBJ-007",
+    "OBJ-008"
+  ],
+  "rules": [
+    {
+      "unit_id": "OBJ-005",
+      "name": "Feedback Creation Timing Constraint",
+      "statement": "A Feedback Record must only be created after a Delivery Proof exists for the associated Order Request.",
+      "type": "Validation",
+      "condition": "When a customer attempts to submit a review for a completed order",
+      "exceptions": [],
+      "actors": [
+        "Customer",
+        "System"
+      ],
+      "objects": [
+        "Feedback Record",
+        "Delivery Proof",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The submission request is rejected and the customer is prompted to complete delivery first",
+      "rationale": "Prevents reviews based on incomplete or unverified deliveries, ensuring data integrity",
+      "parameters": [
+        {
+          "name": "required_delivery_proof_status",
+          "description": "Status indicating delivery has been physically verified and proof uploaded"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-057"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "OBJ-005",
+      "name": "Feedback Closure Dependency",
+      "statement": "A Feedback Record must not be closed if the associated Dispute Ticket is still active.",
+      "type": "State transition",
+      "condition": "When a user or agent attempts to close a feedback record",
+      "exceptions": [
+        "Dispute Ticket explicitly marked as resolved prior to closure attempt"
+      ],
+      "actors": [
+        "Customer",
+        "Support Agent",
+        "System"
+      ],
+      "objects": [
+        "Feedback Record",
+        "Dispute Ticket"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The closure action is blocked and the user is notified that the dispute must be resolved first",
+      "rationale": "Ensures unresolved customer grievances are not hidden from the support workflow",
+      "parameters": [
+        {
+          "name": "active_dispute_status",
+          "description": "Boolean flag indicating an open dispute ticket exists for the order"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-057"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "OBJ-005",
+      "name": "Quality Score Impact Rule",
+      "statement": "A Feedback Record with a negative rating regarding product quality must reduce the overall quality score of the Store Partner.",
+      "type": "Calculation",
+      "condition": "When a new Feedback Record is submitted for a completed task",
+      "exceptions": [
+        "Feedback explicitly marked as 'not applicable' to quality"
+      ],
+      "actors": [
+        "System",
+        "Store Partner"
+      ],
+      "objects": [
+        "Feedback Record",
+        "Quality Score",
+        "Store Partner"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The quality score calculation is skipped for this record, potentially inflating the partner's score",
+      "rationale": "Ensures accurate performance tracking and fair compensation for store partners",
+      "parameters": [
+        {
+          "name": "quality_deduction_factor",
+          "description": "Percentage or points deducted from the score per negative quality record"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-059"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "OBJ-005",
+      "name": "Supervisor Routing Threshold",
+      "statement": "A Feedback Record with a rating below the defined acceptable level must be routed to a Fulfillment Supervisor for investigation.",
+      "type": "Authorization",
+      "condition": "Immediately after a Feedback Record is successfully submitted",
+      "exceptions": [
+        "Rating falls within the acceptable threshold range"
+      ],
+      "actors": [
+        "System",
+        "Fulfillment Supervisor"
+      ],
+      "objects": [
+        "Feedback Record",
+        "Fulfillment Supervisor"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The record remains in the general queue, delaying necessary quality intervention",
+      "rationale": "Ensures low-rated experiences are reviewed by management to prevent recurrence",
+      "parameters": [
+        {
+          "name": "acceptable_rating_threshold",
+          "description": "Minimum rating score required to avoid supervisor escalation"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-061"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "OBJ-006",
+      "name": "Order Minimum Value Enforcement",
+      "statement": "An Order Request must not be submitted if the total calculated value of selected items is less than the minimum order value defined in the Store Partner Agreement.",
+      "type": "Validation",
+      "condition": "during Order Request submission",
+      "exceptions": [
+        "Customer applies a valid promotional coupon that covers the shortfall, if business policy allows"
+      ],
+      "actors": [
+        "Customer",
+        "System",
+        "Store Partner Agreement"
+      ],
+      "objects": [
+        "Order Request",
+        "Product Catalog",
+        "Store Partner Agreement"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The Order Request is rejected with an error message indicating the minimum order value requirement",
+      "rationale": "To ensure economic viability of small orders and cover operational costs for the store partner",
+      "parameters": [
+        {
+          "name": "minimum_order_value",
+          "description": "The lowest total monetary value allowed for an order"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-054"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "OBJ-006",
+      "name": "Expiry Risk Order Rejection",
+      "statement": "An Order Request must not be created if it contains any item flagged as 'nearing expiry' in the primary fulfillment source.",
+      "type": "Validation",
+      "condition": "during Order Request creation and validation",
+      "exceptions": [
+        "Customer explicitly opts-in to purchase 'nearing expiry' items at a discounted rate, if configured"
+      ],
+      "actors": [
+        "System",
+        "Store Partner",
+        "Product Catalog"
+      ],
+      "objects": [
+        "Order Request",
+        "Product Catalog"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The Order Request is automatically rejected to prevent waste and quality issues",
+      "rationale": "To maintain product quality standards and minimize food waste from selling items close to expiration",
+      "parameters": [
+        {
+          "name": "expiry_threshold_days",
+          "description": "The number of days remaining before an item is flagged as nearing expiry"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-024",
+        "FR-006"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "OBJ-006",
+      "name": "Stock Lock Release Timing",
+      "statement": "Locked stock associated with an Order Request must be automatically released if the Order Request remains unconfirmed within the allocated time window.",
+      "type": "Timing",
+      "condition": "after the allocated confirmation time window expires",
+      "exceptions": [
+        "Manual override by a Store Partner manager for exceptional circumstances"
+      ],
+      "actors": [
+        "System",
+        "Store Partner",
+        "Order Request"
+      ],
+      "objects": [
+        "Order Request",
+        "Inventory"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The stock is freed for other customers, potentially causing the original order to be fulfilled late or cancelled",
+      "rationale": "To prevent inventory hoarding and ensure fair access to stock for all customers",
+      "parameters": [
+        {
+          "name": "allocation_time_window",
+          "description": "The maximum duration an Order Request can hold locked stock before auto-release"
+        }
+      ],
+      "related_functional_requirements": [],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "OBJ-006",
+      "name": "Dispute Ticket Linkage Integrity",
+      "statement": "A Dispute Ticket must remain linked to the original Order Request for the entire duration of the dispute resolution process.",
+      "type": "State transition",
+      "condition": "during the lifecycle of a Dispute Ticket",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Customer Support",
+        "System"
+      ],
+      "objects": [
+        "Dispute Ticket",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The Dispute Ticket becomes orphaned, preventing accurate tracking of resolution against the specific order",
+      "rationale": "To ensure auditability and accurate financial settlement by tying disputes to the specific transaction",
+      "parameters": [
+        {
+          "name": "resolution_duration",
+          "description": "The expected timeframe for resolving a dispute"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-007"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "OBJ-007",
+      "name": "Single-Order Stock Locking",
+      "statement": "A specific stock quantity must be locked exclusively to a single Order Request until the Fulfillment Task is completed or the Order Request is cancelled.",
+      "type": "Limit",
+      "condition": "When a Fulfillment Task is created for an Order Request",
+      "exceptions": [
+        "System-wide inventory freeze during maintenance"
+      ],
+      "actors": [
+        "Store Staff",
+        "System",
+        "Order Management System"
+      ],
+      "objects": [
+        "Stock Quantity",
+        "Order Request",
+        "Fulfillment Task"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The system must prevent the creation of a second Fulfillment Task for the same stock unit and flag the inventory as corrupted",
+      "rationale": "Prevents overselling and ensures inventory accuracy in a high-velocity environment",
+      "parameters": [
+        {
+          "name": "lock_duration",
+          "description": "Time window during which stock is reserved"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-001",
+        "FR-034"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "OBJ-007",
+      "name": "Mandatory Quality Verification",
+      "statement": "A Fulfillment Task may only transition to a 'Ready for Dispatch' status if a valid quality verification record exists for every item in the task.",
+      "type": "State transition",
+      "condition": "When attempting to change Fulfillment Task status to 'Ready for Dispatch'",
+      "exceptions": [
+        "Emergency override by Store Manager with audit trail"
+      ],
+      "actors": [
+        "Store Staff",
+        "Quality Assurance"
+      ],
+      "objects": [
+        "Fulfillment Task",
+        "Quality Verification Record"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system must block the status transition and display an error message requiring quality completion",
+      "rationale": "Ensures only verified, high-quality goods leave the store to maintain customer satisfaction",
+      "parameters": [
+        {
+          "name": "min_quality_items",
+          "description": "Total number of items requiring verification"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-018"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "OBJ-007",
+      "name": "Quality Failure Blocking",
+      "statement": "If a quality check fails for any item, the Fulfillment Task must be flagged as 'Requires Correction' and dispatch must be blocked.",
+      "type": "Validation",
+      "condition": "When a quality verification record indicates a failure for any item",
+      "exceptions": [
+        "Manual override by Store Manager with reason code"
+      ],
+      "actors": [
+        "Store Staff",
+        "Quality Assurance"
+      ],
+      "objects": [
+        "Fulfillment Task",
+        "Quality Check Result"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system must prevent any further status changes or dispatch actions until the issue is resolved",
+      "rationale": "Prevents shipping defective or incorrect items to customers",
+      "parameters": [
+        {
+          "name": "failure_threshold",
+          "description": "Number of failed items triggering the block"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-018"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "OBJ-007",
+      "name": "Cancellation Inventory Release",
+      "statement": "Inventory locks must be released immediately upon confirmation of an Order Request cancellation, before the Fulfillment Task status changes to 'Ready for Dispatch'.",
+      "type": "Timing",
+      "condition": "When an Order Request is confirmed as cancelled",
+      "exceptions": [
+        "Pending refund processing delay exceeding 24 hours"
+      ],
+      "actors": [
+        "Order Management System",
+        "Inventory System"
+      ],
+      "objects": [
+        "Inventory Lock",
+        "Order Request",
+        "Fulfillment Task"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The system must automatically revert the inventory to available status and notify the Store Partner",
+      "rationale": "Prevents stock from being held indefinitely by cancelled orders, optimizing inventory turnover",
+      "parameters": [
+        {
+          "name": "release_timeout",
+          "description": "Maximum time allowed before automatic release"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-034"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "OBJ-008",
+      "name": "Dispute Creation Trigger",
+      "statement": "A Dispute Ticket must be created immediately upon receipt of a Delivery Proof indicating a delivery exception or missing items.",
+      "type": "Validation",
+      "condition": "when a delivery proof indicates a delivery exception or missing items",
+      "exceptions": [],
+      "actors": [
+        "System",
+        "Customer"
+      ],
+      "objects": [
+        "Dispute Ticket",
+        "Delivery Proof"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "the delivery exception is not formally tracked, preventing accurate financial settlement and customer support",
+      "rationale": "ensures every delivery exception is captured for resolution and financial adjustment",
+      "parameters": [],
+      "related_functional_requirements": [
+        "FR-007"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "OBJ-008",
+      "name": "Refund Initiation Gate",
+      "statement": "A refund must be initiated only after a Dispute Ticket is marked as validated or a delivery failure is explicitly confirmed.",
+      "type": "Financial control",
+      "condition": "when a refund is requested for a specific order",
+      "exceptions": [],
+      "actors": [
+        "Financial Settlement System",
+        "Dispute Resolution Agent"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Dispute Ticket",
+        "Refund"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "funds are returned prematurely or incorrectly, causing revenue loss and inventory reconciliation errors",
+      "rationale": "prevents unauthorized financial adjustments before the root cause and liability are established",
+      "parameters": [],
+      "related_functional_requirements": [
+        "FR-031"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "OBJ-008",
+      "name": "Self-Approval Prohibition",
+      "statement": "An actor must not approve a Dispute Ticket where they are the accused party or the party responsible for the alleged failure.",
+      "type": "Authorization",
+      "condition": "when an actor is assigned to approve a Dispute Ticket",
+      "exceptions": [],
+      "actors": [
+        "Dispute Resolution Agent",
+        "Store Partner",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Dispute Ticket",
+        "Actor"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "conflict of interest compromises the integrity of the dispute resolution process and invites fraud",
+      "rationale": "ensures impartial adjudication of disputes by separating the accused from the decision-maker",
+      "parameters": [],
+      "related_functional_requirements": [
+        "FR-021"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "OBJ-008",
+      "name": "SLA Escalation Threshold",
+      "statement": "Unresolved Dispute Tickets must be escalated to a Fulfillment Supervisor after the initial assignment deadline expires.",
+      "type": "Timing",
+      "condition": "when a Dispute Ticket remains in 'Open' status beyond the initial assignment deadline",
+      "exceptions": [],
+      "actors": [
+        "System",
+        "Fulfillment Supervisor"
+      ],
+      "objects": [
+        "Dispute Ticket",
+        "Fulfillment Supervisor"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "resolution delays increase customer dissatisfaction and breach service level agreements",
+      "rationale": "ensures timely resolution of stale disputes to maintain customer trust and operational efficiency",
+      "parameters": [
+        {
+          "name": "initial_assignment_deadline",
+          "description": "maximum time allowed for initial assignment before escalation"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-036",
+        "FR-050"
+      ],
+      "basis": "inferred"
+    }
+  ]
+}

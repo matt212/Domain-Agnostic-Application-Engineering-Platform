@@ -1,0 +1,134 @@
+{
+  "unit_id": "OBJ-007",
+  "kind": "business_object",
+  "rules": [
+    {
+      "name": "Single-Order Stock Locking",
+      "statement": "A specific stock quantity must be locked exclusively to a single Order Request until the Fulfillment Task is completed or the Order Request is cancelled.",
+      "type": "Limit",
+      "condition": "When a Fulfillment Task is created for an Order Request",
+      "exceptions": [
+        "System-wide inventory freeze during maintenance"
+      ],
+      "actors": [
+        "Store Staff",
+        "System",
+        "Order Management System"
+      ],
+      "objects": [
+        "Stock Quantity",
+        "Order Request",
+        "Fulfillment Task"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The system must prevent the creation of a second Fulfillment Task for the same stock unit and flag the inventory as corrupted",
+      "rationale": "Prevents overselling and ensures inventory accuracy in a high-velocity environment",
+      "parameters": [
+        {
+          "name": "lock_duration",
+          "description": "Time window during which stock is reserved"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-001",
+        "FR-034"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Mandatory Quality Verification",
+      "statement": "A Fulfillment Task may only transition to a 'Ready for Dispatch' status if a valid quality verification record exists for every item in the task.",
+      "type": "State transition",
+      "condition": "When attempting to change Fulfillment Task status to 'Ready for Dispatch'",
+      "exceptions": [
+        "Emergency override by Store Manager with audit trail"
+      ],
+      "actors": [
+        "Store Staff",
+        "Quality Assurance"
+      ],
+      "objects": [
+        "Fulfillment Task",
+        "Quality Verification Record"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system must block the status transition and display an error message requiring quality completion",
+      "rationale": "Ensures only verified, high-quality goods leave the store to maintain customer satisfaction",
+      "parameters": [
+        {
+          "name": "min_quality_items",
+          "description": "Total number of items requiring verification"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-018"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Quality Failure Blocking",
+      "statement": "If a quality check fails for any item, the Fulfillment Task must be flagged as 'Requires Correction' and dispatch must be blocked.",
+      "type": "Validation",
+      "condition": "When a quality verification record indicates a failure for any item",
+      "exceptions": [
+        "Manual override by Store Manager with reason code"
+      ],
+      "actors": [
+        "Store Staff",
+        "Quality Assurance"
+      ],
+      "objects": [
+        "Fulfillment Task",
+        "Quality Check Result"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system must prevent any further status changes or dispatch actions until the issue is resolved",
+      "rationale": "Prevents shipping defective or incorrect items to customers",
+      "parameters": [
+        {
+          "name": "failure_threshold",
+          "description": "Number of failed items triggering the block"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-018"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Cancellation Inventory Release",
+      "statement": "Inventory locks must be released immediately upon confirmation of an Order Request cancellation, before the Fulfillment Task status changes to 'Ready for Dispatch'.",
+      "type": "Timing",
+      "condition": "When an Order Request is confirmed as cancelled",
+      "exceptions": [
+        "Pending refund processing delay exceeding 24 hours"
+      ],
+      "actors": [
+        "Order Management System",
+        "Inventory System"
+      ],
+      "objects": [
+        "Inventory Lock",
+        "Order Request",
+        "Fulfillment Task"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The system must automatically revert the inventory to available status and notify the Store Partner",
+      "rationale": "Prevents stock from being held indefinitely by cancelled orders, optimizing inventory turnover",
+      "parameters": [
+        {
+          "name": "release_timeout",
+          "description": "Maximum time allowed before automatic release"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-034"
+      ],
+      "basis": "baseline"
+    }
+  ]
+}

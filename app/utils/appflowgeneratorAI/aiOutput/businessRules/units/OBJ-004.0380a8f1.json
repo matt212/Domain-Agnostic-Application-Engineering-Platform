@@ -1,0 +1,141 @@
+{
+  "unit_id": "OBJ-004",
+  "kind": "business_object",
+  "rules": [
+    {
+      "name": "Geographic Boundary Integrity",
+      "statement": "The system must not assign an order to a Delivery Zone unless the customer's address falls strictly within the defined polygon or radius boundaries of a Store Partner's service area.",
+      "type": "Validation",
+      "condition": "When validating a customer's delivery address against the Delivery Zone Map",
+      "exceptions": [
+        "Emergency override for medical situations with explicit manager approval"
+      ],
+      "actors": [
+        "Platform Operator",
+        "System",
+        "Customer"
+      ],
+      "objects": [
+        "Delivery Zone Map",
+        "Customer Address",
+        "Store Partner"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The order is rejected immediately and the customer is notified that the location is outside the service area",
+      "rationale": "Prevents impossible deliveries and protects the platform from liability regarding unfulfillable promises",
+      "parameters": [
+        {
+          "name": "boundary_tolerance_meters",
+          "description": "Maximum allowable deviation for address geocoding errors"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-054",
+        "FR-012"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "SLA Consistency Enforcement",
+      "statement": "The system must only publish a delivery time estimate if the calculated travel time based on real-time traffic and road constraints remains within the Store Partner's agreed Service Level Agreement (SLA).",
+      "type": "Eligibility",
+      "condition": "When generating a delivery time estimate for an order request",
+      "exceptions": [
+        "Premium expedited service tiers with higher SLA limits"
+      ],
+      "actors": [
+        "System",
+        "Store Partner",
+        "Customer"
+      ],
+      "objects": [
+        "Delivery Time Estimate",
+        "Travel Time Calculation",
+        "SLA"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system must not confirm the order and must prompt the customer to select a later time slot or a different store",
+      "rationale": "Ensures that all promised delivery times are operationally achievable to maintain trust and avoid late deliveries",
+      "parameters": [
+        {
+          "name": "max_allowed_travel_time_minutes",
+          "description": "Maximum travel duration permitted under the current SLA"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-045",
+        "FR-054"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Dynamic Fee Recalculation Trigger",
+      "statement": "The system must automatically recalculate the delivery fee whenever the real-time traffic data indicates a change in travel time that exceeds the baseline estimate by more than the configured threshold.",
+      "type": "Calculation",
+      "condition": "When real-time traffic data updates during the order preparation phase",
+      "exceptions": [
+        "Manual fee waivers authorized by customer support for verified emergencies"
+      ],
+      "actors": [
+        "System",
+        "Customer"
+      ],
+      "objects": [
+        "Delivery Fee",
+        "Real-time Traffic Data",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The customer receives an updated total cost notification and must accept the new fee or cancel the order",
+      "rationale": "Ensures pricing accuracy reflects current network congestion and road conditions",
+      "parameters": [
+        {
+          "name": "traffic_variance_threshold_percent",
+          "description": "Percentage increase in travel time required to trigger a fee recalculation"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-045",
+        "FR-054"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Regulatory Zone Activation Gate",
+      "statement": "A Delivery Zone Map must not be activated for commercial use until the defined service boundaries have been legally validated and approved by the relevant regulatory authorities.",
+      "type": "Compliance",
+      "condition": "When a new Store Partner or Service Area Definition is created or modified",
+      "exceptions": [
+        "Internal testing environments or sandbox zones excluded from public commerce"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Regulatory Authority",
+        "Store Partner"
+      ],
+      "objects": [
+        "Delivery Zone Map",
+        "Service Area Definition",
+        "Regulatory Approval"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The system blocks the activation of the zone and prevents any orders from being placed in that area",
+      "rationale": "Ensures strict adherence to local laws and regulations governing service areas and data usage",
+      "parameters": [
+        {
+          "name": "regulatory_approval_status",
+          "description": "Current status of legal validation for the specific zone"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-012",
+        "FR-014"
+      ],
+      "basis": "inferred"
+    }
+  ]
+}

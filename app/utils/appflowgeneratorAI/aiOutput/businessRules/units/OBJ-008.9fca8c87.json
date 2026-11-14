@@ -1,0 +1,110 @@
+{
+  "unit_id": "OBJ-008",
+  "kind": "business_object",
+  "rules": [
+    {
+      "name": "Dispute Creation Trigger",
+      "statement": "A Dispute Ticket must be created immediately upon receipt of a Delivery Proof indicating a delivery exception or missing items.",
+      "type": "Validation",
+      "condition": "when a delivery proof indicates a delivery exception or missing items",
+      "exceptions": [],
+      "actors": [
+        "System",
+        "Customer"
+      ],
+      "objects": [
+        "Dispute Ticket",
+        "Delivery Proof"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "the delivery exception is not formally tracked, preventing accurate financial settlement and customer support",
+      "rationale": "ensures every delivery exception is captured for resolution and financial adjustment",
+      "parameters": [],
+      "related_functional_requirements": [
+        "FR-007"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Refund Initiation Gate",
+      "statement": "A refund must be initiated only after a Dispute Ticket is marked as validated or a delivery failure is explicitly confirmed.",
+      "type": "Financial control",
+      "condition": "when a refund is requested for a specific order",
+      "exceptions": [],
+      "actors": [
+        "Financial Settlement System",
+        "Dispute Resolution Agent"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Dispute Ticket",
+        "Refund"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "funds are returned prematurely or incorrectly, causing revenue loss and inventory reconciliation errors",
+      "rationale": "prevents unauthorized financial adjustments before the root cause and liability are established",
+      "parameters": [],
+      "related_functional_requirements": [
+        "FR-031"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Self-Approval Prohibition",
+      "statement": "An actor must not approve a Dispute Ticket where they are the accused party or the party responsible for the alleged failure.",
+      "type": "Authorization",
+      "condition": "when an actor is assigned to approve a Dispute Ticket",
+      "exceptions": [],
+      "actors": [
+        "Dispute Resolution Agent",
+        "Store Partner",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Dispute Ticket",
+        "Actor"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "conflict of interest compromises the integrity of the dispute resolution process and invites fraud",
+      "rationale": "ensures impartial adjudication of disputes by separating the accused from the decision-maker",
+      "parameters": [],
+      "related_functional_requirements": [
+        "FR-021"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "SLA Escalation Threshold",
+      "statement": "Unresolved Dispute Tickets must be escalated to a Fulfillment Supervisor after the initial assignment deadline expires.",
+      "type": "Timing",
+      "condition": "when a Dispute Ticket remains in 'Open' status beyond the initial assignment deadline",
+      "exceptions": [],
+      "actors": [
+        "System",
+        "Fulfillment Supervisor"
+      ],
+      "objects": [
+        "Dispute Ticket",
+        "Fulfillment Supervisor"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "resolution delays increase customer dissatisfaction and breach service level agreements",
+      "rationale": "ensures timely resolution of stale disputes to maintain customer trust and operational efficiency",
+      "parameters": [
+        {
+          "name": "initial_assignment_deadline",
+          "description": "maximum time allowed for initial assignment before escalation"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-036",
+        "FR-050"
+      ],
+      "basis": "inferred"
+    }
+  ]
+}

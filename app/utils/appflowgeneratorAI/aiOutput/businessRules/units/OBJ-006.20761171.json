@@ -1,0 +1,133 @@
+{
+  "unit_id": "OBJ-006",
+  "kind": "business_object",
+  "rules": [
+    {
+      "name": "Order Minimum Value Enforcement",
+      "statement": "An Order Request must not be submitted if the total calculated value of selected items is less than the minimum order value defined in the Store Partner Agreement.",
+      "type": "Validation",
+      "condition": "during Order Request submission",
+      "exceptions": [
+        "Customer applies a valid promotional coupon that covers the shortfall, if business policy allows"
+      ],
+      "actors": [
+        "Customer",
+        "System",
+        "Store Partner Agreement"
+      ],
+      "objects": [
+        "Order Request",
+        "Product Catalog",
+        "Store Partner Agreement"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The Order Request is rejected with an error message indicating the minimum order value requirement",
+      "rationale": "To ensure economic viability of small orders and cover operational costs for the store partner",
+      "parameters": [
+        {
+          "name": "minimum_order_value",
+          "description": "The lowest total monetary value allowed for an order"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-054"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Expiry Risk Order Rejection",
+      "statement": "An Order Request must not be created if it contains any item flagged as 'nearing expiry' in the primary fulfillment source.",
+      "type": "Validation",
+      "condition": "during Order Request creation and validation",
+      "exceptions": [
+        "Customer explicitly opts-in to purchase 'nearing expiry' items at a discounted rate, if configured"
+      ],
+      "actors": [
+        "System",
+        "Store Partner",
+        "Product Catalog"
+      ],
+      "objects": [
+        "Order Request",
+        "Product Catalog"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The Order Request is automatically rejected to prevent waste and quality issues",
+      "rationale": "To maintain product quality standards and minimize food waste from selling items close to expiration",
+      "parameters": [
+        {
+          "name": "expiry_threshold_days",
+          "description": "The number of days remaining before an item is flagged as nearing expiry"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-024",
+        "FR-006"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Stock Lock Release Timing",
+      "statement": "Locked stock associated with an Order Request must be automatically released if the Order Request remains unconfirmed within the allocated time window.",
+      "type": "Timing",
+      "condition": "after the allocated confirmation time window expires",
+      "exceptions": [
+        "Manual override by a Store Partner manager for exceptional circumstances"
+      ],
+      "actors": [
+        "System",
+        "Store Partner",
+        "Order Request"
+      ],
+      "objects": [
+        "Order Request",
+        "Inventory"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The stock is freed for other customers, potentially causing the original order to be fulfilled late or cancelled",
+      "rationale": "To prevent inventory hoarding and ensure fair access to stock for all customers",
+      "parameters": [
+        {
+          "name": "allocation_time_window",
+          "description": "The maximum duration an Order Request can hold locked stock before auto-release"
+        }
+      ],
+      "related_functional_requirements": [],
+      "basis": "baseline"
+    },
+    {
+      "name": "Dispute Ticket Linkage Integrity",
+      "statement": "A Dispute Ticket must remain linked to the original Order Request for the entire duration of the dispute resolution process.",
+      "type": "State transition",
+      "condition": "during the lifecycle of a Dispute Ticket",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Customer Support",
+        "System"
+      ],
+      "objects": [
+        "Dispute Ticket",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The Dispute Ticket becomes orphaned, preventing accurate tracking of resolution against the specific order",
+      "rationale": "To ensure auditability and accurate financial settlement by tying disputes to the specific transaction",
+      "parameters": [
+        {
+          "name": "resolution_duration",
+          "description": "The expected timeframe for resolving a dispute"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-007"
+      ],
+      "basis": "baseline"
+    }
+  ]
+}

@@ -1,0 +1,132 @@
+{
+  "unit_id": "OBJ-001",
+  "kind": "business_object",
+  "rules": [
+    {
+      "name": "Explicit Acceptance Required",
+      "statement": "A Delivery Assignment must not transition to an active state until the assigned Delivery Partner explicitly accepts the assignment.",
+      "type": "Authorization",
+      "condition": "When a delivery slot is allocated to a specific agent",
+      "exceptions": [
+        "Emergency override by platform operations manager for critical time windows"
+      ],
+      "actors": [
+        "Delivery Partner",
+        "System"
+      ],
+      "objects": [
+        "Delivery Assignment",
+        "Delivery Slot"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system blocks the start of the delivery task and prevents proof of delivery submission",
+      "rationale": "Ensures agents are committed to the task before resources are locked and customers are notified",
+      "parameters": [
+        {
+          "name": "acceptance_timeout_minutes",
+          "description": "Maximum time allowed for an agent to accept or reject an assignment before auto-reassignment"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-003",
+        "FR-056"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Cancellation Proof Rejection",
+      "statement": "The system must not validate a Proof of Delivery if the associated Delivery Assignment is in a cancelled state.",
+      "type": "Validation",
+      "condition": "When a delivery agent attempts to submit proof of delivery",
+      "exceptions": [
+        "Manual override by customer support for fraud investigation"
+      ],
+      "actors": [
+        "Delivery Partner",
+        "System"
+      ],
+      "objects": [
+        "Proof of Delivery",
+        "Delivery Assignment"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The proof of delivery is rejected and the order remains in 'In Transit' status, triggering a re-assignment alert",
+      "rationale": "Prevents fraudulent closure of orders where the agent has abandoned the delivery",
+      "parameters": [
+        {
+          "name": "cancellation_grace_period_minutes",
+          "description": "Time window after cancellation where proof submission is still technically allowed for logging"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-004"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Refund Block on Assignment",
+      "statement": "No new Delivery Assignment may be created for an Order Request while a refund transaction is actively processing.",
+      "type": "Limit",
+      "condition": "When a refund is initiated for an order",
+      "exceptions": [
+        "Exceptional cases approved by senior finance officer for inventory correction"
+      ],
+      "actors": [
+        "System",
+        "Finance Team"
+      ],
+      "objects": [
+        "Order Request",
+        "Delivery Assignment",
+        "Refund Transaction"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system prevents the creation of a new assignment and queues the order for manual review",
+      "rationale": "Prevents double-fulfillment and financial loss by ensuring no new logistics are triggered during financial disputes",
+      "parameters": [
+        {
+          "name": "refund_processing_duration_hours",
+          "description": "Maximum duration a refund can block new assignments before review"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-056"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Feedback Assignment Binding",
+      "statement": "A Feedback Record must only be linked to a specific Delivery Assignment to attribute performance metrics to the correct partner.",
+      "type": "Validation",
+      "condition": "When a customer submits a delivery rating or complaint",
+      "exceptions": [
+        "System-generated automated feedback for technical failures unrelated to agent performance"
+      ],
+      "actors": [
+        "Customer",
+        "System"
+      ],
+      "objects": [
+        "Feedback Record",
+        "Delivery Assignment"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The feedback is rejected or logged as 'Unattributed', preventing accurate agent performance tracking",
+      "rationale": "Ensures accurate attribution of quality issues to the specific agent responsible for the delivery leg",
+      "parameters": [
+        {
+          "name": "feedback_window_hours",
+          "description": "Time limit after delivery completion to submit feedback"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-052"
+      ],
+      "basis": "baseline"
+    }
+  ]
+}

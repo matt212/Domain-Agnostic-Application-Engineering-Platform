@@ -1,0 +1,138 @@
+{
+  "unit_id": "OBJ-002",
+  "kind": "business_object",
+  "rules": [
+    {
+      "name": "Active Agreement Requirement",
+      "statement": "Order Requests must not be allocated to a Store Partner unless the associated Store Partner Agreement is in an 'Active' state.",
+      "type": "Eligibility",
+      "condition": "During order allocation to a specific store partner",
+      "exceptions": [
+        "Emergency manual override with senior management approval (proposed)"
+      ],
+      "actors": [
+        "Order Orchestration System",
+        "Store Partner",
+        "Platform Operations"
+      ],
+      "objects": [
+        "Order Request",
+        "Store Partner Agreement"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The order allocation is rejected and the customer receives a notification of unavailability",
+      "rationale": "Prevents operational chaos and financial disputes by ensuring only valid commercial relationships are utilized",
+      "parameters": [
+        {
+          "name": "active_state_threshold",
+          "description": "Defines the specific status value required for allocation eligibility"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-055",
+        "FR-010"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Minimum Order Value Enforcement",
+      "statement": "Order Requests may only be submitted if the sum of item prices is greater than or equal to the minimum order value defined in the active Store Partner Agreement.",
+      "type": "Validation",
+      "condition": "At the point of cart validation before order submission",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Customer",
+        "Order Orchestration System"
+      ],
+      "objects": [
+        "Order Request",
+        "Store Partner Agreement"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The order submission is blocked and the user is prompted to add items to meet the threshold",
+      "rationale": "Ensures economic viability of small orders and covers fixed operational costs for the partner",
+      "parameters": [
+        {
+          "name": "minimum_order_value",
+          "description": "The mandatory minimum cart total for a specific partner agreement"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-022",
+        "FR-010"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Dynamic Commission Rate Application",
+      "statement": "Financial Transaction Records must calculate revenue shares using the commission rate from the most recently active Store Partner Agreement valid at the time of transaction finalization.",
+      "type": "Calculation",
+      "condition": "During financial settlement and revenue calculation",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Financial Settlement System",
+        "Store Partner",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Store Partner Agreement"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "Settlement records are flagged for manual review and potential financial reclamation",
+      "rationale": "Ensures accurate revenue distribution based on the current contractual terms, preventing over or under-payment",
+      "parameters": [
+        {
+          "name": "commission_rate",
+          "description": "The percentage or fixed fee defined in the active agreement"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-025",
+        "FR-005",
+        "FR-039"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Escalation Hierarchy Adherence",
+      "statement": "Dispute resolution regarding Store Partner Agreements must strictly follow the escalation path defined within the agreement document.",
+      "type": "Compliance",
+      "condition": "When a contractual dispute or exception occurs between platform and partner",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Customer Support",
+        "Store Partner",
+        "Legal/Compliance Team"
+      ],
+      "objects": [
+        "Store Partner Agreement",
+        "Dispute Ticket"
+      ],
+      "enforcement": "Manual",
+      "severity": "Medium",
+      "if_violated": "The dispute ticket is escalated to senior management for policy review and potential contract amendment",
+      "rationale": "Maintains contractual integrity and ensures consistent handling of conflicts according to agreed terms",
+      "parameters": [
+        {
+          "name": "escalation_path",
+          "description": "The defined sequence of roles or departments for dispute resolution"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-053",
+        "FR-010"
+      ],
+      "basis": "inferred"
+    }
+  ]
+}

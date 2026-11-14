@@ -1,0 +1,549 @@
+{
+  "batch": 8,
+  "units": [
+    "OBJ-001",
+    "OBJ-002",
+    "OBJ-003",
+    "OBJ-004"
+  ],
+  "rules": [
+    {
+      "unit_id": "OBJ-001",
+      "name": "Explicit Acceptance Required",
+      "statement": "A Delivery Assignment must not transition to an active state until the assigned Delivery Partner explicitly accepts the assignment.",
+      "type": "Authorization",
+      "condition": "When a delivery slot is allocated to a specific agent",
+      "exceptions": [
+        "Emergency override by platform operations manager for critical time windows"
+      ],
+      "actors": [
+        "Delivery Partner",
+        "System"
+      ],
+      "objects": [
+        "Delivery Assignment",
+        "Delivery Slot"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system blocks the start of the delivery task and prevents proof of delivery submission",
+      "rationale": "Ensures agents are committed to the task before resources are locked and customers are notified",
+      "parameters": [
+        {
+          "name": "acceptance_timeout_minutes",
+          "description": "Maximum time allowed for an agent to accept or reject an assignment before auto-reassignment"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-003",
+        "FR-056"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "OBJ-001",
+      "name": "Cancellation Proof Rejection",
+      "statement": "The system must not validate a Proof of Delivery if the associated Delivery Assignment is in a cancelled state.",
+      "type": "Validation",
+      "condition": "When a delivery agent attempts to submit proof of delivery",
+      "exceptions": [
+        "Manual override by customer support for fraud investigation"
+      ],
+      "actors": [
+        "Delivery Partner",
+        "System"
+      ],
+      "objects": [
+        "Proof of Delivery",
+        "Delivery Assignment"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The proof of delivery is rejected and the order remains in 'In Transit' status, triggering a re-assignment alert",
+      "rationale": "Prevents fraudulent closure of orders where the agent has abandoned the delivery",
+      "parameters": [
+        {
+          "name": "cancellation_grace_period_minutes",
+          "description": "Time window after cancellation where proof submission is still technically allowed for logging"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-004"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "OBJ-001",
+      "name": "Refund Block on Assignment",
+      "statement": "No new Delivery Assignment may be created for an Order Request while a refund transaction is actively processing.",
+      "type": "Limit",
+      "condition": "When a refund is initiated for an order",
+      "exceptions": [
+        "Exceptional cases approved by senior finance officer for inventory correction"
+      ],
+      "actors": [
+        "System",
+        "Finance Team"
+      ],
+      "objects": [
+        "Order Request",
+        "Delivery Assignment",
+        "Refund Transaction"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system prevents the creation of a new assignment and queues the order for manual review",
+      "rationale": "Prevents double-fulfillment and financial loss by ensuring no new logistics are triggered during financial disputes",
+      "parameters": [
+        {
+          "name": "refund_processing_duration_hours",
+          "description": "Maximum duration a refund can block new assignments before review"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-056"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "OBJ-001",
+      "name": "Feedback Assignment Binding",
+      "statement": "A Feedback Record must only be linked to a specific Delivery Assignment to attribute performance metrics to the correct partner.",
+      "type": "Validation",
+      "condition": "When a customer submits a delivery rating or complaint",
+      "exceptions": [
+        "System-generated automated feedback for technical failures unrelated to agent performance"
+      ],
+      "actors": [
+        "Customer",
+        "System"
+      ],
+      "objects": [
+        "Feedback Record",
+        "Delivery Assignment"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The feedback is rejected or logged as 'Unattributed', preventing accurate agent performance tracking",
+      "rationale": "Ensures accurate attribution of quality issues to the specific agent responsible for the delivery leg",
+      "parameters": [
+        {
+          "name": "feedback_window_hours",
+          "description": "Time limit after delivery completion to submit feedback"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-052"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "OBJ-002",
+      "name": "Active Agreement Requirement",
+      "statement": "Order Requests must not be allocated to a Store Partner unless the associated Store Partner Agreement is in an 'Active' state.",
+      "type": "Eligibility",
+      "condition": "During order allocation to a specific store partner",
+      "exceptions": [
+        "Emergency manual override with senior management approval (proposed)"
+      ],
+      "actors": [
+        "Order Orchestration System",
+        "Store Partner",
+        "Platform Operations"
+      ],
+      "objects": [
+        "Order Request",
+        "Store Partner Agreement"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The order allocation is rejected and the customer receives a notification of unavailability",
+      "rationale": "Prevents operational chaos and financial disputes by ensuring only valid commercial relationships are utilized",
+      "parameters": [
+        {
+          "name": "active_state_threshold",
+          "description": "Defines the specific status value required for allocation eligibility"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-055",
+        "FR-010"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "OBJ-002",
+      "name": "Minimum Order Value Enforcement",
+      "statement": "Order Requests may only be submitted if the sum of item prices is greater than or equal to the minimum order value defined in the active Store Partner Agreement.",
+      "type": "Validation",
+      "condition": "At the point of cart validation before order submission",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Customer",
+        "Order Orchestration System"
+      ],
+      "objects": [
+        "Order Request",
+        "Store Partner Agreement"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The order submission is blocked and the user is prompted to add items to meet the threshold",
+      "rationale": "Ensures economic viability of small orders and covers fixed operational costs for the partner",
+      "parameters": [
+        {
+          "name": "minimum_order_value",
+          "description": "The mandatory minimum cart total for a specific partner agreement"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-022",
+        "FR-010"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "OBJ-002",
+      "name": "Dynamic Commission Rate Application",
+      "statement": "Financial Transaction Records must calculate revenue shares using the commission rate from the most recently active Store Partner Agreement valid at the time of transaction finalization.",
+      "type": "Calculation",
+      "condition": "During financial settlement and revenue calculation",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Financial Settlement System",
+        "Store Partner",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Store Partner Agreement"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "Settlement records are flagged for manual review and potential financial reclamation",
+      "rationale": "Ensures accurate revenue distribution based on the current contractual terms, preventing over or under-payment",
+      "parameters": [
+        {
+          "name": "commission_rate",
+          "description": "The percentage or fixed fee defined in the active agreement"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-025",
+        "FR-005",
+        "FR-039"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "OBJ-002",
+      "name": "Escalation Hierarchy Adherence",
+      "statement": "Dispute resolution regarding Store Partner Agreements must strictly follow the escalation path defined within the agreement document.",
+      "type": "Compliance",
+      "condition": "When a contractual dispute or exception occurs between platform and partner",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Customer Support",
+        "Store Partner",
+        "Legal/Compliance Team"
+      ],
+      "objects": [
+        "Store Partner Agreement",
+        "Dispute Ticket"
+      ],
+      "enforcement": "Manual",
+      "severity": "Medium",
+      "if_violated": "The dispute ticket is escalated to senior management for policy review and potential contract amendment",
+      "rationale": "Maintains contractual integrity and ensures consistent handling of conflicts according to agreed terms",
+      "parameters": [
+        {
+          "name": "escalation_path",
+          "description": "The defined sequence of roles or departments for dispute resolution"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-053",
+        "FR-010"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "OBJ-003",
+      "name": "Perishable Expiry Enforcement",
+      "statement": "The system must prevent any Product Catalog item with an active expiry alert from being added to an Order Request.",
+      "type": "Validation",
+      "condition": "when an Order Request is composed or updated",
+      "exceptions": [
+        "items with a 'Sale' status explicitly allowing expired stock for clearance"
+      ],
+      "actors": [
+        "Order Management System",
+        "Merchandiser"
+      ],
+      "objects": [
+        "Product Catalog",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The system rejects the Order Request and logs a compliance error for the user",
+      "rationale": "To ensure food safety and regulatory compliance by preventing the sale of expired perishables",
+      "parameters": [
+        {
+          "name": "expiry_threshold_hours",
+          "description": "time window before expiry triggering an alert"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-006",
+        "FR-024"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "OBJ-003",
+      "name": "Discontinued Item Blocking",
+      "statement": "The system must not allow the inclusion of any Product Catalog item marked as permanently discontinued in a new Order Request.",
+      "type": "Validation",
+      "condition": "when a customer or agent attempts to add an item to an order",
+      "exceptions": [
+        "manual override by a senior administrator for inventory write-off purposes"
+      ],
+      "actors": [
+        "Customer",
+        "Delivery Agent",
+        "System"
+      ],
+      "objects": [
+        "Product Catalog",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system blocks the item selection and displays a 'Product Unavailable' message",
+      "rationale": "To prevent revenue leakage and customer disputes regarding non-existent inventory",
+      "parameters": [
+        {
+          "name": "discontinuation_status",
+          "description": "flag indicating permanent removal from sale"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-024",
+        "FR-032"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "OBJ-003",
+      "name": "Tax Reproducibility Mandate",
+      "statement": "The system must calculate tax liabilities deterministically using the exact same Order Request, Product Catalog snapshot, and Delivery Zone Map data.",
+      "type": "Compliance",
+      "condition": "during financial settlement and audit review",
+      "exceptions": [
+        "none"
+      ],
+      "actors": [
+        "Finance Team",
+        "Auditor",
+        "System"
+      ],
+      "objects": [
+        "Order Request",
+        "Product Catalog",
+        "Delivery Zone Map"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The transaction is flagged for manual reconciliation and potential regulatory penalty",
+      "rationale": "To ensure financial integrity and enable reproducible tax audits across jurisdictions",
+      "parameters": [
+        {
+          "name": "calculation_snapshot_id",
+          "description": "unique identifier for the data state used in calculation"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-040"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "OBJ-003",
+      "name": "High-Velocity Alert Scope",
+      "statement": "The system may only generate predictive inventory replenishment alerts for items explicitly classified as high-velocity in the Product Catalog.",
+      "type": "Limit",
+      "condition": "when running inventory forecasting algorithms",
+      "exceptions": [
+        "none"
+      ],
+      "actors": [
+        "Inventory Management System",
+        "Merchandiser"
+      ],
+      "objects": [
+        "Product Catalog",
+        "Inventory Alert"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "Alert fatigue occurs, causing critical stockouts for key items to be missed",
+      "rationale": "To focus limited operational attention on items with the highest turnover and risk of stockout",
+      "parameters": [
+        {
+          "name": "velocity_classification",
+          "description": "categorization of item demand speed"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-046"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "OBJ-004",
+      "name": "Geographic Boundary Integrity",
+      "statement": "The system must not assign an order to a Delivery Zone unless the customer's address falls strictly within the defined polygon or radius boundaries of a Store Partner's service area.",
+      "type": "Validation",
+      "condition": "When validating a customer's delivery address against the Delivery Zone Map",
+      "exceptions": [
+        "Emergency override for medical situations with explicit manager approval"
+      ],
+      "actors": [
+        "Platform Operator",
+        "System",
+        "Customer"
+      ],
+      "objects": [
+        "Delivery Zone Map",
+        "Customer Address",
+        "Store Partner"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The order is rejected immediately and the customer is notified that the location is outside the service area",
+      "rationale": "Prevents impossible deliveries and protects the platform from liability regarding unfulfillable promises",
+      "parameters": [
+        {
+          "name": "boundary_tolerance_meters",
+          "description": "Maximum allowable deviation for address geocoding errors"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-054",
+        "FR-012"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "OBJ-004",
+      "name": "SLA Consistency Enforcement",
+      "statement": "The system must only publish a delivery time estimate if the calculated travel time based on real-time traffic and road constraints remains within the Store Partner's agreed Service Level Agreement (SLA).",
+      "type": "Eligibility",
+      "condition": "When generating a delivery time estimate for an order request",
+      "exceptions": [
+        "Premium expedited service tiers with higher SLA limits"
+      ],
+      "actors": [
+        "System",
+        "Store Partner",
+        "Customer"
+      ],
+      "objects": [
+        "Delivery Time Estimate",
+        "Travel Time Calculation",
+        "SLA"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system must not confirm the order and must prompt the customer to select a later time slot or a different store",
+      "rationale": "Ensures that all promised delivery times are operationally achievable to maintain trust and avoid late deliveries",
+      "parameters": [
+        {
+          "name": "max_allowed_travel_time_minutes",
+          "description": "Maximum travel duration permitted under the current SLA"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-045",
+        "FR-054"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "OBJ-004",
+      "name": "Dynamic Fee Recalculation Trigger",
+      "statement": "The system must automatically recalculate the delivery fee whenever the real-time traffic data indicates a change in travel time that exceeds the baseline estimate by more than the configured threshold.",
+      "type": "Calculation",
+      "condition": "When real-time traffic data updates during the order preparation phase",
+      "exceptions": [
+        "Manual fee waivers authorized by customer support for verified emergencies"
+      ],
+      "actors": [
+        "System",
+        "Customer"
+      ],
+      "objects": [
+        "Delivery Fee",
+        "Real-time Traffic Data",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The customer receives an updated total cost notification and must accept the new fee or cancel the order",
+      "rationale": "Ensures pricing accuracy reflects current network congestion and road conditions",
+      "parameters": [
+        {
+          "name": "traffic_variance_threshold_percent",
+          "description": "Percentage increase in travel time required to trigger a fee recalculation"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-045",
+        "FR-054"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "OBJ-004",
+      "name": "Regulatory Zone Activation Gate",
+      "statement": "A Delivery Zone Map must not be activated for commercial use until the defined service boundaries have been legally validated and approved by the relevant regulatory authorities.",
+      "type": "Compliance",
+      "condition": "When a new Store Partner or Service Area Definition is created or modified",
+      "exceptions": [
+        "Internal testing environments or sandbox zones excluded from public commerce"
+      ],
+      "actors": [
+        "Platform Operator",
+        "Regulatory Authority",
+        "Store Partner"
+      ],
+      "objects": [
+        "Delivery Zone Map",
+        "Service Area Definition",
+        "Regulatory Approval"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The system blocks the activation of the zone and prevents any orders from being placed in that area",
+      "rationale": "Ensures strict adherence to local laws and regulations governing service areas and data usage",
+      "parameters": [
+        {
+          "name": "regulatory_approval_status",
+          "description": "Current status of legal validation for the specific zone"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-012",
+        "FR-014"
+      ],
+      "basis": "inferred"
+    }
+  ]
+}

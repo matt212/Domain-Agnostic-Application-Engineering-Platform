@@ -1,0 +1,134 @@
+{
+  "unit_id": "OBJ-009",
+  "kind": "business_object",
+  "rules": [
+    {
+      "name": "Identity Verification Gate",
+      "statement": "A Customer Profile must not be activated until a valid government-issued identity document is verified.",
+      "type": "Eligibility",
+      "condition": "during onboarding or profile status change to active",
+      "exceptions": [
+        "Government-issued ID verification fails due to technical system outage",
+        "Customer provides alternative verified identity via trusted third-party service"
+      ],
+      "actors": [
+        "Customer",
+        "Identity Verification Service"
+      ],
+      "objects": [
+        "Customer Profile",
+        "Identity Document"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The profile remains in pending status and cannot initiate any Order Request",
+      "rationale": "Prevents unverified individuals from accessing financial and delivery services, mitigating fraud and regulatory risk.",
+      "parameters": [
+        {
+          "name": "max_verification_attempts",
+          "description": "Maximum number of allowed verification retries before manual review"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-019"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Fraud Flag Suspension",
+      "statement": "A Customer Profile must not be used to create an Order Request if the profile is flagged for fraud or suspended.",
+      "type": "Authorization",
+      "condition": "during Order Initiation",
+      "exceptions": [
+        "Suspension is lifted by a Compliance Officer before order submission",
+        "Fraud flag is a false positive cleared by automated review within 1 hour"
+      ],
+      "actors": [
+        "Customer",
+        "Compliance Officer"
+      ],
+      "objects": [
+        "Customer Profile",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The Order Request is automatically rejected and the customer is notified of the restriction",
+      "rationale": "Protects the platform and merchants from financial loss and reputational damage associated with fraudulent activity.",
+      "parameters": [
+        {
+          "name": "fraud_threshold_score",
+          "description": "Risk score level above which the profile is automatically flagged"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-026"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Profile Data Immutability",
+      "statement": "Archived Customer Profiles must not be modified, and all historical data must be retained indefinitely.",
+      "type": "Limit",
+      "condition": "after the profile status transitions to Archived",
+      "exceptions": [
+        "Correction of a clerical error in the metadata (e.g., archive date) by an Administrator",
+        "Legal requirement to disclose specific data points to a regulatory body"
+      ],
+      "actors": [
+        "System",
+        "Administrator"
+      ],
+      "objects": [
+        "Customer Profile",
+        "Historical Data"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system logs the unauthorized attempt and triggers an audit alert to the Security Team",
+      "rationale": "Ensures data integrity for legal compliance, audit trails, and accurate historical analysis.",
+      "parameters": [
+        {
+          "name": "retention_period_years",
+          "description": "Minimum duration data must be retained after archival"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-009"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Contact Channel Consistency",
+      "statement": "All critical notifications regarding Order Request status or Payment Settlement must be sent via the primary contact method defined in the Customer Profile.",
+      "type": "Validation",
+      "condition": "during notification dispatch for critical events",
+      "exceptions": [
+        "Primary contact method is invalid or unreachable for more than 24 hours",
+        "Customer explicitly opts out of specific notification types in their preferences"
+      ],
+      "actors": [
+        "Notification Service",
+        "Customer"
+      ],
+      "objects": [
+        "Customer Profile",
+        "Notification Message"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The notification is queued for retry; if retry fails, a secondary channel is used with a warning flag",
+      "rationale": "Ensures customers receive timely updates regarding their orders and payments, maintaining trust and reducing support tickets.",
+      "parameters": [
+        {
+          "name": "retry_attempts",
+          "description": "Number of times the system attempts to send via the primary channel before switching"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-054"
+      ],
+      "basis": "inferred"
+    }
+  ]
+}
