@@ -12,15 +12,15 @@
  * Diagrams (one .md file each): use case, process (BPMN-style), sequence, state machine, decision table / DMN.
  *
  * USAGE
- *   node 8.5.2.DiagramsAI.js                                  generate everything missing (resumable), then render
- *   node 8.5.2.DiagramsAI.js --diagram "use case"             only that diagram (still resumable)
- *   node 8.5.2.DiagramsAI.js --rerun --diagram "sequence"     discard and regenerate that diagram
- *   node 8.5.2.DiagramsAI.js --rerun --diagram "state" --failed    redo only the units that failed
- *   node 8.5.2.DiagramsAI.js --rerun --failed                 redo every failed unit of every diagram
- *   node 8.5.2.DiagramsAI.js --rerun --unit STATE-003         redo one unit
- *   node 8.5.2.DiagramsAI.js --status                         show what succeeded, failed or is pending
- *   node 8.5.2.DiagramsAI.js --render                         re-render the .md files from saved results (no AI)
- *   node 8.5.2.DiagramsAI.js --limit 2                        smoke test: first 2 selected units only
+ *   node 8.0.13.ClaudeDiagramsAI.js                                  generate everything missing (resumable), then render
+ *   node 8.0.13.ClaudeDiagramsAI.js --diagram "use case"             only that diagram (still resumable)
+ *   node 8.0.13.ClaudeDiagramsAI.js --rerun --diagram "sequence"     discard and regenerate that diagram
+ *   node 8.0.13.ClaudeDiagramsAI.js --rerun --diagram "state" --failed    redo only the units that failed
+ *   node 8.0.13.ClaudeDiagramsAI.js --rerun --failed                 redo every failed unit of every diagram
+ *   node 8.0.13.ClaudeDiagramsAI.js --rerun --unit STATE-003         redo one unit
+ *   node 8.0.13.ClaudeDiagramsAI.js --status                         show what succeeded, failed or is pending
+ *   node 8.0.13.ClaudeDiagramsAI.js --render                         re-render the .md files from saved results (no AI)
+ *   node 8.0.13.ClaudeDiagramsAI.js --limit 2                        smoke test: first 2 selected units only
  *
  * Diagram names: "use case", "process" (or bpmn), "sequence", "state" (or state machine), "decision" (or dmn), "all".
  * Requires 8.5.0.DiagramCommon.js in the same folder. Local llama-cli only: MODEL_NAME, LLAMA_CLI_PATH, THREADS.

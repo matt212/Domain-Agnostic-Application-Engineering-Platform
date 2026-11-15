@@ -1,0 +1,362 @@
+{
+  "unit_id": "USECASE-2",
+  "diagram": "usecase",
+  "title": "Functional capabilities",
+  "status": "ok",
+  "input_hash": "1c61e276",
+  "model": "unsloth/Qwen3.5-9B-GGUF",
+  "generated_at": "2026-11-15T20:21:19.617Z",
+  "seconds": 2260,
+  "inferred_elements": 15,
+  "spec": {
+    "title": "",
+    "system_name": "Quick Commerce (Q-Commerce) / Hyperlocal Grocery Delivery",
+    "actors": [
+      {
+        "id": "a1",
+        "name": "Customer",
+        "kind": "internal",
+        "inferred": false
+      },
+      {
+        "id": "a2",
+        "name": "Delivery Partner",
+        "kind": "internal",
+        "inferred": false
+      },
+      {
+        "id": "a3",
+        "name": "Store Partner",
+        "kind": "internal",
+        "inferred": false
+      },
+      {
+        "id": "a4",
+        "name": "Platform Operator",
+        "kind": "internal",
+        "inferred": false
+      },
+      {
+        "id": "a5",
+        "name": "Merchandiser",
+        "kind": "internal",
+        "inferred": true
+      },
+      {
+        "id": "a6",
+        "name": "Regulatory Authority",
+        "kind": "external",
+        "inferred": false
+      },
+      {
+        "id": "a7",
+        "name": "Payment Provider",
+        "kind": "external",
+        "inferred": false
+      },
+      {
+        "id": "a8",
+        "name": "Logistics Coordinator",
+        "kind": "internal",
+        "inferred": true
+      },
+      {
+        "id": "a9",
+        "name": "Financial Controller",
+        "kind": "internal",
+        "inferred": true
+      },
+      {
+        "id": "a10",
+        "name": "Support Agent",
+        "kind": "internal",
+        "inferred": true
+      }
+    ],
+    "use_cases": [
+      {
+        "id": "u1",
+        "name": "Place and Confirm Order",
+        "inferred": false
+      },
+      {
+        "id": "u2",
+        "name": "Browse Product Catalog",
+        "inferred": false
+      },
+      {
+        "id": "u3",
+        "name": "Route and Dispatch Delivery",
+        "inferred": false
+      },
+      {
+        "id": "u4",
+        "name": "Track Order Status",
+        "inferred": false
+      },
+      {
+        "id": "u5",
+        "name": "Verify and Pack Order",
+        "inferred": true
+      },
+      {
+        "id": "u6",
+        "name": "Settle Transaction",
+        "inferred": false
+      },
+      {
+        "id": "u7",
+        "name": "Monitor Store Performance",
+        "inferred": false
+      },
+      {
+        "id": "u8",
+        "name": "View Earnings and Settlements",
+        "inferred": false
+      },
+      {
+        "id": "u9",
+        "name": "Manage Loyalty and Subscriptions",
+        "inferred": false
+      },
+      {
+        "id": "u10",
+        "name": "Calculate Dynamic Pricing",
+        "inferred": false
+      },
+      {
+        "id": "u11",
+        "name": "Manage Inventory Reconciliation",
+        "inferred": true
+      },
+      {
+        "id": "u12",
+        "name": "Analyze Revenue Efficiency",
+        "inferred": true
+      },
+      {
+        "id": "u13",
+        "name": "Ensure Regulatory Compliance",
+        "inferred": true
+      },
+      {
+        "id": "u14",
+        "name": "Resolve Disputes and Claims",
+        "inferred": true
+      },
+      {
+        "id": "u15",
+        "name": "Scale Fulfillment Network",
+        "inferred": true
+      },
+      {
+        "id": "u16",
+        "name": "Manage Vendor SLAs",
+        "inferred": true
+      },
+      {
+        "id": "u17",
+        "name": "Process Tax Calculations",
+        "inferred": true
+      },
+      {
+        "id": "u18",
+        "name": "Validate Partner Compliance",
+        "inferred": true
+      },
+      {
+        "id": "u19",
+        "name": "Monitor System Health",
+        "inferred": true
+      },
+      {
+        "id": "u20",
+        "name": "Optimize Demand Forecasting",
+        "inferred": true
+      }
+    ],
+    "links": [
+      {
+        "actor": "a1",
+        "use_case": "u1",
+        "kind": "primary"
+      },
+      {
+        "actor": "a1",
+        "use_case": "u2",
+        "kind": "primary"
+      },
+      {
+        "actor": "a1",
+        "use_case": "u4",
+        "kind": "primary"
+      },
+      {
+        "actor": "a1",
+        "use_case": "u9",
+        "kind": "primary"
+      },
+      {
+        "actor": "a2",
+        "use_case": "u1",
+        "kind": "primary"
+      },
+      {
+        "actor": "a2",
+        "use_case": "u3",
+        "kind": "primary"
+      },
+      {
+        "actor": "a2",
+        "use_case": "u4",
+        "kind": "primary"
+      },
+      {
+        "actor": "a2",
+        "use_case": "u8",
+        "kind": "primary"
+      },
+      {
+        "actor": "a3",
+        "use_case": "u1",
+        "kind": "primary"
+      },
+      {
+        "actor": "a3",
+        "use_case": "u2",
+        "kind": "primary"
+      },
+      {
+        "actor": "a3",
+        "use_case": "u5",
+        "kind": "primary"
+      },
+      {
+        "actor": "a3",
+        "use_case": "u7",
+        "kind": "primary"
+      },
+      {
+        "actor": "a4",
+        "use_case": "u1",
+        "kind": "primary"
+      },
+      {
+        "actor": "a4",
+        "use_case": "u3",
+        "kind": "primary"
+      },
+      {
+        "actor": "a4",
+        "use_case": "u6",
+        "kind": "primary"
+      },
+      {
+        "actor": "a4",
+        "use_case": "u7",
+        "kind": "primary"
+      },
+      {
+        "actor": "a4",
+        "use_case": "u8",
+        "kind": "primary"
+      },
+      {
+        "actor": "a4",
+        "use_case": "u10",
+        "kind": "primary"
+      },
+      {
+        "actor": "a4",
+        "use_case": "u11",
+        "kind": "primary"
+      },
+      {
+        "actor": "a4",
+        "use_case": "u12",
+        "kind": "primary"
+      },
+      {
+        "actor": "a4",
+        "use_case": "u13",
+        "kind": "primary"
+      },
+      {
+        "actor": "a4",
+        "use_case": "u14",
+        "kind": "primary"
+      },
+      {
+        "actor": "a4",
+        "use_case": "u15",
+        "kind": "primary"
+      },
+      {
+        "actor": "a4",
+        "use_case": "u16",
+        "kind": "primary"
+      },
+      {
+        "actor": "a4",
+        "use_case": "u17",
+        "kind": "primary"
+      },
+      {
+        "actor": "a4",
+        "use_case": "u18",
+        "kind": "primary"
+      },
+      {
+        "actor": "a4",
+        "use_case": "u19",
+        "kind": "primary"
+      },
+      {
+        "actor": "a4",
+        "use_case": "u20",
+        "kind": "primary"
+      },
+      {
+        "actor": "a5",
+        "use_case": "u5",
+        "kind": "primary"
+      },
+      {
+        "actor": "a6",
+        "use_case": "u6",
+        "kind": "primary"
+      },
+      {
+        "actor": "a7",
+        "use_case": "u13",
+        "kind": "primary"
+      },
+      {
+        "actor": "a8",
+        "use_case": "u3",
+        "kind": "primary"
+      },
+      {
+        "actor": "a8",
+        "use_case": "u15",
+        "kind": "primary"
+      },
+      {
+        "actor": "a9",
+        "use_case": "u12",
+        "kind": "primary"
+      },
+      {
+        "actor": "a9",
+        "use_case": "u17",
+        "kind": "primary"
+      },
+      {
+        "actor": "a10",
+        "use_case": "u14",
+        "kind": "primary"
+      }
+    ],
+    "includes": []
+  }
+}
