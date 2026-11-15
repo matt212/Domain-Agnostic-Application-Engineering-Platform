@@ -1,0 +1,97 @@
+You are reviewing one functional diagram for a domain-agnostic business application.
+Use only the evidence below.
+Do not invent actors, activities, states, conditions, integrations, or outcomes.
+Return exactly one Mermaid fenced code block for the requested diagram.
+Do not return JSON or explanatory prose.
+Preserve the requested diagram type.
+Keep every supported source fact.
+If evidence is insufficient, show only supported facts.
+Do not add generic placeholder nodes or explanatory notes.
+
+EVIDENCE:
+
+Diagram type: Use Case Diagram
+System: Quick Commerce (Q-Commerce) / Hyperlocal Grocery Delivery
+Evidence counts: {
+  "actors": 51,
+  "objects": 14,
+  "activities": 11,
+  "stages": 11,
+  "information_requirements": 20,
+  "functional_requirements": 62,
+  "business_requirements": 28,
+  "business_rules_raw": 168,
+  "business_rules": 142,
+  "rule_ingestion_run": "3"
+}
+Activities (name | actor | stage | inputs | outputs):
+- Market Entry and Partner Onboarding | Platform Operator | Foundation Establishment | Service Area Definition, Store Partner Agreement | Validated Service Zones, Active Store Network
+- Inventory Synchronization and Validation | Platform Operator | Supply Chain Integration | Real-Time Inventory Snapshot, Product Catalog | Verified Inventory Status, Error Alerts for Stock Discrepancies
+- Order Initiation and Demand Capture | Customer | Order Initiation | Product Catalog, Customer Profile, Assigned Delivery Slot | Order Request, Pending Payment Authorization
+- Order Validation and Resource Allocation | Order Allocation Engine | Order Validation & Allocation | Order Request, Real-Time Inventory Snapshot, Delivery Zone Map, F | Confirmed Order Assignment, Allocated Fulfillment Task, Assigned 
+- Order Fulfillment and Preparation | Store Partner | Order Preparation | Fulfillment Task, Delivery Assignment | Completed Fulfillment Task, Ready-for-Dispatch Order, Pickup Conf
+- Last-Mile Logistics Execution | Delivery Partner | Last-Mile Delivery | Delivery Assignment, Fulfillment Task | In-Transit Status, Delivery Completion Status
+- Delivery Handover and Proof Generation | Delivery Partner | Handover & Confirmation | Delivery Assignment, Delivery Proof | Signed/Photo Delivery Proof, Order Closure Status
+Business objects:
+Actors:
+- Store/Fulfillment Center (internal): 
+
+CURRENT DETERMINISTIC DIAGRAM (reference only):
+
+flowchart LR
+a_a1["Platform Operator<br/>«actor»"]:::actor
+a_a2["Regulatory Authority<br/>«external»"]:::actor
+a_a3["Merchandiser<br/>«actor»"]:::actor
+a_a4["Store Partner<br/>«actor»"]:::actor
+a_a5["Order Allocation Engine<br/>«system»"]:::actor
+a_a6["Customer<br/>«actor»"]:::actor
+a_a7["Fulfillment Supervisor<br/>«actor»"]:::actor
+a_a8["Delivery Partner<br/>«actor»"]:::actor
+a_a9["Payment Provider<br/>«external»"]:::actor
+subgraph SYS["System boundary: Quick Commerce (Q-Commerce) / Hyperlocal Grocery Delivery"]
+u_u1(["Market Entry and Partner Onboarding"]):::uc
+u_u2(["Inventory Synchronization and Validation"]):::uc
+u_u3(["Order Initiation and Demand Capture"]):::uc
+u_u4(["Order Validation and Resource Allocation"]):::uc
+u_u5(["Order Fulfillment and Preparation"]):::uc
+u_u6(["Last-Mile Logistics Execution"]):::uc
+u_u7(["Delivery Handover and Proof Generation"]):::uc
+u_u8(["Payment Processing and Financial Settlement"]):::uc
+u_u9(["Post-Transaction Review and Feedback Collection"]):::uc
+u_u10(["Dispute Resolution and Exception Handling"]):::uc
+u_u11(["Product Catalog Curation and Strategy"]):::uc
+end
+a_a1 --- u_u1
+a_a2 -.- u_u1
+a_a3 -.- u_u1
+a_a1 --- u_u2
+a_a4 -.- u_u2
+a_a5 -.- u_u2
+a_a6 --- u_u3
+a_a5 --- u_u4
+a_a1 -.- u_u4
+a_a4 --- u_u5
+a_a3 -.- u_u5
+a_a7 -.- u_u5
+a_a8 --- u_u6
+a_a5 -.- u_u6
+a_a8 --- u_u7
+a_a6 -.- u_u7
+a_a9 --- u_u8
+a_a1 -.- u_u8
+a_a4 -.- u_u8
+a_a6 --- u_u9
+a_a1 -.- u_u9
+a_a1 --- u_u10
+a_a6 -.- u_u10
+a_a4 -.- u_u10
+a_a3 --- u_u11
+classDef actor fill:#fff7e6,stroke:#d48806,color:#000
+classDef actorInf fill:#fff7e6,stroke:#d48806,stroke-dasharray:5 5,color:#000
+classDef uc fill:#e6f4ff,stroke:#1677ff,color:#000
+classDef ucInf fill:#e6f4ff,stroke:#1677ff,stroke-dasharray:5 5,color:#000
+
+flowchart LR
+a_a1["Customer<br/>«actor»"]:::actor
+
+Generate the corrected Mermaid diagram now.

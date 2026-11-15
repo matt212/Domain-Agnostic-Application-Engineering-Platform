@@ -1,0 +1,88 @@
+
+
+Loading model... 
+
+▄▄ ▄▄
+██ ██
+██ ██  ▀▀█▄ ███▄███▄  ▀▀█▄    ▄████ ████▄ ████▄
+██ ██ ▄█▀██ ██ ██ ██ ▄█▀██    ██    ██ ██ ██ ██
+██ ██ ▀█▄██ ██ ██ ██ ▀█▄██ ██ ▀████ ████▀ ████▀
+                                    ██    ██
+                                    ▀▀    ▀▀
+
+build      : b11146-7fe450e19
+model      : unsloth/Qwen3.5-9B-GGUF
+ftype      : Q4_K - Medium
+modalities : text, vision, video
+
+available commands:
+  /exit or Ctrl+C     stop or exit
+  /regen              regenerate the last response
+  /clear              clear the chat history
+  /read <file>        add a text file
+  /glob <pattern>     add text files using globbing pattern
+  /image <file>       add an image file
+  /video <file>       add a video file
+
+
+
+> You are reviewing one functional diagram for a domain-agnostic business application.
+Use only the evidence below.
+Do not invent actors, activities, states, conditions, integrations, or outcomes.
+Return exactly one Mermaid fenced code block for the requested diagram.
+Do not return JSON or explanatory prose.
+Preserve the requested diagram type.
+Keep every supported source fact.
+If evidence is insufficient, show only supported facts.
+Do not add generic placeholder nodes or explanatory notes.
+
+EVIDE ... (truncated)
+```mermaid
+flowchart LR
+    subgraph G1["Input data (business objects)"]
+        n1["Order Request"]:::in
+        n2["Product Catalog"]:::in
+        n3["Delivery Proof"]:::in
+        n4["Financial Transaction Record"]:::in
+        n5["Service Area Definition"]:::in
+        n6["Dispute Ticket"]:::in
+        n7["Delivery Assignment"]:::in
+        n8["Fulfillment Task"]:::in
+        n9["Order"]:::in
+        n10["Inventory Snapshot"]:::in
+        n11["Store Partner"]:::in
+        n12["Store Partner Agreement"]:::in
+    end
+    subgraph G2["Decisions (rule types)"]
+        n13["Validation"]:::dec
+        n14["State transition"]:::dec
+        n15["Calculation"]:::dec
+        n16["Eligibility"]:::dec
+        n17["Authorization"]:::dec
+        n18["Financial control"]:::dec
+        n19["Limit"]:::dec
+        n20["Compliance"]:::dec
+        n21["Audit and retention"]:::dec
+        n22["Timing"]:::dec
+    end
+    subgraph G3["Outcomes when a rule is broken"]
+        n23["Reject or block"]:::out
+        n24["Handle manually"]:::out
+        n25["Notify"]:::out
+        n26["Escalate for review"]:::out
+        n27["Record and flag"]:::out
+    end
+    n13 -->|17| n23
+    n1 -->|13| n13
+    n14 -->|12| n23
+
+[ Prompt: 15.9 t/s | Generation: 1.4 t/s ]
+
+
+Exiting...
+
+
+--- STDERR ---
+warning: no usable GPU found, --gpu-layers option will be ignored
+warning: one possible reason is that llama.cpp was compiled without GPU support
+warning: consult docs/build.md for compilation instructions

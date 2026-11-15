@@ -1,0 +1,94 @@
+
+
+Loading model... 
+
+▄▄ ▄▄
+██ ██
+██ ██  ▀▀█▄ ███▄███▄  ▀▀█▄    ▄████ ████▄ ████▄
+██ ██ ▄█▀██ ██ ██ ██ ▄█▀██    ██    ██ ██ ██ ██
+██ ██ ▀█▄██ ██ ██ ██ ▀█▄██ ██ ▀████ ████▀ ████▀
+                                    ██    ██
+                                    ▀▀    ▀▀
+
+build      : b11146-7fe450e19
+model      : unsloth/Qwen3.5-9B-GGUF
+ftype      : Q4_K - Medium
+modalities : text, vision, video
+
+available commands:
+  /exit or Ctrl+C     stop or exit
+  /regen              regenerate the last response
+  /clear              clear the chat history
+  /read <file>        add a text file
+  /glob <pattern>     add text files using globbing pattern
+  /image <file>       add an image file
+  /video <file>       add a video file
+
+
+
+> You are reviewing one functional diagram for a domain-agnostic business application.
+Use only the evidence below.
+Do not invent actors, activities, states, conditions, integrations, or outcomes.
+Return exactly one Mermaid fenced code block for the requested diagram.
+Do not return JSON or explanatory prose.
+Preserve the requested diagram type.
+Keep every supported source fact.
+If evidence is insufficient, show only supported facts.
+Do not add generic placeholder nodes or explanatory notes.
+
+EVIDE ... (truncated)
+```mermaid
+usecaseDiagram
+    actor "Platform Operator" as a1
+    actor "Regulatory Authority" as a2
+    actor "Merchandiser" as a3
+    actor "Store Partner" as a4
+    actor "Order Allocation Engine" as a5
+    actor "Customer" as a6
+    actor "Fulfillment Supervisor" as a7
+    actor "Delivery Partner" as a8
+    actor "Payment Provider" as a9
+
+    subgraph "System boundary: Quick Commerce (Q-Commerce) / Hyperlocal Grocery Delivery"
+        usecase "Market Entry and Partner Onboarding" as u1
+        usecase "Inventory Synchronization and Validation" as u2
+        usecase "Order Initiation and Demand Capture" as u3
+        usecase "Order Validation and Resource Allocation" as u4
+        usecase "Order Fulfillment and Preparation" as u5
+        usecase "Last-Mile Logistics Execution" as u6
+        usecase "Delivery Handover and Proof Generation" as u7
+        usecase "Payment Processing and Financial Settlement" as u8
+        usecase "Post-Transaction Review and Feedback Collection" as u9
+        usecase "Dispute Resolution and Exception Handling" as u10
+        usecase "Product Catalog Curation and Strategy" as u11
+    end
+
+    a1 --> u1
+    a2 ..> u1
+    a3 ..> u1
+    a1 --> u2
+    a4 ..> u2
+    a5 ..> u2
+    a6 --> u3
+    a5 --> u4
+    a1 ..> u4
+    a4 --> u5
+    a3 ..> u5
+    a7 ..> u5
+    a8 --> u6
+    a5 ..> u6
+    a8 --> u7
+    a6 ..> u7
+    a9 --> u8
+    a
+
+[ Prompt: 19.5 t/s | Generation: 1.6 t/s ]
+
+
+Exiting...
+
+
+--- STDERR ---
+warning: no usable GPU found, --gpu-layers option will be ignored
+warning: one possible reason is that llama.cpp was compiled without GPU support
+warning: consult docs/build.md for compilation instructions

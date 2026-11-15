@@ -1,0 +1,96 @@
+
+
+Loading model... 
+
+▄▄ ▄▄
+██ ██
+██ ██  ▀▀█▄ ███▄███▄  ▀▀█▄    ▄████ ████▄ ████▄
+██ ██ ▄█▀██ ██ ██ ██ ▄█▀██    ██    ██ ██ ██ ██
+██ ██ ▀█▄██ ██ ██ ██ ▀█▄██ ██ ▀████ ████▀ ████▀
+                                    ██    ██
+                                    ▀▀    ▀▀
+
+build      : b11146-7fe450e19
+model      : unsloth/Qwen3.5-9B-GGUF
+ftype      : Q4_K - Medium
+modalities : text, vision, video
+
+available commands:
+  /exit or Ctrl+C     stop or exit
+  /regen              regenerate the last response
+  /clear              clear the chat history
+  /read <file>        add a text file
+  /glob <pattern>     add text files using globbing pattern
+  /image <file>       add an image file
+  /video <file>       add a video file
+
+
+
+> You are reviewing one functional diagram for a domain-agnostic business application.
+Use only the evidence below.
+Do not invent actors, activities, states, conditions, integrations, or outcomes.
+Return exactly one Mermaid fenced code block for the requested diagram.
+Do not return JSON or explanatory prose.
+Preserve the requested diagram type.
+Keep every supported source fact.
+If evidence is insufficient, show only supported facts.
+Do not add generic placeholder nodes or explanatory notes.
+
+EVIDE ... (truncated)
+```mermaid
+usecaseDiagram
+    actor "Customer" as Customer
+    actor "Store Partner" as StorePartner
+    actor "Delivery Partner" as DeliveryPartner
+    actor "Platform Operator" as PlatformOperator
+    actor "Order Allocation Engine" as AllocationEngine
+    actor "Merchandiser" as Merchandiser
+    actor "Fulfillment Supervisor" as FulfillmentSupervisor
+    actor "Regulatory Authority" as RegulatoryAuthority
+
+    usecase "Market Entry and Partner Onboarding" as UC1
+    usecase "Inventory Synchronization and Validation" as UC2
+    usecase "Order Initiation and Demand Capture" as UC3
+    usecase "Order Validation and Resource Allocation" as UC4
+    usecase "Order Fulfillment and Preparation" as UC5
+    usecase "Last-Mile Logistics Execution" as UC6
+    usecase "Delivery Handover and Proof Generation" as UC7
+    usecase "Payment Processing and Financial Settlement" as UC8
+    usecase "Post-Transaction Review and Feedback Collection" as UC9
+    usecase "Dispute Resolution and Exception Handling" as UC10
+    usecase "Product Catalog Curation and Strategy" as UC11
+
+    Customer --> UC3
+    PlatformOperator --> UC1
+    RegulatoryAuthority .. UC1
+    Merchandiser .. UC1
+    PlatformOperator --> UC2
+    StorePartner .. UC2
+    AllocationEngine .. UC2
+    Customer --> UC3
+    AllocationEngine --> UC4
+    PlatformOperator .. UC4
+    StorePartner .. UC5
+    Merchandiser .. UC5
+    FulfillmentSupervisor .. UC5
+    DeliveryPartner --> UC6
+    AllocationEngine .. UC6
+    DeliveryPartner --> UC7
+    Customer .. UC7
+    PaymentProvider --> UC8
+    PlatformOperator .. UC8
+    StorePartner .. UC8
+    Customer --> UC9
+    PlatformOperator .. UC9
+    PlatformOperator --> UC1
+
+[ Prompt: 19.5 t/s | Generation: 1.5 t/s ]
+
+
+Exiting...
+
+
+--- STDERR ---
+warning: no usable GPU found, --gpu-layers option will be ignored
+warning: one possible reason is that llama.cpp was compiled without GPU support
+warning: consult docs/build.md for compilation instructions

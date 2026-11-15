@@ -1,0 +1,91 @@
+You are reviewing one functional diagram for a domain-agnostic business application.
+Use only the evidence below.
+Do not invent actors, activities, states, conditions, integrations, or outcomes.
+Return exactly one Mermaid fenced code block for the requested diagram.
+Do not return JSON or explanatory prose.
+Preserve the requested diagram type.
+Keep every supported source fact.
+If evidence is insufficient, show only supported facts.
+Do not add generic placeholder nodes or explanatory notes.
+
+EVIDENCE:
+
+Diagram type: Sequence Diagram
+System: Quick Commerce (Q-Commerce) / Hyperlocal Grocery Delivery
+Evidence counts: {
+  "actors": 51,
+  "objects": 14,
+  "activities": 11,
+  "stages": 11,
+  "information_requirements": 20,
+  "functional_requirements": 62,
+  "business_requirements": 28,
+  "business_rules_raw": 168,
+  "business_rules": 142,
+  "rule_ingestion_run": "3"
+}
+Activities (name | actor | stage | inputs | outputs):
+- Market Entry and Partner Onboarding | Platform Operator | Foundation Establishment | Service Area Definition, Store Partner Agreement | Validated Service Zones, Active Store Network
+- Inventory Synchronization and Validation | Platform Operator | Supply Chain Integration | Real-Time Inventory Snapshot, Product Catalog | Verified Inventory Status, Error Alerts for Stock Discrepancies
+- Order Initiation and Demand Capture | Customer | Order Initiation | Product Catalog, Customer Profile, Assigned Delivery Slot | Order Request, Pending Payment Authorization
+- Last-Mile Logistics Execution | Delivery Partner | Last-Mile Delivery | Delivery Assignment, Fulfillment Task | In-Transit Status, Delivery Completion Status
+
+CURRENT DETERMINISTIC DIAGRAM (reference only):
+
+sequenceDiagram
+autonumber
+actor P_p1 as Platform Operator
+actor P_p2 as Regulatory Authority
+actor P_p3 as Merchandiser
+actor P_p4 as Customer
+actor P_p5 as Store Partner
+participant P_p6 as Order Allocation Engine
+actor P_p7 as Fulfillment Supervisor
+actor P_p8 as Delivery Partner
+actor P_p9 as Financial Settlement System
+actor P_p10 as Payment Provider
+Note over P_p1: Foundation Establishment
+P_p1->>P_p2: Market Entry and Partner Onboarding: Validated Service Zones
+P_p1->>P_p3: Market Entry and Partner Onboarding: Validated Service Zones
+P_p1-->>P_p4: Geospatial Service Boundary Definition
+P_p5-->>P_p1: Commercial Partnership Terms and Service Level ...
+alt Regulatory Zone Activation Gate
+Note over P_p1: Continue to the next step
+else Rule violated
+Note over P_p1: The system blocks the activation of the zone and prevents any order...
+end
+Note over P_p1: Supply Chain Integration
+P_p1->>P_p5: Inventory Synchronization and Validation: Verified Inventory Status
+P_p1->>P_p6: Inventory Synchronization and Validation: Verified Inventory Status
+P_p5-->>P_p4: Real-Time Stock Availability and Status
+P_p5-->>P_p1: Inventory Synchronization Health Metrics
+alt Sync Discrepancy Flagging
+Note over P_p1: Continue to the next step
+else Rule violated
+Note over P_p1: The system halts order processing for affected stores and alerts th...
+end
+Note over P_p4: Order Initiation
+P_p4->>P_p4: Order Initiation and Demand Capture
+P_p5-->>P_p4: Real-Time Stock Availability and Status
+P_p5-->>P_p4: Aggregated Product Catalog and Pricing
+alt Discontinued Item Blocking
+Note over P_p4: Continue to the next step
+else Rule violated
+Note over P_p4: The system blocks the item selection and displays a 'Product Unavai...
+end
+Note over P_p6: Order Validation and Allocation
+P_p6->>P_p1: Order Validation and Resource Allocation: Confirmed Order Assignment
+P_p5-->>P_p1: Commercial Partnership Terms and Service Level ...
+P_p5-->>P_p4: Real-Time Stock Availability and Status
+alt Explicit Acceptance Required
+Note over P_p6: Continue to the next step
+else Rule violated
+Note over P_p6: The system blocks the start of the delivery task and prevents proof...
+end
+Note over P_p5: Order Preparation
+P_p5->>P_p3: Order Fulfillment and Preparation: Completed Fulfillment Task
+P_p5->>P_p7: Order Fulfillment and Preparation: Completed Fulfillment Task
+P_p4-->>P_p6: Order Composition and Delivery Instructions
+P_p5-->>P_p6: Fulfillment Task Allocation and Routing
+
+Generate the corrected Mermaid diagram now.

@@ -1,0 +1,86 @@
+
+
+Loading model... 
+
+▄▄ ▄▄
+██ ██
+██ ██  ▀▀█▄ ███▄███▄  ▀▀█▄    ▄████ ████▄ ████▄
+██ ██ ▄█▀██ ██ ██ ██ ▄█▀██    ██    ██ ██ ██ ██
+██ ██ ▀█▄██ ██ ██ ██ ▀█▄██ ██ ▀████ ████▀ ████▀
+                                    ██    ██
+                                    ▀▀    ▀▀
+
+build      : b11146-7fe450e19
+model      : unsloth/Qwen3.5-9B-GGUF
+ftype      : Q4_K - Medium
+modalities : text, vision, video
+
+available commands:
+  /exit or Ctrl+C     stop or exit
+  /regen              regenerate the last response
+  /clear              clear the chat history
+  /read <file>        add a text file
+  /glob <pattern>     add text files using globbing pattern
+  /image <file>       add an image file
+  /video <file>       add a video file
+
+
+
+> You are reviewing one functional diagram for a domain-agnostic business application.
+Use only the evidence below.
+Do not invent actors, activities, states, conditions, integrations, or outcomes.
+Return exactly one Mermaid fenced code block for the requested diagram.
+Do not return JSON or explanatory prose.
+Preserve the requested diagram type.
+Keep every supported source fact.
+If evidence is insufficient, show only supported facts.
+Do not add generic placeholder nodes or explanatory notes.
+
+EVIDE ... (truncated)
+```mermaid
+sequenceDiagram
+    autonumber
+    actor P_p1 as Platform Operator
+    actor P_p2 as Regulatory Authority
+    actor P_p3 as Merchandiser
+    actor P_p4 as Customer
+    actor P_p5 as Store Partner
+    participant P_p6 as Order Allocation Engine
+    actor P_p7 as Fulfillment Supervisor
+    actor P_p8 as Delivery Partner
+    actor P_p9 as Financial Settlement System
+    actor P_p10 as Payment Provider
+    Note over P_p1: Foundation Establishment
+    P_p1->>P_p2: Market Entry and Partner Onboarding: Validated Service Zones
+    P_p1->>P_p3: Market Entry and Partner Onboarding: Validated Service Zones
+    P_p1-->>P_p4: Geospatial Service Boundary Definition
+    P_p5-->>P_p1: Commercial Partnership Terms and Service Level ...
+    alt Regulatory Zone Activation Gate
+        Note over P_p1: Continue to the next step
+    else Rule violated
+        Note over P_p1: The system blocks the activation of the zone and prevents any order...
+    end
+    Note over P_p1: Supply Chain Integration
+    P_p1->>P_p5: Inventory Synchronization and Validation: Verified Inventory Status
+    P_p1->>P_p6: Inventory Synchronization and Validation: Verified Inventory Status
+    P_p5-->>P_p4: Real-Time Stock Availability and Status
+    P_p5-->>P_p1: Inventory Synchronization Health Metrics
+    alt Sync Discrepancy Flagging
+        Note over P_p1: Continue to the next step
+    else Rule violated
+        Note over P_p1: The system halts order processing for affected stores and alerts th...
+    end
+    Note over P_p4: Order Initiation
+    P_p4->>P_p4: Order Initiation and Demand Capture
+    P_p5-->>P_p4: Real-Time
+
+[ Prompt: 14.3 t/s | Generation: 1.4 t/s ]
+
+
+Exiting...
+
+
+--- STDERR ---
+warning: no usable GPU found, --gpu-layers option will be ignored
+warning: one possible reason is that llama.cpp was compiled without GPU support
+warning: consult docs/build.md for compilation instructions
