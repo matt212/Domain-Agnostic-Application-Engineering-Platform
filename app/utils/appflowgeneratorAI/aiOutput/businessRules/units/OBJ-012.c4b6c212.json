@@ -1,0 +1,137 @@
+{
+  "unit_id": "OBJ-012",
+  "kind": "business_object",
+  "rules": [
+    {
+      "name": "Delivery Proof Mandatory for Settlement",
+      "statement": "Financial settlement for an Order Request must only occur after a valid Delivery Proof is recorded and verified as successful.",
+      "type": "Financial control",
+      "condition": "When an Order Request reaches the Financial Settlement Handover confirmation stage",
+      "exceptions": [
+        "Force majeure events declared by regulatory bodies preventing physical handover"
+      ],
+      "actors": [
+        "Platform Finance Team",
+        "Delivery Partner",
+        "Customer"
+      ],
+      "objects": [
+        "Order Request",
+        "Delivery Proof",
+        "Settlement Batch"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The settlement batch is rejected and funds are held in escrow until proof is provided",
+      "rationale": "Prevents revenue leakage and ensures goods are actually delivered before payment is released",
+      "parameters": [
+        {
+          "name": "valid_delivery_proof_status",
+          "description": "Status indicating successful physical transfer"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-004",
+        "FR-028"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Dispute Ticket Auto-Generation on Missing Proof",
+      "statement": "A Dispute Ticket must be created immediately upon receipt of a Delivery Proof indicating a missing item, damaged goods, or lack of valid timestamp/signature.",
+      "type": "Exception handling",
+      "condition": "When a Delivery Proof is submitted with indicators of delivery failure or discrepancy",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "System Automation",
+        "Customer Support"
+      ],
+      "objects": [
+        "Dispute Ticket",
+        "Delivery Proof",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The Order Request remains in a pending state, blocking closure and potentially causing customer dissatisfaction",
+      "rationale": "Ensures rapid response to delivery failures and initiates the resolution workflow",
+      "parameters": [
+        {
+          "name": "dispute_trigger_threshold",
+          "description": "Criteria defining what constitutes a delivery exception"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-007",
+        "FR-015"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Delivery Proof Rejection for Cancelled Assignments",
+      "statement": "A Delivery Proof must not be accepted or processed if the associated Delivery Assignment is marked as cancelled.",
+      "type": "Validation",
+      "condition": "When a Delivery Partner attempts to submit a Delivery Proof for an Order Request",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Delivery Partner",
+        "System Validation Engine"
+      ],
+      "objects": [
+        "Delivery Proof",
+        "Delivery Assignment",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system rejects the submission and logs an error, preventing false settlement triggers",
+      "rationale": "Prevents fraudulent claims or errors where goods were never assigned for delivery",
+      "parameters": [
+        {
+          "name": "assignment_status",
+          "description": "Current status of the Delivery Assignment (e.g., cancelled, active)"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-004"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Delivery Partner Score Update on Proof Submission",
+      "statement": "A Delivery Partner's performance score must be updated immediately upon the submission of a Delivery Proof record.",
+      "type": "Calculation",
+      "condition": "When a Delivery Proof is successfully submitted and validated",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "System Analytics Engine",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Delivery Partner Profile",
+        "Performance Score",
+        "Delivery Proof"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The partner's performance metrics remain stale, affecting future order allocation and compensation",
+      "rationale": "Ensures real-time accuracy of partner performance metrics for routing and incentive calculations",
+      "parameters": [
+        {
+          "name": "score_update_latency",
+          "description": "Maximum time allowed between proof submission and score recalculation"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-015"
+      ],
+      "basis": "inferred"
+    }
+  ]
+}

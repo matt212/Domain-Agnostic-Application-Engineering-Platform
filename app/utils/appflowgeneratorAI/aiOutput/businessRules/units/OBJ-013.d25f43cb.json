@@ -1,0 +1,137 @@
+{
+  "unit_id": "OBJ-013",
+  "kind": "business_object",
+  "rules": [
+    {
+      "name": "Snapshot Consistency Requirement",
+      "statement": "The Real-Time Inventory Snapshot must reflect the actual physical stock count at the specific store location within a maximum allowed latency of 30 seconds (proposed).",
+      "type": "Limit",
+      "condition": "during any order allocation or validation activity",
+      "exceptions": [
+        "scheduled system maintenance windows",
+        "network outages exceeding 30 seconds"
+      ],
+      "actors": [
+        "Store Personnel",
+        "System",
+        "Inventory Management"
+      ],
+      "objects": [
+        "Real-Time Inventory Snapshot",
+        "SKU Stock"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The system must block new order allocations and trigger an immediate manual audit of the store's physical inventory",
+      "rationale": "To prevent overselling and ensure accurate order fulfillment based on real-world availability",
+      "parameters": [
+        {
+          "name": "maximum allowed latency",
+          "description": "The maximum time delay between a physical stock change and its reflection in the snapshot"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-002",
+        "FR-058"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Reservation Release on Failure",
+      "statement": "Inventory reserved for a pending Fulfillment Task must be automatically released from the Real-Time Inventory Snapshot if the task status transitions to failed or cancelled.",
+      "type": "State transition",
+      "condition": "when a Fulfillment Task fails, is cancelled, or times out",
+      "exceptions": [
+        "manual override by a Store Manager to hold stock"
+      ],
+      "actors": [
+        "Order Orchestration System",
+        "Fulfillment Task"
+      ],
+      "objects": [
+        "Real-Time Inventory Snapshot",
+        "Fulfillment Task"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system must flag the inventory record as 'stale' and prevent further order processing for that SKU until the reservation is manually cleared",
+      "rationale": "To prevent permanent stock locking and ensure availability for other customers when a delivery fails",
+      "parameters": [
+        {
+          "name": "timeout threshold",
+          "description": "The maximum duration a failed task can hold a reservation before auto-release"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-034",
+        "FR-033"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Forecast Data Integrity",
+      "statement": "Predictive demand forecasts must be recalculated exclusively using the latest validated Real-Time Inventory Snapshot data.",
+      "type": "Calculation",
+      "condition": "at the start of every daily forecasting cycle",
+      "exceptions": [
+        "emergency manual override by a Senior Analyst"
+      ],
+      "actors": [
+        "Demand Planning System",
+        "Forecasting Algorithm"
+      ],
+      "objects": [
+        "Real-Time Inventory Snapshot",
+        "Demand Forecast"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The forecast generation process must halt and generate a warning log indicating data source staleness",
+      "rationale": "To ensure resource allocation and replenishment plans are based on current, not historical, stock levels",
+      "parameters": [
+        {
+          "name": "recalculation frequency",
+          "description": "How often the forecast engine runs against the snapshot"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-046",
+        "FR-058"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Allocation Eligibility Threshold",
+      "statement": "An incoming Order Request may only be assigned to a Store Partner if the Real-Time Inventory Snapshot shows available quantity greater than or equal to the requested quantity for all items.",
+      "type": "Eligibility",
+      "condition": "at the moment of order assignment or validation",
+      "exceptions": [
+        "manual override by a Store Manager for high-priority customers"
+      ],
+      "actors": [
+        "Order Allocation Engine",
+        "Store Partner",
+        "Customer"
+      ],
+      "objects": [
+        "Order Request",
+        "Real-Time Inventory Snapshot",
+        "SKU"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The order assignment must be rejected immediately and the customer notified of stock unavailability",
+      "rationale": "To guarantee that every assigned order can be physically fulfilled without partial shipments",
+      "parameters": [
+        {
+          "name": "minimum required quantity",
+          "description": "The specific amount of each SKU needed to satisfy the order"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-002"
+      ],
+      "basis": "baseline"
+    }
+  ]
+}

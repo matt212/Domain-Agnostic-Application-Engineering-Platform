@@ -1,0 +1,127 @@
+{
+  "unit_id": "OBJ-010",
+  "kind": "business_object",
+  "rules": [
+    {
+      "name": "Regulatory Zone Exclusion",
+      "statement": "A Service Area Definition must not be created if its geographic boundaries overlap with a zone restricted by the Regulatory Authority.",
+      "type": "Compliance",
+      "condition": "during creation of a new Service Area Definition",
+      "exceptions": [],
+      "actors": [
+        "Platform Operator"
+      ],
+      "objects": [
+        "Service Area Definition",
+        "Regulatory Zone"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The creation request is rejected and the operator is notified of the compliance violation.",
+      "rationale": "To ensure strict adherence to legal and regulatory mandates regarding service zones.",
+      "parameters": [
+        {
+          "name": "restricted_zone_id",
+          "description": "Unique identifier for the regulatory restricted zone"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-053"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Active State Requirement",
+      "statement": "A Service Area Definition may only be used to validate new Order Requests when it is explicitly marked as active.",
+      "type": "Validation",
+      "condition": "when validating an Order Request against a Service Area Definition",
+      "exceptions": [
+        "legacy orders in transition period"
+      ],
+      "actors": [
+        "Order Allocation Engine"
+      ],
+      "objects": [
+        "Service Area Definition",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The Order Request is automatically rejected and the customer is informed that the address is unsupported.",
+      "rationale": "To prevent processing orders in zones that are currently suspended or under review.",
+      "parameters": [
+        {
+          "name": "active_status_flag",
+          "description": "Boolean flag indicating the operational state of the zone"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-023",
+        "FR-014"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "name": "Geographic Boundary Integrity",
+      "statement": "A Service Area Definition must not contain internal gaps or disconnected regions that exceed a maximum allowed distance threshold.",
+      "type": "Validation",
+      "condition": "during creation or modification of a Service Area Definition",
+      "exceptions": [
+        "multi-cluster zones explicitly configured as separate sub-zones"
+      ],
+      "actors": [
+        "Platform Operator"
+      ],
+      "objects": [
+        "Service Area Definition",
+        "Geographic Boundary"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The definition is rejected to prevent routing failures and delivery delays.",
+      "rationale": "To ensure continuous coverage and reliable algorithmic routing within the defined zone.",
+      "parameters": [
+        {
+          "name": "max_gap_distance_km",
+          "description": "Maximum allowable distance between contiguous boundary segments"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-029",
+        "FR-058"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "name": "Version Supersession Policy",
+      "statement": "A new version of a Service Area Definition must immediately supersede the previous active version upon publication without a grace period.",
+      "type": "State transition",
+      "condition": "when a new version is published for an active Service Area Definition",
+      "exceptions": [
+        "emergency rollback scenarios requiring immediate reversion"
+      ],
+      "actors": [
+        "Platform Operator"
+      ],
+      "objects": [
+        "Service Area Definition",
+        "Version History"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The system automatically archives the previous version and activates the new one, potentially causing order rejection for addresses in the changed area.",
+      "rationale": "To maintain a single source of truth for service availability and prevent order allocation errors.",
+      "parameters": [
+        {
+          "name": "supersede_immediately",
+          "description": "Boolean flag enforcing immediate version replacement"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-012",
+        "FR-014"
+      ],
+      "basis": "baseline"
+    }
+  ]
+}

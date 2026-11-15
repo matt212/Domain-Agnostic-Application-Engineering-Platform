@@ -1,0 +1,273 @@
+{
+  "batch": 11,
+  "units": [
+    "OBJ-013",
+    "OBJ-014"
+  ],
+  "rules": [
+    {
+      "unit_id": "OBJ-013",
+      "name": "Snapshot Consistency Requirement",
+      "statement": "The Real-Time Inventory Snapshot must reflect the actual physical stock count at the specific store location within a maximum allowed latency of 30 seconds (proposed).",
+      "type": "Limit",
+      "condition": "during any order allocation or validation activity",
+      "exceptions": [
+        "scheduled system maintenance windows",
+        "network outages exceeding 30 seconds"
+      ],
+      "actors": [
+        "Store Personnel",
+        "System",
+        "Inventory Management"
+      ],
+      "objects": [
+        "Real-Time Inventory Snapshot",
+        "SKU Stock"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The system must block new order allocations and trigger an immediate manual audit of the store's physical inventory",
+      "rationale": "To prevent overselling and ensure accurate order fulfillment based on real-world availability",
+      "parameters": [
+        {
+          "name": "maximum allowed latency",
+          "description": "The maximum time delay between a physical stock change and its reflection in the snapshot"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-002",
+        "FR-058"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "OBJ-013",
+      "name": "Reservation Release on Failure",
+      "statement": "Inventory reserved for a pending Fulfillment Task must be automatically released from the Real-Time Inventory Snapshot if the task status transitions to failed or cancelled.",
+      "type": "State transition",
+      "condition": "when a Fulfillment Task fails, is cancelled, or times out",
+      "exceptions": [
+        "manual override by a Store Manager to hold stock"
+      ],
+      "actors": [
+        "Order Orchestration System",
+        "Fulfillment Task"
+      ],
+      "objects": [
+        "Real-Time Inventory Snapshot",
+        "Fulfillment Task"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system must flag the inventory record as 'stale' and prevent further order processing for that SKU until the reservation is manually cleared",
+      "rationale": "To prevent permanent stock locking and ensure availability for other customers when a delivery fails",
+      "parameters": [
+        {
+          "name": "timeout threshold",
+          "description": "The maximum duration a failed task can hold a reservation before auto-release"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-034",
+        "FR-033"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "OBJ-013",
+      "name": "Forecast Data Integrity",
+      "statement": "Predictive demand forecasts must be recalculated exclusively using the latest validated Real-Time Inventory Snapshot data.",
+      "type": "Calculation",
+      "condition": "at the start of every daily forecasting cycle",
+      "exceptions": [
+        "emergency manual override by a Senior Analyst"
+      ],
+      "actors": [
+        "Demand Planning System",
+        "Forecasting Algorithm"
+      ],
+      "objects": [
+        "Real-Time Inventory Snapshot",
+        "Demand Forecast"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The forecast generation process must halt and generate a warning log indicating data source staleness",
+      "rationale": "To ensure resource allocation and replenishment plans are based on current, not historical, stock levels",
+      "parameters": [
+        {
+          "name": "recalculation frequency",
+          "description": "How often the forecast engine runs against the snapshot"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-046",
+        "FR-058"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "OBJ-013",
+      "name": "Allocation Eligibility Threshold",
+      "statement": "An incoming Order Request may only be assigned to a Store Partner if the Real-Time Inventory Snapshot shows available quantity greater than or equal to the requested quantity for all items.",
+      "type": "Eligibility",
+      "condition": "at the moment of order assignment or validation",
+      "exceptions": [
+        "manual override by a Store Manager for high-priority customers"
+      ],
+      "actors": [
+        "Order Allocation Engine",
+        "Store Partner",
+        "Customer"
+      ],
+      "objects": [
+        "Order Request",
+        "Real-Time Inventory Snapshot",
+        "SKU"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The order assignment must be rejected immediately and the customer notified of stock unavailability",
+      "rationale": "To guarantee that every assigned order can be physically fulfilled without partial shipments",
+      "parameters": [
+        {
+          "name": "minimum required quantity",
+          "description": "The specific amount of each SKU needed to satisfy the order"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-002"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "OBJ-014",
+      "name": "Slot Validity on Route Constraint",
+      "statement": "The system must invalidate an Assigned Delivery Slot if external network data indicates a route constraint.",
+      "type": "Validation",
+      "condition": "When external logistics data signals a route constraint for the assigned path",
+      "exceptions": [
+        "Manual override by Platform Operator for critical orders"
+      ],
+      "actors": [
+        "System",
+        "Delivery Partner",
+        "Platform Operator"
+      ],
+      "objects": [
+        "Assigned Delivery Slot",
+        "Fulfillment Task"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The delivery task is re-allocated to an alternative agent or the order is cancelled",
+      "rationale": "Prevents agents from being assigned to impossible or severely delayed routes",
+      "parameters": [
+        {
+          "name": "route_constraint_threshold",
+          "description": "Defines the severity of network delay that triggers invalidation"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-028",
+        "FR-047"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "OBJ-014",
+      "name": "Agent Capacity Real-Time Sync",
+      "statement": "The system must update agent capacity metrics continuously based on live location and speed data.",
+      "type": "Calculation",
+      "condition": "During the active delivery window for an Assigned Delivery Slot",
+      "exceptions": [
+        "System maintenance mode"
+      ],
+      "actors": [
+        "System",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Assigned Delivery Slot",
+        "Delivery Zone Map"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "Overbooking occurs, leading to missed delivery SLAs and customer dissatisfaction",
+      "rationale": "Ensures accurate matching of order demand with available agent capacity",
+      "parameters": [
+        {
+          "name": "update_frequency",
+          "description": "Interval for recalculating capacity metrics"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-047"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "OBJ-014",
+      "name": "Congestion-Driven Slot Rejection",
+      "statement": "The system must reject new Assigned Delivery Slot requests when demand exceeds supply in a specific zone.",
+      "type": "Eligibility",
+      "condition": "When congestion alerts are triggered due to supply-demand imbalance",
+      "exceptions": [
+        "Emergency medical or government priority orders"
+      ],
+      "actors": [
+        "System",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Assigned Delivery Slot",
+        "Delivery Zone Map"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "New orders are queued or rejected, increasing wait times",
+      "rationale": "Prevents saturation of the delivery network which degrades service quality",
+      "parameters": [
+        {
+          "name": "supply_demand_ratio",
+          "description": "Threshold ratio where demand exceeds available supply"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-033"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "OBJ-014",
+      "name": "Slot Duration Limit",
+      "statement": "An Assigned Delivery Slot must not exceed a maximum allowed duration defined by the delivery zone configuration.",
+      "type": "Limit",
+      "condition": "At the moment the slot is created or extended",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "System",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Assigned Delivery Slot"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The slot is automatically truncated or the order is flagged for review",
+      "rationale": "Ensures adherence to the ultra-fast delivery promise and operational efficiency",
+      "parameters": [
+        {
+          "name": "max_slot_duration",
+          "description": "Maximum time window allowed for a single delivery slot"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-056"
+      ],
+      "basis": "inferred"
+    }
+  ]
+}

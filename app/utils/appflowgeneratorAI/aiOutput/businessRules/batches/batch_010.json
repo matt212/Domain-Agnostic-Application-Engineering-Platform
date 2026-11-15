@@ -1,0 +1,530 @@
+{
+  "batch": 10,
+  "units": [
+    "OBJ-009",
+    "OBJ-010",
+    "OBJ-011",
+    "OBJ-012"
+  ],
+  "rules": [
+    {
+      "unit_id": "OBJ-009",
+      "name": "Identity Verification Gate",
+      "statement": "A Customer Profile must not be activated until a valid government-issued identity document is verified.",
+      "type": "Eligibility",
+      "condition": "during onboarding or profile status change to active",
+      "exceptions": [
+        "Government-issued ID verification fails due to technical system outage",
+        "Customer provides alternative verified identity via trusted third-party service"
+      ],
+      "actors": [
+        "Customer",
+        "Identity Verification Service"
+      ],
+      "objects": [
+        "Customer Profile",
+        "Identity Document"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The profile remains in pending status and cannot initiate any Order Request",
+      "rationale": "Prevents unverified individuals from accessing financial and delivery services, mitigating fraud and regulatory risk.",
+      "parameters": [
+        {
+          "name": "max_verification_attempts",
+          "description": "Maximum number of allowed verification retries before manual review"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-019"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "OBJ-009",
+      "name": "Fraud Flag Suspension",
+      "statement": "A Customer Profile must not be used to create an Order Request if the profile is flagged for fraud or suspended.",
+      "type": "Authorization",
+      "condition": "during Order Initiation",
+      "exceptions": [
+        "Suspension is lifted by a Compliance Officer before order submission",
+        "Fraud flag is a false positive cleared by automated review within 1 hour"
+      ],
+      "actors": [
+        "Customer",
+        "Compliance Officer"
+      ],
+      "objects": [
+        "Customer Profile",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The Order Request is automatically rejected and the customer is notified of the restriction",
+      "rationale": "Protects the platform and merchants from financial loss and reputational damage associated with fraudulent activity.",
+      "parameters": [
+        {
+          "name": "fraud_threshold_score",
+          "description": "Risk score level above which the profile is automatically flagged"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-026"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "OBJ-009",
+      "name": "Profile Data Immutability",
+      "statement": "Archived Customer Profiles must not be modified, and all historical data must be retained indefinitely.",
+      "type": "Limit",
+      "condition": "after the profile status transitions to Archived",
+      "exceptions": [
+        "Correction of a clerical error in the metadata (e.g., archive date) by an Administrator",
+        "Legal requirement to disclose specific data points to a regulatory body"
+      ],
+      "actors": [
+        "System",
+        "Administrator"
+      ],
+      "objects": [
+        "Customer Profile",
+        "Historical Data"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system logs the unauthorized attempt and triggers an audit alert to the Security Team",
+      "rationale": "Ensures data integrity for legal compliance, audit trails, and accurate historical analysis.",
+      "parameters": [
+        {
+          "name": "retention_period_years",
+          "description": "Minimum duration data must be retained after archival"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-009"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "OBJ-009",
+      "name": "Contact Channel Consistency",
+      "statement": "All critical notifications regarding Order Request status or Payment Settlement must be sent via the primary contact method defined in the Customer Profile.",
+      "type": "Validation",
+      "condition": "during notification dispatch for critical events",
+      "exceptions": [
+        "Primary contact method is invalid or unreachable for more than 24 hours",
+        "Customer explicitly opts out of specific notification types in their preferences"
+      ],
+      "actors": [
+        "Notification Service",
+        "Customer"
+      ],
+      "objects": [
+        "Customer Profile",
+        "Notification Message"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The notification is queued for retry; if retry fails, a secondary channel is used with a warning flag",
+      "rationale": "Ensures customers receive timely updates regarding their orders and payments, maintaining trust and reducing support tickets.",
+      "parameters": [
+        {
+          "name": "retry_attempts",
+          "description": "Number of times the system attempts to send via the primary channel before switching"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-054"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "OBJ-010",
+      "name": "Regulatory Zone Exclusion",
+      "statement": "A Service Area Definition must not be created if its geographic boundaries overlap with a zone restricted by the Regulatory Authority.",
+      "type": "Compliance",
+      "condition": "during creation of a new Service Area Definition",
+      "exceptions": [],
+      "actors": [
+        "Platform Operator"
+      ],
+      "objects": [
+        "Service Area Definition",
+        "Regulatory Zone"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The creation request is rejected and the operator is notified of the compliance violation.",
+      "rationale": "To ensure strict adherence to legal and regulatory mandates regarding service zones.",
+      "parameters": [
+        {
+          "name": "restricted_zone_id",
+          "description": "Unique identifier for the regulatory restricted zone"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-053"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "OBJ-010",
+      "name": "Active State Requirement",
+      "statement": "A Service Area Definition may only be used to validate new Order Requests when it is explicitly marked as active.",
+      "type": "Validation",
+      "condition": "when validating an Order Request against a Service Area Definition",
+      "exceptions": [
+        "legacy orders in transition period"
+      ],
+      "actors": [
+        "Order Allocation Engine"
+      ],
+      "objects": [
+        "Service Area Definition",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The Order Request is automatically rejected and the customer is informed that the address is unsupported.",
+      "rationale": "To prevent processing orders in zones that are currently suspended or under review.",
+      "parameters": [
+        {
+          "name": "active_status_flag",
+          "description": "Boolean flag indicating the operational state of the zone"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-023",
+        "FR-014"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "OBJ-010",
+      "name": "Geographic Boundary Integrity",
+      "statement": "A Service Area Definition must not contain internal gaps or disconnected regions that exceed a maximum allowed distance threshold.",
+      "type": "Validation",
+      "condition": "during creation or modification of a Service Area Definition",
+      "exceptions": [
+        "multi-cluster zones explicitly configured as separate sub-zones"
+      ],
+      "actors": [
+        "Platform Operator"
+      ],
+      "objects": [
+        "Service Area Definition",
+        "Geographic Boundary"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The definition is rejected to prevent routing failures and delivery delays.",
+      "rationale": "To ensure continuous coverage and reliable algorithmic routing within the defined zone.",
+      "parameters": [
+        {
+          "name": "max_gap_distance_km",
+          "description": "Maximum allowable distance between contiguous boundary segments"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-029",
+        "FR-058"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "OBJ-010",
+      "name": "Version Supersession Policy",
+      "statement": "A new version of a Service Area Definition must immediately supersede the previous active version upon publication without a grace period.",
+      "type": "State transition",
+      "condition": "when a new version is published for an active Service Area Definition",
+      "exceptions": [
+        "emergency rollback scenarios requiring immediate reversion"
+      ],
+      "actors": [
+        "Platform Operator"
+      ],
+      "objects": [
+        "Service Area Definition",
+        "Version History"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The system automatically archives the previous version and activates the new one, potentially causing order rejection for addresses in the changed area.",
+      "rationale": "To maintain a single source of truth for service availability and prevent order allocation errors.",
+      "parameters": [
+        {
+          "name": "supersede_immediately",
+          "description": "Boolean flag enforcing immediate version replacement"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-012",
+        "FR-014"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "OBJ-011",
+      "name": "Settlement Amount Integrity",
+      "statement": "The sum of all distributed amounts must equal the total value of the Financial Transaction Record.",
+      "type": "Validation",
+      "condition": "during Financial Transaction Record generation or validation",
+      "exceptions": [],
+      "actors": [
+        "System",
+        "Financial Settlement Engine"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Settlement Amount"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The transaction record remains in pending status and cannot be finalized until the discrepancy is resolved",
+      "rationale": "Ensures that no funds are lost or created during the settlement process",
+      "parameters": [
+        {
+          "name": "total_value",
+          "description": "The aggregate sum of item costs, fees, taxes, and commissions"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-005",
+        "FR-043"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "OBJ-011",
+      "name": "Store Partner Agreement Validation",
+      "statement": "A Financial Transaction Record must not be finalized if no valid Store Partner Agreement exists for the involved Store Partner.",
+      "type": "Authorization",
+      "condition": "at the moment of attempting to finalize a Financial Transaction Record",
+      "exceptions": [
+        "Manual override by Compliance Officer with documented justification"
+      ],
+      "actors": [
+        "System",
+        "Store Partner",
+        "Compliance Officer"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Store Partner Agreement"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system blocks the settlement process and flags the transaction for manual review",
+      "rationale": "Prevents unauthorized payouts and ensures contractual compliance before money moves",
+      "parameters": [
+        {
+          "name": "validity_period",
+          "description": "The duration for which the agreement is considered active"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-043"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "OBJ-011",
+      "name": "Tax Rate Dynamic Adjustment",
+      "statement": "The Financial Transaction Record must be updated immediately upon receiving a new tax rate update from the external service.",
+      "type": "Calculation",
+      "condition": "when an external tax service pushes a rate update affecting the transaction",
+      "exceptions": [
+        "Transactions already marked as 'Settled and Closed' in the ledger"
+      ],
+      "actors": [
+        "System",
+        "External Tax Service"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Tax Rate"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system recalculates the record and triggers a re-billing notification to the customer and store",
+      "rationale": "Ensures accurate tax remittance and prevents revenue leakage due to outdated rates",
+      "parameters": [
+        {
+          "name": "tax_rate_update_frequency",
+          "description": "The interval at which the system checks for external tax updates"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-030"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "OBJ-011",
+      "name": "Automated Dispute Trigger on Tax Error",
+      "statement": "The system must automatically generate a Dispute Ticket whenever a tax calculation error is detected during Financial Transaction Record generation.",
+      "type": "Exception handling",
+      "condition": "immediately after the tax calculation step fails validation against the external service",
+      "exceptions": [],
+      "actors": [
+        "System",
+        "Dispute Resolution Team"
+      ],
+      "objects": [
+        "Financial Transaction Record",
+        "Dispute Ticket"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The transaction is paused, a ticket is created, and the record is marked as 'Under Dispute Review'",
+      "rationale": "Ensures rapid identification and resolution of financial discrepancies to maintain trust",
+      "parameters": [
+        {
+          "name": "error_threshold",
+          "description": "The margin of difference that triggers an automatic error flag"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-026",
+        "FR-042"
+      ],
+      "basis": "inferred"
+    },
+    {
+      "unit_id": "OBJ-012",
+      "name": "Delivery Proof Mandatory for Settlement",
+      "statement": "Financial settlement for an Order Request must only occur after a valid Delivery Proof is recorded and verified as successful.",
+      "type": "Financial control",
+      "condition": "When an Order Request reaches the Financial Settlement Handover confirmation stage",
+      "exceptions": [
+        "Force majeure events declared by regulatory bodies preventing physical handover"
+      ],
+      "actors": [
+        "Platform Finance Team",
+        "Delivery Partner",
+        "Customer"
+      ],
+      "objects": [
+        "Order Request",
+        "Delivery Proof",
+        "Settlement Batch"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Critical",
+      "if_violated": "The settlement batch is rejected and funds are held in escrow until proof is provided",
+      "rationale": "Prevents revenue leakage and ensures goods are actually delivered before payment is released",
+      "parameters": [
+        {
+          "name": "valid_delivery_proof_status",
+          "description": "Status indicating successful physical transfer"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-004",
+        "FR-028"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "OBJ-012",
+      "name": "Dispute Ticket Auto-Generation on Missing Proof",
+      "statement": "A Dispute Ticket must be created immediately upon receipt of a Delivery Proof indicating a missing item, damaged goods, or lack of valid timestamp/signature.",
+      "type": "Exception handling",
+      "condition": "When a Delivery Proof is submitted with indicators of delivery failure or discrepancy",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "System Automation",
+        "Customer Support"
+      ],
+      "objects": [
+        "Dispute Ticket",
+        "Delivery Proof",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The Order Request remains in a pending state, blocking closure and potentially causing customer dissatisfaction",
+      "rationale": "Ensures rapid response to delivery failures and initiates the resolution workflow",
+      "parameters": [
+        {
+          "name": "dispute_trigger_threshold",
+          "description": "Criteria defining what constitutes a delivery exception"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-007",
+        "FR-015"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "OBJ-012",
+      "name": "Delivery Proof Rejection for Cancelled Assignments",
+      "statement": "A Delivery Proof must not be accepted or processed if the associated Delivery Assignment is marked as cancelled.",
+      "type": "Validation",
+      "condition": "When a Delivery Partner attempts to submit a Delivery Proof for an Order Request",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "Delivery Partner",
+        "System Validation Engine"
+      ],
+      "objects": [
+        "Delivery Proof",
+        "Delivery Assignment",
+        "Order Request"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "High",
+      "if_violated": "The system rejects the submission and logs an error, preventing false settlement triggers",
+      "rationale": "Prevents fraudulent claims or errors where goods were never assigned for delivery",
+      "parameters": [
+        {
+          "name": "assignment_status",
+          "description": "Current status of the Delivery Assignment (e.g., cancelled, active)"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-004"
+      ],
+      "basis": "baseline"
+    },
+    {
+      "unit_id": "OBJ-012",
+      "name": "Delivery Partner Score Update on Proof Submission",
+      "statement": "A Delivery Partner's performance score must be updated immediately upon the submission of a Delivery Proof record.",
+      "type": "Calculation",
+      "condition": "When a Delivery Proof is successfully submitted and validated",
+      "exceptions": [
+        "None"
+      ],
+      "actors": [
+        "System Analytics Engine",
+        "Delivery Partner"
+      ],
+      "objects": [
+        "Delivery Partner Profile",
+        "Performance Score",
+        "Delivery Proof"
+      ],
+      "enforcement": "System-enforced",
+      "severity": "Medium",
+      "if_violated": "The partner's performance metrics remain stale, affecting future order allocation and compensation",
+      "rationale": "Ensures real-time accuracy of partner performance metrics for routing and incentive calculations",
+      "parameters": [
+        {
+          "name": "score_update_latency",
+          "description": "Maximum time allowed between proof submission and score recalculation"
+        }
+      ],
+      "related_functional_requirements": [
+        "FR-015"
+      ],
+      "basis": "inferred"
+    }
+  ]
+}
