@@ -67,6 +67,13 @@ const DECISION_TYPES = ['Validation', 'Eligibility', 'Authorization', 'Complianc
 // ============================================================
 
 const log = m => console.log(`[diagrams] ${new Date().toISOString()} ${m}`);
+
+// every generated file is prefixed with the time of the run: 20261115_163042_<name>
+const pad2 = n => String(n).padStart(2, '0');
+function makeStamp(d = new Date()) {
+    return `${d.getFullYear()}${pad2(d.getMonth() + 1)}${pad2(d.getDate())}_${pad2(d.getHours())}${pad2(d.getMinutes())}${pad2(d.getSeconds())}`;
+}
+const RUN_STAMP = process.env.DIAGRAM_TIMESTAMP || makeStamp();
 const arr = v => (Array.isArray(v) ? v : v === undefined || v === null || v === '' ? [] : [v]);
 const uniq = l => [...new Set(l.filter(Boolean))];
 const shortHash = t => crypto.createHash('sha1').update(String(t)).digest('hex').slice(0, 8);
@@ -197,7 +204,7 @@ function outcomeClass(text) {
     const t = String(text || '').toLowerCase();
     if (/escalat|supervisor|manager|review/.test(t)) return 'Escalate for review';
     if (/reject|block|deny|decline|prevent|refuse|cancel/.test(t)) return 'Reject or block';
-    if (/refund|compensat|credit|reimburs|reverse/.test(t)) return 'Compensate or reverse';
+    if (/compensat|reimburs|reverse|rollback|roll back|rectif|restor|make good/.test(t)) return 'Compensate or reverse';
     if (/suspend|terminate|disable|revoke|deactivat/.test(t)) return 'Suspend or revoke';
     if (/notify|alert|inform|warn/.test(t)) return 'Notify';
     if (/log|record|audit|flag/.test(t)) return 'Record and flag';
@@ -247,6 +254,14 @@ async function loadModel(pool) {
     };
     of('ACTOR_DEFINITION').forEach(x => addActor(x.d.actor_name, x.d.operational_role));
     responsibilities.forEach(r => addActor(r.actor));
+    // names mentioned by business requirements and business rules are MATCHED to known actors, never added
+    // (adding them turned 9 actors into 51 and made every diagram unreadable)
+    let unmatchedMentions = 0;
+    const findActor = name => {
+        const hit = actors.find(a => same(a.name, name));
+        if (!hit) unmatchedMentions++;
+        return hit ? hit.name : null;
+    };
 
     const stages = of('BUSINESS_LIFECYCLE_STAGE').map(x => ({ name: x.d.stage, desc: cut(x.d.description, 160), trigger: cut(x.d.trigger, 160) }))
         .filter(s => s.name);
@@ -307,7 +322,7 @@ async function loadModel(pool) {
     const brs = brRows.map(r => ({
         id: r.business_requirement_id, name: cut(r.name || r.business_requirement, 90),
         requirement: cut(r.business_requirement, 300), objective: cut(r.business_objective, 200),
-        stakeholders: toList(r.stakeholders).map(a => addActor(a)), priority: r.priority || '',
+        stakeholders: toList(r.stakeholders).map(findActor).filter(Boolean), priority: r.priority || '',
         policies: toList(r.policies_and_constraints), frs: toList(r.linked_functional_requirements)
     }));
     const traceRows = await safeQuery(pool, 'requirements.v_fr_br_traceability',
@@ -341,7 +356,7 @@ async function loadModel(pool) {
         unit: r.unit_id, name: cut(r.name, 100), statement: cut(r.statement, 320),
         type: RULE_TYPES.find(t => t.toLowerCase() === String(r.type || '').toLowerCase()) || 'Validation',
         condition: cut(jtext(r.condition), 220), exceptions: toList(r.exceptions),
-        actors: toList(r.actors).map(a => addActor(a)), objects: toList(r.objects),
+        actors: toList(r.actors).map(findActor).filter(Boolean), objects: toList(r.objects),
         enforcement: r.enforcement || '', severity: r.severity || '', ifViolated: cut(r.if_violated, 200),
         rationale: cut(r.rationale, 200), frs: toList(r.related_functional_requirements), basis: r.basis || ''
     })));
@@ -350,7 +365,7 @@ async function loadModel(pool) {
     model.stats = {
         actors: actors.length, objects: objects.length, activities: activities.length, stages: stages.length,
         information_requirements: irs.length, functional_requirements: frs.length, business_requirements: brs.length,
-        business_rules_raw: rawRules.length, business_rules: rules.length,
+        business_rules_raw: rawRules.length, business_rules: rules.length, unmatched_actor_mentions: unmatchedMentions,
         rule_ingestion_run: run ? run.ingestion_run_id : null
     };
     return model;
@@ -381,12 +396,13 @@ const canonActor = (model, name) => (model.actors.find(a => same(a.name, name)) 
 const actorKind = (model, name) => (model.actors.find(a => same(a.name, name)) || { kind: 'internal' }).kind;
 
 // activity -> best rules, by text similarity (deterministic)
-function matchRules(model, types, perActivity = 1) {
+function matchRules(model, types, perActivity = 1, subset = null) {
     const out = new Map();
     const rules = model.rules.filter(r => types.includes(r.type) && r.ifViolated);
-    if (!rules.length || !model.activities.length) return out;
+    const acts = subset || model.activities;
+    if (!rules.length || !acts.length) return out;
     const sim = crossSimilarity(
-        model.activities.map(a => `${a.name} ${a.desc} ${a.precondition} ${a.inputs.join(' ')} ${a.outputs.join(' ')}`),
+        acts.map(a => `${a.name} ${a.desc} ${a.precondition} ${a.inputs.join(' ')} ${a.outputs.join(' ')}`),
         rules.map(r => `${r.name} ${r.statement} ${r.condition} ${r.objects.join(' ')}`));
     const used = new Set();
     // best pairs first so a rule is not claimed by a weaker activity
@@ -441,9 +457,9 @@ function buildUseCaseSpecs(model) {
     return specs;
 }
 
-function buildProcessSpec(model) {
-    const acts = model.activities.slice(0, LIMITS.maxProcessActivities);
-    const matches = matchRules(model, DECISION_TYPES);
+function buildProcessSpec(model, opts = {}) {
+    const acts = (opts.activities || model.activities).slice(0, LIMITS.maxProcessActivities);
+    const matches = matchRules(model, opts.ruleTypes || DECISION_TYPES, 1, acts);
     const nodes = [{ id: 'start', type: 'start', label: 'Start' }];
     const flows = [];
     let prev = 'start', prevLabel = acts[0] && acts[0].precondition ? cut(acts[0].precondition, 50) : '';
@@ -472,12 +488,12 @@ function buildProcessSpec(model) {
     });
     nodes.push({ id: 'end', type: 'end', label: 'End' });
     flows.push({ from: prev, to: 'end', label: prevLabel, kind: 'normal' });
-    return { title: 'End-to-end business process', nodes, flows };
+    return { title: opts.title || 'End-to-end business process', nodes, flows };
 }
 
-function buildSequenceSpec(model) {
-    const acts = model.activities.slice(0, LIMITS.maxSequenceActivities);
-    const matches = matchRules(model, DECISION_TYPES);
+function buildSequenceSpec(model, opts = {}) {
+    const acts = (opts.activities || model.activities).slice(0, LIMITS.maxSequenceActivities);
+    const matches = matchRules(model, opts.ruleTypes || DECISION_TYPES, 1, acts);
     const parts = [];
     const pid = name => {
         const n = canonActor(model, name);
@@ -511,7 +527,36 @@ function buildSequenceSpec(model) {
             steps.push({ type: 'end' });
         }
     });
-    return { title: 'End-to-end interaction', participants: parts, steps };
+    return { title: opts.title || 'End-to-end interaction', participants: parts, steps };
+}
+
+// Scenarios are DERIVED from the data, never hardcoded: contiguous groups of lifecycle stages
+// (titled by the stage names) plus one exception scenario (titled by the objects the exception rules are about).
+function sequenceScenarios(model) {
+    const acts = model.activities, n = acts.length;
+    if (!n) return [];
+    const size = Math.max(6, Math.ceil(n / 3));
+    const segs = [];
+    let cur = [];
+    acts.forEach(a => {
+        if (cur.length >= size && a.stage !== cur[cur.length - 1].stage) { segs.push(cur); cur = []; }
+        cur.push(a);
+    });
+    if (cur.length) segs.push(cur);
+    const out = segs.slice(0, 3).map(seg => {
+        const first = seg[0].stage || seg[0].name, last = seg[seg.length - 1].stage || seg[seg.length - 1].name;
+        return { kind: 'flow', title: first === last ? first : `${first} to ${last}`, activities: seg, ruleTypes: DECISION_TYPES };
+    });
+    const exc = model.rules.filter(r => r.type === 'Exception handling');
+    const counts = new Map();
+    exc.forEach(r => r.objects.forEach(o => counts.set(o, (counts.get(o) || 0) + 1)));
+    const names = [...counts].sort((a, b) => b[1] - a[1]).slice(0, 2).map(x => x[0]);
+    const hit = [...matchRules(model, ['Exception handling'], 1).keys()].sort((a, b) => a - b).map(i => model.activities[i]);
+    out.push({
+        kind: 'exception', title: names.length ? `Exception paths: ${names.join(' and ')}` : 'Exception paths',
+        activities: hit.length ? hit : acts.slice(0, Math.min(6, n)), ruleTypes: ['Exception handling']
+    });
+    return out;
 }
 
 function buildStateSpecs(model) {
@@ -736,8 +781,9 @@ function renderDecisionTable(table) {
 function writeDoc(dir, file, title, intro, blocks) {
     fs.mkdirSync(dir, { recursive: true });
     const text = [`# ${title}`, '', ...intro.map(l => l), '', ...blocks].join('\n') + '\n';
-    fs.writeFileSync(path.join(dir, file), text);
-    return path.join(dir, file);
+    const out = path.join(dir, `${RUN_STAMP}_${file}`);
+    fs.writeFileSync(out, text);
+    return out;
 }
 
 function sourceLine(model) {
@@ -749,6 +795,7 @@ function sourceLine(model) {
 }
 
 module.exports = {
+    RUN_STAMP, sequenceScenarios,
     createPool, loadModel, LIMITS, RULE_TYPES, DECISION_TYPES, log, arr, uniq, cut, norm, same, shortHash, flatText, flatten, pick,
     crossSimilarity, outcomeClass, canonActor, actorKind, matchRules,
     buildUseCaseSpecs, buildProcessSpec, buildSequenceSpec, buildStateSpecs, buildDecisionSpecs,
