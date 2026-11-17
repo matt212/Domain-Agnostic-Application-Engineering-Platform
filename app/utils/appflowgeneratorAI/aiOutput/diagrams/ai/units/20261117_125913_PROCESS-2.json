@@ -1,0 +1,255 @@
+{
+  "unit_id": "PROCESS-2",
+  "diagram": "process",
+  "title": "Exception paths",
+  "input_hash": "f7b1ddb5",
+  "model": "unsloth/Qwen3.5-9B-GGUF",
+  "generated_at": "2026-11-17T08:10:57.594Z",
+  "status": "ok",
+  "seconds": 496,
+  "added": 8,
+  "incomplete": [],
+  "inferred_elements": 4,
+  "spec": {
+    "title": "Exception paths",
+    "nodes": [
+      {
+        "id": "start",
+        "label": "Start",
+        "inferred": false,
+        "type": "start",
+        "lane": ""
+      },
+      {
+        "id": "t1",
+        "label": "Market Entry and Partner Onboarding",
+        "inferred": false,
+        "type": "task",
+        "lane": "Platform Operator"
+      },
+      {
+        "id": "d1",
+        "label": "Regulatory License Anomaly Escalation?",
+        "inferred": false,
+        "type": "decision",
+        "lane": "Platform Operator"
+      },
+      {
+        "id": "x1",
+        "label": "The business risks accepting orders from unlicensed ...",
+        "inferred": false,
+        "type": "exception",
+        "lane": "Platform Operator"
+      },
+      {
+        "id": "t2",
+        "label": "Inventory Synchronization and Validation",
+        "inferred": false,
+        "type": "task",
+        "lane": "Platform Operator"
+      },
+      {
+        "id": "t3",
+        "label": "Order Initiation and Demand Capture",
+        "inferred": false,
+        "type": "task",
+        "lane": "Customer"
+      },
+      {
+        "id": "t4",
+        "label": "Order Validation and Resource Allocation",
+        "inferred": false,
+        "type": "task",
+        "lane": "Order Allocation Engine"
+      },
+      {
+        "id": "t5",
+        "label": "Order Fulfillment and Preparation",
+        "inferred": false,
+        "type": "task",
+        "lane": "Store Partner"
+      },
+      {
+        "id": "t6",
+        "label": "Last-Mile Logistics Execution",
+        "inferred": false,
+        "type": "task",
+        "lane": "Delivery Partner"
+      },
+      {
+        "id": "t7",
+        "label": "Delivery Handover and Proof Generation",
+        "inferred": false,
+        "type": "task",
+        "lane": "Delivery Partner"
+      },
+      {
+        "id": "t8",
+        "label": "Payment Processing and Financial Settlement",
+        "inferred": false,
+        "type": "task",
+        "lane": "Payment Provider"
+      },
+      {
+        "id": "t9",
+        "label": "Post-Transaction Review and Feedback Collection",
+        "inferred": false,
+        "type": "task",
+        "lane": "Customer"
+      },
+      {
+        "id": "t10",
+        "label": "Dispute Resolution and Exception Handling",
+        "inferred": false,
+        "type": "task",
+        "lane": "Platform Operator"
+      },
+      {
+        "id": "t11",
+        "label": "Product Catalog Curation and Strategy",
+        "inferred": false,
+        "type": "task",
+        "lane": "Merchandiser"
+      },
+      {
+        "id": "end",
+        "label": "End",
+        "inferred": false,
+        "type": "end",
+        "lane": ""
+      },
+      {
+        "id": "i19",
+        "label": "Order Validation Failure",
+        "inferred": true,
+        "type": "task",
+        "lane": "Order Allocation Engine"
+      },
+      {
+        "id": "i20",
+        "label": "Payment Authorization Failure",
+        "inferred": true,
+        "type": "task",
+        "lane": "Payment Provider"
+      },
+      {
+        "id": "i21",
+        "label": "Delivery Handover Rejection",
+        "inferred": true,
+        "type": "task",
+        "lane": "Delivery Partner"
+      },
+      {
+        "id": "i22",
+        "label": "Missing Item Detection",
+        "inferred": true,
+        "type": "exception",
+        "lane": "Merchandiser"
+      },
+      {
+        "id": "exception_end",
+        "type": "end",
+        "label": "Exception outcome",
+        "lane": ""
+      }
+    ],
+    "flows": [
+      {
+        "from": "start",
+        "to": "t1",
+        "label": "Strategic decision to launch in a new...",
+        "kind": "normal"
+      },
+      {
+        "from": "t1",
+        "to": "d1",
+        "label": "",
+        "kind": "normal"
+      },
+      {
+        "from": "d1",
+        "to": "x1",
+        "label": "No",
+        "kind": "exception"
+      },
+      {
+        "from": "d1",
+        "to": "t2",
+        "label": "Yes",
+        "kind": "normal"
+      },
+      {
+        "from": "t3",
+        "to": "t4",
+        "label": "Order Request",
+        "kind": "normal"
+      },
+      {
+        "from": "t5",
+        "to": "t6",
+        "label": "Completed Fulfillment Task",
+        "kind": "normal"
+      },
+      {
+        "from": "t6",
+        "to": "t7",
+        "label": "",
+        "kind": "normal"
+      },
+      {
+        "from": "t8",
+        "to": "t9",
+        "label": "",
+        "kind": "normal"
+      },
+      {
+        "from": "t9",
+        "to": "t10",
+        "label": "",
+        "kind": "normal"
+      },
+      {
+        "from": "t11",
+        "to": "end",
+        "label": "",
+        "kind": "normal"
+      },
+      {
+        "from": "t4",
+        "to": "i20",
+        "label": "Block Order and Notify Customer",
+        "kind": "exception"
+      },
+      {
+        "from": "t4",
+        "to": "i19",
+        "label": "Reject Order due to Inventory or Zone...",
+        "kind": "exception"
+      },
+      {
+        "from": "t7",
+        "to": "i21",
+        "label": "Return Order to Store due to Customer...",
+        "kind": "exception"
+      },
+      {
+        "from": "t5",
+        "to": "i22",
+        "label": "Flag Order for Partial Fulfillment Ex...",
+        "kind": "exception"
+      },
+      {
+        "from": "x1",
+        "to": "exception_end",
+        "label": "Exception outcome",
+        "kind": "exception"
+      },
+      {
+        "from": "i22",
+        "to": "exception_end",
+        "label": "Exception outcome",
+        "kind": "exception"
+      }
+    ]
+  }
+}

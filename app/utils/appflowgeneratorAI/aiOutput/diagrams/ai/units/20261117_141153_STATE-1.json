@@ -1,0 +1,239 @@
+{
+  "unit_id": "STATE-1",
+  "diagram": "state",
+  "title": "Service Area Definition, Store Partner Agreement, Product Catalog and 2 more",
+  "input_hash": "c536c4ff",
+  "model": "unsloth/Qwen3.5-9B-GGUF",
+  "generated_at": "2026-11-17T09:08:10.276Z",
+  "status": "ok",
+  "seconds": 806,
+  "added": 27,
+  "incomplete": [],
+  "inferred_elements": 27,
+  "spec": [
+    {
+      "object": "Service Area Definition",
+      "purpose": "",
+      "states": [
+        {
+          "id": "s1",
+          "name": "Draft",
+          "inferred": true
+        },
+        {
+          "id": "s2",
+          "name": "Approved",
+          "inferred": true
+        },
+        {
+          "id": "s3",
+          "name": "Inactive",
+          "inferred": true
+        }
+      ],
+      "transitions": [
+        {
+          "from": "s1",
+          "to": "s2",
+          "event": "Market Entry and Partner Onboarding",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s2",
+          "to": "s3",
+          "event": "Market Entry and Partner Onboarding",
+          "guard": "",
+          "inferred": true
+        }
+      ],
+      "notes": [],
+      "initial": "s1",
+      "finals": [
+        "s3"
+      ]
+    },
+    {
+      "object": "Store Partner Agreement",
+      "purpose": "",
+      "states": [
+        {
+          "id": "s1",
+          "name": "Draft",
+          "inferred": true
+        },
+        {
+          "id": "s2",
+          "name": "Active",
+          "inferred": true
+        },
+        {
+          "id": "s3",
+          "name": "Suspended",
+          "inferred": true
+        },
+        {
+          "id": "s4",
+          "name": "Terminated",
+          "inferred": true
+        }
+      ],
+      "transitions": [
+        {
+          "from": "s1",
+          "to": "s2",
+          "event": "Market Entry and Partner Onboarding",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s2",
+          "to": "s3",
+          "event": "Market Entry and Partner Onboarding",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s3",
+          "to": "s4",
+          "event": "Market Entry and Partner Onboarding",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s2",
+          "to": "s4",
+          "event": "Market Entry and Partner Onboarding",
+          "guard": "",
+          "inferred": true
+        }
+      ],
+      "notes": [],
+      "initial": "s1",
+      "finals": [
+        "s4"
+      ]
+    },
+    {
+      "object": "Product Catalog",
+      "purpose": "",
+      "states": [
+        {
+          "id": "s1",
+          "name": "Draft",
+          "inferred": true
+        },
+        {
+          "id": "s2",
+          "name": "Published",
+          "inferred": true
+        },
+        {
+          "id": "s3",
+          "name": "Archived",
+          "inferred": true
+        }
+      ],
+      "transitions": [
+        {
+          "from": "s1",
+          "to": "s2",
+          "event": "Product Catalog Curation and Strategy",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s2",
+          "to": "s3",
+          "event": "Product Catalog Curation and Strategy",
+          "guard": "",
+          "inferred": true
+        }
+      ],
+      "notes": [],
+      "initial": "s1",
+      "finals": [
+        "s3"
+      ]
+    },
+    {
+      "object": "Real-Time Inventory Snapshot",
+      "purpose": "",
+      "states": [
+        {
+          "id": "s1",
+          "name": "Valid",
+          "inferred": true
+        },
+        {
+          "id": "s2",
+          "name": "Stale",
+          "inferred": true
+        }
+      ],
+      "transitions": [
+        {
+          "from": "s1",
+          "to": "s2",
+          "event": "Inventory Synchronization and Validation",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s2",
+          "to": "s1",
+          "event": "Inventory Synchronization and Validation",
+          "guard": "",
+          "inferred": true
+        }
+      ],
+      "notes": [],
+      "initial": "s1",
+      "finals": [
+        "s1"
+      ]
+    },
+    {
+      "object": "Delivery Zone Map",
+      "purpose": "",
+      "states": [
+        {
+          "id": "s1",
+          "name": "Draft",
+          "inferred": true
+        },
+        {
+          "id": "s2",
+          "name": "Active",
+          "inferred": true
+        },
+        {
+          "id": "s3",
+          "name": "Deprecated",
+          "inferred": true
+        }
+      ],
+      "transitions": [
+        {
+          "from": "s1",
+          "to": "s2",
+          "event": "Order Validation and Resource Allocation",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s2",
+          "to": "s3",
+          "event": "Order Validation and Resource Allocation",
+          "guard": "",
+          "inferred": true
+        }
+      ],
+      "notes": [],
+      "initial": "s1",
+      "finals": [
+        "s3"
+      ]
+    }
+  ]
+}

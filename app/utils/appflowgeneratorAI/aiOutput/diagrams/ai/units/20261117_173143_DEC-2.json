@@ -1,0 +1,194 @@
+{
+  "unit_id": "DEC-2",
+  "diagram": "decision",
+  "title": "Store Partner Agreement, Real-Time Inventory Snapshot",
+  "input_hash": "7f571a80",
+  "model": "unsloth/Qwen3.5-9B-GGUF",
+  "generated_at": "2026-11-17T12:06:14.754Z",
+  "status": "ok",
+  "seconds": 271,
+  "added": 2,
+  "incomplete": [],
+  "inferred_elements": 2,
+  "spec": [
+    {
+      "name": "Order Allocation and Eligibility",
+      "subject": "Store Partner Agreement",
+      "hit_policy": "U (Unique)",
+      "inputs": [
+        "Order Request Status",
+        "Real-Time Inventory Snapshot",
+        "Order Total Value",
+        "Store Partner Agreement State"
+      ],
+      "outputs": [
+        "Order Assigned",
+        "Order Rejected/Blocked",
+        "Order Flagged for Review"
+      ],
+      "rows": [
+        {
+          "when": [
+            "Active",
+            "Sufficient",
+            ">= Min Value",
+            "Within Zone"
+          ],
+          "then": [
+            "Order Assigned []",
+            "-",
+            "-"
+          ],
+          "rule": "",
+          "type": "",
+          "severity": "",
+          "enforcement": "",
+          "basis": "inferred",
+          "inferred": true
+        },
+        {
+          "when": [
+            "Active",
+            "Insufficient",
+            ">= Min Value",
+            "Within Zone"
+          ],
+          "then": [
+            "Order Flagged for Review",
+            "-",
+            "-"
+          ],
+          "rule": "R-002",
+          "type": "Validation",
+          "severity": "Critical",
+          "enforcement": "System-enforced",
+          "basis": "baseline",
+          "inferred": false
+        },
+        {
+          "when": [
+            "Active",
+            "Any",
+            "< Min Value",
+            "Any"
+          ],
+          "then": [
+            "Order Rejected/Blocked",
+            "-",
+            "-"
+          ],
+          "rule": "R-008",
+          "type": "Validation",
+          "severity": "High",
+          "enforcement": "System-enforced",
+          "basis": "baseline",
+          "inferred": false
+        },
+        {
+          "when": [
+            "Active",
+            "Any",
+            "Any",
+            "Outside Zone"
+          ],
+          "then": [
+            "Order Rejected/Blocked",
+            "-",
+            "-"
+          ],
+          "rule": "R-024",
+          "type": "Validation",
+          "severity": "Critical",
+          "enforcement": "System-enforced",
+          "basis": "inferred",
+          "inferred": false
+        },
+        {
+          "when": [
+            "Active",
+            "Any",
+            "Any",
+            "Any"
+          ],
+          "then": [
+            "Order Rejected/Blocked",
+            "-",
+            "-"
+          ],
+          "rule": "R-039",
+          "type": "Eligibility",
+          "severity": "Critical",
+          "enforcement": "System-enforced",
+          "basis": "baseline",
+          "inferred": false
+        },
+        {
+          "when": [
+            "Pending",
+            "Any",
+            "Any",
+            "Any"
+          ],
+          "then": [
+            "Onboarding Suspended",
+            "-",
+            "-"
+          ],
+          "rule": "R-035",
+          "type": "Eligibility",
+          "severity": "Critical",
+          "enforcement": "System-enforced",
+          "basis": "inferred",
+          "inferred": false
+        }
+      ]
+    },
+    {
+      "name": "Financial Settlement Validation",
+      "subject": "Real-Time Inventory Snapshot",
+      "hit_policy": "U (Unique)",
+      "inputs": [
+        "Settlement Phase",
+        "Store Partner Agreement Existence"
+      ],
+      "outputs": [
+        "Transaction Settled",
+        "Transaction Failed"
+      ],
+      "rows": [
+        {
+          "when": [
+            "Handover",
+            "Valid Agreement"
+          ],
+          "then": [
+            "Transaction Settled []",
+            "-"
+          ],
+          "rule": "",
+          "type": "",
+          "severity": "",
+          "enforcement": "",
+          "basis": "inferred",
+          "inferred": true
+        },
+        {
+          "when": [
+            "Handover",
+            "No Valid Agreement"
+          ],
+          "then": [
+            "Transaction Failed",
+            "-"
+          ],
+          "rule": "R-010",
+          "type": "Validation",
+          "severity": "Critical",
+          "enforcement": "System-enforced",
+          "basis": "baseline",
+          "inferred": false
+        }
+      ]
+    }
+  ]
+}
