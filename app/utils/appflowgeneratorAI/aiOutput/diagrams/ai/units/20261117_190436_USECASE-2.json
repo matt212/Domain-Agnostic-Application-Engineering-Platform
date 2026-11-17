@@ -1,0 +1,281 @@
+{
+  "unit_id": "USECASE-2",
+  "diagram": "usecase",
+  "title": "Functional capabilities",
+  "input_hash": "fbab0f57",
+  "model": "unsloth/Qwen3.5-9B-GGUF",
+  "generated_at": "2026-11-17T13:46:05.681Z",
+  "status": "ok",
+  "seconds": 338,
+  "added": 6,
+  "incomplete": [],
+  "inferred_elements": 6,
+  "spec": {
+    "title": "Functional capabilities",
+    "system_name": "Quick Commerce (Q-Commerce) / Hyperlocal Grocery Delivery",
+    "actors": [
+      {
+        "id": "a1",
+        "name": "Customer",
+        "kind": "internal",
+        "inferred": false
+      },
+      {
+        "id": "a2",
+        "name": "Delivery Partner",
+        "kind": "internal",
+        "inferred": false
+      },
+      {
+        "id": "a3",
+        "name": "Store Partner",
+        "kind": "internal",
+        "inferred": false
+      },
+      {
+        "id": "a4",
+        "name": "Platform Operator",
+        "kind": "internal",
+        "inferred": false
+      },
+      {
+        "id": "a5",
+        "name": "Fulfillment Supervisor",
+        "kind": "internal",
+        "inferred": false
+      },
+      {
+        "id": "a6",
+        "name": "Payment Provider",
+        "kind": "external",
+        "inferred": false
+      },
+      {
+        "id": "a7",
+        "name": "Regulatory Authority",
+        "kind": "external",
+        "inferred": false
+      }
+    ],
+    "use_cases": [
+      {
+        "id": "u1",
+        "name": "Hyperlocal Order Fulfillment",
+        "inferred": true
+      },
+      {
+        "id": "u2",
+        "name": "Dynamic Logistics and Routing",
+        "inferred": true
+      },
+      {
+        "id": "u3",
+        "name": "Financial Operations and Settlement",
+        "inferred": true
+      },
+      {
+        "id": "u4",
+        "name": "Partner Performance and Compliance",
+        "inferred": true
+      },
+      {
+        "id": "u5",
+        "name": "Customer Experience and Loyalty",
+        "inferred": true
+      },
+      {
+        "id": "u6",
+        "name": "Risk Management and Brand Protection",
+        "inferred": true
+      }
+    ],
+    "links": [
+      {
+        "actor": "a1",
+        "use_case": "u1",
+        "kind": "primary"
+      },
+      {
+        "actor": "a2",
+        "use_case": "u1",
+        "kind": "primary"
+      },
+      {
+        "actor": "a3",
+        "use_case": "u1",
+        "kind": "primary"
+      },
+      {
+        "actor": "a4",
+        "use_case": "u1",
+        "kind": "primary"
+      },
+      {
+        "actor": "a5",
+        "use_case": "u1",
+        "kind": "primary"
+      },
+      {
+        "actor": "a6",
+        "use_case": "u1",
+        "kind": "primary"
+      },
+      {
+        "actor": "a7",
+        "use_case": "u1",
+        "kind": "primary"
+      },
+      {
+        "actor": "a4",
+        "use_case": "u2",
+        "kind": "primary"
+      },
+      {
+        "actor": "a7",
+        "use_case": "u2",
+        "kind": "primary"
+      },
+      {
+        "actor": "a1",
+        "use_case": "u2",
+        "kind": "primary"
+      },
+      {
+        "actor": "a2",
+        "use_case": "u2",
+        "kind": "primary"
+      },
+      {
+        "actor": "a4",
+        "use_case": "u3",
+        "kind": "primary"
+      },
+      {
+        "actor": "a6",
+        "use_case": "u3",
+        "kind": "primary"
+      },
+      {
+        "actor": "a2",
+        "use_case": "u3",
+        "kind": "primary"
+      },
+      {
+        "actor": "a7",
+        "use_case": "u3",
+        "kind": "primary"
+      },
+      {
+        "actor": "a1",
+        "use_case": "u3",
+        "kind": "primary"
+      },
+      {
+        "actor": "a3",
+        "use_case": "u3",
+        "kind": "primary"
+      },
+      {
+        "actor": "a5",
+        "use_case": "u3",
+        "kind": "primary"
+      },
+      {
+        "actor": "a3",
+        "use_case": "u4",
+        "kind": "primary"
+      },
+      {
+        "actor": "a4",
+        "use_case": "u4",
+        "kind": "primary"
+      },
+      {
+        "actor": "a5",
+        "use_case": "u4",
+        "kind": "primary"
+      },
+      {
+        "actor": "a7",
+        "use_case": "u4",
+        "kind": "primary"
+      },
+      {
+        "actor": "a2",
+        "use_case": "u4",
+        "kind": "primary"
+      },
+      {
+        "actor": "a6",
+        "use_case": "u4",
+        "kind": "primary"
+      },
+      {
+        "actor": "a1",
+        "use_case": "u5",
+        "kind": "primary"
+      },
+      {
+        "actor": "a4",
+        "use_case": "u5",
+        "kind": "primary"
+      },
+      {
+        "actor": "a6",
+        "use_case": "u5",
+        "kind": "primary"
+      },
+      {
+        "actor": "a5",
+        "use_case": "u5",
+        "kind": "primary"
+      },
+      {
+        "actor": "a3",
+        "use_case": "u5",
+        "kind": "primary"
+      },
+      {
+        "actor": "a7",
+        "use_case": "u5",
+        "kind": "primary"
+      },
+      {
+        "actor": "a2",
+        "use_case": "u5",
+        "kind": "primary"
+      },
+      {
+        "actor": "a4",
+        "use_case": "u6",
+        "kind": "primary"
+      },
+      {
+        "actor": "a1",
+        "use_case": "u6",
+        "kind": "primary"
+      },
+      {
+        "actor": "a3",
+        "use_case": "u6",
+        "kind": "primary"
+      },
+      {
+        "actor": "a2",
+        "use_case": "u6",
+        "kind": "primary"
+      },
+      {
+        "actor": "a7",
+        "use_case": "u6",
+        "kind": "primary"
+      },
+      {
+        "actor": "a5",
+        "use_case": "u6",
+        "kind": "primary"
+      }
+    ],
+    "includes": []
+  }
+}

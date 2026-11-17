@@ -2810,30 +2810,52 @@ const inputHash = u =>
         u.baseline
     ]));
 
+// function unitFiles(u) {
+//     try {
+//         return fs.readdirSync(UNIT_DIR)
+//             .filter(f =>
+//                 /^\d{8}_\d{6}_/.test(f) &&
+//                 f.endsWith(`_${u.id}.json`)
+//             )
+//             .sort()
+//             .reverse()
+//             .map(f => {
+//                 try {
+//                     return JSON.parse(
+//                         fs.readFileSync(path.join(UNIT_DIR, f), 'utf8')
+//                     );
+//                 } catch {
+//                     return null;
+//                 }
+//             })
+//             .filter(Boolean);
+//     } catch {
+//         return [];
+//     }
+// }
 function unitFiles(u) {
     try {
         return fs.readdirSync(UNIT_DIR)
-            .filter(f =>
-                /^\d{8}_\d{6}_/.test(f) &&
-                f.endsWith(`_${u.id}.json`)
-            )
-            .sort()
-            .reverse()
+            .filter(f => f.endsWith(`_${u.id}.json`))
             .map(f => {
+                const fullPath = path.join(UNIT_DIR, f);
+
                 try {
-                    return JSON.parse(
-                        fs.readFileSync(path.join(UNIT_DIR, f), 'utf8')
-                    );
+                    return {
+                        data: JSON.parse(fs.readFileSync(fullPath, 'utf8')),
+                        modified: fs.statSync(fullPath).mtimeMs
+                    };
                 } catch {
                     return null;
                 }
             })
-            .filter(Boolean);
+            .filter(Boolean)
+            .sort((a, b) => b.modified - a.modified)
+            .map(x => x.data);
     } catch {
         return [];
     }
 }
-
 const bestOk = u =>
     unitFiles(u).find(r =>
         r.status === 'ok' &&

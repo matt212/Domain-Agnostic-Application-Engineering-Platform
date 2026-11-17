@@ -1,0 +1,541 @@
+{
+  "unit_id": "PROCESS-1",
+  "diagram": "process",
+  "title": "Main end-to-end process",
+  "input_hash": "e1d6a160",
+  "model": "unsloth/Qwen3.5-9B-GGUF",
+  "generated_at": "2026-11-17T16:49:27.830Z",
+  "status": "ok",
+  "seconds": 1118,
+  "added": 6,
+  "incomplete": [],
+  "inferred_elements": 0,
+  "spec": {
+    "title": "End-to-end business process",
+    "nodes": [
+      {
+        "id": "start",
+        "label": "Start",
+        "inferred": false,
+        "type": "start",
+        "lane": ""
+      },
+      {
+        "id": "t1",
+        "label": "Market Entry and Partner Onboarding",
+        "inferred": false,
+        "type": "task",
+        "lane": "Platform Operator"
+      },
+      {
+        "id": "d1",
+        "label": "Regulatory Zone Activation Gate?",
+        "inferred": false,
+        "type": "decision",
+        "lane": "Platform Operator"
+      },
+      {
+        "id": "x1",
+        "label": "The system blocks the activation of the zone and pre...",
+        "inferred": false,
+        "type": "exception",
+        "lane": "Platform Operator"
+      },
+      {
+        "id": "t2",
+        "label": "Inventory Synchronization and Validation",
+        "inferred": false,
+        "type": "task",
+        "lane": "Platform Operator"
+      },
+      {
+        "id": "d2",
+        "label": "Sync Discrepancy Flagging?",
+        "inferred": false,
+        "type": "decision",
+        "lane": "Platform Operator"
+      },
+      {
+        "id": "x2",
+        "label": "The system halts order processing for affected store...",
+        "inferred": false,
+        "type": "exception",
+        "lane": "Platform Operator"
+      },
+      {
+        "id": "t3",
+        "label": "Order Initiation and Demand Capture",
+        "inferred": false,
+        "type": "task",
+        "lane": "Customer"
+      },
+      {
+        "id": "d3",
+        "label": "Discontinued Item Blocking?",
+        "inferred": false,
+        "type": "decision",
+        "lane": "Customer"
+      },
+      {
+        "id": "x3",
+        "label": "The system blocks the item selection and displays a ...",
+        "inferred": false,
+        "type": "exception",
+        "lane": "Customer"
+      },
+      {
+        "id": "t4",
+        "label": "Order Validation and Resource Allocation",
+        "inferred": false,
+        "type": "task",
+        "lane": "Order Allocation Engine"
+      },
+      {
+        "id": "d4",
+        "label": "Explicit Acceptance Required?",
+        "inferred": false,
+        "type": "decision",
+        "lane": "Order Allocation Engine"
+      },
+      {
+        "id": "x4",
+        "label": "The system blocks the start of the delivery task and...",
+        "inferred": false,
+        "type": "exception",
+        "lane": "Order Allocation Engine"
+      },
+      {
+        "id": "t5",
+        "label": "Order Fulfillment and Preparation",
+        "inferred": false,
+        "type": "task",
+        "lane": "Store Partner"
+      },
+      {
+        "id": "d5",
+        "label": "Quality Failure Blocking?",
+        "inferred": false,
+        "type": "decision",
+        "lane": "Store Partner"
+      },
+      {
+        "id": "x5",
+        "label": "The system must prevent any further status changes o...",
+        "inferred": false,
+        "type": "exception",
+        "lane": "Store Partner"
+      },
+      {
+        "id": "t6",
+        "label": "Last-Mile Logistics Execution",
+        "inferred": false,
+        "type": "task",
+        "lane": "Delivery Partner"
+      },
+      {
+        "id": "d6",
+        "label": "Mandatory Status Notification Trigger?",
+        "inferred": false,
+        "type": "decision",
+        "lane": "Delivery Partner"
+      },
+      {
+        "id": "x6",
+        "label": "Customer support inquiries increase and customer ret...",
+        "inferred": false,
+        "type": "exception",
+        "lane": "Delivery Partner"
+      },
+      {
+        "id": "t7",
+        "label": "Delivery Handover and Proof Generation",
+        "inferred": false,
+        "type": "task",
+        "lane": "Delivery Partner"
+      },
+      {
+        "id": "d7",
+        "label": "Delivery Proof Rejection for Cancelled Ass...?",
+        "inferred": false,
+        "type": "decision",
+        "lane": "Delivery Partner"
+      },
+      {
+        "id": "x7",
+        "label": "The system rejects the submission and logs an error,...",
+        "inferred": false,
+        "type": "exception",
+        "lane": "Delivery Partner"
+      },
+      {
+        "id": "t8",
+        "label": "Payment Processing and Financial Settlement",
+        "inferred": false,
+        "type": "task",
+        "lane": "Payment Provider"
+      },
+      {
+        "id": "d8",
+        "label": "Delivery Verification Mandate?",
+        "inferred": false,
+        "type": "decision",
+        "lane": "Payment Provider"
+      },
+      {
+        "id": "x8",
+        "label": "The settlement status remains 'Pending' and funds ar...",
+        "inferred": false,
+        "type": "exception",
+        "lane": "Payment Provider"
+      },
+      {
+        "id": "t9",
+        "label": "Post-Transaction Review and Feedback Collection",
+        "inferred": false,
+        "type": "task",
+        "lane": "Customer"
+      },
+      {
+        "id": "d9",
+        "label": "Feedback Assignment Binding?",
+        "inferred": false,
+        "type": "decision",
+        "lane": "Customer"
+      },
+      {
+        "id": "x9",
+        "label": "The feedback is rejected or logged as 'Unattributed'...",
+        "inferred": false,
+        "type": "exception",
+        "lane": "Customer"
+      },
+      {
+        "id": "t10",
+        "label": "Dispute Resolution and Exception Handling",
+        "inferred": false,
+        "type": "task",
+        "lane": "Platform Operator"
+      },
+      {
+        "id": "d10",
+        "label": "Refund Precondition?",
+        "inferred": false,
+        "type": "decision",
+        "lane": "Platform Operator"
+      },
+      {
+        "id": "x10",
+        "label": "Revenue leakage or incorrect financial reporting occurs",
+        "inferred": false,
+        "type": "exception",
+        "lane": "Platform Operator"
+      },
+      {
+        "id": "t11",
+        "label": "Product Catalog Curation and Strategy",
+        "inferred": false,
+        "type": "task",
+        "lane": "Merchandiser"
+      },
+      {
+        "id": "d11",
+        "label": "Perishable Expiry Enforcement?",
+        "inferred": false,
+        "type": "decision",
+        "lane": "Merchandiser"
+      },
+      {
+        "id": "x11",
+        "label": "The system rejects the Order Request and logs a comp...",
+        "inferred": false,
+        "type": "exception",
+        "lane": "Merchandiser"
+      },
+      {
+        "id": "end",
+        "label": "End",
+        "inferred": false,
+        "type": "end",
+        "lane": ""
+      },
+      {
+        "id": "exception_end",
+        "type": "end",
+        "label": "Exception outcome",
+        "lane": ""
+      }
+    ],
+    "flows": [
+      {
+        "from": "start",
+        "to": "t1",
+        "label": "Strategic decision to launch in a new...",
+        "kind": "normal"
+      },
+      {
+        "from": "d1",
+        "to": "x1",
+        "label": "No",
+        "kind": "exception"
+      },
+      {
+        "from": "d2",
+        "to": "x2",
+        "label": "No",
+        "kind": "exception"
+      },
+      {
+        "from": "d3",
+        "to": "x3",
+        "label": "No",
+        "kind": "exception"
+      },
+      {
+        "from": "t4",
+        "to": "d4",
+        "label": "",
+        "kind": "normal"
+      },
+      {
+        "from": "d4",
+        "to": "x4",
+        "label": "No",
+        "kind": "exception"
+      },
+      {
+        "from": "d4",
+        "to": "t5",
+        "label": "Yes: Allocated Fulfillment ...",
+        "kind": "normal"
+      },
+      {
+        "from": "t5",
+        "to": "d5",
+        "label": "",
+        "kind": "normal"
+      },
+      {
+        "from": "d5",
+        "to": "x5",
+        "label": "No",
+        "kind": "exception"
+      },
+      {
+        "from": "d5",
+        "to": "t6",
+        "label": "Yes: Completed Fulfillment ...",
+        "kind": "normal"
+      },
+      {
+        "from": "t6",
+        "to": "d6",
+        "label": "",
+        "kind": "normal"
+      },
+      {
+        "from": "d6",
+        "to": "x6",
+        "label": "No",
+        "kind": "exception"
+      },
+      {
+        "from": "d6",
+        "to": "t7",
+        "label": "Yes",
+        "kind": "normal"
+      },
+      {
+        "from": "t7",
+        "to": "d7",
+        "label": "",
+        "kind": "normal"
+      },
+      {
+        "from": "d7",
+        "to": "x7",
+        "label": "No",
+        "kind": "exception"
+      },
+      {
+        "from": "d7",
+        "to": "t8",
+        "label": "Yes",
+        "kind": "normal"
+      },
+      {
+        "from": "t8",
+        "to": "d8",
+        "label": "",
+        "kind": "normal"
+      },
+      {
+        "from": "d8",
+        "to": "x8",
+        "label": "No",
+        "kind": "exception"
+      },
+      {
+        "from": "d8",
+        "to": "t9",
+        "label": "Yes",
+        "kind": "normal"
+      },
+      {
+        "from": "t9",
+        "to": "d9",
+        "label": "",
+        "kind": "normal"
+      },
+      {
+        "from": "d9",
+        "to": "x9",
+        "label": "No",
+        "kind": "exception"
+      },
+      {
+        "from": "d9",
+        "to": "t10",
+        "label": "Yes",
+        "kind": "normal"
+      },
+      {
+        "from": "t10",
+        "to": "d10",
+        "label": "",
+        "kind": "normal"
+      },
+      {
+        "from": "d10",
+        "to": "x10",
+        "label": "No",
+        "kind": "exception"
+      },
+      {
+        "from": "d10",
+        "to": "t11",
+        "label": "Yes",
+        "kind": "normal"
+      },
+      {
+        "from": "t11",
+        "to": "d11",
+        "label": "",
+        "kind": "normal"
+      },
+      {
+        "from": "d11",
+        "to": "x11",
+        "label": "No",
+        "kind": "exception"
+      },
+      {
+        "from": "d11",
+        "to": "end",
+        "label": "Yes",
+        "kind": "normal"
+      },
+      {
+        "from": "t1",
+        "to": "d1",
+        "label": "Regulatory Zone Activation Gate?",
+        "kind": "normal"
+      },
+      {
+        "from": "d1",
+        "to": "t2",
+        "label": "Yes",
+        "kind": "normal"
+      },
+      {
+        "from": "t2",
+        "to": "d2",
+        "label": "Sync Discrepancy Flagging?",
+        "kind": "normal"
+      },
+      {
+        "from": "d2",
+        "to": "t3",
+        "label": "Yes",
+        "kind": "normal"
+      },
+      {
+        "from": "t3",
+        "to": "d3",
+        "label": "Discontinued Item Blocking?",
+        "kind": "normal"
+      },
+      {
+        "from": "d3",
+        "to": "t4",
+        "label": "Yes",
+        "kind": "normal"
+      },
+      {
+        "from": "x1",
+        "to": "exception_end",
+        "label": "Exception outcome",
+        "kind": "exception"
+      },
+      {
+        "from": "x2",
+        "to": "exception_end",
+        "label": "Exception outcome",
+        "kind": "exception"
+      },
+      {
+        "from": "x3",
+        "to": "exception_end",
+        "label": "Exception outcome",
+        "kind": "exception"
+      },
+      {
+        "from": "x4",
+        "to": "exception_end",
+        "label": "Exception outcome",
+        "kind": "exception"
+      },
+      {
+        "from": "x5",
+        "to": "exception_end",
+        "label": "Exception outcome",
+        "kind": "exception"
+      },
+      {
+        "from": "x6",
+        "to": "exception_end",
+        "label": "Exception outcome",
+        "kind": "exception"
+      },
+      {
+        "from": "x7",
+        "to": "exception_end",
+        "label": "Exception outcome",
+        "kind": "exception"
+      },
+      {
+        "from": "x8",
+        "to": "exception_end",
+        "label": "Exception outcome",
+        "kind": "exception"
+      },
+      {
+        "from": "x9",
+        "to": "exception_end",
+        "label": "Exception outcome",
+        "kind": "exception"
+      },
+      {
+        "from": "x10",
+        "to": "exception_end",
+        "label": "Exception outcome",
+        "kind": "exception"
+      },
+      {
+        "from": "x11",
+        "to": "exception_end",
+        "label": "Exception outcome",
+        "kind": "exception"
+      }
+    ]
+  }
+}

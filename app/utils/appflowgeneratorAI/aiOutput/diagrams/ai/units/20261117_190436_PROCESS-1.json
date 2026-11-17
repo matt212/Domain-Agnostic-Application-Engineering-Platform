@@ -1,0 +1,11 @@
+{
+  "unit_id": "PROCESS-1",
+  "diagram": "process",
+  "title": "Main end-to-end process",
+  "input_hash": "e1d6a160",
+  "model": "unsloth/Qwen3.5-9B-GGUF",
+  "generated_at": "2026-11-17T14:13:42.819Z",
+  "status": "failed",
+  "seconds": 1657,
+  "error": "Only 0 valid new element(s) were added. At least 1 are required."
+}

@@ -1,0 +1,364 @@
+{
+  "unit_id": "STATE-1",
+  "diagram": "state",
+  "title": "Service Area Definition, Store Partner Agreement, Product Catalog and 2 more",
+  "input_hash": "c536c4ff",
+  "model": "unsloth/Qwen3.5-9B-GGUF",
+  "generated_at": "2026-11-17T15:07:15.522Z",
+  "status": "ok",
+  "seconds": 998,
+  "added": 47,
+  "incomplete": [],
+  "inferred_elements": 47,
+  "spec": [
+    {
+      "object": "Service Area Definition",
+      "purpose": "",
+      "states": [
+        {
+          "id": "s1",
+          "name": "Draft",
+          "inferred": true
+        },
+        {
+          "id": "s2",
+          "name": "Active",
+          "inferred": true
+        },
+        {
+          "id": "s3",
+          "name": "Suspended",
+          "inferred": true
+        },
+        {
+          "id": "s4",
+          "name": "Archived",
+          "inferred": true
+        }
+      ],
+      "transitions": [
+        {
+          "from": "s1",
+          "to": "s2",
+          "event": "Store and Delivery Partner onboarding comp...",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s2",
+          "to": "s3",
+          "event": "Market entry review failed or operational ...",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s3",
+          "to": "s2",
+          "event": "Operational constraints resolved and revie...",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s2",
+          "to": "s4",
+          "event": "Market exit or strategic zone deactivation",
+          "guard": "",
+          "inferred": true
+        }
+      ],
+      "notes": [],
+      "initial": "s1",
+      "finals": [
+        "s4"
+      ]
+    },
+    {
+      "object": "Store Partner Agreement",
+      "purpose": "",
+      "states": [
+        {
+          "id": "s1",
+          "name": "Negotiation",
+          "inferred": true
+        },
+        {
+          "id": "s2",
+          "name": "Pending Signature",
+          "inferred": true
+        },
+        {
+          "id": "s3",
+          "name": "Active",
+          "inferred": true
+        },
+        {
+          "id": "s4",
+          "name": "Terminated",
+          "inferred": true
+        },
+        {
+          "id": "s5",
+          "name": "Expired",
+          "inferred": true
+        }
+      ],
+      "transitions": [
+        {
+          "from": "s1",
+          "to": "s2",
+          "event": "Terms and conditions agreed upon by both p...",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s2",
+          "to": "s3",
+          "event": "Counterparties have signed the agreement",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s3",
+          "to": "s4",
+          "event": "Mutual termination or breach of contract",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s3",
+          "to": "s5",
+          "event": "Agreement term has concluded without renewal",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s4",
+          "to": "s5",
+          "event": "Termination date passed",
+          "guard": "",
+          "inferred": true
+        }
+      ],
+      "notes": [],
+      "initial": "s1",
+      "finals": [
+        "s4",
+        "s5"
+      ]
+    },
+    {
+      "object": "Product Catalog",
+      "purpose": "",
+      "states": [
+        {
+          "id": "s1",
+          "name": "Draft",
+          "inferred": true
+        },
+        {
+          "id": "s2",
+          "name": "Under Review",
+          "inferred": true
+        },
+        {
+          "id": "s3",
+          "name": "Active",
+          "inferred": true
+        },
+        {
+          "id": "s4",
+          "name": "Deprecated",
+          "inferred": true
+        },
+        {
+          "id": "s5",
+          "name": "Archived",
+          "inferred": true
+        }
+      ],
+      "transitions": [
+        {
+          "from": "s1",
+          "to": "s2",
+          "event": "Product catalog curation and strategy revi...",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s2",
+          "to": "s3",
+          "event": "Catalog curation and strategy review approved",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s3",
+          "to": "s4",
+          "event": "Product is no longer supported but data is...",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s4",
+          "to": "s5",
+          "event": "Product is permanently removed from system",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s3",
+          "to": "s4",
+          "event": "Inventory synchronization and validation i...",
+          "guard": "",
+          "inferred": true
+        }
+      ],
+      "notes": [],
+      "initial": "s1",
+      "finals": [
+        "s5"
+      ]
+    },
+    {
+      "object": "Real-Time Inventory Snapshot",
+      "purpose": "",
+      "states": [
+        {
+          "id": "s1",
+          "name": "Initialized",
+          "inferred": true
+        },
+        {
+          "id": "s2",
+          "name": "Valid",
+          "inferred": true
+        },
+        {
+          "id": "s3",
+          "name": "Stale",
+          "inferred": true
+        },
+        {
+          "id": "s4",
+          "name": "Reconciled",
+          "inferred": true
+        }
+      ],
+      "transitions": [
+        {
+          "from": "s1",
+          "to": "s2",
+          "event": "Inventory synchronization and validation p...",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s2",
+          "to": "s3",
+          "event": "Time threshold exceeded without update",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s2",
+          "to": "s4",
+          "event": "Discrepancies resolved and data corrected",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s3",
+          "to": "s2",
+          "event": "New synchronization cycle completes succes...",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s3",
+          "to": "s2",
+          "event": "Data integrity check fails on stale data",
+          "guard": "",
+          "inferred": true
+        }
+      ],
+      "notes": [],
+      "initial": "s1",
+      "finals": [
+        "s2"
+      ]
+    },
+    {
+      "object": "Delivery Zone Map",
+      "purpose": "",
+      "states": [
+        {
+          "id": "s1",
+          "name": "Draft",
+          "inferred": true
+        },
+        {
+          "id": "s2",
+          "name": "Calculated",
+          "inferred": true
+        },
+        {
+          "id": "s3",
+          "name": "Active",
+          "inferred": true
+        },
+        {
+          "id": "s4",
+          "name": "Outdated",
+          "inferred": true
+        },
+        {
+          "id": "s5",
+          "name": "Invalidated",
+          "inferred": true
+        }
+      ],
+      "transitions": [
+        {
+          "from": "s1",
+          "to": "s2",
+          "event": "Geographic boundaries and travel time esti...",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s2",
+          "to": "s3",
+          "event": "Map is approved for fee calculation and de...",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s3",
+          "to": "s4",
+          "event": "Travel time estimates or boundaries no lon...",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s4",
+          "to": "s3",
+          "event": "Map data refreshed and validated",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s3",
+          "to": "s5",
+          "event": "Store location changed or service area def...",
+          "guard": "",
+          "inferred": true
+        }
+      ],
+      "notes": [],
+      "initial": "s1",
+      "finals": [
+        "s5"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,222 @@
+{
+  "unit_id": "DEC-2",
+  "diagram": "decision",
+  "title": "Store Partner Agreement, Real-Time Inventory Snapshot",
+  "input_hash": "7f571a80",
+  "model": "unsloth/Qwen3.5-9B-GGUF",
+  "generated_at": "2026-11-17T15:51:41.701Z",
+  "status": "ok",
+  "seconds": 423,
+  "added": 1,
+  "incomplete": [],
+  "inferred_elements": 1,
+  "spec": [
+    {
+      "name": "Order Allocation and Validation",
+      "subject": "Store Partner Agreement",
+      "hit_policy": "A (Any)",
+      "inputs": [
+        "Order Request Items",
+        "Minimum Order Value",
+        "Store Partner Agreement State",
+        "Delivery Address"
+      ],
+      "outputs": [
+        "Order Assigned",
+        "Order Rejected",
+        "Order Flagged for Review"
+      ],
+      "rows": [
+        {
+          "when": [
+            "Items: Sufficient Qty",
+            "Min Value: Met",
+            "Agreement: Active",
+            "Address: In Zone"
+          ],
+          "then": [
+            "Order Assigned [R-002, R-008, R-024, R-039]",
+            "-",
+            "-"
+          ],
+          "rule": "",
+          "type": "",
+          "severity": "",
+          "enforcement": "",
+          "basis": "inferred",
+          "inferred": true
+        },
+        {
+          "when": [
+            "Items: Insufficient Qty",
+            "Min Value: Met",
+            "Agreement: Active",
+            "Address: In Zone"
+          ],
+          "then": [
+            "Order Flagged for Review",
+            "-",
+            "-"
+          ],
+          "rule": "R-002",
+          "type": "Validation",
+          "severity": "Critical",
+          "enforcement": "System-enforced",
+          "basis": "baseline",
+          "inferred": false
+        },
+        {
+          "when": [
+            "Items: Any",
+            "Min Value: Below Threshold",
+            "Agreement: Active",
+            "Address: In Zone"
+          ],
+          "then": [
+            "Order Rejected",
+            "-",
+            "-"
+          ],
+          "rule": "R-008",
+          "type": "Validation",
+          "severity": "High",
+          "enforcement": "System-enforced",
+          "basis": "baseline",
+          "inferred": false
+        },
+        {
+          "when": [
+            "Items: Any",
+            "Min Value: Met",
+            "Agreement: Inactive",
+            "Address: In Zone"
+          ],
+          "then": [
+            "Order Rejected",
+            "-",
+            "-"
+          ],
+          "rule": "R-039",
+          "type": "Eligibility",
+          "severity": "Critical",
+          "enforcement": "System-enforced",
+          "basis": "baseline",
+          "inferred": false
+        },
+        {
+          "when": [
+            "Items: Any",
+            "Min Value: Met",
+            "Agreement: Active",
+            "Address: Outside Zone"
+          ],
+          "then": [
+            "Order Rejected",
+            "-",
+            "-"
+          ],
+          "rule": "R-024",
+          "type": "Validation",
+          "severity": "Critical",
+          "enforcement": "System-enforced",
+          "basis": "inferred",
+          "inferred": false
+        },
+        {
+          "when": [
+            "Items: Any",
+            "Min Value: Met",
+            "Agreement: Active",
+            "Address: In Zone"
+          ],
+          "then": [
+            "Onboarding Blocked",
+            "-",
+            "-"
+          ],
+          "rule": "R-035",
+          "type": "Eligibility",
+          "severity": "Critical",
+          "enforcement": "System-enforced",
+          "basis": "inferred",
+          "inferred": false
+        }
+      ]
+    },
+    {
+      "name": "Inventory Consistency and Settlement",
+      "subject": "Real-Time Inventory Snapshot",
+      "hit_policy": "A (Any)",
+      "inputs": [
+        "Requested Quantity",
+        "Available Stock",
+        "Settlement Status",
+        "Agreement Validity"
+      ],
+      "outputs": [
+        "Allocation Successful",
+        "Allocation Failed",
+        "Settlement Failed"
+      ],
+      "rows": [
+        {
+          "when": [
+            "Requested Qty <= Available Stock",
+            "Settlement: Pending",
+            "Agreement: Valid",
+            "-"
+          ],
+          "then": [
+            "Allocation Successful",
+            "-",
+            "-"
+          ],
+          "rule": "R-002",
+          "type": "Validation",
+          "severity": "Critical",
+          "enforcement": "System-enforced",
+          "basis": "baseline",
+          "inferred": false
+        },
+        {
+          "when": [
+            "Requested Qty > Available Stock",
+            "Settlement: Pending",
+            "Agreement: Valid",
+            "-"
+          ],
+          "then": [
+            "Allocation Failed",
+            "-",
+            "-"
+          ],
+          "rule": "R-002",
+          "type": "Validation",
+          "severity": "Critical",
+          "enforcement": "System-enforced",
+          "basis": "baseline",
+          "inferred": false
+        },
+        {
+          "when": [
+            "Settlement: Finalizing",
+            "Agreement: Missing/Invalid",
+            "-",
+            "-"
+          ],
+          "then": [
+            "Settlement Failed",
+            "-",
+            "-"
+          ],
+          "rule": "R-010",
+          "type": "Validation",
+          "severity": "Critical",
+          "enforcement": "System-enforced",
+          "basis": "baseline",
+          "inferred": false
+        }
+      ]
+    }
+  ]
+}

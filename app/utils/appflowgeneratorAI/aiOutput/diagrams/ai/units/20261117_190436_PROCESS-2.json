@@ -1,0 +1,317 @@
+{
+  "unit_id": "PROCESS-2",
+  "diagram": "process",
+  "title": "Exception paths",
+  "input_hash": "f7b1ddb5",
+  "model": "unsloth/Qwen3.5-9B-GGUF",
+  "generated_at": "2026-11-17T14:21:19.920Z",
+  "status": "ok",
+  "seconds": 457,
+  "added": 4,
+  "incomplete": [],
+  "inferred_elements": 0,
+  "spec": {
+    "title": "Exception paths",
+    "nodes": [
+      {
+        "id": "start",
+        "label": "Start",
+        "inferred": false,
+        "type": "start",
+        "lane": ""
+      },
+      {
+        "id": "t1",
+        "label": "Market Entry and Partner Onboarding",
+        "inferred": false,
+        "type": "task",
+        "lane": "Platform Operator"
+      },
+      {
+        "id": "d1",
+        "label": "Regulatory License Anomaly Escalation?",
+        "inferred": false,
+        "type": "decision",
+        "lane": "Platform Operator"
+      },
+      {
+        "id": "x1",
+        "label": "The business risks accepting orders from unlicensed ...",
+        "inferred": false,
+        "type": "exception",
+        "lane": "Platform Operator"
+      },
+      {
+        "id": "t2",
+        "label": "Inventory Synchronization and Validation",
+        "inferred": false,
+        "type": "task",
+        "lane": "Platform Operator"
+      },
+      {
+        "id": "d2",
+        "label": "Immediate Order Locking on Failure?",
+        "inferred": false,
+        "type": "decision",
+        "lane": "Platform Operator"
+      },
+      {
+        "id": "x2",
+        "label": "The business risks overselling inventory, causing or...",
+        "inferred": false,
+        "type": "exception",
+        "lane": "Platform Operator"
+      },
+      {
+        "id": "t3",
+        "label": "Order Initiation and Demand Capture",
+        "inferred": false,
+        "type": "task",
+        "lane": "Customer"
+      },
+      {
+        "id": "t4",
+        "label": "Order Validation and Resource Allocation",
+        "inferred": false,
+        "type": "task",
+        "lane": "Order Allocation Engine"
+      },
+      {
+        "id": "t5",
+        "label": "Order Fulfillment and Preparation",
+        "inferred": false,
+        "type": "task",
+        "lane": "Store Partner"
+      },
+      {
+        "id": "t6",
+        "label": "Last-Mile Logistics Execution",
+        "inferred": false,
+        "type": "task",
+        "lane": "Delivery Partner"
+      },
+      {
+        "id": "t7",
+        "label": "Delivery Handover and Proof Generation",
+        "inferred": false,
+        "type": "task",
+        "lane": "Delivery Partner"
+      },
+      {
+        "id": "d3",
+        "label": "Dispute Ticket Auto-Generation on Missing ...?",
+        "inferred": false,
+        "type": "decision",
+        "lane": "Delivery Partner"
+      },
+      {
+        "id": "x3",
+        "label": "The Order Request remains in a pending state, blocki...",
+        "inferred": false,
+        "type": "exception",
+        "lane": "Delivery Partner"
+      },
+      {
+        "id": "t8",
+        "label": "Payment Processing and Financial Settlement",
+        "inferred": false,
+        "type": "task",
+        "lane": "Payment Provider"
+      },
+      {
+        "id": "t9",
+        "label": "Post-Transaction Review and Feedback Collection",
+        "inferred": false,
+        "type": "task",
+        "lane": "Customer"
+      },
+      {
+        "id": "t10",
+        "label": "Dispute Resolution and Exception Handling",
+        "inferred": false,
+        "type": "task",
+        "lane": "Platform Operator"
+      },
+      {
+        "id": "d4",
+        "label": "Tax Dispute Auto-Trigger?",
+        "inferred": false,
+        "type": "decision",
+        "lane": "Platform Operator"
+      },
+      {
+        "id": "x4",
+        "label": "A formal dispute record is created to initiate a rec...",
+        "inferred": false,
+        "type": "exception",
+        "lane": "Platform Operator"
+      },
+      {
+        "id": "t11",
+        "label": "Product Catalog Curation and Strategy",
+        "inferred": false,
+        "type": "task",
+        "lane": "Merchandiser"
+      },
+      {
+        "id": "end",
+        "label": "End",
+        "inferred": false,
+        "type": "end",
+        "lane": ""
+      },
+      {
+        "id": "exception_end",
+        "type": "end",
+        "label": "Exception outcome",
+        "lane": ""
+      }
+    ],
+    "flows": [
+      {
+        "from": "start",
+        "to": "t1",
+        "label": "Strategic decision to launch in a new...",
+        "kind": "normal"
+      },
+      {
+        "from": "t1",
+        "to": "d1",
+        "label": "",
+        "kind": "normal"
+      },
+      {
+        "from": "d1",
+        "to": "t2",
+        "label": "Yes",
+        "kind": "normal"
+      },
+      {
+        "from": "t2",
+        "to": "d2",
+        "label": "",
+        "kind": "normal"
+      },
+      {
+        "from": "d2",
+        "to": "t3",
+        "label": "Yes",
+        "kind": "normal"
+      },
+      {
+        "from": "t3",
+        "to": "t4",
+        "label": "Order Request",
+        "kind": "normal"
+      },
+      {
+        "from": "t4",
+        "to": "t5",
+        "label": "Allocated Fulfillment Task",
+        "kind": "normal"
+      },
+      {
+        "from": "t5",
+        "to": "t6",
+        "label": "Completed Fulfillment Task",
+        "kind": "normal"
+      },
+      {
+        "from": "t6",
+        "to": "t7",
+        "label": "",
+        "kind": "normal"
+      },
+      {
+        "from": "t7",
+        "to": "d3",
+        "label": "",
+        "kind": "normal"
+      },
+      {
+        "from": "d3",
+        "to": "t8",
+        "label": "Yes",
+        "kind": "normal"
+      },
+      {
+        "from": "t8",
+        "to": "t9",
+        "label": "",
+        "kind": "normal"
+      },
+      {
+        "from": "t9",
+        "to": "t10",
+        "label": "",
+        "kind": "normal"
+      },
+      {
+        "from": "t10",
+        "to": "d4",
+        "label": "",
+        "kind": "normal"
+      },
+      {
+        "from": "d4",
+        "to": "t11",
+        "label": "Yes",
+        "kind": "normal"
+      },
+      {
+        "from": "t11",
+        "to": "end",
+        "label": "",
+        "kind": "normal"
+      },
+      {
+        "from": "d1",
+        "to": "x1",
+        "label": "License Anomaly Confirmed",
+        "kind": "exception"
+      },
+      {
+        "from": "d2",
+        "to": "x2",
+        "label": "Critical Stock Discrepancy",
+        "kind": "exception"
+      },
+      {
+        "from": "d3",
+        "to": "x3",
+        "label": "Proof Validation Failed",
+        "kind": "exception"
+      },
+      {
+        "from": "d4",
+        "to": "x4",
+        "label": "Tax Dispute Confirmed",
+        "kind": "exception"
+      },
+      {
+        "from": "x1",
+        "to": "exception_end",
+        "label": "Exception outcome",
+        "kind": "exception"
+      },
+      {
+        "from": "x2",
+        "to": "exception_end",
+        "label": "Exception outcome",
+        "kind": "exception"
+      },
+      {
+        "from": "x3",
+        "to": "exception_end",
+        "label": "Exception outcome",
+        "kind": "exception"
+      },
+      {
+        "from": "x4",
+        "to": "exception_end",
+        "label": "Exception outcome",
+        "kind": "exception"
+      }
+    ]
+  }
+}

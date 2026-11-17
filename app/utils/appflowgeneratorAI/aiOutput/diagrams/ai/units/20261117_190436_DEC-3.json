@@ -1,0 +1,260 @@
+{
+  "unit_id": "DEC-3",
+  "diagram": "decision",
+  "title": "Dispute Ticket, Delivery Proof",
+  "input_hash": "369616b4",
+  "model": "unsloth/Qwen3.5-9B-GGUF",
+  "generated_at": "2026-11-17T15:59:51.321Z",
+  "status": "ok",
+  "seconds": 490,
+  "added": 1,
+  "incomplete": [],
+  "inferred_elements": 1,
+  "spec": [
+    {
+      "name": "Dispute Ticket Creation and Routing",
+      "subject": "Dispute Ticket",
+      "hit_policy": "A (Any)",
+      "inputs": [
+        "Delivery Proof Status",
+        "Dispute Category",
+        "Assigned Actor Role",
+        "Ticket Status"
+      ],
+      "outputs": [
+        "Create Dispute Ticket",
+        "Escalate to Senior Support",
+        "Escalate to Fulfillment Supervisor"
+      ],
+      "rows": [
+        {
+          "when": [
+            "Delivery Exception",
+            "Missing Items",
+            "N/A",
+            "N/A"
+          ],
+          "then": [
+            "Create Dispute Ticket",
+            "-",
+            "-"
+          ],
+          "rule": "R-018",
+          "type": "Validation",
+          "severity": "High",
+          "enforcement": "System-enforced",
+          "basis": "inferred",
+          "inferred": false
+        },
+        {
+          "when": [
+            "N/A",
+            "Product Quality",
+            "N/A",
+            "N/A"
+          ],
+          "then": [
+            "Route to Store Partner",
+            "-",
+            "-"
+          ],
+          "rule": "R-067",
+          "type": "Authorization",
+          "severity": "Medium",
+          "enforcement": "System-enforced",
+          "basis": "baseline",
+          "inferred": false
+        },
+        {
+          "when": [
+            "N/A",
+            "N/A",
+            "Accused Party",
+            "N/A"
+          ],
+          "then": [
+            "Block Approval",
+            "-",
+            "-"
+          ],
+          "rule": "R-066",
+          "type": "Authorization",
+          "severity": "High",
+          "enforcement": "System-enforced",
+          "basis": "inferred",
+          "inferred": false
+        },
+        {
+          "when": [
+            "N/A",
+            "N/A",
+            "N/A",
+            "Open"
+          ],
+          "then": [
+            "Escalate to Fulfillment Supervisor",
+            "-",
+            "-"
+          ],
+          "rule": "R-081",
+          "type": "Timing",
+          "severity": "Medium",
+          "enforcement": "System-enforced",
+          "basis": "inferred",
+          "inferred": false
+        },
+        {
+          "when": [
+            "N/A",
+            "N/A",
+            "N/A",
+            "N/A"
+          ],
+          "then": [
+            "Escalate to Senior Support",
+            "-",
+            "-"
+          ],
+          "rule": "R-078",
+          "type": "Timing",
+          "severity": "High",
+          "enforcement": "System-enforced",
+          "basis": "inferred",
+          "inferred": false
+        },
+        {
+          "when": [
+            "N/A",
+            "Overselling",
+            "N/A",
+            "N/A"
+          ],
+          "then": [
+            "Escalate to Compliance Officer",
+            "-",
+            "-"
+          ],
+          "rule": "R-082",
+          "type": "State transition",
+          "severity": "Critical",
+          "enforcement": "System-enforced",
+          "basis": "inferred",
+          "inferred": false
+        },
+        {
+          "when": [
+            "N/A",
+            "N/A",
+            "N/A",
+            "N/A"
+          ],
+          "then": [
+            "Hold Settlement",
+            "-",
+            "-"
+          ],
+          "rule": "R-087",
+          "type": "State transition",
+          "severity": "High",
+          "enforcement": "System-enforced",
+          "basis": "inferred",
+          "inferred": false
+        }
+      ]
+    },
+    {
+      "name": "Delivery Proof Validation and Exception Handling",
+      "subject": "Delivery Proof",
+      "hit_policy": "A (Any)",
+      "inputs": [
+        "Proof Status",
+        "Items Matched",
+        "Signature Status",
+        "Photo Evidence"
+      ],
+      "outputs": [
+        "Confirm Delivery",
+        "Flag Delivery Exception",
+        "Flag Missing Items"
+      ],
+      "rows": [
+        {
+          "when": [
+            "Delivered",
+            "All Items",
+            "Signed",
+            "Clear Photo"
+          ],
+          "then": [
+            "Confirm Delivery",
+            "-",
+            "-"
+          ],
+          "rule": "",
+          "type": "",
+          "severity": "",
+          "enforcement": "",
+          "basis": "inferred",
+          "inferred": true
+        },
+        {
+          "when": [
+            "Delivered",
+            "Partial Items",
+            "N/A",
+            "N/A"
+          ],
+          "then": [
+            "Flag Missing Items",
+            "-",
+            "-"
+          ],
+          "rule": "R-018",
+          "type": "Validation",
+          "severity": "High",
+          "enforcement": "System-enforced",
+          "basis": "inferred",
+          "inferred": false
+        },
+        {
+          "when": [
+            "Delivered",
+            "All Items",
+            "N/A",
+            "N/A"
+          ],
+          "then": [
+            "Flag Delivery Exception",
+            "-",
+            "-"
+          ],
+          "rule": "R-018",
+          "type": "Validation",
+          "severity": "High",
+          "enforcement": "System-enforced",
+          "basis": "inferred",
+          "inferred": false
+        },
+        {
+          "when": [
+            "Delivered",
+            "All Items",
+            "N/A",
+            "N/A"
+          ],
+          "then": [
+            "Trigger Dispute Ticket",
+            "-",
+            "-"
+          ],
+          "rule": "R-018",
+          "type": "Validation",
+          "severity": "High",
+          "enforcement": "System-enforced",
+          "basis": "inferred",
+          "inferred": false
+        }
+      ]
+    }
+  ]
+}

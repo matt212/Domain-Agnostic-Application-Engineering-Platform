@@ -1,0 +1,367 @@
+{
+  "unit_id": "USECASE-1",
+  "diagram": "usecase",
+  "title": "Use cases from business activities",
+  "input_hash": "63025356",
+  "model": "unsloth/Qwen3.5-9B-GGUF",
+  "generated_at": "2026-11-17T13:40:27.593Z",
+  "status": "ok",
+  "seconds": 351,
+  "added": 20,
+  "incomplete": [],
+  "inferred_elements": 20,
+  "spec": {
+    "title": "View 1: business activities",
+    "system_name": "Quick Commerce (Q-Commerce) / Hyperlocal Grocery Delivery",
+    "actors": [
+      {
+        "id": "a1",
+        "name": "Platform Operator",
+        "kind": "internal",
+        "inferred": false
+      },
+      {
+        "id": "a2",
+        "name": "Regulatory Authority",
+        "kind": "external",
+        "inferred": false
+      },
+      {
+        "id": "a3",
+        "name": "Merchandiser",
+        "kind": "internal",
+        "inferred": false
+      },
+      {
+        "id": "a4",
+        "name": "Store Partner",
+        "kind": "internal",
+        "inferred": false
+      },
+      {
+        "id": "a5",
+        "name": "Order Allocation Engine",
+        "kind": "system",
+        "inferred": false
+      },
+      {
+        "id": "a6",
+        "name": "Customer",
+        "kind": "internal",
+        "inferred": false
+      },
+      {
+        "id": "a7",
+        "name": "Fulfillment Supervisor",
+        "kind": "internal",
+        "inferred": false
+      },
+      {
+        "id": "a8",
+        "name": "Delivery Partner",
+        "kind": "internal",
+        "inferred": false
+      },
+      {
+        "id": "a9",
+        "name": "Payment Provider",
+        "kind": "external",
+        "inferred": false
+      },
+      {
+        "id": "a10",
+        "name": "a1 Platform Operator",
+        "kind": "system",
+        "inferred": true
+      },
+      {
+        "id": "a11",
+        "name": "a2 Regulatory Authority",
+        "kind": "external",
+        "inferred": true
+      },
+      {
+        "id": "a12",
+        "name": "a3 Merchandiser",
+        "kind": "internal",
+        "inferred": true
+      },
+      {
+        "id": "a13",
+        "name": "a4 Store Partner",
+        "kind": "external",
+        "inferred": true
+      },
+      {
+        "id": "a14",
+        "name": "a5 Order Allocation Engine",
+        "kind": "system",
+        "inferred": true
+      },
+      {
+        "id": "a15",
+        "name": "a6 Customer",
+        "kind": "internal",
+        "inferred": true
+      },
+      {
+        "id": "a16",
+        "name": "a7 Fulfillment Supervisor",
+        "kind": "internal",
+        "inferred": true
+      },
+      {
+        "id": "a17",
+        "name": "a8 Delivery Partner",
+        "kind": "internal",
+        "inferred": true
+      },
+      {
+        "id": "a18",
+        "name": "a9 Payment Provider",
+        "kind": "external",
+        "inferred": true
+      }
+    ],
+    "use_cases": [
+      {
+        "id": "u1",
+        "name": "Market Entry and Partner Onboarding",
+        "inferred": false
+      },
+      {
+        "id": "u2",
+        "name": "Inventory Synchronization and Validation",
+        "inferred": false
+      },
+      {
+        "id": "u3",
+        "name": "Order Initiation and Demand Capture",
+        "inferred": false
+      },
+      {
+        "id": "u4",
+        "name": "Order Validation and Resource Allocation",
+        "inferred": false
+      },
+      {
+        "id": "u5",
+        "name": "Order Fulfillment and Preparation",
+        "inferred": false
+      },
+      {
+        "id": "u6",
+        "name": "Last-Mile Logistics Execution",
+        "inferred": false
+      },
+      {
+        "id": "u7",
+        "name": "Delivery Handover and Proof Generation",
+        "inferred": false
+      },
+      {
+        "id": "u8",
+        "name": "Payment Processing and Financial Settlement",
+        "inferred": false
+      },
+      {
+        "id": "u9",
+        "name": "Post-Transaction Review and Feedback Collection",
+        "inferred": false
+      },
+      {
+        "id": "u10",
+        "name": "Dispute Resolution and Exception Handling",
+        "inferred": false
+      },
+      {
+        "id": "u11",
+        "name": "Product Catalog Curation and Strategy",
+        "inferred": false
+      },
+      {
+        "id": "u12",
+        "name": "u1 Market Entry and Partner Onboarding",
+        "inferred": true
+      },
+      {
+        "id": "u13",
+        "name": "u2 Inventory Synchronization and Validation",
+        "inferred": true
+      },
+      {
+        "id": "u14",
+        "name": "u3 Order Initiation and Demand Capture",
+        "inferred": true
+      },
+      {
+        "id": "u15",
+        "name": "u4 Order Validation and Resource Allocation",
+        "inferred": true
+      },
+      {
+        "id": "u16",
+        "name": "u5 Order Fulfillment and Preparation",
+        "inferred": true
+      },
+      {
+        "id": "u17",
+        "name": "u6 Last-Mile Logistics Execution",
+        "inferred": true
+      },
+      {
+        "id": "u18",
+        "name": "u7 Delivery Handover and Proof Generation",
+        "inferred": true
+      },
+      {
+        "id": "u19",
+        "name": "u8 Payment Processing and Financial Settlement",
+        "inferred": true
+      },
+      {
+        "id": "u20",
+        "name": "u9 Post-Transaction Review and Feedback Collection",
+        "inferred": true
+      },
+      {
+        "id": "u21",
+        "name": "u10 Dispute Resolution and Exception Handling",
+        "inferred": true
+      },
+      {
+        "id": "u22",
+        "name": "u11 Product Catalog Curation and Strategy",
+        "inferred": true
+      }
+    ],
+    "links": [
+      {
+        "actor": "a1",
+        "use_case": "u1",
+        "kind": "primary"
+      },
+      {
+        "actor": "a2",
+        "use_case": "u1",
+        "kind": "supporting"
+      },
+      {
+        "actor": "a3",
+        "use_case": "u1",
+        "kind": "supporting"
+      },
+      {
+        "actor": "a1",
+        "use_case": "u2",
+        "kind": "primary"
+      },
+      {
+        "actor": "a4",
+        "use_case": "u2",
+        "kind": "supporting"
+      },
+      {
+        "actor": "a5",
+        "use_case": "u2",
+        "kind": "supporting"
+      },
+      {
+        "actor": "a6",
+        "use_case": "u3",
+        "kind": "primary"
+      },
+      {
+        "actor": "a5",
+        "use_case": "u4",
+        "kind": "primary"
+      },
+      {
+        "actor": "a1",
+        "use_case": "u4",
+        "kind": "supporting"
+      },
+      {
+        "actor": "a4",
+        "use_case": "u5",
+        "kind": "primary"
+      },
+      {
+        "actor": "a3",
+        "use_case": "u5",
+        "kind": "supporting"
+      },
+      {
+        "actor": "a7",
+        "use_case": "u5",
+        "kind": "supporting"
+      },
+      {
+        "actor": "a8",
+        "use_case": "u6",
+        "kind": "primary"
+      },
+      {
+        "actor": "a5",
+        "use_case": "u6",
+        "kind": "supporting"
+      },
+      {
+        "actor": "a8",
+        "use_case": "u7",
+        "kind": "primary"
+      },
+      {
+        "actor": "a6",
+        "use_case": "u7",
+        "kind": "supporting"
+      },
+      {
+        "actor": "a9",
+        "use_case": "u8",
+        "kind": "primary"
+      },
+      {
+        "actor": "a1",
+        "use_case": "u8",
+        "kind": "supporting"
+      },
+      {
+        "actor": "a4",
+        "use_case": "u8",
+        "kind": "supporting"
+      },
+      {
+        "actor": "a6",
+        "use_case": "u9",
+        "kind": "primary"
+      },
+      {
+        "actor": "a1",
+        "use_case": "u9",
+        "kind": "supporting"
+      },
+      {
+        "actor": "a1",
+        "use_case": "u10",
+        "kind": "primary"
+      },
+      {
+        "actor": "a6",
+        "use_case": "u10",
+        "kind": "supporting"
+      },
+      {
+        "actor": "a4",
+        "use_case": "u10",
+        "kind": "supporting"
+      },
+      {
+        "actor": "a3",
+        "use_case": "u11",
+        "kind": "primary"
+      }
+    ],
+    "includes": []
+  }
+}

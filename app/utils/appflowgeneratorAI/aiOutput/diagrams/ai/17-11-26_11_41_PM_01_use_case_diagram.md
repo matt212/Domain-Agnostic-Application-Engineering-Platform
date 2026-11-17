@@ -1,0 +1,156 @@
+# Use Case Diagram
+
+Actors, system boundary and functional capabilities.
+
+Dashed outlines and elements marked * were added by AI. Solid elements come from the repositories.
+
+Generated 2026-11-17T18:18:20.523Z by 8.0.13.DiagramsAI.js using unsloth/Qwen3.5-9B-GGUF. Sources: knowledge base (10 actors, 14 business objects, 11 activities, 11 lifecycle stages, 20 information requirements), requirements schema (62 functional, 28 business requirements), business_rule_discovery (142 rules after merging 168 raw rules, ingestion run 3).
+
+| Unit | Covers | Source | New elements |
+|---|---|---|---|
+| USECASE-1 | Use cases from business activities | AI complete | 20 |
+| USECASE-2 | Functional capabilities | AI complete | 6 |
+
+## USECASE-1: View 1: business activities
+
+Focus: Identify actor goals, use cases, actor associations and valid include/extend relationships.
+
+```mermaid
+flowchart LR
+  a_a1["Platform Operator<br/>«actor»"]:::actor
+  a_a2["Regulatory Authority<br/>«external»"]:::actor
+  a_a3["Merchandiser<br/>«actor»"]:::actor
+  a_a4["Store Partner<br/>«actor»"]:::actor
+  a_a5["Order Allocation Engine<br/>«system»"]:::actor
+  a_a6["Customer<br/>«actor»"]:::actor
+  a_a7["Fulfillment Supervisor<br/>«actor»"]:::actor
+  a_a8["Delivery Partner<br/>«actor»"]:::actor
+  a_a9["Payment Provider<br/>«external»"]:::actor
+  a_a10["a1 Platform Operator<br/>«system»"]:::actorInf
+  a_a11["a2 Regulatory Authority<br/>«external»"]:::actorInf
+  a_a12["a3 Merchandiser<br/>«actor»"]:::actorInf
+  a_a13["a4 Store Partner<br/>«external»"]:::actorInf
+  a_a14["a5 Order Allocation Engine<br/>«system»"]:::actorInf
+  a_a15["a6 Customer<br/>«actor»"]:::actorInf
+  a_a16["a7 Fulfillment Supervisor<br/>«actor»"]:::actorInf
+  a_a17["a8 Delivery Partner<br/>«actor»"]:::actorInf
+  a_a18["a9 Payment Provider<br/>«external»"]:::actorInf
+  subgraph SYS["System boundary: Quick Commerce (Q-Commerce) / Hyperlocal Grocery Delivery"]
+    u_u1(["Market Entry and Partner Onboarding"]):::uc
+    u_u2(["Inventory Synchronization and Validation"]):::uc
+    u_u3(["Order Initiation and Demand Capture"]):::uc
+    u_u4(["Order Validation and Resource Allocation"]):::uc
+    u_u5(["Order Fulfillment and Preparation"]):::uc
+    u_u6(["Last-Mile Logistics Execution"]):::uc
+    u_u7(["Delivery Handover and Proof Generation"]):::uc
+    u_u8(["Payment Processing and Financial Settlement"]):::uc
+    u_u9(["Post-Transaction Review and Feedback Collection"]):::uc
+    u_u10(["Dispute Resolution and Exception Handling"]):::uc
+    u_u11(["Product Catalog Curation and Strategy"]):::uc
+    u_u12(["u1 Market Entry and Partner Onboarding"]):::ucInf
+    u_u13(["u2 Inventory Synchronization and Validation"]):::ucInf
+    u_u14(["u3 Order Initiation and Demand Capture"]):::ucInf
+    u_u15(["u4 Order Validation and Resource Allocation"]):::ucInf
+    u_u16(["u5 Order Fulfillment and Preparation"]):::ucInf
+    u_u17(["u6 Last-Mile Logistics Execution"]):::ucInf
+    u_u18(["u7 Delivery Handover and Proof Generation"]):::ucInf
+    u_u19(["u8 Payment Processing and Financial Settlement"]):::ucInf
+    u_u20(["u9 Post-Transaction Review and Feedback Collection"]):::ucInf
+    u_u21(["u10 Dispute Resolution and Exception Handling"]):::ucInf
+    u_u22(["u11 Product Catalog Curation and Strategy"]):::ucInf
+  end
+  a_a1 --- u_u1
+  a_a2 -.- u_u1
+  a_a3 -.- u_u1
+  a_a1 --- u_u2
+  a_a4 -.- u_u2
+  a_a5 -.- u_u2
+  a_a6 --- u_u3
+  a_a5 --- u_u4
+  a_a1 -.- u_u4
+  a_a4 --- u_u5
+  a_a3 -.- u_u5
+  a_a7 -.- u_u5
+  a_a8 --- u_u6
+  a_a5 -.- u_u6
+  a_a8 --- u_u7
+  a_a6 -.- u_u7
+  a_a9 --- u_u8
+  a_a1 -.- u_u8
+  a_a4 -.- u_u8
+  a_a6 --- u_u9
+  a_a1 -.- u_u9
+  a_a1 --- u_u10
+  a_a6 -.- u_u10
+  a_a4 -.- u_u10
+  a_a3 --- u_u11
+  classDef actor fill:#fff7e6,stroke:#d48806,color:#000
+  classDef actorInf fill:#fff7e6,stroke:#d48806,stroke-dasharray:5 5,color:#000
+  classDef uc fill:#e6f4ff,stroke:#1677ff,color:#000
+  classDef ucInf fill:#e6f4ff,stroke:#1677ff,stroke-dasharray:5 5,color:#000
+```
+
+## USECASE-2: Functional capabilities
+
+Focus: Group business requirements into coherent functional capabilities.
+
+```mermaid
+flowchart LR
+  a_a1["Customer<br/>«actor»"]:::actor
+  a_a2["Delivery Partner<br/>«actor»"]:::actor
+  a_a3["Store Partner<br/>«actor»"]:::actor
+  a_a4["Platform Operator<br/>«actor»"]:::actor
+  a_a5["Fulfillment Supervisor<br/>«actor»"]:::actor
+  a_a6["Payment Provider<br/>«external»"]:::actor
+  a_a7["Regulatory Authority<br/>«external»"]:::actor
+  subgraph SYS["System boundary: Quick Commerce (Q-Commerce) / Hyperlocal Grocery Delivery"]
+    u_u1(["Hyperlocal Order Fulfillment"]):::ucInf
+    u_u2(["Dynamic Logistics and Routing"]):::ucInf
+    u_u3(["Financial Operations and Settlement"]):::ucInf
+    u_u4(["Partner Performance and Compliance"]):::ucInf
+    u_u5(["Customer Experience and Loyalty"]):::ucInf
+    u_u6(["Risk Management and Brand Protection"]):::ucInf
+  end
+  a_a1 --- u_u1
+  a_a2 --- u_u1
+  a_a3 --- u_u1
+  a_a4 --- u_u1
+  a_a5 --- u_u1
+  a_a6 --- u_u1
+  a_a7 --- u_u1
+  a_a4 --- u_u2
+  a_a7 --- u_u2
+  a_a1 --- u_u2
+  a_a2 --- u_u2
+  a_a4 --- u_u3
+  a_a6 --- u_u3
+  a_a2 --- u_u3
+  a_a7 --- u_u3
+  a_a1 --- u_u3
+  a_a3 --- u_u3
+  a_a5 --- u_u3
+  a_a3 --- u_u4
+  a_a4 --- u_u4
+  a_a5 --- u_u4
+  a_a7 --- u_u4
+  a_a2 --- u_u4
+  a_a6 --- u_u4
+  a_a1 --- u_u5
+  a_a4 --- u_u5
+  a_a6 --- u_u5
+  a_a5 --- u_u5
+  a_a3 --- u_u5
+  a_a7 --- u_u5
+  a_a2 --- u_u5
+  a_a4 --- u_u6
+  a_a1 --- u_u6
+  a_a3 --- u_u6
+  a_a2 --- u_u6
+  a_a7 --- u_u6
+  a_a5 --- u_u6
+  classDef actor fill:#fff7e6,stroke:#d48806,color:#000
+  classDef actorInf fill:#fff7e6,stroke:#d48806,stroke-dasharray:5 5,color:#000
+  classDef uc fill:#e6f4ff,stroke:#1677ff,color:#000
+  classDef ucInf fill:#e6f4ff,stroke:#1677ff,stroke-dasharray:5 5,color:#000
+```
+

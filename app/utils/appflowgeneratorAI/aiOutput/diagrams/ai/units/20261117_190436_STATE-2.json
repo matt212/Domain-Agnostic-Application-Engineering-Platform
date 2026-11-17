@@ -1,0 +1,311 @@
+{
+  "unit_id": "STATE-2",
+  "diagram": "state",
+  "title": "Customer Profile, Order Request, Fulfillment Task and 2 more",
+  "input_hash": "042291bd",
+  "model": "unsloth/Qwen3.5-9B-GGUF",
+  "generated_at": "2026-11-17T15:21:44.071Z",
+  "status": "ok",
+  "seconds": 869,
+  "added": 38,
+  "incomplete": [],
+  "inferred_elements": 38,
+  "spec": [
+    {
+      "object": "Customer Profile",
+      "purpose": "",
+      "states": [
+        {
+          "id": "s1",
+          "name": "Inactive",
+          "inferred": true
+        },
+        {
+          "id": "s2",
+          "name": "Suspended",
+          "inferred": true
+        }
+      ],
+      "transitions": [
+        {
+          "from": "s1",
+          "to": "s2",
+          "event": "Payment Method Invalidated or Fraud Detected",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s2",
+          "to": "s1",
+          "event": "Payment Method Validated and Fraud Cleared",
+          "guard": "",
+          "inferred": true
+        }
+      ],
+      "notes": [],
+      "initial": "s1",
+      "finals": [
+        "s2"
+      ]
+    },
+    {
+      "object": "Order Request",
+      "purpose": "",
+      "states": [
+        {
+          "id": "s1",
+          "name": "Draft",
+          "inferred": true
+        },
+        {
+          "id": "s2",
+          "name": "Validated",
+          "inferred": true
+        },
+        {
+          "id": "s3",
+          "name": "Rejected",
+          "inferred": true
+        },
+        {
+          "id": "s4",
+          "name": "Confirmed",
+          "inferred": true
+        }
+      ],
+      "transitions": [
+        {
+          "from": "s1",
+          "to": "s2",
+          "event": "Inventory Availability Confirmed and Resou...",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s1",
+          "to": "s3",
+          "event": "Item Unavailable or Address Invalid",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s2",
+          "to": "s4",
+          "event": "Payment Authorized and Slot Secured",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s4",
+          "to": "s3",
+          "event": "Payment Declined or Slot Conflict Resolved",
+          "guard": "",
+          "inferred": true
+        }
+      ],
+      "notes": [],
+      "initial": "s1",
+      "finals": [
+        "s3",
+        "s4"
+      ]
+    },
+    {
+      "object": "Fulfillment Task",
+      "purpose": "",
+      "states": [
+        {
+          "id": "s1",
+          "name": "Pending",
+          "inferred": true
+        },
+        {
+          "id": "s2",
+          "name": "Picking",
+          "inferred": true
+        },
+        {
+          "id": "s3",
+          "name": "Packed",
+          "inferred": true
+        },
+        {
+          "id": "s4",
+          "name": "Dispatched",
+          "inferred": true
+        },
+        {
+          "id": "s5",
+          "name": "Completed",
+          "inferred": true
+        }
+      ],
+      "transitions": [
+        {
+          "from": "s1",
+          "to": "s2",
+          "event": "Order Confirmed and Task Assigned",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s2",
+          "to": "s3",
+          "event": "Items Collected and Verified",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s3",
+          "to": "s4",
+          "event": "Package Sealed and Handed to Courier",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s2",
+          "to": "s5",
+          "event": "Cancelled by Customer or System",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s3",
+          "to": "s5",
+          "event": "Cancelled by Customer or System",
+          "guard": "",
+          "inferred": true
+        }
+      ],
+      "notes": [],
+      "initial": "s1",
+      "finals": [
+        "s5"
+      ]
+    },
+    {
+      "object": "Assigned Delivery Slot",
+      "purpose": "",
+      "states": [
+        {
+          "id": "s1",
+          "name": "Available",
+          "inferred": true
+        },
+        {
+          "id": "s2",
+          "name": "Booked",
+          "inferred": true
+        },
+        {
+          "id": "s3",
+          "name": "Confirmed",
+          "inferred": true
+        },
+        {
+          "id": "s4",
+          "name": "Cancelled",
+          "inferred": true
+        }
+      ],
+      "transitions": [
+        {
+          "from": "s1",
+          "to": "s2",
+          "event": "Order Request Confirmed with Time Preference",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s2",
+          "to": "s3",
+          "event": "Delivery Agent Assigned",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s2",
+          "to": "s4",
+          "event": "Customer Cancellation or Agent Unavailable",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s3",
+          "to": "s4",
+          "event": "Delivery Agent Reassignment or Order Cance...",
+          "guard": "",
+          "inferred": true
+        }
+      ],
+      "notes": [],
+      "initial": "s1",
+      "finals": [
+        "s3",
+        "s4"
+      ]
+    },
+    {
+      "object": "Delivery Assignment",
+      "purpose": "",
+      "states": [
+        {
+          "id": "s1",
+          "name": "Unassigned",
+          "inferred": true
+        },
+        {
+          "id": "s2",
+          "name": "In-Transit",
+          "inferred": true
+        },
+        {
+          "id": "s3",
+          "name": "Delivered",
+          "inferred": true
+        },
+        {
+          "id": "s4",
+          "name": "Failed",
+          "inferred": true
+        }
+      ],
+      "transitions": [
+        {
+          "from": "s1",
+          "to": "s2",
+          "event": "Agent Picks Up Package",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s2",
+          "to": "s3",
+          "event": "Package Handed Over to Customer",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s2",
+          "to": "s4",
+          "event": "Delivery Attempt Unsuccessful or Customer ...",
+          "guard": "",
+          "inferred": true
+        },
+        {
+          "from": "s4",
+          "to": "s3",
+          "event": "Customer Accepts Package After Delay",
+          "guard": "",
+          "inferred": true
+        }
+      ],
+      "notes": [],
+      "initial": "s1",
+      "finals": [
+        "s3",
+        "s4"
+      ]
+    }
+  ]
+}

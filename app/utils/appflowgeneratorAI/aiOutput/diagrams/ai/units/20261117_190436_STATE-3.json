@@ -1,0 +1,263 @@
+{
+  "unit_id": "STATE-3",
+  "diagram": "state",
+  "title": "Financial Transaction Record, Delivery Proof, Feedback Record and 1 more",
+  "input_hash": "5df92469",
+  "model": "unsloth/Qwen3.5-9B-GGUF",
+  "generated_at": "2026-11-17T15:32:48.266Z",
+  "status": "ok",
+  "seconds": 664,
+  "added": 32,
+  "incomplete": [],
+  "inferred_elements": 32,
+  "spec": [
+    {
+      "object": "Financial Transaction Record",
+      "purpose": "",
+      "states": [
+        {
+          "id": "s1",
+          "name": "Unsettled",
+          "inferred": true
+        },
+        {
+          "id": "s2",
+          "name": "Disputed",
+          "inferred": true
+        },
+        {
+          "id": "s3",
+          "name": "Refunded",
+          "inferred": true
+        }
+      ],
+      "transitions": [
+        {
+          "from": "s1",
+          "to": "s2",
+          "event": "Dispute Initiated",
+          "guard": "Customer reports transaction issue",
+          "inferred": true
+        },
+        {
+          "from": "s1",
+          "to": "s3",
+          "event": "Refund Approved",
+          "guard": "Merchant or system initiates reversal",
+          "inferred": true
+        },
+        {
+          "from": "s2",
+          "to": "s1",
+          "event": "Dispute Resolved in Favor of Merchant",
+          "guard": "Evidence validates transaction legitimacy",
+          "inferred": true
+        },
+        {
+          "from": "s2",
+          "to": "s3",
+          "event": "Dispute Resolved in Favor of Customer",
+          "guard": "Transaction voided due to error",
+          "inferred": true
+        }
+      ],
+      "notes": [],
+      "initial": "s1",
+      "finals": [
+        "s1",
+        "s3"
+      ]
+    },
+    {
+      "object": "Delivery Proof",
+      "purpose": "",
+      "states": [
+        {
+          "id": "s1",
+          "name": "Pending",
+          "inferred": true
+        },
+        {
+          "id": "s2",
+          "name": "Generated",
+          "inferred": true
+        },
+        {
+          "id": "s3",
+          "name": "Verified",
+          "inferred": true
+        },
+        {
+          "id": "s4",
+          "name": "Invalidated",
+          "inferred": true
+        }
+      ],
+      "transitions": [
+        {
+          "from": "s1",
+          "to": "s2",
+          "event": "Handover Completed",
+          "guard": "Courier confirms delivery with customer si...",
+          "inferred": true
+        },
+        {
+          "from": "s2",
+          "to": "s3",
+          "event": "Proof Confirmed",
+          "guard": "System validates proof authenticity and ti...",
+          "inferred": true
+        },
+        {
+          "from": "s2",
+          "to": "s4",
+          "event": "Proof Rejected",
+          "guard": "Proof fails validation criteria or is tamp...",
+          "inferred": true
+        },
+        {
+          "from": "s4",
+          "to": "s2",
+          "event": "Proof Resubmitted",
+          "guard": "New proof generated after rejection",
+          "inferred": true
+        }
+      ],
+      "notes": [],
+      "initial": "s1",
+      "finals": [
+        "s3",
+        "s4"
+      ]
+    },
+    {
+      "object": "Feedback Record",
+      "purpose": "",
+      "states": [
+        {
+          "id": "s1",
+          "name": "Drafted",
+          "inferred": true
+        },
+        {
+          "id": "s2",
+          "name": "Submitted",
+          "inferred": true
+        },
+        {
+          "id": "s3",
+          "name": "Processed",
+          "inferred": true
+        },
+        {
+          "id": "s4",
+          "name": "Archived",
+          "inferred": true
+        }
+      ],
+      "transitions": [
+        {
+          "from": "s1",
+          "to": "s2",
+          "event": "Customer Submits Feedback",
+          "guard": "Customer completes rating and comment entry",
+          "inferred": true
+        },
+        {
+          "from": "s2",
+          "to": "s3",
+          "event": "Feedback Validated",
+          "guard": "System checks for completeness and spam",
+          "inferred": true
+        },
+        {
+          "from": "s3",
+          "to": "s4",
+          "event": "Feedback Stored",
+          "guard": "Record saved for quality improvement and e...",
+          "inferred": true
+        },
+        {
+          "from": "s2",
+          "to": "s1",
+          "event": "Feedback Withdrawn",
+          "guard": "Customer cancels submission before finaliz...",
+          "inferred": true
+        }
+      ],
+      "notes": [],
+      "initial": "s1",
+      "finals": [
+        "s4"
+      ]
+    },
+    {
+      "object": "Dispute Ticket",
+      "purpose": "",
+      "states": [
+        {
+          "id": "s1",
+          "name": "Open",
+          "inferred": true
+        },
+        {
+          "id": "s2",
+          "name": "Investigating",
+          "inferred": true
+        },
+        {
+          "id": "s3",
+          "name": "Resolved",
+          "inferred": true
+        },
+        {
+          "id": "s4",
+          "name": "Closed",
+          "inferred": true
+        }
+      ],
+      "transitions": [
+        {
+          "from": "s1",
+          "to": "s2",
+          "event": "Issue Reported",
+          "guard": "Customer or agent logs a specific exception",
+          "inferred": true
+        },
+        {
+          "from": "s1",
+          "to": "s4",
+          "event": "Issue Dismissed",
+          "guard": "Issue deemed invalid or outside scope",
+          "inferred": true
+        },
+        {
+          "from": "s2",
+          "to": "s3",
+          "event": "Issue Resolved",
+          "guard": "Problem fixed or compensation agreed upon",
+          "inferred": true
+        },
+        {
+          "from": "s3",
+          "to": "s4",
+          "event": "Ticket Finalized",
+          "guard": "Resolution confirmed and ticket archived",
+          "inferred": true
+        },
+        {
+          "from": "s2",
+          "to": "s1",
+          "event": "Investigation Reset",
+          "guard": "New evidence requires reopening the case",
+          "inferred": true
+        }
+      ],
+      "notes": [],
+      "initial": "s1",
+      "finals": [
+        "s4"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,241 @@
+{
+  "unit_id": "DEC-1",
+  "diagram": "decision",
+  "title": "Order Request, Financial Transaction Record",
+  "input_hash": "d3fcfab7",
+  "model": "unsloth/Qwen3.5-9B-GGUF",
+  "generated_at": "2026-11-17T18:10:19.809Z",
+  "status": "ok",
+  "seconds": 390,
+  "added": 1,
+  "incomplete": [],
+  "inferred_elements": 1,
+  "spec": [
+    {
+      "name": "Order Creation and Allocation Validity",
+      "subject": "Order Request",
+      "hit_policy": "U (Unique)",
+      "inputs": [
+        "Item Expiry Status",
+        "Inventory Sufficiency",
+        "Delivery Address Location",
+        "Delivery Time Adherence"
+      ],
+      "outputs": [
+        "Order Request Rejected",
+        "Order Escalated for Review",
+        "Order Rejected (Service Area)"
+      ],
+      "rows": [
+        {
+          "when": [
+            "Item Expiry: Expired",
+            "Inventory: Sufficient",
+            "Address: In Scope",
+            "Time: On Time"
+          ],
+          "then": [
+            "Order Request Rejected",
+            "-",
+            "-"
+          ],
+          "rule": "R-001",
+          "type": "Validation",
+          "severity": "Critical",
+          "enforcement": "System-enforced",
+          "basis": "baseline",
+          "inferred": false
+        },
+        {
+          "when": [
+            "Item Expiry: Valid",
+            "Inventory: Insufficient",
+            "Address: In Scope",
+            "Time: On Time"
+          ],
+          "then": [
+            "Order Escalated for Review",
+            "-",
+            "-"
+          ],
+          "rule": "R-002",
+          "type": "Validation",
+          "severity": "Critical",
+          "enforcement": "System-enforced",
+          "basis": "baseline",
+          "inferred": false
+        },
+        {
+          "when": [
+            "Item Expiry: Valid",
+            "Inventory: Sufficient",
+            "Address: Outside Scope",
+            "Time: On Time"
+          ],
+          "then": [
+            "Order Rejected (Service Area)",
+            "-",
+            "-"
+          ],
+          "rule": "R-005",
+          "type": "Validation",
+          "severity": "Medium",
+          "enforcement": "System-enforced",
+          "basis": "baseline",
+          "inferred": false
+        },
+        {
+          "when": [
+            "Item Expiry: Valid",
+            "Inventory: Sufficient",
+            "Address: In Scope",
+            "Time: Exceeded"
+          ],
+          "then": [
+            "Order Flagged as Late",
+            "-",
+            "-"
+          ],
+          "rule": "R-006",
+          "type": "Validation",
+          "severity": "High",
+          "enforcement": "System-enforced",
+          "basis": "inferred",
+          "inferred": false
+        },
+        {
+          "when": [
+            "Item Expiry: Valid",
+            "Inventory: Sufficient",
+            "Address: In Scope",
+            "Time: On Time"
+          ],
+          "then": [
+            "Order Fulfilled",
+            "-",
+            "-"
+          ],
+          "rule": "",
+          "type": "",
+          "severity": "",
+          "enforcement": "",
+          "basis": "inferred",
+          "inferred": true
+        }
+      ]
+    },
+    {
+      "name": "Transaction Initiation and Settlement",
+      "subject": "Financial Transaction Record",
+      "hit_policy": "U (Unique)",
+      "inputs": [
+        "Payment Method Type",
+        "Customer Account Status",
+        "Fraud Risk Score",
+        "Transaction Amount Limit"
+      ],
+      "outputs": [
+        "Transaction Declined",
+        "Transaction Pending",
+        "Transaction Approved"
+      ],
+      "rows": [
+        {
+          "when": [
+            "Payment: Credit Card",
+            "Account: Active",
+            "Fraud: High",
+            "Amount: Within Limit"
+          ],
+          "then": [
+            "Transaction Declined",
+            "-",
+            "-"
+          ],
+          "rule": "R-008",
+          "type": "Validation",
+          "severity": "High",
+          "enforcement": "System-enforced",
+          "basis": "baseline",
+          "inferred": false
+        },
+        {
+          "when": [
+            "Payment: Credit Card",
+            "Account: Active",
+            "Fraud: Low",
+            "Amount: Within Limit"
+          ],
+          "then": [
+            "Transaction Approved",
+            "-",
+            "-"
+          ],
+          "rule": "R-009",
+          "type": "Validation",
+          "severity": "High",
+          "enforcement": "System-enforced",
+          "basis": "baseline",
+          "inferred": false
+        },
+        {
+          "when": [
+            "Payment: Credit Card",
+            "Account: Active",
+            "Fraud: Low",
+            "Amount: Exceeds Limit"
+          ],
+          "then": [
+            "Transaction Pending",
+            "-",
+            "-"
+          ],
+          "rule": "R-010",
+          "type": "Validation",
+          "severity": "Critical",
+          "enforcement": "System-enforced",
+          "basis": "baseline",
+          "inferred": false
+        },
+        {
+          "when": [
+            "Payment: Credit Card",
+            "Account: Frozen",
+            "Fraud: Low",
+            "Amount: Within Limit"
+          ],
+          "then": [
+            "Transaction Declined",
+            "-",
+            "-"
+          ],
+          "rule": "R-011",
+          "type": "Validation",
+          "severity": "High",
+          "enforcement": "System-enforced",
+          "basis": "baseline",
+          "inferred": false
+        },
+        {
+          "when": [
+            "Payment: Credit Card",
+            "Account: Active",
+            "Fraud: Low",
+            "Amount: Within Limit"
+          ],
+          "then": [
+            "Transaction Settled",
+            "-",
+            "-"
+          ],
+          "rule": "R-012",
+          "type": "Validation",
+          "severity": "Critical",
+          "enforcement": "System-enforced",
+          "basis": "inferred",
+          "inferred": false
+        }
+      ]
+    }
+  ]
+}

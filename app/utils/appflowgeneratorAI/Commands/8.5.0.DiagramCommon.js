@@ -71,7 +71,23 @@ const log = m => console.log(`[diagrams] ${new Date().toISOString()} ${m}`);
 // every generated file is prefixed with the time of the run: 20261115_163042_<name>
 const pad2 = n => String(n).padStart(2, '0');
 function makeStamp(d = new Date()) {
-    return `${d.getFullYear()}${pad2(d.getMonth() + 1)}${pad2(d.getDate())}_${pad2(d.getHours())}${pad2(d.getMinutes())}${pad2(d.getSeconds())}`;
+  function pad2(n) {
+    return String(n).padStart(2, '0');
+}
+    const dd = pad2(d.getDate());
+    const mm = pad2(d.getMonth() + 1);
+    const yy = String(d.getFullYear()).slice(-2);
+    
+    let hours = d.getHours();
+    const ampm = hours >= 12 ? 'PM' : 'AM';
+    
+    hours = hours % 12;
+    hours = hours ? hours : 12; // Converts '0' hours to '12'
+    const hrs = pad2(hours);
+    
+    const min = pad2(d.getMinutes());
+
+    return `${dd}-${mm}-${yy}_${hrs}_${min}_${ampm}`;
 }
 const RUN_STAMP = process.env.DIAGRAM_TIMESTAMP || makeStamp();
 const arr = v => (Array.isArray(v) ? v : v === undefined || v === null || v === '' ? [] : [v]);

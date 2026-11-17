@@ -1,0 +1,11 @@
+{
+  "unit_id": "DEC-1",
+  "diagram": "decision",
+  "title": "Order Request, Financial Transaction Record",
+  "input_hash": "d3fcfab7",
+  "model": "unsloth/Qwen3.5-9B-GGUF",
+  "generated_at": "2026-11-17T15:44:38.426Z",
+  "status": "failed",
+  "seconds": 710,
+  "error": "Only 0 valid new element(s) were added. At least 1 are required."
+}

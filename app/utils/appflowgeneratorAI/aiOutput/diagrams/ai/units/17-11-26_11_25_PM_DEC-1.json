@@ -1,0 +1,203 @@
+{
+  "unit_id": "DEC-1",
+  "diagram": "decision",
+  "title": "Order Request, Financial Transaction Record",
+  "input_hash": "d3fcfab7",
+  "model": "unsloth/Qwen3.5-9B-GGUF",
+  "generated_at": "2026-11-17T18:00:54.665Z",
+  "status": "ok",
+  "seconds": 314,
+  "added": 4,
+  "incomplete": [],
+  "inferred_elements": 4,
+  "spec": [
+    {
+      "name": "Order Creation and Allocation Validation",
+      "subject": "Order Request",
+      "hit_policy": "U (Unique)",
+      "inputs": [
+        "Item Expiry Status",
+        "Inventory Availability",
+        "Delivery Address Status",
+        "Delivery Time Compliance"
+      ],
+      "outputs": [
+        "Order Request Rejected",
+        "Order Escalated for Review",
+        "Order Rejected (Service Area)"
+      ],
+      "rows": [
+        {
+          "when": [
+            "Item Expiry: Expired",
+            "Inventory: Sufficient",
+            "Address: In Scope",
+            "Time: On Time"
+          ],
+          "then": [
+            "Order Request Rejected",
+            "-",
+            "-"
+          ],
+          "rule": "R-001",
+          "type": "Validation",
+          "severity": "Critical",
+          "enforcement": "System-enforced",
+          "basis": "baseline",
+          "inferred": false
+        },
+        {
+          "when": [
+            "Item Expiry: Valid",
+            "Inventory: Insufficient",
+            "Address: In Scope",
+            "Time: On Time"
+          ],
+          "then": [
+            "Order Escalated for Review",
+            "-",
+            "-"
+          ],
+          "rule": "R-002",
+          "type": "Validation",
+          "severity": "Critical",
+          "enforcement": "System-enforced",
+          "basis": "baseline",
+          "inferred": false
+        },
+        {
+          "when": [
+            "Item Expiry: Valid",
+            "Inventory: Sufficient",
+            "Address: Out of Scope",
+            "Time: On Time"
+          ],
+          "then": [
+            "Order Rejected (Service Area)",
+            "-",
+            "-"
+          ],
+          "rule": "R-005",
+          "type": "Validation",
+          "severity": "Medium",
+          "enforcement": "System-enforced",
+          "basis": "baseline",
+          "inferred": false
+        },
+        {
+          "when": [
+            "Item Expiry: Valid",
+            "Inventory: Sufficient",
+            "Address: In Scope",
+            "Time: Exceeded"
+          ],
+          "then": [
+            "Order Flagged as Late",
+            "-",
+            "-"
+          ],
+          "rule": "R-006",
+          "type": "Validation",
+          "severity": "High",
+          "enforcement": "System-enforced",
+          "basis": "inferred",
+          "inferred": false
+        }
+      ]
+    },
+    {
+      "name": "Payment and Settlement Processing",
+      "subject": "Financial Transaction Record",
+      "hit_policy": "U (Unique)",
+      "inputs": [
+        "Payment Method Status",
+        "Fraud Check Result",
+        "Settlement Account Status",
+        "Refund Eligibility"
+      ],
+      "outputs": [
+        "Transaction Approved",
+        "Transaction Declined",
+        "Transaction Flagged for Review"
+      ],
+      "rows": [
+        {
+          "when": [
+            "Payment Method: Valid",
+            "Fraud Check: Pass",
+            "Settlement: Active",
+            "-"
+          ],
+          "then": [
+            "Transaction Approved",
+            "-",
+            "-"
+          ],
+          "rule": "",
+          "type": "",
+          "severity": "",
+          "enforcement": "",
+          "basis": "inferred",
+          "inferred": true
+        },
+        {
+          "when": [
+            "Payment Method: Valid",
+            "Fraud Check: Fail",
+            "Settlement: Active",
+            "-"
+          ],
+          "then": [
+            "Transaction Declined",
+            "-",
+            "-"
+          ],
+          "rule": "",
+          "type": "",
+          "severity": "",
+          "enforcement": "",
+          "basis": "inferred",
+          "inferred": true
+        },
+        {
+          "when": [
+            "Payment Method: Valid",
+            "Fraud Check: Pending",
+            "Settlement: Active",
+            "-"
+          ],
+          "then": [
+            "Transaction Flagged for Review",
+            "-",
+            "-"
+          ],
+          "rule": "",
+          "type": "",
+          "severity": "",
+          "enforcement": "",
+          "basis": "inferred",
+          "inferred": true
+        },
+        {
+          "when": [
+            "Payment Method: Voided",
+            "Fraud Check: Pass",
+            "Settlement: Active",
+            "Eligible: Yes"
+          ],
+          "then": [
+            "Refund Initiated",
+            "-",
+            "-"
+          ],
+          "rule": "",
+          "type": "",
+          "severity": "",
+          "enforcement": "",
+          "basis": "inferred",
+          "inferred": true
+        }
+      ]
+    }
+  ]
+}
