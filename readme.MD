@@ -195,7 +195,7 @@ Qwen provides the local reasoning capability. An independently architected orche
 
 ---
 
-# 🗺️ Complete Platform Lifecycle
+### 🗺️ Complete Platform Lifecycle
 
 <sub>FROM BUSINESS UNDERSTANDING TO ENGINEERING-READY APPLICATION BLUEPRINT</sub>
 
@@ -284,7 +284,7 @@ flowchart TD
 
 ---
 
-## 🔬 Explore the Five Engineering Stages
+### 🔬 Explore the Five Engineering Stages
 
 <sub>EXPAND EACH STAGE TO EXPLORE ITS ENGINEERING SCOPE AND DELIVERABLES</sub>
 
@@ -420,7 +420,7 @@ Establish the technical foundation required to progress from business and functi
 
 ---
 
-# 🌟 Beyond the Blueprint — The Complete Platform Vision
+## 🌟 Beyond the Blueprint — The Complete Platform Vision
 
 <sub>FROM BUSINESS IDEA TO GENERATED, EVALUATED AND DELIVERABLE APPLICATION ECOSYSTEM</sub>
 
