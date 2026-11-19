@@ -1,0 +1,977 @@
+[
+  {
+    "title": "Foundation Establishment to Last-Mile Delivery",
+    "participants": [
+      {
+        "id": "p1",
+        "name": "Platform Operator",
+        "kind": "actor"
+      },
+      {
+        "id": "p2",
+        "name": "Regulatory Authority",
+        "kind": "actor"
+      },
+      {
+        "id": "p3",
+        "name": "Merchandiser",
+        "kind": "actor"
+      },
+      {
+        "id": "p4",
+        "name": "Customer",
+        "kind": "actor"
+      },
+      {
+        "id": "p5",
+        "name": "Store Partner",
+        "kind": "actor"
+      },
+      {
+        "id": "p6",
+        "name": "Order Allocation Engine",
+        "kind": "participant"
+      },
+      {
+        "id": "p7",
+        "name": "Fulfillment Supervisor",
+        "kind": "actor"
+      },
+      {
+        "id": "p8",
+        "name": "Delivery Partner",
+        "kind": "actor"
+      }
+    ],
+    "steps": [
+      {
+        "type": "note",
+        "over": [
+          "p1"
+        ],
+        "text": "Foundation Establishment"
+      },
+      {
+        "type": "message",
+        "from": "p1",
+        "to": "p2",
+        "text": "Market Entry and Partner Onboarding: Validated Service Zones",
+        "style": "sync"
+      },
+      {
+        "type": "message",
+        "from": "p1",
+        "to": "p3",
+        "text": "Market Entry and Partner Onboarding: Validated Service Zones",
+        "style": "sync"
+      },
+      {
+        "type": "message",
+        "from": "p1",
+        "to": "p4",
+        "text": "Geospatial Service Boundary Definition",
+        "style": "dashed"
+      },
+      {
+        "type": "message",
+        "from": "p5",
+        "to": "p1",
+        "text": "Commercial Partnership Terms and Service Level ...",
+        "style": "dashed"
+      },
+      {
+        "type": "alt",
+        "text": "Regulatory Zone Activation Gate"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p1"
+        ],
+        "text": "Continue to the next step"
+      },
+      {
+        "type": "else",
+        "text": "Rule violated"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p1"
+        ],
+        "text": "The system blocks the activation of the zone and prevents any order..."
+      },
+      {
+        "type": "end"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p1"
+        ],
+        "text": "Supply Chain Integration"
+      },
+      {
+        "type": "message",
+        "from": "p1",
+        "to": "p5",
+        "text": "Inventory Synchronization and Validation: Verified Inventory Status",
+        "style": "sync"
+      },
+      {
+        "type": "message",
+        "from": "p1",
+        "to": "p6",
+        "text": "Inventory Synchronization and Validation: Verified Inventory Status",
+        "style": "sync"
+      },
+      {
+        "type": "message",
+        "from": "p5",
+        "to": "p4",
+        "text": "Real-Time Stock Availability and Status",
+        "style": "dashed"
+      },
+      {
+        "type": "message",
+        "from": "p5",
+        "to": "p1",
+        "text": "Inventory Synchronization Health Metrics",
+        "style": "dashed"
+      },
+      {
+        "type": "alt",
+        "text": "Sync Discrepancy Flagging"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p1"
+        ],
+        "text": "Continue to the next step"
+      },
+      {
+        "type": "else",
+        "text": "Rule violated"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p1"
+        ],
+        "text": "The system halts order processing for affected stores and alerts th..."
+      },
+      {
+        "type": "end"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p4"
+        ],
+        "text": "Order Initiation"
+      },
+      {
+        "type": "message",
+        "from": "p4",
+        "to": "p4",
+        "text": "Order Initiation and Demand Capture",
+        "style": "self"
+      },
+      {
+        "type": "message",
+        "from": "p5",
+        "to": "p4",
+        "text": "Real-Time Stock Availability and Status",
+        "style": "dashed"
+      },
+      {
+        "type": "message",
+        "from": "p5",
+        "to": "p4",
+        "text": "Aggregated Product Catalog and Pricing",
+        "style": "dashed"
+      },
+      {
+        "type": "alt",
+        "text": "Discontinued Item Blocking"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p4"
+        ],
+        "text": "Continue to the next step"
+      },
+      {
+        "type": "else",
+        "text": "Rule violated"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p4"
+        ],
+        "text": "The system blocks the item selection and displays a 'Product Unavai..."
+      },
+      {
+        "type": "end"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p6"
+        ],
+        "text": "Order Validation & Allocation"
+      },
+      {
+        "type": "message",
+        "from": "p6",
+        "to": "p1",
+        "text": "Order Validation and Resource Allocation: Confirmed Order Assignment",
+        "style": "sync"
+      },
+      {
+        "type": "message",
+        "from": "p5",
+        "to": "p1",
+        "text": "Commercial Partnership Terms and Service Level ...",
+        "style": "dashed"
+      },
+      {
+        "type": "message",
+        "from": "p5",
+        "to": "p4",
+        "text": "Real-Time Stock Availability and Status",
+        "style": "dashed"
+      },
+      {
+        "type": "alt",
+        "text": "Explicit Acceptance Required"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p6"
+        ],
+        "text": "Continue to the next step"
+      },
+      {
+        "type": "else",
+        "text": "Rule violated"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p6"
+        ],
+        "text": "The system blocks the start of the delivery task and prevents proof..."
+      },
+      {
+        "type": "end"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p5"
+        ],
+        "text": "Order Preparation"
+      },
+      {
+        "type": "message",
+        "from": "p5",
+        "to": "p3",
+        "text": "Order Fulfillment and Preparation: Completed Fulfillment Task",
+        "style": "sync"
+      },
+      {
+        "type": "message",
+        "from": "p5",
+        "to": "p7",
+        "text": "Order Fulfillment and Preparation: Completed Fulfillment Task",
+        "style": "sync"
+      },
+      {
+        "type": "message",
+        "from": "p4",
+        "to": "p6",
+        "text": "Order Composition and Delivery Instructions",
+        "style": "dashed"
+      },
+      {
+        "type": "message",
+        "from": "p5",
+        "to": "p6",
+        "text": "Fulfillment Task Allocation and Routing",
+        "style": "dashed"
+      },
+      {
+        "type": "alt",
+        "text": "Quality Failure Blocking"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p5"
+        ],
+        "text": "Continue to the next step"
+      },
+      {
+        "type": "else",
+        "text": "Rule violated"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p5"
+        ],
+        "text": "The system must prevent any further status changes or dispatch acti..."
+      },
+      {
+        "type": "end"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p8"
+        ],
+        "text": "Last-Mile Delivery"
+      },
+      {
+        "type": "message",
+        "from": "p8",
+        "to": "p6",
+        "text": "Last-Mile Logistics Execution: In-Transit Status",
+        "style": "sync"
+      },
+      {
+        "type": "message",
+        "from": "p1",
+        "to": "p4",
+        "text": "Geospatial Service Boundary Definition",
+        "style": "dashed"
+      },
+      {
+        "type": "message",
+        "from": "p4",
+        "to": "p6",
+        "text": "Customer Identity and Contact Information",
+        "style": "dashed"
+      },
+      {
+        "type": "alt",
+        "text": "Mandatory Status Notification Trigger"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p8"
+        ],
+        "text": "Continue to the next step"
+      },
+      {
+        "type": "else",
+        "text": "Rule violated"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p8"
+        ],
+        "text": "Customer support inquiries increase and customer retention rates de..."
+      },
+      {
+        "type": "end"
+      }
+    ]
+  },
+  {
+    "title": "Handover & Confirmation to Business Decision",
+    "participants": [
+      {
+        "id": "p1",
+        "name": "Delivery Partner",
+        "kind": "actor"
+      },
+      {
+        "id": "p2",
+        "name": "Customer",
+        "kind": "actor"
+      },
+      {
+        "id": "p3",
+        "name": "Order Allocation Engine",
+        "kind": "participant"
+      },
+      {
+        "id": "p4",
+        "name": "Platform Operator",
+        "kind": "actor"
+      },
+      {
+        "id": "p5",
+        "name": "Payment Provider",
+        "kind": "actor"
+      },
+      {
+        "id": "p6",
+        "name": "Store Partner",
+        "kind": "actor"
+      },
+      {
+        "id": "p7",
+        "name": "Merchandiser",
+        "kind": "actor"
+      }
+    ],
+    "steps": [
+      {
+        "type": "note",
+        "over": [
+          "p1"
+        ],
+        "text": "Handover & Confirmation"
+      },
+      {
+        "type": "message",
+        "from": "p1",
+        "to": "p2",
+        "text": "Delivery Handover and Proof Generation: Signed/Photo Delivery Proof",
+        "style": "sync"
+      },
+      {
+        "type": "message",
+        "from": "p2",
+        "to": "p3",
+        "text": "Customer Identity and Contact Information",
+        "style": "dashed"
+      },
+      {
+        "type": "message",
+        "from": "p2",
+        "to": "p4",
+        "text": "Proof of Delivery (POD) Evidence",
+        "style": "dashed"
+      },
+      {
+        "type": "alt",
+        "text": "Delivery Proof Rejection for Cancelled Assignments"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p1"
+        ],
+        "text": "Continue to the next step"
+      },
+      {
+        "type": "else",
+        "text": "Rule violated"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p1"
+        ],
+        "text": "The system rejects the submission and logs an error, preventing fal..."
+      },
+      {
+        "type": "end"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p5"
+        ],
+        "text": "Financial Settlement"
+      },
+      {
+        "type": "message",
+        "from": "p5",
+        "to": "p4",
+        "text": "Payment Processing and Financial Settlement: Processed Payment",
+        "style": "sync"
+      },
+      {
+        "type": "message",
+        "from": "p5",
+        "to": "p6",
+        "text": "Payment Processing and Financial Settlement: Processed Payment",
+        "style": "sync"
+      },
+      {
+        "type": "message",
+        "from": "p2",
+        "to": "p3",
+        "text": "Customer Identity and Contact Information",
+        "style": "dashed"
+      },
+      {
+        "type": "message",
+        "from": "p2",
+        "to": "p4",
+        "text": "Proof of Delivery (POD) Evidence",
+        "style": "dashed"
+      },
+      {
+        "type": "alt",
+        "text": "Delivery Verification Mandate"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p5"
+        ],
+        "text": "Continue to the next step"
+      },
+      {
+        "type": "else",
+        "text": "Rule violated"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p5"
+        ],
+        "text": "The settlement status remains 'Pending' and funds are withheld unti..."
+      },
+      {
+        "type": "end"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p2"
+        ],
+        "text": "Post-Transaction Review"
+      },
+      {
+        "type": "message",
+        "from": "p2",
+        "to": "p4",
+        "text": "Post-Transaction Review and Feedback Collection: Customer Ratings and Comments",
+        "style": "sync"
+      },
+      {
+        "type": "message",
+        "from": "p2",
+        "to": "p4",
+        "text": "Customer Satisfaction and Quality Feedback",
+        "style": "dashed"
+      },
+      {
+        "type": "message",
+        "from": "p2",
+        "to": "p4",
+        "text": "Exception and Dispute Ticket Registry",
+        "style": "dashed"
+      },
+      {
+        "type": "alt",
+        "text": "Feedback Assignment Binding"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p2"
+        ],
+        "text": "Continue to the next step"
+      },
+      {
+        "type": "else",
+        "text": "Rule violated"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p2"
+        ],
+        "text": "The feedback is rejected or logged as 'Unattributed', preventing ac..."
+      },
+      {
+        "type": "end"
+      },
+      {
+        "type": "message",
+        "from": "p4",
+        "to": "p2",
+        "text": "Dispute Resolution and Exception Handling: Resolved Dispute",
+        "style": "sync"
+      },
+      {
+        "type": "message",
+        "from": "p4",
+        "to": "p6",
+        "text": "Dispute Resolution and Exception Handling: Resolved Dispute",
+        "style": "sync"
+      },
+      {
+        "type": "message",
+        "from": "p6",
+        "to": "p2",
+        "text": "Financial Transaction Ledger",
+        "style": "dashed"
+      },
+      {
+        "type": "message",
+        "from": "p2",
+        "to": "p4",
+        "text": "Customer Satisfaction and Quality Feedback",
+        "style": "dashed"
+      },
+      {
+        "type": "alt",
+        "text": "Refund Precondition"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p4"
+        ],
+        "text": "Continue to the next step"
+      },
+      {
+        "type": "else",
+        "text": "Rule violated"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p4"
+        ],
+        "text": "Revenue leakage or incorrect financial reporting occurs"
+      },
+      {
+        "type": "end"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p7"
+        ],
+        "text": "Business Decision"
+      },
+      {
+        "type": "message",
+        "from": "p7",
+        "to": "p7",
+        "text": "Product Catalog Curation and Strategy",
+        "style": "self"
+      },
+      {
+        "type": "message",
+        "from": "p6",
+        "to": "p4",
+        "text": "Commercial Partnership Terms and Service Level ...",
+        "style": "dashed"
+      },
+      {
+        "type": "message",
+        "from": "p6",
+        "to": "p2",
+        "text": "Real-Time Stock Availability and Status",
+        "style": "dashed"
+      },
+      {
+        "type": "alt",
+        "text": "Perishable Expiry Enforcement"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p7"
+        ],
+        "text": "Continue to the next step"
+      },
+      {
+        "type": "else",
+        "text": "Rule violated"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p7"
+        ],
+        "text": "The system rejects the Order Request and logs a compliance error fo..."
+      },
+      {
+        "type": "end"
+      }
+    ]
+  },
+  {
+    "title": "Exception paths: Dispute Ticket and Financial Transaction Record",
+    "participants": [
+      {
+        "id": "p1",
+        "name": "Platform Operator",
+        "kind": "actor"
+      },
+      {
+        "id": "p2",
+        "name": "Regulatory Authority",
+        "kind": "actor"
+      },
+      {
+        "id": "p3",
+        "name": "Merchandiser",
+        "kind": "actor"
+      },
+      {
+        "id": "p4",
+        "name": "Customer",
+        "kind": "actor"
+      },
+      {
+        "id": "p5",
+        "name": "Store Partner",
+        "kind": "actor"
+      },
+      {
+        "id": "p6",
+        "name": "Order Allocation Engine",
+        "kind": "participant"
+      },
+      {
+        "id": "p7",
+        "name": "Delivery Partner",
+        "kind": "actor"
+      }
+    ],
+    "steps": [
+      {
+        "type": "note",
+        "over": [
+          "p1"
+        ],
+        "text": "Foundation Establishment"
+      },
+      {
+        "type": "message",
+        "from": "p1",
+        "to": "p2",
+        "text": "Market Entry and Partner Onboarding: Validated Service Zones",
+        "style": "sync"
+      },
+      {
+        "type": "message",
+        "from": "p1",
+        "to": "p3",
+        "text": "Market Entry and Partner Onboarding: Validated Service Zones",
+        "style": "sync"
+      },
+      {
+        "type": "message",
+        "from": "p1",
+        "to": "p4",
+        "text": "Geospatial Service Boundary Definition",
+        "style": "dashed"
+      },
+      {
+        "type": "message",
+        "from": "p5",
+        "to": "p1",
+        "text": "Commercial Partnership Terms and Service Level ...",
+        "style": "dashed"
+      },
+      {
+        "type": "alt",
+        "text": "Regulatory License Anomaly Escalation"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p1"
+        ],
+        "text": "Continue to the next step"
+      },
+      {
+        "type": "else",
+        "text": "Rule violated"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p1"
+        ],
+        "text": "The business risks accepting orders from unlicensed partners, leadi..."
+      },
+      {
+        "type": "end"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p1"
+        ],
+        "text": "Supply Chain Integration"
+      },
+      {
+        "type": "message",
+        "from": "p1",
+        "to": "p5",
+        "text": "Inventory Synchronization and Validation: Verified Inventory Status",
+        "style": "sync"
+      },
+      {
+        "type": "message",
+        "from": "p1",
+        "to": "p6",
+        "text": "Inventory Synchronization and Validation: Verified Inventory Status",
+        "style": "sync"
+      },
+      {
+        "type": "message",
+        "from": "p5",
+        "to": "p4",
+        "text": "Real-Time Stock Availability and Status",
+        "style": "dashed"
+      },
+      {
+        "type": "message",
+        "from": "p5",
+        "to": "p1",
+        "text": "Inventory Synchronization Health Metrics",
+        "style": "dashed"
+      },
+      {
+        "type": "alt",
+        "text": "Immediate Order Locking on Failure"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p1"
+        ],
+        "text": "Continue to the next step"
+      },
+      {
+        "type": "else",
+        "text": "Rule violated"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p1"
+        ],
+        "text": "The business risks overselling inventory, causing order fulfillment..."
+      },
+      {
+        "type": "end"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p7"
+        ],
+        "text": "Handover & Confirmation"
+      },
+      {
+        "type": "message",
+        "from": "p7",
+        "to": "p4",
+        "text": "Delivery Handover and Proof Generation: Signed/Photo Delivery Proof",
+        "style": "sync"
+      },
+      {
+        "type": "message",
+        "from": "p4",
+        "to": "p6",
+        "text": "Customer Identity and Contact Information",
+        "style": "dashed"
+      },
+      {
+        "type": "message",
+        "from": "p4",
+        "to": "p1",
+        "text": "Proof of Delivery (POD) Evidence",
+        "style": "dashed"
+      },
+      {
+        "type": "alt",
+        "text": "Dispute Ticket Auto-Generation on Missing Proof"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p7"
+        ],
+        "text": "Continue to the next step"
+      },
+      {
+        "type": "else",
+        "text": "Rule violated"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p7"
+        ],
+        "text": "The Order Request remains in a pending state, blocking closure and ..."
+      },
+      {
+        "type": "end"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p1"
+        ],
+        "text": "Post-Transaction Review"
+      },
+      {
+        "type": "message",
+        "from": "p1",
+        "to": "p4",
+        "text": "Dispute Resolution and Exception Handling: Resolved Dispute",
+        "style": "sync"
+      },
+      {
+        "type": "message",
+        "from": "p1",
+        "to": "p5",
+        "text": "Dispute Resolution and Exception Handling: Resolved Dispute",
+        "style": "sync"
+      },
+      {
+        "type": "message",
+        "from": "p5",
+        "to": "p4",
+        "text": "Financial Transaction Ledger",
+        "style": "dashed"
+      },
+      {
+        "type": "message",
+        "from": "p4",
+        "to": "p1",
+        "text": "Customer Satisfaction and Quality Feedback",
+        "style": "dashed"
+      },
+      {
+        "type": "alt",
+        "text": "Tax Dispute Auto-Trigger"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p1"
+        ],
+        "text": "Continue to the next step"
+      },
+      {
+        "type": "else",
+        "text": "Rule violated"
+      },
+      {
+        "type": "note",
+        "over": [
+          "p1"
+        ],
+        "text": "A formal dispute record is created to initiate a reconciliation pro..."
+      },
+      {
+        "type": "end"
+      }
+    ]
+  }
+]
