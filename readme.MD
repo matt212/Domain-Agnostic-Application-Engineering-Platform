@@ -101,7 +101,7 @@
 
 <details open>
 
-<summary id="AI">🚧 <strong>WORK IN PROGRESS — NEXT RELEASE</strong> | 🚀 AI-Driven Business-to-Application Engineering</summary>
+<summary id="AI">🚧 <strong>WORK IN PROGRESS — NEXT RELEASE | 🚀 AI-Driven Business-to-Application Engineering</strong></summary>
 
 ### 🚀 From Business Idea to Intelligent Application Ecosystem
 
