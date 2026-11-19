@@ -163,7 +163,7 @@ flowchart TD
         B2 --> B3["Actors & Roles"]
         B3 --> B4["Responsibilities & Authorization"]
         B4 --> B5["Business Object Relationships"]
-        B5 --> B6["Activities & Business Processes"]
+        B5 --> B6["Business Activities & Processes"]
         B6 --> B7["Information Requirements"]
     end
 
