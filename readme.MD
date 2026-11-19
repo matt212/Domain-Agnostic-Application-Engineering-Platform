@@ -115,28 +115,28 @@ From understanding the business and engineering its operational behaviour to gen
 <tr>
 <td align="center" width="25%">
 
-### 🧠 Understand
+#### 🧠 Understand
 
 Business knowledge, actors, processes and rules.
 
 </td>
 <td align="center" width="25%">
 
-### 📐 Engineer
+#### 📐 Engineer
 
 Requirements, workflows, models and backlogs.
 
 </td>
 <td align="center" width="25%">
 
-### ⚙️ Generate
+#### ⚙️ Generate
 
 Applications, functionality, data and system interactions.
 
 </td>
 <td align="center" width="25%">
 
-### 🧪 Evaluate
+#### 🧪 Evaluate
 
 Automated execution, scenario coverage and confidence.
 
