@@ -148,7 +148,6 @@ flowchart TD
         D --> D7["User Journey Map"]
         D --> D8["Data Flow Diagram"]
         D --> D9["Event Flow Diagram"]
-        D --> D10["CRUD Matrix"]
     end
 
     D1 --> E
