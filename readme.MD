@@ -159,7 +159,6 @@ flowchart TD
     D7 --> E
     D8 --> E
     D9 --> E
-    D10 --> E
 
     subgraph S4["04. AGILE BACKLOG ENGINEERING"]
         E["Convert Requirements into an Actionable Product Backlog"]
