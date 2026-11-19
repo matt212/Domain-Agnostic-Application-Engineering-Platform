@@ -287,7 +287,6 @@ Translate business knowledge and requirements into visual representations of pro
 | 07 | User Journey Map | Actor journeys and user interactions |
 | 08 | Data Flow Diagram | Information movement and transformations |
 | 09 | Event Flow Diagram | Event-driven interactions and flows |
-| 10 | CRUD Matrix | Business object operations and access mapping |
 
 **Outcome:** Visual models that make business behaviour, application interactions and operational flows easier to understand and validate.
 
