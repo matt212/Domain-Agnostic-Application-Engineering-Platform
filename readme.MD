@@ -101,6 +101,26 @@
  <summary id="AI"> 🚧 Work in Progress — Next Release - AI-Driven Business Idea to Application Engineering
  </summary><blockquote>
 
+## QWEN AI REASONING ENGINE
+
+**Qwen3.5-9B**
+
+`9 Billion Parameters` · `Local LLM` · `Q4_K_M`
+
+Powered by an independently architected AI orchestration and engineering framework.
+
+**Core AI Capabilities:**
+
+- Business Reasoning
+- Contextual Knowledge Retrieval
+- Business & Functional Analysis
+- Requirements Engineering
+- Analysis and Validation
+- Structured Generation
+
+The local Qwen model acts as the reasoning engine within the platform. The independently architected orchestration framework coordinates contextual knowledge retrieval, business analysis, validation and structured generation across the engineering lifecycle.
+
+---
 # Complete Platform Lifecycle
 
 Transforming an unstructured business idea into an engineering-ready application blueprint through AI-powered business knowledge engineering, requirements analysis, functional modelling and Agile backlog generation.
