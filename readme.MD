@@ -99,7 +99,7 @@
 </details>
 
 <details open>
-<summary id="AI">🚀 Work in Progress — Next Release | AI-Driven Business Idea to Application Engineering</summary>
+<summary id="AI">🚧 Work in Progress — Next Release | AI-Driven Business Idea to Application Engineering</summary>
 
 <br/>
 
