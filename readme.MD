@@ -260,8 +260,7 @@ flowchart TD
         E --> E1["Epics"]
         E1 --> E2["Features"]
         E2 --> E3["User Stories"]
-        E3 --> E4["Acceptance Criteria"]
-        E4 --> E5["Dependencies"]
+       
     end
 
     E5 --> F
