@@ -1,0 +1,54 @@
+{
+  "final_status": {
+    "overall_assessment": "Generated backlog: Good foundation",
+    "sections": [
+      {
+        "name": "Acceptance criteria",
+        "status": "Partial",
+        "fields": [
+          "acceptance_criteria",
+          "given_when_then",
+          "success_criteria",
+          "business_rules"
+        ],
+        "explanation": "Acceptance criteria and Given/When/Then scenarios are populated, but they are frequently repeated across different user stories or inherited from parent features and business requirements. Some success criteria also contain inherited business-rule measurements rather than validated outcomes for the individual story.",
+        "expected_refinement": [
+          "Define acceptance criteria specific to each user story.",
+          "Ensure Given/When/Then scenarios describe the actual behaviour of that story.",
+          "Specify clear and testable expected outcomes.",
+          "Validate that associated business rules apply to the individual story.",
+          "Ensure success criteria demonstrate whether the story has been completed correctly."
+        ]
+      },
+      {
+        "name": "Functional execution behaviour",
+        "status": "Missing",
+        "fields": [
+          "user_goal",
+          "preconditions",
+          "postconditions",
+          "trigger",
+          "main_flow",
+          "alternative_flows",
+          "exception_flows"
+        ]
+      },
+      {
+        "name": "Dependencies",
+        "status": "Missing",
+        "fields": [
+          "dependencies"
+        ],
+        "observations": [
+          "The dependencies field is empty.",
+          "Some dependency-related information exists in constraints.risks_and_dependencies but is not structured as user-story dependencies."
+        ]
+      }
+    ],
+    "recommendation": {
+      "action": "Retain the existing 328 user stories. Do not regenerate them from scratch.",
+      "next_stage": "User Story Functional Refinement and Validation",
+      "before_stage": "Engineering-Ready Blueprint"
+    }
+  }
+}
