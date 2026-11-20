@@ -260,10 +260,10 @@ flowchart TD
         E --> E1["Epics"]
         E1 --> E2["Features"]
         E2 --> E3["User Stories"]
-       
+        
     end
 
-    E5 --> F
+    E3 --> F
 
     subgraph S5["05. ENGINEERING-READY BLUEPRINT"]
         F["Foundation for Application Architecture & Implementation"]
