@@ -498,7 +498,25 @@ async function selectNextUserStory() {
 
 const EVIDENCE_SQL = String.raw`
 
-WITH story AS MATERIALIZED
+WITH
+
+/* ================================================================
+   1. LOAD ORIGINAL USER STORY
+   ================================================================ */
+
+assessment_source AS MATERIALIZED
+(
+    SELECT
+        us.*
+    FROM requirements.user_stories us
+    WHERE us.user_story_id = $1
+),
+
+/* ================================================================
+   2. NORMALIZE JSON FIELDS
+   ================================================================ */
+
+normalized_source AS MATERIALIZED
 (
     SELECT
         s.*,
@@ -508,6 +526,17 @@ WITH story AS MATERIALIZED
                 to_jsonb(s) -> 'functional_requirement_ids'
             ) = 'array'
                 THEN to_jsonb(s) -> 'functional_requirement_ids'
+
+            WHEN jsonb_typeof(
+                to_jsonb(s) -> 'functional_requirement_ids'
+            ) = 'string'
+             AND BTRIM(
+                to_jsonb(s) ->> 'functional_requirement_ids'
+             ) LIKE '[%'
+                THEN (
+                    to_jsonb(s) ->> 'functional_requirement_ids'
+                )::jsonb
+
             ELSE '[]'::jsonb
         END AS fr_ids_json,
 
@@ -516,60 +545,50 @@ WITH story AS MATERIALIZED
                 to_jsonb(s) -> 'business_requirement_ids'
             ) = 'array'
                 THEN to_jsonb(s) -> 'business_requirement_ids'
-            ELSE '[]'::jsonb
-        END AS br_ids_json,
 
-        CASE
             WHEN jsonb_typeof(
-                to_jsonb(s) -> 'actor'
-            ) = 'array'
-                THEN to_jsonb(s) -> 'actor'
-            ELSE '[]'::jsonb
-        END AS actors_json,
+                to_jsonb(s) -> 'business_requirement_ids'
+            ) = 'string'
+             AND BTRIM(
+                to_jsonb(s) ->> 'business_requirement_ids'
+             ) LIKE '[%'
+                THEN (
+                    to_jsonb(s) ->> 'business_requirement_ids'
+                )::jsonb
 
-        CASE
-            WHEN jsonb_typeof(
-                to_jsonb(s) -> 'business_objects'
-            ) = 'array'
-                THEN to_jsonb(s) -> 'business_objects'
             ELSE '[]'::jsonb
-        END AS objects_json
+        END AS br_ids_json
 
-    FROM requirements.user_stories s
-    WHERE s.user_story_id = $1
+    FROM assessment_source s
 ),
 
-story_keys AS MATERIALIZED
+/* ================================================================
+   3. BUILD NORMALIZED STORY CONTEXT
+   ================================================================ */
+
+story_context AS MATERIALIZED
 (
     SELECT
         s.*,
 
         ARRAY(
-            SELECT DISTINCT value
+            SELECT DISTINCT BTRIM(value)
             FROM jsonb_array_elements_text(s.fr_ids_json)
             WHERE NULLIF(BTRIM(value), '') IS NOT NULL
         ) AS fr_ids,
 
         ARRAY(
-            SELECT DISTINCT value
+            SELECT DISTINCT BTRIM(value)
             FROM jsonb_array_elements_text(s.br_ids_json)
             WHERE NULLIF(BTRIM(value), '') IS NOT NULL
-        ) AS br_ids,
+        ) AS br_ids
 
-        ARRAY(
-            SELECT DISTINCT value
-            FROM jsonb_array_elements_text(s.actors_json)
-            WHERE NULLIF(BTRIM(value), '') IS NOT NULL
-        ) AS actor_names,
-
-        ARRAY(
-            SELECT DISTINCT value
-            FROM jsonb_array_elements_text(s.objects_json)
-            WHERE NULLIF(BTRIM(value), '') IS NOT NULL
-        ) AS object_names
-
-    FROM story s
+    FROM normalized_source s
 ),
+
+/* ================================================================
+   4. RETRIEVE DIRECTLY ASSOCIATED FUNCTIONAL REQUIREMENTS
+   ================================================================ */
 
 functional_requirements AS MATERIALIZED
 (
@@ -578,334 +597,253 @@ functional_requirements AS MATERIALIZED
         fr.functional_requirement_id,
         fr.name,
         fr.description,
-        fr.status
+        fr.status,
 
-    FROM story_keys sk
+        'DIRECT_STORY_ASSOCIATION'::text AS retrieval_source
+
+    FROM story_context s
 
     JOIN requirements.functional_requirements fr
-      ON fr.functional_requirement_id = ANY(sk.fr_ids)
+      ON fr.functional_requirement_id = ANY(s.fr_ids)
+),
+
+/* ================================================================
+   5. RETRIEVE DIRECTLY ASSOCIATED BUSINESS REQUIREMENTS
+
+   Only IDs explicitly supplied by the User Story are used.
+
+   No inherited FR-to-BR retrieval.
+   ================================================================ */
+
+business_requirement_paths AS
+(
+    SELECT
+        br.business_requirement_pk,
+        br.business_requirement_id,
+        br.name,
+        br.business_requirement,
+        br.business_objective,
+        br.success_measures,
+        br.policies_and_constraints,
+
+        'DIRECT_STORY_ASSOCIATION'::text AS retrieval_source
+
+    FROM story_context s
+
+    JOIN requirements.business_requirements br
+      ON br.business_requirement_id = ANY(s.br_ids)
 ),
 
 business_requirements AS MATERIALIZED
 (
-    SELECT DISTINCT
-        br.business_requirement_pk,
-        br.business_requirement_id,
-        br.name,
-        br.business_requirement,
-        br.business_objective,
-        br.success_measures,
-        br.policies_and_constraints
+    SELECT
+        business_requirement_pk,
+        business_requirement_id,
+        name,
+        business_requirement,
+        business_objective,
+        success_measures,
+        policies_and_constraints,
 
-    FROM story_keys sk
+        ARRAY_AGG(
+            DISTINCT retrieval_source
+            ORDER BY retrieval_source
+        ) AS retrieval_sources
 
-    JOIN requirements.business_requirements br
-      ON br.business_requirement_id = ANY(sk.br_ids)
+    FROM business_requirement_paths
 
-    UNION
+    GROUP BY
+        business_requirement_pk,
+        business_requirement_id,
+        name,
+        business_requirement,
+        business_objective,
+        success_measures,
+        policies_and_constraints
+),
 
-    SELECT DISTINCT
-        br.business_requirement_pk,
-        br.business_requirement_id,
-        br.name,
-        br.business_requirement,
-        br.business_objective,
-        br.success_measures,
-        br.policies_and_constraints
+/* ================================================================
+   6. BUILD FUNCTIONAL REQUIREMENT JSON ARRAY
+   ================================================================ */
+
+functional_requirement_evidence AS MATERIALIZED
+(
+    SELECT
+        COALESCE(
+            jsonb_agg(
+                jsonb_build_object(
+                    'functional_requirement_pk',
+                        fr.functional_requirement_pk,
+
+                    'functional_requirement_id',
+                        fr.functional_requirement_id,
+
+                    'name',
+                        fr.name,
+
+                    'description',
+                        fr.description,
+
+                    'status',
+                        fr.status,
+
+                    'retrieval_source',
+                        fr.retrieval_source
+                )
+                ORDER BY fr.functional_requirement_id
+            ),
+            '[]'::jsonb
+        ) AS functional_requirements
 
     FROM functional_requirements fr
-
-    JOIN requirements.requirement_relationships rr
-      ON rr.functional_requirement_pk = fr.functional_requirement_pk
-
-    JOIN requirements.business_requirements br
-      ON br.business_requirement_pk = rr.business_requirement_pk
 ),
 
-business_rules AS MATERIALIZED
-(
-    SELECT DISTINCT
-        r.business_rule_pk,
-        r.name,
-        r.statement,
-        r.type,
-        r.condition,
-        r.exceptions,
-        r.actors,
-        r.objects,
-        r.enforcement,
-        r.severity,
-        r.related_functional_requirements,
-        r.knowledge_record_ids
+/* ================================================================
+   7. BUILD BUSINESS REQUIREMENT JSON ARRAY
+   ================================================================ */
 
-    FROM story_keys sk
-
-    JOIN business_rule_discovery.business_rules r
-      ON
-      (
-          EXISTS (
-              SELECT 1
-              FROM jsonb_array_elements_text(
-                  CASE
-                      WHEN jsonb_typeof(
-                          r.related_functional_requirements
-                      ) = 'array'
-                          THEN r.related_functional_requirements
-                      ELSE '[]'::jsonb
-                  END
-              ) fr(value)
-              WHERE fr.value = ANY(sk.fr_ids)
-          )
-
-          OR
-
-          (
-              CARDINALITY(sk.actor_names) > 0
-              AND CARDINALITY(sk.object_names) > 0
-
-              AND COALESCE(r.actors, '[]'::jsonb)
-                  ?| sk.actor_names
-
-              AND COALESCE(r.objects, '[]'::jsonb)
-                  ?| sk.object_names
-          )
-      )
-),
-
-direct_kb_ids AS MATERIALIZED
-(
-    SELECT DISTINCT
-        kb.value AS record_id
-
-    FROM business_rules r
-
-    CROSS JOIN LATERAL jsonb_array_elements_text(
-        CASE
-            WHEN jsonb_typeof(r.knowledge_record_ids) = 'array'
-                THEN r.knowledge_record_ids
-            ELSE '[]'::jsonb
-        END
-    ) kb(value)
-
-    WHERE NULLIF(BTRIM(kb.value), '') IS NOT NULL
-),
-
-expanded_kb_ids AS MATERIALIZED
-(
-    SELECT record_id
-    FROM direct_kb_ids
-
-    UNION
-
-    SELECT kr.target_record_id
-    FROM direct_kb_ids d
-    JOIN public.knowledge_relationships kr
-      ON kr.from_record_id = d.record_id
-    WHERE kr.target_record_id IS NOT NULL
-
-    UNION
-
-    SELECT kr.from_record_id
-    FROM direct_kb_ids d
-    JOIN public.knowledge_relationships kr
-      ON kr.target_record_id = d.record_id
-    WHERE kr.from_record_id IS NOT NULL
-),
-
-knowledge_records AS MATERIALIZED
-(
-    SELECT DISTINCT
-        kr.record_id,
-        kr.record_type,
-        kr.source_stage,
-        kr.source_file,
-        kr.section,
-        kr.semantic_category,
-        kr.content
-
-    FROM expanded_kb_ids e
-
-    JOIN public.knowledge_records kr
-      ON kr.record_id = e.record_id
-),
-
-semantic_kb AS MATERIALIZED
+business_requirement_evidence AS MATERIALIZED
 (
     SELECT
-        kr.record_id,
-        kr.record_type,
-        kr.source_stage,
-        kr.source_file,
-        kr.section,
-        kr.semantic_category,
-        kr.content
+        COALESCE(
+            jsonb_agg(
+                jsonb_build_object(
+                    'business_requirement_pk',
+                        br.business_requirement_pk,
 
-    FROM story_keys sk
+                    'business_requirement_id',
+                        br.business_requirement_id,
 
-    CROSS JOIN LATERAL (
-        SELECT websearch_to_tsquery(
-            'english',
-            CONCAT_WS(
-                ' ',
-                sk.user_story_title,
-                sk.user_story_description,
-                sk.user_goal,
-                array_to_string(sk.object_names, ' ')
-            )
-        ) AS query
-    ) q
+                    'name',
+                        br.name,
 
-    JOIN LATERAL (
-        SELECT
-            ks.record_id,
-            ts_rank_cd(ks.search_vector, q.query) AS rank
+                    'business_requirement',
+                        br.business_requirement,
 
-        FROM public.knowledge_search ks
+                    'business_objective',
+                        br.business_objective,
 
-        WHERE numnode(q.query) > 0
-          AND ks.search_vector @@ q.query
+                    'success_measures',
+                        br.success_measures,
 
-        ORDER BY rank DESC
-        LIMIT 12
-    ) hit ON TRUE
+                    'policies_and_constraints',
+                        br.policies_and_constraints,
 
-    JOIN public.knowledge_records kr
-      ON kr.record_id = hit.record_id
+                    'retrieval_sources',
+                        br.retrieval_sources
+                )
+                ORDER BY br.business_requirement_id
+            ),
+            '[]'::jsonb
+        ) AS business_requirements
 
-    WHERE NOT EXISTS (
-        SELECT 1 FROM knowledge_records
-    )
+    FROM business_requirements br
 ),
 
-all_knowledge_records AS MATERIALIZED
-(
-    SELECT * FROM knowledge_records
+/* ================================================================
+   8. EVIDENCE SUMMARY
+   ================================================================ */
 
-    UNION
-
-    SELECT * FROM semantic_kb
-),
-
-evidence AS
+evidence_summary AS MATERIALIZED
 (
     SELECT
-        (
-            SELECT COALESCE(
-                jsonb_agg(
-                    jsonb_build_object(
-                        'functional_requirement_id',
-                            functional_requirement_id,
-                        'name', name,
-                        'description', description,
-                        'status', status
-                    )
-                    ORDER BY functional_requirement_id
-                ),
-                '[]'::jsonb
-            )
-            FROM functional_requirements
-        ) AS functional_requirements,
+        jsonb_build_object(
 
-        (
-            SELECT COALESCE(
-                jsonb_agg(
-                    jsonb_build_object(
-                        'business_requirement_id',
-                            business_requirement_id,
-                        'name', name,
-                        'business_requirement', business_requirement,
-                        'business_objective', business_objective,
-                        'success_measures', success_measures,
-                        'policies_and_constraints',
-                            policies_and_constraints
-                    )
-                    ORDER BY business_requirement_id
+            'functional_requirement_count',
+                jsonb_array_length(
+                    fr.functional_requirements
                 ),
-                '[]'::jsonb
-            )
-            FROM business_requirements
-        ) AS business_requirements,
 
-        (
-            SELECT COALESCE(
-                jsonb_agg(
-                    jsonb_build_object(
-                        'business_rule_id', business_rule_pk,
-                        'name', name,
-                        'statement', statement,
-                        'type', type,
-                        'condition', condition,
-                        'exceptions', exceptions,
-                        'actors', actors,
-                        'objects', objects,
-                        'enforcement', enforcement,
-                        'severity', severity,
-                        'related_functional_requirements',
-                            related_functional_requirements,
-                        'knowledge_record_ids', knowledge_record_ids
-                    )
-                    ORDER BY business_rule_pk
+            'business_requirement_count',
+                jsonb_array_length(
+                    br.business_requirements
                 ),
-                '[]'::jsonb
-            )
-            FROM business_rules
-        ) AS business_rules,
 
-        (
-            SELECT COALESCE(
-                jsonb_agg(
-                    jsonb_build_object(
-                        'record_id', record_id,
-                        'record_type', record_type,
-                        'source_stage', source_stage,
-                        'source_file', source_file,
-                        'section', section,
-                        'semantic_category', semantic_category,
-                        'content', content
-                    )
-                    ORDER BY record_id
-                ),
-                '[]'::jsonb
-            )
-            FROM all_knowledge_records
-        ) AS knowledge_records
+            'retrieval_status',
+                CASE
+                    WHEN
+                        jsonb_array_length(
+                            fr.functional_requirements
+                        ) > 0
+
+                        OR
+
+                        jsonb_array_length(
+                            br.business_requirements
+                        ) > 0
+
+                    THEN 'REPOSITORY_EVIDENCE_AVAILABLE'
+
+                    ELSE 'NO_REPOSITORY_EVIDENCE_FOUND'
+                END
+
+        ) AS summary
+
+    FROM functional_requirement_evidence fr
+
+    CROSS JOIN business_requirement_evidence br
 )
 
+/* ================================================================
+   9. FINAL RESULT
+
+   Original User Story fields individually.
+   Two separate repository evidence arrays.
+   No consolidated_evidence wrapper.
+   ================================================================ */
+
 SELECT
-    sk.*,
 
-    e.functional_requirements,
-    e.business_requirements,
-    e.business_rules,
-    e.knowledge_records,
+    /* Original User Story */
 
-    jsonb_build_object(
-        'functional_requirement_count',
-            jsonb_array_length(e.functional_requirements),
+    s.user_story_id,
+    s.user_story_title,
+    s.user_story_description,
+    s.user_story_type,
+    s.actor,
+    s.user_goal,
+    s.business_value,
+    s.feature_id,
+    s.feature_name,
+    s.epic_id,
+    s.epic_title,
+    s.business_requirement_ids,
+    s.functional_requirement_ids,
+    s.business_objects,
+    s.preconditions,
+    s.postconditions,
+    s.trigger,
+    s.main_flow,
+    s.alternative_flows,
+    s.exception_flows,
+    s.business_rules,
+    s.acceptance_criteria,
+    s.given_when_then,
+    s.success_criteria,
+    s.non_functional_requirements,
+    s.dependencies,
+    s.constraints,
+    s.priority,
+    s.estimation,
+    s.status,
 
-        'business_requirement_count',
-            jsonb_array_length(e.business_requirements),
+    /* Retrieved repository evidence */
 
-        'business_rule_count',
-            jsonb_array_length(e.business_rules),
+    fr.functional_requirements,
 
-        'knowledge_record_count',
-            jsonb_array_length(e.knowledge_records),
+    br.business_requirements,
 
-        'retrieval_status',
-            CASE
-                WHEN
-                    jsonb_array_length(e.functional_requirements) > 0
-                    OR jsonb_array_length(e.business_requirements) > 0
-                    OR jsonb_array_length(e.business_rules) > 0
-                    OR jsonb_array_length(e.knowledge_records) > 0
-                THEN 'REPOSITORY_EVIDENCE_AVAILABLE'
-                ELSE 'NO_REPOSITORY_EVIDENCE_FOUND'
-            END
-    ) AS evidence_summary
+    /* Retrieval diagnostics */
 
-FROM story_keys sk
-CROSS JOIN evidence e;
+    summary.summary AS evidence_summary
+
+FROM story_context s
+
+CROSS JOIN functional_requirement_evidence fr
+
+CROSS JOIN business_requirement_evidence br
+
+CROSS JOIN evidence_summary summary;
 `;
 
 /* =========================================================================
