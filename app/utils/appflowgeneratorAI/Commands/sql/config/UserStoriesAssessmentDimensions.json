@@ -1,0 +1,141 @@
+{
+  "dimensions": [
+    {
+      "dimension": "user_goal",
+      "question": "What meaningful outcome should this actor achieve through this story?",
+      "data_to_supply": [
+        "Story title and description",
+        "Linked functional requirements",
+        "Actor responsibilities",
+        "Relevant business objects and relationships"
+      ]
+    },
+    {
+      "dimension": "preconditions",
+      "question": "What must be true before this story can begin successfully?",
+      "data_to_supply": [
+        "Functional requirements",
+        "Business rules",
+        "Actor permissions",
+        "Business-object states",
+        "Dependencies",
+        "Relevant lifecycle information"
+      ]
+    },
+    {
+      "dimension": "postconditions",
+      "question": "What must be true after successful completion of this story?",
+      "data_to_supply": [
+        "Functional requirements",
+        "Expected business outcomes",
+        "Object states",
+        "Lifecycle transitions",
+        "Applicable business rules"
+      ]
+    },
+    {
+      "dimension": "trigger",
+      "question": "What event, action, or condition initiates this story?",
+      "data_to_supply": [
+        "Story description",
+        "Functional requirements",
+        "Actor activities",
+        "Workflow events",
+        "Relevant lifecycle transitions"
+      ]
+    },
+    {
+      "dimension": "main_flow",
+      "question": "What is the logical sequence of actions from initiation to successful completion?",
+      "data_to_supply": [
+        "Actor responsibilities",
+        "Functional requirements",
+        "Business-object relationships",
+        "Business rules",
+        "Relevant existing workflow information"
+      ]
+    },
+    {
+      "dimension": "alternative_flows",
+      "question": "What other valid paths can achieve the intended outcome when circumstances differ?",
+      "data_to_supply": [
+        "Functional requirements",
+        "Business rules",
+        "Object states",
+        "Optional behaviours",
+        "Decision conditions",
+        "Relevant actor permissions"
+      ]
+    },
+    {
+      "dimension": "exception_flows",
+      "question": "What can prevent successful completion, and how should the application respond?",
+      "data_to_supply": [
+        "Business rules",
+        "Rejection conditions",
+        "Invalid states",
+        "Authorization constraints",
+        "Dependency failures",
+        "Relevant system behaviours"
+      ]
+    },
+    {
+      "dimension": "acceptance_criteria",
+      "question": "What observable conditions must be satisfied for this story to be accepted?",
+      "data_to_supply": [
+        "Generated user goal",
+        "Preconditions",
+        "Postconditions",
+        "Flows",
+        "Functional requirements",
+        "Applicable business rules"
+      ]
+    },
+    {
+      "dimension": "given_when_then",
+      "question": "What starting condition, action, and observable outcome demonstrate each behaviour?",
+      "data_to_supply": [
+        "Generated acceptance criteria",
+        "Preconditions",
+        "Main flows",
+        "Alternative flows",
+        "Exception flows",
+        "Applicable business rules"
+      ]
+    },
+    {
+      "dimension": "business_rules",
+      "question": "Which existing rules apply, and what additional rules or constraints are logically required by the discovered behaviour?",
+      "data_to_supply": [
+        "Linked business rules",
+        "Rule definitions",
+        "Related objects",
+        "Functional requirements",
+        "Relevant source evidence"
+      ]
+    },
+    {
+      "dimension": "success_criteria",
+      "question": "How can successful completion and the intended outcome be measured?",
+      "data_to_supply": [
+        "Functional requirements",
+        "Business objectives where available",
+        "Generated postconditions",
+        "Acceptance criteria",
+        "Measurable application outcomes"
+      ]
+    },
+    {
+      "dimension": "direct_dependencies",
+      "question": "What must exist or happen before this story can be implemented or executed?",
+      "data_to_supply": [
+        "Related stories",
+        "Functional requirements",
+        "Business objects",
+        "Lifecycle transitions",
+        "Actors",
+        "Explicit dependency relationships"
+      ]
+    }
+  ]
+}

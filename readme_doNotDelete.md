@@ -606,3 +606,9 @@ below are customer's activities not output, till 1.e .
  ---comfyui
  python main.py --cpu --lowvram --disable-smart-memory --fp32-vae --force-fp32
 
+--save json
+  fs.writeFileSync(
+    'output.json',
+    JSON.stringify(input, null, 2),
+    'utf8'
+);

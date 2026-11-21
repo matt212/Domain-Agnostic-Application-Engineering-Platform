@@ -1,5 +1,5 @@
 
-/*CREATE TEMP TABLE assessment_stories AS*/
+/*CREATE  TABLE assessment_stories AS*/
 WITH epic_groups AS (
     SELECT
         NULLIF(BTRIM(br.business_objective), '') AS epic_title,
