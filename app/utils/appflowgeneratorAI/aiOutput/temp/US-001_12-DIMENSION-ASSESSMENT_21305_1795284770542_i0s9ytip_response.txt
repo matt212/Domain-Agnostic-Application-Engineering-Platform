@@ -81,3 +81,73 @@ No code fences.
 No commentary.
 No explanation outside the JSON.
 
+Assistant:
+{
+  "user_story_id": "US-001",
+  "assessment_result": "NEEDS_CORRECTION",
+  "overall_assessment": "The user story is currently in 'DRAFT' status with significant incompleteness in core behavioral dimensions. While business value and constraints are well-defined, the story lacks explicit preconditions, a defined trigger, a step-by-step main flow, and detailed exception handling. The acceptance criteria and GWT scenarios are truncated, preventing verification of testability. The 'business_rules' array in the user story itself is empty despite containing valid rule text elsewhere, indicating a data structure mismatch.",
+  "dimension_findings": {
+    "user_goal": {
+      "status": "PASS",
+      "finding": "The intended outcome is clearly defined in the title and description: receiving, validating, and updating inventory snapshots to prevent overselling.",
+      "issues": [],
+      "evidence_references": [],
+      "recommended_correction": ""
+    },
+    "preconditions": {
+      "status": "FAIL",
+      "finding": "The preconditions field is empty. Critical prerequisites for data exchange (e.g., API connectivity, authenticated Store Partner, valid SKU state) are missing.",
+      "issues": [
+        "Preconditions array is empty.",
+        "Missing definition of Store Partner API readiness.",
+        "Missing definition of valid SKU state in both systems."
+      ],
+      "evidence_references": [
+        "FEAT-001",
+        "FR-001"
+      ],
+      "recommended_correction": "Define preconditions including: 'Store Partner API is reachable', 'Store Partner is authenticated', 'SKU exists in central catalog', 'Network latency < 200ms'."
+    },
+    "postconditions": {
+      "status": "FAIL",
+      "finding": "The postconditions field is empty. The story does not explicitly state the final state of the Product Catalog or the inventory lock status upon successful completion.",
+      "issues": [
+        "Postconditions array is empty.",
+        "Missing explicit statement that Product Catalog is updated.",
+        "Missing explicit statement regarding stock lock acquisition."
+      ],
+      "evidence_references": [
+        "FR-001",
+        "BR-005"
+      ],
+      "recommended_correction": "Add postcondition: 'Product Catalog inventory count for the SKU is updated to the received value', 'Stock quantity is locked for the Order Request (if applicable)'."
+    },
+    "trigger": {
+      "status": "FAIL",
+      "finding": "The trigger is null. It is unclear what specific event initiates this story (e.g., periodic polling, event-driven webhook, manual batch upload).",
+      "issues": [
+        "Trigger is null.",
+        "No event defined in Story Description.",
+        "Unclear if this is a continuous process or a one-time action."
+      ],
+      "evidence_references": [
+        "FR-001",
+        "BR-011"
+      ],
+      "recommended_correction": "Specify trigger: 'Upon receipt of a Real-Time Inventory Snapshot from a Store Partner' or 'Scheduled polling every X minutes'."
+    },
+    "main_flow": {
+      "status": "FAIL",
+      "finding": "The main flow is empty. There is no logical sequence describing how the system receives, validates, and updates the data.",
+      "issues": [
+        "Main flow array is empty.",
+        "Missing steps for validation logic.",
+        "Missing steps for catalog update mechanism."
+      ],
+      "evidence_references": [
+        "FR-001"
+      ],
+      "recommended_correction": "Define main flow: 1. System receives Snapshot. 2. System validates schema and data integrity. 3. System compares with current catalog. 4. System updates catalog if validated. 5. System notifies Order Allocation Engine."
+    },
+    "alternative_flows": {
+
