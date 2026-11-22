@@ -97,7 +97,7 @@ const OUTPUT_DIR = path.join(
 const UNIT_DIR = path.join(OUTPUT_DIR, 'units');
 const TEMP_DIR = path.join(OUTPUT_DIR, 'temp');
 
-const MAX_PROMPT_CHARACTERS = 3000;
+const MAX_PROMPT_CHARACTERS = 4000;
 const MAX_OUTPUT_TOKENS = 350;
 
 const CONTEXT_SIZE = 4096;
@@ -691,34 +691,72 @@ function buildPrompt(aiInput) {
     }
 
     let fixedPrompt = [
-        'Generate the requested User Story output dimensions.',
-        'Use only the supplied User Story information.',
-        'Do not invent actors, business rules, features, fields or behaviour.',
-        'Return valid JSON only. No Markdown or explanations.',
-        'Return exactly the requested root keys.',
-        dimensionInstructions,
-        'OUTPUT JSON STRUCTURE:',
-        JSON.stringify(outputSchema),
-        'USER STORY:'
-    ].join('\n');
+    'TASK: Generate the requested User Story output dimensions.',
+    '',
+    'SOURCE DATA:',
+    'Use the supplied User Story as the evidence baseline.',
+    'Title and description are the primary sources of story-specific behaviour.',
+    'Actors identify participants. Business objects identify relevant entities.',
+    'Business rules constrain behaviour only when relevant to this story.',
+    'Existing acceptance criteria are supporting evidence, not automatically validated story-level behaviour.',
+    'Assess inherited acceptance criteria for relevance before reuse.',
+    'Do not invent actors, rules, conditions, triggers, outcomes, validation, error handling, thresholds or behaviour.',
+    'Do not assume missing information.',
+    '',
+    'INTERNAL ANALYSIS:',
+    'Before generation, answer internally:',
+    '1. What behaviour does this story describe?',
+    '2. Which actors and objects are involved?',
+    '3. What conditions and events are supported?',
+    '4. What observable outcomes are supported?',
+    '5. Which business rules apply?',
+    '6. Which existing scenarios are relevant?',
+    '7. What information is missing?',
+    'Use these answers to generate the dimensions. Do not include the answers in the output.',
+    '',
+    'GENERATION:',
+    'Generate distinct, meaningful and testable results supported by the supplied evidence.',
+    'Do not duplicate existing scenarios unnecessarily or manufacture additional results.',
+    '',
+    'OUTPUT:',
+    'Return valid JSON only. No Markdown or explanations.',
+    'Return exactly the requested root keys and follow the supplied schema.',
+    dimensionInstructions,
+    'OUTPUT JSON STRUCTURE:',
+    JSON.stringify(outputSchema),
+    'USER STORY BASELINE:'
+].join('\n');
 
-    let availableCharacters =
-        MAX_PROMPT_CHARACTERS - fixedPrompt.length;
+let availableCharacters =
+    MAX_PROMPT_CHARACTERS - fixedPrompt.length - 1;
 
-    if (availableCharacters <= 0) {
-        throw new Error(
-            'Dimension instructions and schema exceed the prompt limit.'
-        );
-    }
+if (availableCharacters <= 0) {
+    throw new Error(
+        `Fixed prompt exceeds character limit. ` +
+        `Required: ${fixedPrompt.length + 1}, ` +
+        `Maximum: ${MAX_PROMPT_CHARACTERS}`
+    );
+}
 
-    let prompt =
-        fixedPrompt + '\n' + aiInput.slice(0, availableCharacters);
+if (aiInput.length > availableCharacters) {
+    throw new Error(
+        `User Story baseline exceeds available prompt space. ` +
+        `Baseline: ${aiInput.length}, ` +
+        `Available: ${availableCharacters}, ` +
+        `Maximum: ${MAX_PROMPT_CHARACTERS}. ` +
+        `Increase MAX_PROMPT_CHARACTERS or reduce fixed instructions.`
+    );
+}
 
-    if (prompt.length > MAX_PROMPT_CHARACTERS) {
-        throw new Error('Prompt character limit exceeded.');
-    }
+let prompt = fixedPrompt + '\n' + aiInput;
 
-    return prompt;
+if (prompt.length > MAX_PROMPT_CHARACTERS) {
+    throw new Error(
+        `Prompt character limit exceeded: ${prompt.length}/${MAX_PROMPT_CHARACTERS}`
+    );
+}
+
+return prompt;
 }
 
 
