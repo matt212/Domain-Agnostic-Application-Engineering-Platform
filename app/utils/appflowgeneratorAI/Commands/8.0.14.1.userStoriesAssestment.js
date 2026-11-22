@@ -98,7 +98,7 @@ const UNIT_DIR = path.join(OUTPUT_DIR, 'units');
 const TEMP_DIR = path.join(OUTPUT_DIR, 'temp');
 
 const MAX_PROMPT_CHARACTERS = 4000;
-const MAX_OUTPUT_TOKENS = 350;
+const MAX_OUTPUT_TOKENS = 650;
 
 const CONTEXT_SIZE = 4096;
 const MODEL_THREADS = 8;
@@ -449,10 +449,10 @@ async function startScript() {
 
 
             // STEP 4: Build Qwen prompt.
-console.log(`\nBuilding prompt for User Story: ${aiInput}\n`);
+//console.log(`\nBuilding prompt for User Story: ${aiInput}\n`);
             let prompt =
                 buildPrompt(aiInput);
-console.log(`\nPrompt built for User Story: ${prompt}\n`);
+//console.log(`\nPrompt built for User Story: ${prompt}\n`);
 
             // STEP 5: Run Qwen.
 
@@ -462,7 +462,9 @@ console.log(`\nPrompt built for User Story: ${prompt}\n`);
                     userStoryId
                 );
 
-
+console.log('\n========== RAW QWEN RESPONSE ==========\n');
+console.log(qwenOutput);
+console.log('\n========== END RAW QWEN RESPONSE ==========\n');
             // STEP 6: Receive Qwen response.
 
             let rawResponse =
@@ -721,10 +723,12 @@ function buildPrompt(aiInput) {
     'OUTPUT:',
     'Return valid JSON only. No Markdown or explanations.',
     'Return exactly the requested root keys and follow the supplied schema.',
-    dimensionInstructions,
-    'OUTPUT JSON STRUCTURE:',
-    JSON.stringify(outputSchema),
-    'USER STORY BASELINE:'
+    
+dimensionInstructions,
+'Use the OUTPUT JSON STRUCTURE only as a structural template; never copy or repeat its placeholder values, replace them with evidence-based generated content, and return empty arrays when the supplied evidence is insufficient.',
+'OUTPUT JSON STRUCTURE:',
+'{"given_when_then":[{"given":"","when":"","then":""}],"success_criteria":[]}',
+'USER STORY BASELINE:'
 ].join('\n');
 
 let availableCharacters =
