@@ -612,3 +612,7 @@ below are customer's activities not output, till 1.e .
     JSON.stringify(input, null, 2),
     'utf8'
 );
+
+--metal
+ GGML_METAL_TENSOR_ENABLE=1 \
+node app/utils/appflowgeneratorAI/Commands/8.0.14.1.userStoriesAssestment.js

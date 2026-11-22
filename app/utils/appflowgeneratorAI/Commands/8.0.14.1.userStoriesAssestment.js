@@ -98,11 +98,11 @@ const UNIT_DIR = path.join(OUTPUT_DIR, 'units');
 const TEMP_DIR = path.join(OUTPUT_DIR, 'temp');
 
 const MAX_PROMPT_CHARACTERS = 4000;
-const MAX_OUTPUT_TOKENS = 650;
+const MAX_OUTPUT_TOKENS = 2250;
 
 const CONTEXT_SIZE = 4096;
 const MODEL_THREADS = 8;
-const MODEL_GPU_LAYERS = 99;
+const MODEL_GPU_LAYERS = 4;
 const MODEL_BATCH_SIZE = 128;
 const MODEL_UBATCH_SIZE = 128;
 
@@ -462,9 +462,7 @@ async function startScript() {
                     userStoryId
                 );
 
-console.log('\n========== RAW QWEN RESPONSE ==========\n');
-console.log(qwenOutput);
-console.log('\n========== END RAW QWEN RESPONSE ==========\n');
+
             // STEP 6: Receive Qwen response.
 
             let rawResponse =
@@ -768,6 +766,11 @@ return prompt;
 // 12. RUN QWEN
 // ============================================================
 
+
+// ============================================================
+// 12. RUN QWEN — DETAILED INFERENCE LOGGING
+// ============================================================
+
 async function runQwen(prompt, userStoryId) {
 
     let promptFile = path.join(
@@ -779,28 +782,56 @@ async function runQwen(prompt, userStoryId) {
 
         let stdout = '';
         let stderr = '';
+
         let settled = false;
         let timedOut = false;
+
         let timeout;
         let killTimeout;
+        let progressInterval;
+
+        let startedAt = Date.now();
+        let firstOutputAt = null;
+        let lastOutputAt = null;
+
+        let stdoutChunks = 0;
+        let stderrChunks = 0;
+
+        let lastReportedCharacters = 0;
+
+        function elapsed() {
+            return (
+                (Date.now() - startedAt) / 1000
+            ).toFixed(2);
+        }
+
+        function qwenLog(message) {
+            console.log(
+                `[QWEN ${elapsed()}s] ${message}`
+            );
+        }
 
         function cleanup() {
+
             clearTimeout(timeout);
             clearTimeout(killTimeout);
+            clearInterval(progressInterval);
 
             try {
                 if (fs.existsSync(promptFile)) {
                     fs.unlinkSync(promptFile);
                 }
             } catch (_) {
-                // No terminal output.
+                // Ignore cleanup errors.
             }
         }
 
         function finish(error, result) {
+
             if (settled) return;
 
             settled = true;
+
             cleanup();
 
             if (error) {
@@ -812,17 +843,38 @@ async function runQwen(prompt, userStoryId) {
 
         try {
 
+            qwenLog('Checking executable...');
+
             if (!fs.existsSync(LLAMA_CLI)) {
                 throw new Error(
                     `llama-completion not found: ${LLAMA_CLI}`
                 );
             }
 
-            fs.writeFileSync(promptFile, prompt, 'utf8');
+            qwenLog(`Executable: ${LLAMA_CLI}`);
+            qwenLog(`Model: ${MODEL}`);
+            qwenLog(`Prompt characters: ${prompt.length}`);
+            qwenLog(`Context size: ${CONTEXT_SIZE}`);
+            qwenLog(`Maximum output tokens: ${MAX_OUTPUT_TOKENS}`);
+            qwenLog(`Threads: ${MODEL_THREADS}`);
+            qwenLog(`GPU layers requested: ${MODEL_GPU_LAYERS}`);
+            qwenLog(`Batch size: ${MODEL_BATCH_SIZE}`);
+            qwenLog(`UBatch size: ${MODEL_UBATCH_SIZE}`);
+            qwenLog('Reasoning setting: off');
+
+            qwenLog('Writing prompt file...');
+
+            fs.writeFileSync(
+                promptFile,
+                prompt,
+                'utf8'
+            );
 
             let args = [
                 '-hf', MODEL,
                 '-ngl', String(MODEL_GPU_LAYERS),
+                '--device', 'MTL0:AMD Radeon Pro 5300M',
+                '--fit', 'off',
                 '--single-turn',
                 '-c', String(CONTEXT_SIZE),
                 '-b', String(MODEL_BATCH_SIZE),
@@ -830,8 +882,15 @@ async function runQwen(prompt, userStoryId) {
                 '-t', String(MODEL_THREADS),
                 '--reasoning', 'off',
                 '-n', String(MAX_OUTPUT_TOKENS),
-                '-f', promptFile
+                '-f', promptFile,
+                
             ];
+
+            qwenLog('Launching Qwen process...');
+
+            qwenLog(
+                `Command arguments: ${args.join(' ')}`
+            );
 
             let child = spawn(LLAMA_CLI, args, {
                 cwd: ROOT,
@@ -841,13 +900,83 @@ async function runQwen(prompt, userStoryId) {
             child.stdout.setEncoding('utf8');
             child.stderr.setEncoding('utf8');
 
+            qwenLog(`Process PID: ${child.pid}`);
+            qwenLog('Waiting for model output...');
+
+            // --------------------------------------------
+            // STDOUT: GENERATED MODEL OUTPUT
+            // --------------------------------------------
+
             child.stdout.on('data', chunk => {
+
+                let now = Date.now();
+
                 stdout += chunk;
+                stdoutChunks++;
+
+                if (firstOutputAt === null) {
+
+                    firstOutputAt = now;
+
+                    qwenLog(
+                        `FIRST OUTPUT RECEIVED after ${(
+                            (now - startedAt) / 1000
+                        ).toFixed(2)} seconds`
+                    );
+                }
+
+                lastOutputAt = now;
             });
 
+            // --------------------------------------------
+            // STDERR: MODEL LOADING / BACKEND / DIAGNOSTICS
+            // --------------------------------------------
+
             child.stderr.on('data', chunk => {
+
                 stderr += chunk;
+                stderrChunks++;
+
+                let lines = chunk
+                    .toString()
+                    .split(/\r?\n/)
+                    .filter(Boolean);
+
+                for (const line of lines) {
+                    qwenLog(`STDERR: ${line}`);
+                }
             });
+
+            // --------------------------------------------
+            // PERIODIC GENERATION PROGRESS
+            // --------------------------------------------
+
+            progressInterval = setInterval(() => {
+
+                let currentCharacters = stdout.length;
+
+                let idleSeconds = lastOutputAt
+                    ? ((Date.now() - lastOutputAt) / 1000).toFixed(1)
+                    : 'No output yet';
+
+                let newCharacters =
+                    currentCharacters - lastReportedCharacters;
+
+                qwenLog(
+                    `PROGRESS | Output chars: ${currentCharacters} | ` +
+                    `New chars since last check: ${newCharacters} | ` +
+                    `Stdout chunks: ${stdoutChunks} | ` +
+                    `Idle: ${idleSeconds}s`
+                );
+
+                lastReportedCharacters =
+                    currentCharacters;
+
+            }, 10000);
+
+            // --------------------------------------------
+            // TIMEOUT
+            // --------------------------------------------
 
             timeout = setTimeout(() => {
 
@@ -855,17 +984,39 @@ async function runQwen(prompt, userStoryId) {
 
                 timedOut = true;
 
+                qwenLog(
+                    `TIMEOUT: Qwen exceeded ${MODEL_TIMEOUT_MS} ms`
+                );
+
+                qwenLog('Sending SIGTERM...');
+
                 child.kill('SIGTERM');
 
                 killTimeout = setTimeout(() => {
+
                     if (!settled) {
+
+                        qwenLog(
+                            'Process did not terminate; sending SIGKILL...'
+                        );
+
                         child.kill('SIGKILL');
                     }
+
                 }, MODEL_KILL_GRACE_MS);
 
             }, MODEL_TIMEOUT_MS);
 
+            // --------------------------------------------
+            // PROCESS ERROR
+            // --------------------------------------------
+
             child.on('error', error => {
+
+                qwenLog(
+                    `PROCESS ERROR: ${error.message}`
+                );
+
                 finish(
                     new Error(
                         `Unable to launch Qwen: ${error.message}`
@@ -873,40 +1024,84 @@ async function runQwen(prompt, userStoryId) {
                 );
             });
 
+            // --------------------------------------------
+            // PROCESS CLOSE
+            // --------------------------------------------
+
             child.on('close', (code, signal) => {
 
-                if (settled) return;
+                qwenLog('Qwen process closed.');
+
+                qwenLog(`Exit code: ${code}`);
+                qwenLog(`Signal: ${signal || 'none'}`);
+                qwenLog(`Timed out: ${timedOut}`);
+
+                qwenLog(`Total duration: ${elapsed()} seconds`);
+
+                qwenLog(`Stdout characters: ${stdout.length}`);
+                qwenLog(`Stderr characters: ${stderr.length}`);
+
+                qwenLog(`Stdout chunks: ${stdoutChunks}`);
+                qwenLog(`Stderr chunks: ${stderrChunks}`);
+
+                qwenLog(
+                    `First output delay: ${
+                        firstOutputAt
+                            ? ((firstOutputAt - startedAt) / 1000).toFixed(2) + ' seconds'
+                            : 'No output received'
+                    }`
+                );
+
+                qwenLog(
+                    `Last output received: ${
+                        lastOutputAt
+                            ? ((Date.now() - lastOutputAt) / 1000).toFixed(2) + ' seconds before close'
+                            : 'No output received'
+                    }`
+                );
 
                 if (timedOut) {
+
                     finish(
                         new Error(
                             `Qwen timed out after ${MODEL_TIMEOUT_MS} ms.`
                         )
                     );
+
                     return;
                 }
 
                 if (code !== 0) {
+
                     finish(
                         new Error(
-                            `Qwen exited with code ${code}; signal ${signal || 'none'}. ${stderr.slice(-2000)}`
+                            `Qwen exited with code ${code}; ` +
+                            `signal ${signal || 'none'}. ` +
+                            stderr.slice(-3000)
                         )
                     );
+
                     return;
                 }
 
                 if (!stdout.trim()) {
+
                     finish(
-                        new Error('Qwen returned no output.')
+                        new Error(
+                            'Qwen returned no output.'
+                        )
                     );
+
                     return;
                 }
 
-                finish(null, stdout);
+                qwenLog('Qwen generation completed successfully.');
 
+                finish(null, stdout);
             });
 
         } catch (error) {
+
             finish(error);
         }
 
