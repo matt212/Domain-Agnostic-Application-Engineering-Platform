@@ -1,0 +1,26 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Store Partner has submitted a Store Partner Agreement containing a new operating license.",
+      "when": "The system performs a validation check against the Regulatory Authority database.",
+      "then": "The system confirms the license is authentic and updates the Store Partner's compliance status to 'Active'."
+    },
+    {
+      "given": "The system performs a scheduled validation check on an existing Store Partner's license record.",
+      "when": "The Regulatory Authority database indicates the license is flagged as invalid.",
+      "then": "The system updates the compliance status to 'Non-Compliant' and blocks order allocation to that Store Partner."
+    },
+    {
+      "given": "A Store Partner's license expiration date is within 30 days of the current date.",
+      "when": "The system executes the daily license validation cycle.",
+      "then": "The system updates the Regulatory compliance status and triggers an immediate notification to the Store Partner."
+    }
+  ],
+  "success_criteria": [
+    "The system must confirm license authenticity by matching received data against the Regulatory Authority database.",
+    "The system must block order allocation if a Store Partner's primary operating license is flagged as invalid.",
+    "The system must update the Regulatory compliance status to 'Active' only when the license is verified valid.",
+    "The system must trigger an immediate notification to the Store Partner if their license expiration date is within 30 days.",
+    "The system must update the Regulatory compliance status within 24 hours of receiving new data from external sources."
+  ]
+}

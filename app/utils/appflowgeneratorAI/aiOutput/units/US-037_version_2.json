@@ -1,0 +1,42 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Store Partner has a food safety certificate that is valid and non-expired in the external database.",
+      "when": "The system automatically ingests license data from the external regulatory sources.",
+      "then": "The system updates the Store Partner's compliance status to 'Active' and allows order allocation."
+    },
+    {
+      "given": "The Store Partner uploads a document containing license data.",
+      "when": "The system ingests and validates the uploaded document against the Regulatory Authority database.",
+      "then": "The system updates the Store Partner's compliance status to 'Active' and allows order allocation."
+    },
+    {
+      "given": "A Store Partner's food safety certificate is flagged as invalid in the external database.",
+      "when": "The system performs a scheduled validation check.",
+      "then": "The system updates the Store Partner's compliance status to 'Non-Compliant' and blocks all new order requests for that Store Partner."
+    },
+    {
+      "given": "A Store Partner's primary operating license is flagged as invalid.",
+      "when": "The system performs a scheduled validation check.",
+      "then": "The system blocks order allocation to the Store Partner."
+    },
+    {
+      "given": "The system receives new data from external sources.",
+      "when": "The ingestion process completes.",
+      "then": "The Regulatory compliance status is updated within 24 hours."
+    },
+    {
+      "given": "The Store Partner's license expiration date is within 30 days.",
+      "when": "The system checks the license data during ingestion.",
+      "then": "The Store Partner is notified immediately of the expiration warning."
+    }
+  ],
+  "success_criteria": [
+    "The system successfully updates the compliance status to 'Active' when a valid food safety certificate is ingested.",
+    "The system successfully blocks order allocation when a primary operating license is flagged as invalid.",
+    "The system updates the Regulatory compliance status within 24 hours of receiving new data from external sources.",
+    "The system immediately notifies the Store Partner when their license expiration date is within 30 days.",
+    "The system updates the compliance status to 'Non-Compliant' when a food safety certificate is found to be expired.",
+    "The system allows order allocation for a Store Partner whose food safety certificate has a future expiration date in the external database."
+  ]
+}

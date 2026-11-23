@@ -1,0 +1,36 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Delivery Partner has submitted a Delivery Proof indicating a delivery exception",
+      "when": "The system processes the delivery proof",
+      "then": "A Dispute Ticket is automatically generated with status 'Open' and linked to the Order Request"
+    },
+    {
+      "given": "The system has created a Dispute Ticket with status 'Open'",
+      "when": "The system executes the notification routine",
+      "then": "The Customer and the Delivery Partner are notified of the dispute creation and required actions"
+    },
+    {
+      "given": "The Customer has logged into the platform",
+      "when": "The Customer views the Dispute Ticket details",
+      "then": "The Customer sees the dispute creation notification and the required actions to resolve the dispute"
+    },
+    {
+      "given": "The Delivery Partner has received the notification",
+      "when": "The Delivery Partner views the Dispute Ticket",
+      "then": "The Delivery Partner sees the dispute creation notification and the required actions"
+    },
+    {
+      "given": "A Customer reports a missing item and the system attempts to generate a Dispute Ticket",
+      "when": "The system detects the delivery proof is missing or incomplete",
+      "then": "The system creates a Dispute Ticket with status 'Pending Investigation' and notifies the Customer"
+    }
+  ],
+  "success_criteria": [
+    "The Customer receives a notification regarding the creation of a new Dispute Ticket and required actions immediately after the ticket is generated.",
+    "The Delivery Partner receives a notification regarding the creation of a new Dispute Ticket and required actions immediately after the ticket is generated.",
+    "The Dispute Ticket is automatically generated with status 'Open' and linked to the Order Request when a Delivery Proof indicates an exception.",
+    "The Dispute Ticket is generated with status 'Pending Investigation' when a Customer reports a missing item and the delivery proof is missing or incomplete.",
+    "The notification content clearly specifies the required actions for both the Customer and the Delivery Partner."
+  ]
+}

@@ -1,0 +1,25 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Real-Time Inventory Snapshot shows an item with less than the configured safety margin remaining shelf life.",
+      "when": "The Order Allocation Engine processes a new Order Request containing the item.",
+      "then": "The system rejects the Order Request and updates the Product Catalog status to prevent new requests."
+    },
+    {
+      "given": "The system detects an item flagged as 'nearing expiry' in the Order Allocation Engine.",
+      "when": "The system performs an inventory quality check on the Real-Time Inventory Snapshot.",
+      "then": "The system updates the Product Catalog status and logs an expiry alert with a timestamp and specific item identifier."
+    },
+    {
+      "given": "A Store Partner queries the Product Catalog for an item flagged as 'nearing expiry'.",
+      "when": "The system processes the query against the Real-Time Inventory Snapshot.",
+      "then": "The system prevents the creation of new Order Requests and returns an unavailable status for the item."
+    }
+  ],
+  "success_criteria": [
+    "The Product Catalog status is immediately updated upon detecting an expiry alert.",
+    "New Order Requests are rejected if the primary fulfillment source contains items flagged as 'nearing expiry'.",
+    "All expiry alerts are logged with a timestamp and the specific item identifier.",
+    "The system prevents new Order Requests for items nearing expiry based on the configured safety margin."
+  ]
+}

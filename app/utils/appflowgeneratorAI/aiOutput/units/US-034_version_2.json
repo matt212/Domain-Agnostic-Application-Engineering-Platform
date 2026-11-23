@@ -1,0 +1,30 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Delivery Partner submits a Delivery Proof showing a package was damaged during transit",
+      "when": "The system processes the delivery proof",
+      "then": "A Dispute Ticket is automatically generated with status 'Open' and linked to the Order Request"
+    },
+    {
+      "given": "A Customer reports a missing item and the system attempts to generate a Dispute Ticket",
+      "when": "The system detects the delivery proof is missing or incomplete",
+      "then": "The system creates a Dispute Ticket with status 'Pending Investigation' and notifies the Customer"
+    },
+    {
+      "given": "A Dispute Ticket is in 'Open' status and a final decision is recorded by a Platform Operator",
+      "when": "The system processes the status update",
+      "then": "The Dispute Ticket status transitions from 'Open' to 'Resolved'"
+    },
+    {
+      "given": "A Financial Transaction Record requires adjustment due to a dispute",
+      "when": "The Dispute Ticket is in 'Resolved' status",
+      "then": "The system finalizes the Financial adjustment"
+    }
+  ],
+  "success_criteria": [
+    "A Dispute Ticket is created immediately upon receipt of a Delivery Proof indicating a delivery exception.",
+    "The Dispute Ticket status transitions from 'Open' to 'Resolved' only after a final decision is recorded.",
+    "A Dispute Ticket remains linked to the original Order Request for the duration of the resolution process.",
+    "Financial adjustments are finalized only after the Dispute Ticket is marked as Resolved."
+  ]
+}

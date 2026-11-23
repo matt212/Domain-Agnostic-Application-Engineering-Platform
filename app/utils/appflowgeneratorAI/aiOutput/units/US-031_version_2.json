@@ -1,0 +1,21 @@
+{
+  "given_when_then": [
+    {
+      "given": "The Real-Time Inventory Snapshot shows an item with 2 days remaining until its sell-by date, and the configured threshold is 3 days.",
+      "when": "The system performs its scheduled inventory quality check.",
+      "then": "The system flags the item in the Product Catalog and sends an alert to the Store Partner."
+    },
+    {
+      "given": "A customer attempts to place an Order Request containing an item flagged as 'nearing expiry'.",
+      "when": "The Order Allocation Engine processes the request.",
+      "then": "The system rejects the Order Request and notifies the customer that the item is unavailable due to quality constraints."
+    }
+  ],
+  "success_criteria": [
+    "The system logs all expiry alerts with a timestamp and the specific item identifier in a Feedback Record.",
+    "The system logs all subsequent actions, including Order Request rejections and catalog status updates, in the Feedback Record.",
+    "The Product Catalog status is updated immediately upon detection of an expiry alert.",
+    "New Order Requests containing items flagged as 'nearing expiry' are rejected.",
+    "All expiry alerts are detected when remaining shelf life is less than the configured safety margin."
+  ]
+}

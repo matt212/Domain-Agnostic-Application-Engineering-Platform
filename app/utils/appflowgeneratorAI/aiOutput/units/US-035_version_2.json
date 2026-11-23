@@ -1,0 +1,19 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Dispute Ticket exists and is linked to an Order Request",
+      "when": "The Delivery Partner submits a Delivery Proof for the ticket",
+      "then": "The system associates the Delivery Proof with the Dispute Ticket"
+    },
+    {
+      "given": "A Dispute Ticket exists and is linked to an Order Request",
+      "when": "A Financial Transaction Record is available for the ticket",
+      "then": "The system associates the Financial Transaction Record with the Dispute Ticket"
+    }
+  ],
+  "success_criteria": [
+    "The Dispute Ticket record must contain a reference to the associated Delivery Proof.",
+    "The Dispute Ticket record must contain a reference to the associated Financial Transaction Record.",
+    "The Dispute Ticket must retain its link to the original Order Request after association."
+  ]
+}

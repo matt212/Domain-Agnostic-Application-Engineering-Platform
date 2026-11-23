@@ -1,0 +1,25 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Delivery Partner submits a Delivery Proof showing a package was damaged during transit",
+      "when": "The system processes the delivery proof",
+      "then": "A Dispute Ticket is automatically generated with status 'Open' and linked to the Order Request"
+    },
+    {
+      "given": "A Customer reports a missing item and the system attempts to generate a Dispute Ticket",
+      "when": "The system detects the delivery proof is missing or incomplete",
+      "then": "The system creates a Dispute Ticket with status 'Pending Investigation' and notifies the Customer"
+    },
+    {
+      "given": "A Delivery Partner submits a Delivery Proof indicating a delivery exception",
+      "when": "The system receives the proof",
+      "then": "A Dispute Ticket is created immediately to record the nature of the issue"
+    }
+  ],
+  "success_criteria": [
+    "The Dispute Ticket is created immediately upon receipt of the Delivery Proof indicating a delivery exception.",
+    "The Dispute Ticket status is set to 'Open' when generated from a delivery exception.",
+    "The Dispute Ticket is linked to the original Order Request.",
+    "The system records the specific nature of the issue (missing items, damages, or failed deliveries) within the ticket."
+  ]
+}

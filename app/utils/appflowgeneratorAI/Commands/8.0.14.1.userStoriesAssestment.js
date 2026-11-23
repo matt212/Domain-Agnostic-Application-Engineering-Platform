@@ -411,6 +411,144 @@ function ensureDirectories() {
 // Each step stores its returned result in a let variable.
 // ============================================================
 
+// async function startScript() {
+
+//     let dimensionConfiguration =
+//         validateDimensionConfiguration();
+
+//     let directoriesCreated =
+//         ensureDirectories();
+
+//     let dbConnection =
+//         await connectToPostgreSQL();
+
+
+//     try {
+
+//         // Repeat for each User Story.
+
+//         while (true) {
+
+//             // STEP 1: Find next User Story.
+
+//             let userStoryId =
+//                 await findNextUserStory(dbConnection);
+
+//             if (!userStoryId) {
+//                 break;
+//             }
+
+
+//             // STEP 2: Retrieve original User Story.
+
+//             let originalStory =
+//                 await retrieveUserStory(
+//                     dbConnection,
+//                     userStoryId
+//                 );
+
+
+//             // STEP 3: Prepare AI input.
+//             let aiInput =
+//                 prepareAIInput(originalStory);
+
+
+//             // STEP 4: Build Qwen prompt.
+// //console.log(`\nBuilding prompt for User Story: ${aiInput}\n`);
+//             let prompt =
+//                 buildPrompt(aiInput);
+// //console.log(`\nPrompt built for User Story: ${prompt}\n`);
+
+//             // STEP 5: Run Qwen.
+
+//             let qwenOutput =
+//                 await runQwen(
+//                     prompt,
+//                     userStoryId
+//                 );
+
+// console.log(`\qwenOutput OUTPUT  for User Story: ${qwenOutput}\n`);
+//             // STEP 6: Receive Qwen response.
+
+//             let rawResponse =
+//                 receiveQwenResponse(qwenOutput);
+
+
+//             // STEP 7: Extract JSON.
+
+//             let generatedJSON =
+//                 extractJSON(rawResponse);
+
+
+//             // STEP 8: Validate generated JSON.
+
+//             let validatedJSON =
+//                 validateJSON(generatedJSON);
+
+
+//             // STEP 9: Prepare new User Story version.
+
+//             let newStoryVersion =
+//                 prepareNewStoryVersion(
+//                     originalStory,
+//                     validatedJSON
+//                 );
+
+
+//             // STEP 10: Verify copied User Story.
+
+//             let verifiedStory =
+//                 verifyCopiedStory(
+//                     newStoryVersion,
+//                     originalStory
+//                 );
+
+
+//             // STEP 11: Save new User Story version.
+
+//             let savedVersion =
+//                 await saveNewVersion(
+//                     dbConnection,
+//                     verifiedStory,
+//                     validatedJSON
+//                 );
+
+
+//             // STEP 12: Write JSON artifact.
+
+//             let jsonArtifact =
+//                 writeJSONArtifact(
+//                     userStoryId,
+//                     savedVersion.version_number,
+//                     validatedJSON
+//                 );
+
+
+//             // STEP 13: Print generated dimensions.
+
+//             let printedDimensions =
+//                 printGeneratedDimensions(
+//                     userStoryId,
+//                     validatedJSON
+//                 );
+
+
+//             // STEP 14: Repeat.
+//             // Execution returns to STEP 1.
+
+//         }
+
+//     } finally {
+
+//         // Close PostgreSQL connection.
+
+//         let finished =
+//             await finishScript(dbConnection);
+
+//     }
+
+//     return true;
+// }
 async function startScript() {
 
     let dimensionConfiguration =
@@ -422,6 +560,7 @@ async function startScript() {
     let dbConnection =
         await connectToPostgreSQL();
 
+    const MAX_RETRIES = 3;
 
     try {
 
@@ -438,7 +577,6 @@ async function startScript() {
                 break;
             }
 
-
             // STEP 2: Retrieve original User Story.
 
             let originalStory =
@@ -447,44 +585,87 @@ async function startScript() {
                     userStoryId
                 );
 
+            // Retry only the current User Story.
 
-            // STEP 3: Prepare AI input.
-            let aiInput =
-                prepareAIInput(originalStory);
+            let validatedJSON = null;
 
+            for (
+                let attempt = 1;
+                attempt <= MAX_RETRIES;
+                attempt++
+            ) {
 
-            // STEP 4: Build Qwen prompt.
-//console.log(`\nBuilding prompt for User Story: ${aiInput}\n`);
-            let prompt =
-                buildPrompt(aiInput);
-//console.log(`\nPrompt built for User Story: ${prompt}\n`);
+                try {
 
-            // STEP 5: Run Qwen.
+                    // STEP 3: Prepare AI input.
 
-            let qwenOutput =
-                await runQwen(
-                    prompt,
-                    userStoryId
+                    let aiInput =
+                        prepareAIInput(originalStory);
+
+                    // STEP 4: Build Qwen prompt.
+
+                    let prompt =
+                        buildPrompt(aiInput);
+
+                    // STEP 5: Run Qwen.
+
+                    let qwenOutput =
+                        await runQwen(
+                            prompt,
+                            userStoryId
+                        );
+
+                    console.log(
+                        `Qwen OUTPUT for User Story ${userStoryId}, attempt ${attempt}:`,
+                        qwenOutput
+                    );
+
+                    // STEP 6: Receive Qwen response.
+
+                    let rawResponse =
+                        receiveQwenResponse(qwenOutput);
+
+                    // STEP 7: Extract JSON.
+
+                    let generatedJSON =
+                        extractJSON(rawResponse);
+
+                    // STEP 8: Validate generated JSON.
+
+                    validatedJSON =
+                        validateJSON(generatedJSON);
+
+                    // Successful validation: stop retrying.
+
+                    if (validatedJSON) {
+                        break;
+                    }
+
+                } catch (error) {
+
+                    console.error(
+                        `User Story ${userStoryId}: Attempt ${attempt}/${MAX_RETRIES} failed:`,
+                        error.message
+                    );
+
+                    if (attempt === MAX_RETRIES) {
+                        throw error;
+                    }
+
+                }
+
+                if (attempt < MAX_RETRIES) {
+                    await new Promise(resolve =>
+                        setTimeout(resolve, 1000)
+                    );
+                }
+            }
+
+            if (!validatedJSON) {
+                throw new Error(
+                    `Qwen failed to generate valid JSON for User Story ${userStoryId} after ${MAX_RETRIES} attempts.`
                 );
-
-console.log(`\qwenOutput OUTPUT  for User Story: ${qwenOutput}\n`);
-            // STEP 6: Receive Qwen response.
-
-            let rawResponse =
-                receiveQwenResponse(qwenOutput);
-
-
-            // STEP 7: Extract JSON.
-
-            let generatedJSON =
-                extractJSON(rawResponse);
-
-
-            // STEP 8: Validate generated JSON.
-
-            let validatedJSON =
-                validateJSON(generatedJSON);
-
+            }
 
             // STEP 9: Prepare new User Story version.
 
@@ -494,7 +675,6 @@ console.log(`\qwenOutput OUTPUT  for User Story: ${qwenOutput}\n`);
                     validatedJSON
                 );
 
-
             // STEP 10: Verify copied User Story.
 
             let verifiedStory =
@@ -502,7 +682,6 @@ console.log(`\qwenOutput OUTPUT  for User Story: ${qwenOutput}\n`);
                     newStoryVersion,
                     originalStory
                 );
-
 
             // STEP 11: Save new User Story version.
 
@@ -513,7 +692,6 @@ console.log(`\qwenOutput OUTPUT  for User Story: ${qwenOutput}\n`);
                     validatedJSON
                 );
 
-
             // STEP 12: Write JSON artifact.
 
             let jsonArtifact =
@@ -523,7 +701,6 @@ console.log(`\qwenOutput OUTPUT  for User Story: ${qwenOutput}\n`);
                     validatedJSON
                 );
 
-
             // STEP 13: Print generated dimensions.
 
             let printedDimensions =
@@ -532,9 +709,7 @@ console.log(`\qwenOutput OUTPUT  for User Story: ${qwenOutput}\n`);
                     validatedJSON
                 );
 
-
-            // STEP 14: Repeat.
-            // Execution returns to STEP 1.
+            // STEP 14: Repeat for next User Story.
 
         }
 
@@ -549,7 +724,6 @@ console.log(`\qwenOutput OUTPUT  for User Story: ${qwenOutput}\n`);
 
     return true;
 }
-
 
 // ============================================================
 // 7. CONNECT TO POSTGRESQL
