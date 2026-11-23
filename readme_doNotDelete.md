@@ -616,3 +616,13 @@ below are customer's activities not output, till 1.e .
 --metal
  GGML_METAL_TENSOR_ENABLE=1 \
 node app/utils/appflowgeneratorAI/Commands/8.0.14.1.userStoriesAssestment.js
+
+
+/Users/apple/Documents/Projects/fastify/llama-metal/build/bin/llama-completion \
+  -hf unsloth/Qwen3.5-9B-GGUF:Q4_K_M \
+  -ngl 4 \
+  --device "MTL0:AMD Radeon Pro 5300M" \
+  --fit off \
+  -c 4096 \
+  -n 10 \
+  -p "Reply with OK."

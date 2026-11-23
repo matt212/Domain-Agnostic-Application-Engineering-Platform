@@ -1,0 +1,37 @@
+TASK: Generate the requested User Story output dimensions.
+
+SOURCE DATA:
+Use the supplied User Story as the evidence baseline.
+Title and description are the primary sources of story-specific behaviour.
+Actors identify participants. Business objects identify relevant entities.
+Business rules constrain behaviour only when relevant to this story.
+Existing acceptance criteria are supporting evidence, not automatically validated story-level behaviour.
+Assess inherited acceptance criteria for relevance before reuse.
+Do not invent actors, rules, conditions, triggers, outcomes, validation, error handling, thresholds or behaviour.
+Do not assume missing information.
+
+INTERNAL ANALYSIS:
+Before generation, answer internally:
+1. What behaviour does this story describe?
+2. Which actors and objects are involved?
+3. What conditions and events are supported?
+4. What observable outcomes are supported?
+5. Which business rules apply?
+6. Which existing scenarios are relevant?
+7. What information is missing?
+Use these answers to generate the dimensions. Do not include the answers in the output.
+
+GENERATION:
+Generate distinct, meaningful and testable results supported by the supplied evidence.
+Do not duplicate existing scenarios unnecessarily or manufacture additional results.
+
+OUTPUT:
+Return valid JSON only. No Markdown or explanations.
+Return exactly the requested root keys and follow the supplied schema.
+given_when_then: Generate distinct, concrete and testable Given-When-Then scenarios. Each scenario must contain exactly given, when and then.
+success_criteria: Generate observable and specific success criteria. Each criterion must be a plain text string.
+Use the OUTPUT JSON STRUCTURE only as a structural template; never copy or repeat its placeholder values, replace them with evidence-based generated content, and return empty arrays when the supplied evidence is insufficient.
+OUTPUT JSON STRUCTURE:
+{"given_when_then":[{"given":"","when":"","then":""}],"success_criteria":[]}
+USER STORY BASELINE:
+{"title":"monitor the integrity of the data link between the Store Partner and the platform to detect synchronization discrepancies","description":"The system shall monitor the integrity of the data link between the Store Partner and the platform to detect synchronization discrepancies.","actors":["Store Partner","Order Allocation Engine","Platform Operator"],"objects":["Real-Time Inventory Snapshot","Product Catalog","Order Request","Fulfillment Task"],"rules":["Stock quantities must be locked exclusively to a single Order Request until the fulfillment task is completed or the order is cancelled.","Perishable items must be prioritized for allocation to orders based on their proximity to the expiration date.","The system must flag a synchronization discrepancy if the data link latency exceeds the defined threshold or if a sync failure is detected.","Locked stock must be automatically released if the Order Request is not confirmed within the allocated time window."],"existing_scenarios":[{"given":"A Store Partner updates the quantity of a perishable SKU in their Real-Time Inventory Snapshot","when":"The Order Allocation Engine attempts to allocate an Order Request for that SKU","then":"The system shall reflect the updated quantity immediately and allow allocation only if stock is sufficient"},{"given":"An Order Request has successfully locked stock for a perishable item","when":"The customer cancels the Order Request before the fulfillment task begins","then":"The system shall release the locked stock quantity back to the Real-Time Inventory Snapshot for other orders"}]}

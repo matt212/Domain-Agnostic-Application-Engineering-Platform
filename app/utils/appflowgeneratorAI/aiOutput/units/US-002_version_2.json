@@ -1,0 +1,30 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Store Partner updates the quantity of a perishable SKU in their Real-Time Inventory Snapshot",
+      "when": "The Order Allocation Engine attempts to allocate an Order Request for that SKU",
+      "then": "The system shall reflect the updated quantity immediately and allow allocation only if stock is sufficient"
+    },
+    {
+      "given": "An Order Request has successfully locked stock for a perishable item",
+      "when": "The Customer cancels the Order Request before the fulfillment task begins",
+      "then": "The system shall release the locked stock quantity back to the Real-Time Inventory Snapshot for other orders"
+    },
+    {
+      "given": "Multiple Order Requests are attempting to allocate stock for the same perishable item simultaneously",
+      "when": "The Order Allocation Engine processes the allocation requests",
+      "then": "The system shall lock the available stock quantity to the first successful request and reject subsequent requests for that quantity to prevent overselling"
+    },
+    {
+      "given": "An Order Request has locked stock but remains unconfirmed",
+      "when": "The allocated time window expires without confirmation",
+      "then": "The system shall automatically release the locked stock quantity back to the Real-Time Inventory Snapshot"
+    }
+  ],
+  "success_criteria": [
+    "The stock quantity associated with an Order Request is locked exclusively to that specific request immediately upon allocation.",
+    "Concurrent allocation attempts for the same SKU result in only one successful lock, with other attempts failing.",
+    "The system prevents overselling by ensuring available stock is not double-allocated to different Order Requests.",
+    "Locked stock is automatically released when the Order Request is cancelled or when the confirmation time window expires."
+  ]
+}

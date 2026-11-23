@@ -2,6 +2,11 @@
 'use strict';
 
 /*
+
+ GGML_METAL_TENSOR_ENABLE=1 \
+node app/utils/appflowgeneratorAI/Commands/8.0.14.1.userStoriesAssestment.js
+
+
  * USER STORY DIMENSION GENERATOR
  *
  * EXECUTION:
@@ -102,12 +107,12 @@ const MAX_OUTPUT_TOKENS = 2250;
 
 const CONTEXT_SIZE = 4096;
 const MODEL_THREADS = 8;
-const MODEL_GPU_LAYERS = 4;
+const MODEL_GPU_LAYERS = 20;
 const MODEL_BATCH_SIZE = 128;
 const MODEL_UBATCH_SIZE = 128;
 
 const MODEL_TIMEOUT_MS = 300000;
-const MODEL_KILL_GRACE_MS = 5000;
+const MODEL_KILL_GRACE_MS = 6000;
 
 
 // ============================================================
@@ -782,6 +787,9 @@ async function runQwen(prompt, userStoryId) {
 
         let stdout = '';
         let stderr = '';
+        let stderrBuffer = '';
+
+        let gpuLogLines = [];
 
         let settled = false;
         let timedOut = false;
@@ -872,6 +880,8 @@ async function runQwen(prompt, userStoryId) {
 
             let args = [
                 '-hf', MODEL,
+                '-no-cnv',
+                '--verbose',
                 '-ngl', String(MODEL_GPU_LAYERS),
                 '--device', 'MTL0:AMD Radeon Pro 5300M',
                 '--fit', 'off',
@@ -882,8 +892,7 @@ async function runQwen(prompt, userStoryId) {
                 '-t', String(MODEL_THREADS),
                 '--reasoning', 'off',
                 '-n', String(MAX_OUTPUT_TOKENS),
-                '-f', promptFile,
-                
+                '-f', promptFile
             ];
 
             qwenLog('Launching Qwen process...');
@@ -894,7 +903,11 @@ async function runQwen(prompt, userStoryId) {
 
             let child = spawn(LLAMA_CLI, args, {
                 cwd: ROOT,
-                stdio: ['ignore', 'pipe', 'pipe']
+                stdio: ['ignore', 'pipe', 'pipe'],
+                env: {
+                    ...process.env,
+                    GGML_METAL_TENSOR_ENABLE: '1'
+                }
             });
 
             child.stdout.setEncoding('utf8');
@@ -929,7 +942,8 @@ async function runQwen(prompt, userStoryId) {
             });
 
             // --------------------------------------------
-            // STDERR: MODEL LOADING / BACKEND / DIAGNOSTICS
+            // STDERR: CAPTURE EVERYTHING
+            // PRINT ONLY GPU ASSIGNMENT/OFFLOAD MESSAGES
             // --------------------------------------------
 
             child.stderr.on('data', chunk => {
@@ -937,14 +951,120 @@ async function runQwen(prompt, userStoryId) {
                 stderr += chunk;
                 stderrChunks++;
 
-                let lines = chunk
-                    .toString()
-                    .split(/\r?\n/)
-                    .filter(Boolean);
+                stderrBuffer += chunk;
+
+                let lines = stderrBuffer.split(/\r?\n/);
+
+                stderrBuffer = lines.pop() || '';
 
                 for (const line of lines) {
-                    qwenLog(`STDERR: ${line}`);
+
+                    if (
+                        /offload|assigned to device|MTL0_Private model buffer/i.test(line)
+                    ) {
+
+                        gpuLogLines.push(line);
+
+                        qwenLog(
+                            `GPU: ${line.trim()}`
+                        );
+                    }
                 }
+            });
+
+            // --------------------------------------------
+            // PROCESS CLOSE
+            // --------------------------------------------
+
+            child.on('close', (code, signal) => {
+
+                // Process any final stderr line without a newline.
+                if (stderrBuffer.trim()) {
+
+                    if (
+                        /offload|assigned to device|MTL0_Private model buffer/i.test(stderrBuffer)
+                    ) {
+
+                        gpuLogLines.push(stderrBuffer);
+
+                        qwenLog(
+                            `GPU: ${stderrBuffer.trim()}`
+                        );
+                    }
+                }
+
+                qwenLog('Qwen process closed.');
+
+                qwenLog(`Exit code: ${code}`);
+                qwenLog(`Signal: ${signal || 'none'}`);
+                qwenLog(`Timed out: ${timedOut}`);
+
+                qwenLog(`Total duration: ${elapsed()} seconds`);
+
+                qwenLog(`Stdout characters: ${stdout.length}`);
+                qwenLog(`Stderr characters: ${stderr.length}`);
+
+                qwenLog(`Stdout chunks: ${stdoutChunks}`);
+                qwenLog(`Stderr chunks: ${stderrChunks}`);
+
+                qwenLog(
+                    `GPU diagnostic lines captured: ${gpuLogLines.length}`
+                );
+
+                qwenLog(
+                    `First output delay: ${
+                        firstOutputAt
+                            ? ((firstOutputAt - startedAt) / 1000).toFixed(2) + ' seconds'
+                            : 'No output received'
+                    }`
+                );
+
+                qwenLog(
+                    `Last output received: ${
+                        lastOutputAt
+                            ? ((Date.now() - lastOutputAt) / 1000).toFixed(2) + ' seconds before close'
+                            : 'No output received'
+                    }`
+                );
+
+                if (timedOut) {
+
+                    finish(
+                        new Error(
+                            `Qwen timed out after ${MODEL_TIMEOUT_MS} ms.`
+                        )
+                    );
+
+                    return;
+                }
+
+                if (code !== 0) {
+
+                    finish(
+                        new Error(
+                            `Qwen exited with code ${code}; ` +
+                            `signal ${signal || 'none'}. ` +
+                            stderr.slice(-3000)
+                        )
+                    );
+
+                    return;
+                }
+
+                if (!stdout.trim()) {
+
+                    finish(
+                        new Error(
+                            'Qwen returned no output.'
+                        )
+                    );
+
+                    return;
+                }
+
+                qwenLog('Qwen generation completed successfully.');
+
+                finish(null, stdout);
             });
 
             // --------------------------------------------
@@ -1022,82 +1142,6 @@ async function runQwen(prompt, userStoryId) {
                         `Unable to launch Qwen: ${error.message}`
                     )
                 );
-            });
-
-            // --------------------------------------------
-            // PROCESS CLOSE
-            // --------------------------------------------
-
-            child.on('close', (code, signal) => {
-
-                qwenLog('Qwen process closed.');
-
-                qwenLog(`Exit code: ${code}`);
-                qwenLog(`Signal: ${signal || 'none'}`);
-                qwenLog(`Timed out: ${timedOut}`);
-
-                qwenLog(`Total duration: ${elapsed()} seconds`);
-
-                qwenLog(`Stdout characters: ${stdout.length}`);
-                qwenLog(`Stderr characters: ${stderr.length}`);
-
-                qwenLog(`Stdout chunks: ${stdoutChunks}`);
-                qwenLog(`Stderr chunks: ${stderrChunks}`);
-
-                qwenLog(
-                    `First output delay: ${
-                        firstOutputAt
-                            ? ((firstOutputAt - startedAt) / 1000).toFixed(2) + ' seconds'
-                            : 'No output received'
-                    }`
-                );
-
-                qwenLog(
-                    `Last output received: ${
-                        lastOutputAt
-                            ? ((Date.now() - lastOutputAt) / 1000).toFixed(2) + ' seconds before close'
-                            : 'No output received'
-                    }`
-                );
-
-                if (timedOut) {
-
-                    finish(
-                        new Error(
-                            `Qwen timed out after ${MODEL_TIMEOUT_MS} ms.`
-                        )
-                    );
-
-                    return;
-                }
-
-                if (code !== 0) {
-
-                    finish(
-                        new Error(
-                            `Qwen exited with code ${code}; ` +
-                            `signal ${signal || 'none'}. ` +
-                            stderr.slice(-3000)
-                        )
-                    );
-
-                    return;
-                }
-
-                if (!stdout.trim()) {
-
-                    finish(
-                        new Error(
-                            'Qwen returned no output.'
-                        )
-                    );
-
-                    return;
-                }
-
-                qwenLog('Qwen generation completed successfully.');
-
-                finish(null, stdout);
             });
 
         } catch (error) {
