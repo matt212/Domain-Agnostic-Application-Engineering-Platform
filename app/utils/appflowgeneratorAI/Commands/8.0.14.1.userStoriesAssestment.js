@@ -102,10 +102,10 @@ const OUTPUT_DIR = path.join(
 const UNIT_DIR = path.join(OUTPUT_DIR, 'units');
 const TEMP_DIR = path.join(OUTPUT_DIR, 'temp');
 
-const MAX_PROMPT_CHARACTERS = 4500;
-const MAX_OUTPUT_TOKENS = 2250;
+const MAX_PROMPT_CHARACTERS = 7000;
+const MAX_OUTPUT_TOKENS = 4250;
 
-const CONTEXT_SIZE = 4096;
+const CONTEXT_SIZE = 5096;
 const MODEL_THREADS = 8;
 const MODEL_GPU_LAYERS = 20;
 const MODEL_BATCH_SIZE = 128;
@@ -777,24 +777,36 @@ function buildPrompt(aiInput) {
 
 
 
+
 let fixedPrompt = [
     'ROLE: Principal requirements engineer and solution architect.',
     '',
-    'MISSION: Transform this User Story into a COMPLETE, IMPLEMENTABLE AND TESTABLE engineering-handoff specification. Producing anything less is an incomplete response.',
+    'MISSION: Transform this User Story into a complete, implementable and testable engineering-handoff specification. Anything less is incomplete.',
     '',
-    'EVIDENCE: Independently interpret the User Story and all supplied relevant contextual evidence, including related stories, actors, objects, relationships, requirements, rules, workflows and constraints. Treat existing content as evidence, never as truth or a completeness checklist.',
+    'EVIDENCE: Independently interpret the User Story and all relevant supplied contextual evidence, including related stories, actors, objects, relationships, requirements, rules, workflows and constraints. Treat existing content as evidence, never as truth or a completeness checklist.',
     '',
-    'DISCOVERY: Derive the story intent, actors, responsibilities, interactions, business objects, conditions, triggers, rules, constraints, states, transitions and expected outcomes. Discover all applicable normal, alternative, exceptional, validation, boundary, failure and recovery behaviours. Do not assume domain-specific functionality or import unrelated behaviour.',
+    'DISCOVERY: Establish the actual story intent, scope, actors, responsibilities, interactions, business objects, conditions, triggers, rules, constraints, states, transitions and expected outcomes. Identify all applicable normal, alternative, exceptional, validation, boundary, failure and recovery behaviours. Include only behaviour relevant to this User Story.',
     '',
-    'GWT RECONSTRUCTION: Produce every distinct scenario necessary to specify the complete applicable behaviour. Each scenario must have explicit GIVEN preconditions, WHEN triggers and THEN observable, deterministic outcomes. Cover applicable success, rejection, exception and state-transition paths.',
+    'SCOPE AND EVIDENCE CONTROL: Derive scenarios from the actual intent and scope of the User Story. Distinguish explicitly documented behaviour from behaviour logically established by supplied evidence. Do not expand generic requirements into speculative actor-object-action combinations, exhaustive matrices or unrelated functionality. Never turn plausible assumptions into confirmed requirements. Exclude unsupported behaviour rather than inventing it.',
     '',
-    'SUCCESS CRITERIA: Produce complete, objective and independently verifiable conditions covering applicable functional outcomes, business rules, data integrity and quality expectations. Avoid vague, duplicate or unmeasurable criteria.',
+    'ACTOR AND CONTEXT SPECIFICITY: Use actual actor names, roles, responsibilities and relationships wherever relevant and supported by evidence. Identify specific business objects, actions and states when established by the User Story or contextual evidence. Use generic terms such as current user, requested action or business object when the requirement is intentionally generic. Never invent actor identities, responsibilities or relationships.',
     '',
-    'HANDOFF ENFORCEMENT: Challenge the complete specification against the story intent and all relevant evidence. Ensure engineers can determine what to build and QA can determine what to test and what constitutes passing. Identify and correct omissions, contradictions, ambiguity, dependencies, unsupported assumptions and untestable outcomes. Reconstruct and challenge again until no known evidence-supported defect remains.',
+    'ACTOR-DRIVEN SCENARIO DERIVATION: Reflect documented actor capabilities, restrictions, interactions, object access and applicable boundaries in relevant scenarios. Express actor-to-action and actor-to-object relationships explicitly when supported. Distinguish applicable constraints such as permissions, ownership, assignment, scope and lifecycle state. Do not force actor-specific scenarios when the story specifies common system behaviour. Never assume business rules, permission mappings, access outcomes, responses or technical mechanisms without evidence.',
     '',
-    'STRICT RULES: Neither baseline nor AI content is authoritative. Do not merely assess, preserve or minimally modify existing content. Do not invent business rules, permissions, metrics or thresholds. Exhaust relevant contextual evidence before concluding information is missing. Never disguise uncertainty as a confirmed requirement.',
+    'GWT RECONSTRUCTION: Independently reconstruct all distinct scenarios necessary to specify the applicable behaviour. Each scenario must contain explicit GIVEN preconditions, WHEN triggers and THEN observable, deterministic outcomes. Cover applicable success, rejection, exception, validation and state-transition paths. Avoid redundant scenarios and unnecessary fragmentation.',
     '',
-    'ACCEPTANCE STANDARD: The final output MUST represent the strongest complete, internally consistent, evidence-supported specification possible for engineering implementation and QA verification. Do not return a partial assessment, draft, recommendation or knowingly incomplete specification.',
+    'SCENARIO PROPORTIONALITY: Keep GWT scenarios concise and proportionate to the User Story. Prefer 2–3 distinct scenarios for typical stories. Use fewer for simple stories and add more only for materially different behaviours, conditions, exceptions or outcomes that cannot be clearly covered otherwise. Do not split scenarios unnecessarily, enumerate every actor/object/action combination or duplicate coverage. Never sacrifice behavioural completeness for a target count.',
+    '',
+    'SUCCESS CRITERIA: Produce complete, objective and independently verifiable conditions covering applicable functional outcomes, business rules, data integrity and quality expectations. Ensure criteria complement GWT scenarios rather than merely duplicate them. Avoid vague, redundant or unmeasurable criteria.',
+    '',
+    'HANDOFF ENFORCEMENT: Challenge the reconstructed specification against the User Story intent, scope and all relevant evidence. Ensure engineers can determine what behaviour to implement and QA can determine what to test and what constitutes passing. Correct discoverable omissions, contradictions, ambiguity, dependencies, unsupported assumptions and untestable outcomes. Do not fabricate decisions to conceal evidence gaps.',
+    '',
+    'IMPLEMENTATION-READINESS ENFORCEMENT:',
+    'Specify concrete, deterministic and testable behaviour. Use the User Story and relevant evidence from the 50-story corpus where applicable. Convert examples into requirements only when evidence supports them. Define applicable preconditions, triggers, transitions, validations, permissions, actor identities, data changes, errors and expected outcomes precisely. Eliminate vague wording, unsupported assumptions, contradictions, incomplete scenarios and untestable criteria. Ensure every GWT is implementable and executable by QA, and every success criterion has an objective, independently verifiable result. Resolve discoverable ambiguities using evidence, but never invent business policies, rules, permissions, technical behaviour or thresholds. Simulate engineering implementation and QA execution to identify details they would otherwise have to guess.',
+    '',
+    'STRICT RULES: Neither baseline nor AI-generated content is authoritative. Do not merely assess, preserve or minimally modify existing content. Do not invent business rules, permissions, metrics, thresholds or implementation decisions. Exhaust relevant contextual evidence before concluding information is unavailable. Never disguise uncertainty as a confirmed requirement. Do not confuse completeness with unnecessary scenario volume.',
+    '',
+    'ACCEPTANCE STANDARD: Deliver the most complete evidence-supported specification within the actual User Story scope, with concrete implementable behaviour and independently verifiable outcomes. Correct all discoverable defects without expanding scope or inventing missing business decisions. Optimize for implementation and QA readiness, not baseline similarity or brevity.',
     '',
     'DIMENSION-SPECIFIC INSTRUCTIONS:',
     dimensionInstructions,
@@ -804,6 +816,7 @@ let fixedPrompt = [
     '',
     'USER STORY AND AVAILABLE EVIDENCE:'
 ].join('\n');
+
 
 
 
