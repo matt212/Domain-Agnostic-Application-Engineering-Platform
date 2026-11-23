@@ -1,0 +1,26 @@
+{
+  "given_when_then": [
+    {
+      "given": "A customer places an Order Request with items available at multiple Store Partners",
+      "when": "The Order Allocation Engine processes the request",
+      "then": "The system assigns the order to the nearest Store Partner with sufficient stock and creates a Fulfillment Task"
+    },
+    {
+      "given": "A customer places an Order Request where no Store Partner has sufficient stock for all items",
+      "when": "The Order Allocation Engine processes the request",
+      "then": "the system does not assign the order and flags it for manual review without creating a Fulfillment Task"
+    },
+    {
+      "given": "The system has identified a Fulfillment Task with sufficient inventory available at a Store Partner",
+      "when": "The Order Allocation Engine assigns a Delivery Assignment with an Assigned Delivery Slot to the order",
+      "then": "The Store Partner is notified via the assigned Delivery Slot of the new Fulfillment Task"
+    }
+  ],
+  "success_criteria": [
+    "The Store Partner is notified of the new Fulfillment Task via the assigned Delivery Slot",
+    "The nearest Store Partner with sufficient stock is selected for assignment",
+    "Inventory quantities reserved by an automatic assignment are immediately deducted from the Real-Time Inventory Snapshot",
+    "No Fulfillment Task is created if no store has sufficient inventory for the complete order",
+    "An order flagged for manual review is not assigned to any store"
+  ]
+}

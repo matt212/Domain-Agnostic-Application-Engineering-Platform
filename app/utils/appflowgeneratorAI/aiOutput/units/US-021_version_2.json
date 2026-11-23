@@ -1,0 +1,37 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Delivery Proof is successfully recorded for an Order Request",
+      "when": "The system processes the settlement event",
+      "then": "The system generates a Financial Transaction Record with correct split amounts for all parties"
+    },
+    {
+      "given": "The Delivery Proof is missing or invalid for an Order Request",
+      "when": "The system attempts to process the settlement event",
+      "then": "The system prevents financial distribution and flags the Order Request for manual review"
+    },
+    {
+      "given": "A transaction involves high-risk indicators",
+      "when": "The system processes the settlement event",
+      "then": "The system pauses financial distribution for manual verification before settlement"
+    },
+    {
+      "given": "The system calculates settlement amounts for an Order Request",
+      "when": "The system processes the settlement event",
+      "then": "The sum of all distributed amounts must equal the total value of the Financial Transaction Record"
+    },
+    {
+      "given": "A delivery is completed regardless of outcome",
+      "when": "The system processes the post-delivery event",
+      "then": "A Financial Transaction Record is generated for every completed delivery"
+    }
+  ],
+  "success_criteria": [
+    "System generates a Financial Transaction Record with correct split amounts for all parties when a valid Delivery Proof is recorded.",
+    "System prevents financial distribution and flags the Order Request for manual review if the Delivery Proof is missing or invalid.",
+    "System pauses financial distribution for manual verification if high-risk indicators are detected.",
+    "System ensures the sum of all distributed amounts equals the total value of the Financial Transaction Record.",
+    "System strictly adheres to the terms defined in the Store Partner Agreement during settlement calculations.",
+    "System generates a Financial Transaction Record for every completed delivery regardless of outcome."
+  ]
+}

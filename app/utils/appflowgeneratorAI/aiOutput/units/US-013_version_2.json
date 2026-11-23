@@ -1,0 +1,24 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Delivery Partner has reached their maximum workload capacity",
+      "when": "The Order Allocation Engine attempts to assign a new delivery task to that partner",
+      "then": "The system rejects the assignment and routes the task to another available agent within the same service zone"
+    },
+    {
+      "given": "An agent has been assigned a delivery task within their service zone",
+      "when": "The agent explicitly accepts the delivery assignment",
+      "then": "The system confirms the slot as active"
+    },
+    {
+      "given": "A delivery task has been assigned to an agent",
+      "when": "The original agent rejects the task or exceeds capacity limits",
+      "then": "The system permits dynamic reassignment of the delivery task"
+    }
+  ],
+  "success_criteria": [
+    "The system must prevent overloading by refusing to assign a delivery slot to an agent whose current workload exceeds the maximum capacity defined for their service zone.",
+    "The system must only confirm a delivery slot as active after the agent has explicitly accepted the assignment.",
+    "The system must allow dynamic reassignment of a delivery task if the original agent rejects the task or exceeds capacity limits."
+  ]
+}

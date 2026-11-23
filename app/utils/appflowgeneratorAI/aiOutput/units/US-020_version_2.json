@@ -1,0 +1,31 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Delivery Partner submits a delivery proof that fails validation checks",
+      "when": "The system processes the submission",
+      "then": "The system generates a Dispute Ticket and blocks fund release"
+    },
+    {
+      "given": "A Delivery Partner submits a delivery proof that is missing required elements",
+      "when": "The system validates the proof",
+      "then": "The system generates a Dispute Ticket and blocks fund release"
+    },
+    {
+      "given": "The system retrieves a proof via an external API that lacks a valid timestamp or signature",
+      "when": "The proof is verified against system standards",
+      "then": "The system generates a Dispute Ticket as if it were locally captured"
+    },
+    {
+      "given": "A Delivery Partner submits a proof for a Delivery Assignment marked as cancelled",
+      "when": "The system checks the Delivery Assignment status",
+      "then": "The system rejects the delivery proof"
+    }
+  ],
+  "success_criteria": [
+    "A Dispute Ticket is created immediately upon detection of validation failure or missing required elements.",
+    "Funds are withheld from the Store Partner until the Dispute Ticket is resolved.",
+    "External API proofs are subjected to the same verification standards as locally captured proofs.",
+    "Delivery proofs for cancelled assignments are rejected without generating a Dispute Ticket.",
+    "The system logs the specific reason for the Dispute Ticket (validation failure or missing elements)."
+  ]
+}

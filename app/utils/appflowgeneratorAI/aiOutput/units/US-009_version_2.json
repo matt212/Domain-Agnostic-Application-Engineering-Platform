@@ -1,0 +1,25 @@
+{
+  "given_when_then": [
+    {
+      "given": "The Real-Time Inventory Snapshot shows sufficient available quantity for all items in an Order Request",
+      "when": "The Order Allocation Engine assigns the order to the nearest Store Partner with sufficient stock",
+      "then": "The system immediately deducts the reserved quantities from the Real-Time Inventory Snapshot"
+    },
+    {
+      "given": "No Store Partner has sufficient inventory to fulfill the complete Order Request",
+      "when": "The Order Allocation Engine attempts to assign the order",
+      "then": "The system does not assign the order and flags it for manual review"
+    },
+    {
+      "given": "Multiple Store Partners have sufficient inventory for the Order Request",
+      "when": "The Order Allocation Engine processes the request",
+      "then": "The system assigns the order to the nearest store based on the shortest estimated preparation and dispatch time"
+    }
+  ],
+  "success_criteria": [
+    "The Real-Time Inventory Snapshot reflects deducted reserved quantities immediately after automatic assignment",
+    "Orders are assigned only when the Real-Time Inventory Snapshot shows available quantity greater than or equal to the requested quantity for all items",
+    "Orders are not assigned if no store has sufficient inventory and are instead flagged for manual review",
+    "Orders are prioritized to the nearest store based on shortest estimated preparation and dispatch time"
+  ]
+}

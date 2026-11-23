@@ -1,21 +1,26 @@
 {
   "given_when_then": [
     {
-      "given": "A Store Partner updates the quantity of a perishable SKU in their Real-Time Inventory Snapshot",
-      "when": "The Order Allocation Engine attempts to allocate an Order Request for that SKU",
-      "then": "The system shall reflect the updated quantity immediately and allow allocation only if stock is sufficient"
+      "given": "A Store Partner has submitted a Real-Time Inventory Snapshot with updated stock quantities",
+      "when": "The system receives the snapshot and performs validation against the central Product Catalog",
+      "then": "The central Product Catalog is updated with the new quantities and the snapshot is marked as processed"
     },
     {
-      "given": "An Order Request has successfully locked stock for a perishable item",
-      "when": "The customer cancels the Order Request before the fulfillment task begins",
-      "then": "The system shall release the locked stock quantity back to the Real-Time Inventory Snapshot for other orders"
+      "given": "The data link latency between Store Partner and system exceeds the defined threshold",
+      "when": "The system attempts to process the Real-Time Inventory Snapshot",
+      "then": "The system flags a synchronization discrepancy and does not update the central Product Catalog"
+    },
+    {
+      "given": "A synchronization failure is detected in the data link",
+      "when": "The system attempts to process the Real-Time Inventory Snapshot",
+      "then": "The system flags a synchronization discrepancy and does not update the central Product Catalog"
     }
   ],
   "success_criteria": [
-    "System receives Real-Time Inventory Snapshot updates from Store Partners without manual intervention",
-    "System validates Real-Time Inventory Snapshot data against Product Catalog definitions",
-    "System updates the central Product Catalog with received snapshot data",
-    "System flags a synchronization discrepancy if data link latency exceeds the defined threshold",
-    "System flags a synchronization discrepancy if a sync failure is detected"
+    "Real-Time Inventory Snapshots from Store Partners are validated and the central Product Catalog is updated correctly",
+    "Synchronization discrepancies are flagged when data link latency exceeds the defined threshold",
+    "Synchronization discrepancies are flagged when a sync failure is detected",
+    "Stock quantities are validated before updating the central Product Catalog",
+    "The system handles receipt of Real-Time Inventory Snapshots without blocking other valid updates due to single sync failures"
   ]
 }

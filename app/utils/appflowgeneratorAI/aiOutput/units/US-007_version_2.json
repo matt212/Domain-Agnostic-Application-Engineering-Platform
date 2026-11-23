@@ -1,0 +1,37 @@
+{
+  "given_when_then": [
+    {
+      "given": "The Order Allocation Engine receives an Order Request containing multiple items",
+      "when": "The system checks the Real-Time Inventory Snapshot for the selected Store Partner",
+      "then": "The system validates that the available quantity for every item is greater than or equal to the requested quantity"
+    },
+    {
+      "given": "A customer places an Order Request where no Store Partner has sufficient stock for all items",
+      "when": "The Order Allocation Engine processes the request",
+      "then": "The system does not assign the order and flags it for manual review without creating a Fulfillment Task"
+    },
+    {
+      "given": "The Order Allocation Engine receives an Order Request where multiple Store Partners have sufficient stock",
+      "when": "The system calculates estimated preparation and dispatch time for each eligible store",
+      "then": "The system assigns the order to the nearest Store Partner based on the shortest estimated preparation and dispatch time"
+    },
+    {
+      "given": "The system completes a successful order assignment to a Store Partner",
+      "when": "The assignment is finalized",
+      "then": "The Real-Time Inventory Snapshot is immediately updated with deducted quantities for all items in the Order Request"
+    },
+    {
+      "given": "The Order Allocation Engine processes an Order Request",
+      "when": "The Real-Time Inventory Snapshot indicates sufficient stock for all items at a Store Partner",
+      "then": "The system creates a Fulfillment Task for the assigned order"
+    }
+  ],
+  "success_criteria": [
+    "The system successfully assigns an Order Request to a Store Partner only when the Real-Time Inventory Snapshot shows available quantity greater than or equal to the requested quantity for all items.",
+    "The system flags an Order Request for manual review when no Store Partner has sufficient inventory for the complete order.",
+    "The system assigns the order to the nearest Store Partner based on the shortest estimated preparation and dispatch time.",
+    "The Real-Time Inventory Snapshot is immediately updated with deducted quantities upon successful automatic assignment to prevent overselling.",
+    "The system does not create a Fulfillment Task when an Order Request cannot be assigned due to insufficient inventory.",
+    "The system validates all items in an Order Request against the Real-Time Inventory Snapshot of the selected Store Partner before assignment."
+  ]
+}

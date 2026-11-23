@@ -7,24 +7,30 @@
     },
     {
       "given": "An Order Request has successfully locked stock for a perishable item",
-      "when": "The Customer cancels the Order Request before the fulfillment task begins",
+      "when": "The customer cancels the Order Request before the fulfillment task begins",
       "then": "The system shall release the locked stock quantity back to the Real-Time Inventory Snapshot for other orders"
     },
     {
-      "given": "Multiple Order Requests are attempting to allocate stock for the same perishable item simultaneously",
-      "when": "The Order Allocation Engine processes the allocation requests",
-      "then": "The system shall lock the available stock quantity to the first successful request and reject subsequent requests for that quantity to prevent overselling"
+      "given": "The Order Allocation Engine attempts to allocate stock for an Order Request",
+      "when": "The allocation occurs immediately upon request confirmation",
+      "then": "The system shall lock the available stock quantities exclusively to prevent concurrent overselling"
     },
     {
-      "given": "An Order Request has locked stock but remains unconfirmed",
-      "when": "The allocated time window expires without confirmation",
+      "given": "An Order Request is not confirmed within the allocated time window",
+      "when": "The time window expires",
       "then": "The system shall automatically release the locked stock quantity back to the Real-Time Inventory Snapshot"
+    },
+    {
+      "given": "The Order Allocation Engine detects a synchronization discrepancy",
+      "when": "The data link latency exceeds the defined threshold or a sync failure is detected",
+      "then": "The system shall flag the synchronization discrepancy for review by the Platform Operator"
     }
   ],
   "success_criteria": [
-    "The stock quantity associated with an Order Request is locked exclusively to that specific request immediately upon allocation.",
-    "Concurrent allocation attempts for the same SKU result in only one successful lock, with other attempts failing.",
-    "The system prevents overselling by ensuring available stock is not double-allocated to different Order Requests.",
-    "Locked stock is automatically released when the Order Request is cancelled or when the confirmation time window expires."
+    "Stock quantities are locked exclusively to a single Order Request until the fulfillment task is completed or the order is cancelled.",
+    "Perishable items are prioritized for allocation to orders based on their proximity to the expiration date.",
+    "Synchronization discrepancies are flagged when the data link latency exceeds the defined threshold or if a sync failure is detected.",
+    "Locked stock is automatically released if the Order Request is not confirmed within the allocated time window.",
+    "Real-Time Inventory Snapshot reflects stock updates immediately upon allocation attempts."
   ]
 }

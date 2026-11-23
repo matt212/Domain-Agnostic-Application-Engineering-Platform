@@ -1,0 +1,25 @@
+{
+  "given_when_then": [
+    {
+      "given": "An Order Request has successfully locked stock for a perishable item",
+      "when": "The customer cancels the Order Request before the fulfillment task begins",
+      "then": "The system shall release the locked stock quantity back to the Real-Time Inventory Snapshot for other orders"
+    },
+    {
+      "given": "An Order Request has successfully locked stock",
+      "when": "The Order Request times out within the defined window",
+      "then": "The system shall automatically release the locked stock quantity back to the Real-Time Inventory Snapshot"
+    },
+    {
+      "given": "The system detects a sync failure or latency exceeding the defined threshold",
+      "when": "The system attempts to allocate or manage locked stock",
+      "then": "The system shall flag a synchronization discrepancy"
+    }
+  ],
+  "success_criteria": [
+    "Stock quantities must be released back to the Real-Time Inventory Snapshot when an Order Request is cancelled.",
+    "Locked stock quantities must be released automatically when an Order Request times out within the defined window.",
+    "A synchronization discrepancy must be flagged if data link latency exceeds the defined threshold or if a sync failure is detected.",
+    "The system shall allow allocation only if stock is sufficient and not locked by an active or pending order."
+  ]
+}

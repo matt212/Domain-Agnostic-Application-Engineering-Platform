@@ -1,0 +1,24 @@
+{
+  "given_when_then": [
+    {
+      "given": "The Order Allocation Engine receives an Order Request with items available at multiple Store Partners",
+      "when": "The Order Allocation Engine calculates the distance between the customer location and all eligible Store Partners",
+      "then": "The system identifies the nearest Store Partner based on the shortest estimated preparation and dispatch time"
+    },
+    {
+      "given": "A customer places an Order Request with items available at multiple Store Partners",
+      "when": "The Order Allocation Engine processes the request",
+      "then": "The system assigns the order to the nearest Store Partner with sufficient stock and creates a Fulfillment Task"
+    },
+    {
+      "given": "A customer places an Order Request where no Store Partner has sufficient stock for all items",
+      "when": "The Order Allocation Engine processes the request",
+      "then": "The system does not assign the order and flags it for manual review without creating a Fulfillment Task"
+    }
+  ],
+  "success_criteria": [
+    "The system assigns the order to the nearest Store Partner with sufficient stock and creates a Fulfillment Task",
+    "The system does not assign the order and flags it for manual review without creating a Fulfillment Task",
+    "The Real-Time Inventory Snapshot is updated immediately after automatic assignment to prevent overselling"
+  ]
+}

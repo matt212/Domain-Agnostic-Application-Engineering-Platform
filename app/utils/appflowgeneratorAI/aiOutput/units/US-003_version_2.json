@@ -1,0 +1,36 @@
+{
+  "given_when_then": [
+    {
+      "given": "The Store Partner updates the quantity of a perishable SKU in their Real-Time Inventory Snapshot",
+      "when": "The Order Allocation Engine attempts to allocate an Order Request for that SKU",
+      "then": "The system shall reflect the updated quantity immediately and allow allocation only if stock is sufficient"
+    },
+    {
+      "given": "An Order Request has successfully locked stock for a perishable item",
+      "when": "The customer cancels the Order Request before the fulfillment task begins",
+      "then": "The system shall release the locked stock quantity back to the Real-Time Inventory Snapshot for other orders"
+    },
+    {
+      "given": "The data link latency exceeds the defined threshold",
+      "when": "The system monitors the integrity of the data link between the Store Partner and the platform",
+      "then": "The system shall flag a synchronization discrepancy"
+    },
+    {
+      "given": "A sync failure is detected on the data link",
+      "when": "The system monitors the integrity of the data link between the Store Partner and the platform",
+      "then": "The system shall flag a synchronization discrepancy"
+    },
+    {
+      "given": "An Order Request is not confirmed within the allocated time window",
+      "when": "The system monitors locked stock status for the Order Request",
+      "then": "The system shall automatically release the locked stock"
+    }
+  ],
+  "success_criteria": [
+    "The system flags a synchronization discrepancy when data link latency exceeds the defined threshold.",
+    "The system flags a synchronization discrepancy when a sync failure is detected.",
+    "The system releases locked stock automatically if the Order Request is not confirmed within the allocated time window.",
+    "The system reflects updated quantities in the Real-Time Inventory Snapshot immediately before allowing allocation.",
+    "The system prioritizes allocation for perishable items based on expiration date proximity."
+  ]
+}

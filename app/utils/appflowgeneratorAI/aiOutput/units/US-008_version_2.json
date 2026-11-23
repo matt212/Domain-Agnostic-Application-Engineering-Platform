@@ -1,0 +1,37 @@
+{
+  "given_when_then": [
+    {
+      "given": "A customer places an Order Request with items available at multiple Store Partners",
+      "when": "The Order Allocation Engine processes the request",
+      "then": "The system assigns the order to the nearest Store Partner with sufficient stock and creates a Fulfillment Task"
+    },
+    {
+      "given": "A customer places an Order Request where no Store Partner has sufficient stock for all items",
+      "when": "The Order Allocation Engine processes the request",
+      "then": "The system does not assign the order and flags it for manual review without creating a Fulfillment Task"
+    },
+    {
+      "given": "The Real-Time Inventory Snapshot shows available quantity less than the requested quantity for any item",
+      "when": "The Order Allocation Engine evaluates a Store Partner for assignment",
+      "then": "The system excludes that Store Partner from consideration and does not create a Fulfillment Task"
+    },
+    {
+      "given": "Multiple Store Partners have sufficient inventory for the complete order",
+      "when": "The Order Allocation Engine evaluates Store Partners for assignment",
+      "then": "The system prioritizes and assigns the order to the Store Partner with the shortest estimated preparation and dispatch time"
+    },
+    {
+      "given": "The Order Allocation Engine assigns an order to a Store Partner",
+      "when": "The system finalizes the assignment",
+      "then": "Inventory quantities for the assigned items are immediately deducted from the Real-Time Inventory Snapshot"
+    }
+  ],
+  "success_criteria": [
+    "Order is successfully assigned to the nearest Store Partner with sufficient stock when multiple stores qualify",
+    "Fulfillment Task is created immediately upon successful order assignment to a Store Partner",
+    "Order remains unassigned and flagged for manual review when no Store Partner has sufficient inventory",
+    "No Fulfillment Task is created when an order cannot be assigned to any Store Partner",
+    "Inventory quantities are immediately deducted from the Real-Time Inventory Snapshot upon order assignment",
+    "Store Partners with insufficient inventory for any item are excluded from assignment consideration"
+  ]
+}

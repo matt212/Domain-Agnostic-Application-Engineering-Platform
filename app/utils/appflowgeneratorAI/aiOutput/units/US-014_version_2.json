@@ -1,0 +1,41 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Delivery Partner is logged in and viewing their dashboard",
+      "when": "The Order Allocation Engine assigns a new delivery task within their service zone",
+      "then": "The system displays the delivery slot details including route, estimated arrival time, and item list for the partner to accept or reject"
+    },
+    {
+      "given": "A Delivery Partner has reached their maximum workload capacity",
+      "when": "The Order Allocation Engine attempts to assign a new delivery task to that partner",
+      "then": "The system rejects the assignment and routes the task to another available agent within the same service zone"
+    },
+    {
+      "given": "An agent has explicitly rejected a delivery assignment",
+      "when": "The system processes the rejection request",
+      "then": "The delivery task is dynamically reassigned to another available agent within the same service zone"
+    },
+    {
+      "given": "Traffic patterns change significantly after the initial assignment",
+      "when": "The system detects the traffic change",
+      "then": "The system recalculates the estimated arrival time for the assigned delivery task"
+    },
+    {
+      "given": "An agent accepts a delivery assignment",
+      "when": "The system receives the acceptance confirmation",
+      "then": "The system updates the agent's workload status in real-time and confirms the slot as active"
+    }
+  ],
+  "success_criteria": [
+    "The agent's workload status is updated in real-time immediately upon acceptance or rejection of a delivery task.",
+    "The system prevents assignment to an agent if their current workload exceeds the maximum capacity for their service zone.",
+    "The system confirms a delivery slot as active only after the agent explicitly accepts the assignment.",
+    "The system successfully reassigns a delivery task when the original agent rejects it or exceeds capacity limits.",
+    "The system recalculates estimated arrival times when significant changes in traffic patterns are detected.",
+    "The system does not assign a delivery slot to an agent who has exceeded their maximum capacity.",
+    "The system rejects a new assignment when an agent's current workload is at the maximum limit defined for their service zone.",
+    "The system routes the task to another available agent within the same service zone when the original agent rejects it.",
+    "The system updates the workload status and confirms the slot as active upon explicit acceptance of a delivery assignment.",
+    "The system displays delivery slot details including route, estimated arrival time, and item list for the partner to accept or reject."
+  ]
+}

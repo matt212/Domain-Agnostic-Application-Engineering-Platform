@@ -1,0 +1,24 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Delivery Proof has been successfully recorded for an Order Request",
+      "when": "The system calculates the settlement amounts against the Store Partner Agreement",
+      "then": "The system generates a Financial Transaction Record and flags it for manual review if the calculated amounts deviate from expected thresholds based on historical data"
+    },
+    {
+      "given": "The sum of all calculated distributed amounts equals the total value of the Financial Transaction Record",
+      "when": "The system validates the calculated settlement amounts",
+      "then": "The system checks for deviations against historical thresholds; if a deviation exists, the transaction is flagged for manual review"
+    },
+    {
+      "given": "A Financial Transaction Record exists for a completed delivery",
+      "when": "The system processes the transaction based on historical data thresholds",
+      "then": "The system flags the transaction for manual review if the calculated amounts deviate from expected thresholds"
+    }
+  ],
+  "success_criteria": [
+    "The system flags the Financial Transaction Record for manual review when calculated settlement amounts deviate from expected historical thresholds",
+    "The system generates a Financial Transaction Record for every completed delivery regardless of the outcome of the amount deviation check",
+    "The sum of distributed amounts in the Financial Transaction Record strictly equals the total value of the transaction"
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Delivery Partner submits a delivery proof via external API",
+      "when": "The system validates the authenticity and completeness of the received delivery proof",
+      "then": "The system rejects the delivery proof if the associated Delivery Assignment is marked as cancelled"
+    },
+    {
+      "given": "A Delivery Partner completes a physical handover and captures a digital signature",
+      "when": "The system processes the submission",
+      "then": "The system validates the proof and releases funds to the Store Partner"
+    },
+    {
+      "given": "A Delivery Partner captures a delivery proof that lacks a timestamp or valid signature",
+      "when": "The system processes the submission",
+      "then": "The system creates a Dispute Ticket"
+    },
+    {
+      "given": "The system retrieves a delivery proof from an external courier API",
+      "when": "The system validates the authenticity and completeness of the received delivery proof",
+      "then": "The system treats the external proof with the same verification standards as locally captured proof"
+    },
+    {
+      "given": "A Store Partner requests a status update for an order with no valid delivery proof recorded",
+      "when": "The system processes the request",
+      "then": "The system does not update the order status and holds funds"
+    },
+    {
+      "given": "A Delivery Partner submits a delivery proof retrieved via external API",
+      "when": "The external courier API returns an invalid or missing delivery confirmation",
+      "then": "The system creates a Dispute Ticket and blocks fund release"
+    }
+  ],
+  "success_criteria": [
+    "Delivery Assignment must be validated for cancellation status before processing any delivery proof",
+    "Delivery proof must contain a valid timestamp and signature to be accepted",
+    "Funds shall not be released to the Store Partner until a valid delivery proof is recorded in the system",
+    "Dispute Ticket must be created if the delivery proof lacks a timestamp or valid signature",
+    "External delivery proofs must undergo the same verification standards as locally captured proofs",
+    "Order status must not be updated without a valid delivery proof being recorded first"
+  ]
+}

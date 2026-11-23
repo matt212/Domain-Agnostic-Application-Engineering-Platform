@@ -1,0 +1,26 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Store Partner Agreement is active",
+      "when": "The system processes a settlement event for an Order Request",
+      "then": "The system retrieves and applies the commission rates and payout terms defined in the agreement to the Financial Transaction Record"
+    },
+    {
+      "given": "A Delivery Proof is successfully recorded for an Order Request",
+      "when": "The system processes the settlement event",
+      "then": "The system generates a Financial Transaction Record with split amounts calculated according to the Store Partner Agreement"
+    },
+    {
+      "given": "A Delivery Proof is missing or invalid for an Order Request",
+      "when": "The system processes the settlement event",
+      "then": "The system prevents financial distribution and flags the Order Request for manual review"
+    }
+  ],
+  "success_criteria": [
+    "The system retrieves commission rates from the active Store Partner Agreement when processing settlement events.",
+    "The system distributes payout amounts strictly according to the commission rates and terms defined in the Store Partner Agreement.",
+    "The system ensures the sum of all distributed amounts equals the total value of the Financial Transaction Record.",
+    "The system generates a Financial Transaction Record for every completed delivery regardless of outcome.",
+    "The system pauses financial distribution and flags the Order Request for manual verification when high-risk indicators are detected."
+  ]
+}

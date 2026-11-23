@@ -1,0 +1,31 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Delivery Proof is successfully recorded for an Order Request",
+      "when": "The system processes the settlement event",
+      "then": "The system generates a Financial Transaction Record with correct split amounts for all parties"
+    },
+    {
+      "given": "The Delivery Proof is missing or invalid for an Order Request",
+      "when": "The system attempts to process the settlement event",
+      "then": "The system prevents financial distribution and flags the Order Request for manual review"
+    },
+    {
+      "given": "A transaction involves high-risk indicators",
+      "when": "The system processes the settlement event",
+      "then": "Transactions involving high-risk indicators must be paused for manual verification before settlement"
+    },
+    {
+      "given": "Settlement calculations are performed",
+      "when": "The system calculates the net settlement amount",
+      "then": "The sum of all distributed amounts must equal the total value of the Financial Transaction Record"
+    }
+  ],
+  "success_criteria": [
+    "A Financial Transaction Record is generated for every completed delivery regardless of outcome",
+    "The sum of all distributed amounts must equal the total value of the Financial Transaction Record",
+    "Settlement calculations strictly adhere to the terms defined in the Store Partner Agreement",
+    "Financial distribution is blocked if a valid Delivery Proof is not recorded",
+    "Transactions with high-risk indicators are paused for manual verification before settlement"
+  ]
+}

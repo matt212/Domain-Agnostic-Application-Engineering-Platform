@@ -1,0 +1,32 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Delivery Proof is successfully recorded for an Order Request",
+      "when": "The system processes the settlement event",
+      "then": "The system updates the status of the Order Request to 'Settled' and generates a Financial Transaction Record"
+    },
+    {
+      "given": "The Delivery Proof is missing or invalid for an Order Request",
+      "when": "The system attempts to process the settlement event",
+      "then": "The system does not update the Order Request status to 'Settled' and flags the Order Request for manual review"
+    },
+    {
+      "given": "The system detects high-risk indicators on the Financial Transaction Record",
+      "when": "The system attempts to process the settlement event",
+      "then": "The system pauses the financial distribution and prevents the status from changing to 'Settled' until manual verification is completed"
+    },
+    {
+      "given": "The system processes a completed delivery for an Order Request",
+      "when": "The settlement calculation is executed",
+      "then": "The sum of all distributed amounts in the Financial Transaction Record equals the total value of the Financial Transaction Record"
+    }
+  ],
+  "success_criteria": [
+    "The Order Request status must be updated to 'Settled' only after a valid Delivery Proof is recorded.",
+    "The status must not change to 'Settled' if the Delivery Proof is missing or invalid.",
+    "The status must not change to 'Setteld' if high-risk indicators are present.",
+    "The sum of all distributed amounts must equal the total value of the Financial Transaction Record.",
+    "A Financial Transaction Record must be generated for every completed delivery regardless of outcome.",
+    "The distribution amounts must adhere to the terms defined in the Store Partner Agreement."
+  ]
+}

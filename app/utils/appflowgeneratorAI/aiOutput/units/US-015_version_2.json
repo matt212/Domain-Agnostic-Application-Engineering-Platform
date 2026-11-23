@@ -1,0 +1,32 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Delivery Partner is logged in and viewing their dashboard",
+      "when": "The Order Allocation Engine assigns a new delivery task within their service zone",
+      "then": "The system displays the delivery slot details including route, estimated arrival time, and item list for the partner to accept or reject"
+    },
+    {
+      "given": "A Delivery Partner has reached their maximum workload capacity",
+      "when": "The Order Allocation Engine attempts to assign a new delivery task to that partner",
+      "then": "The system rejects the assignment and routes the task to another available agent within the same service zone"
+    },
+    {
+      "given": "A delivery task is initially assigned to an agent",
+      "when": "Traffic patterns change significantly after the initial assignment",
+      "then": "The system recalculates and displays the updated estimated arrival time for the assigned delivery slot"
+    },
+    {
+      "given": "A Delivery Partner is assigned a delivery slot",
+      "when": "The Delivery Partner explicitly accepts the delivery assignment",
+      "then": "The system confirms the slot as active for the Delivery Partner"
+    }
+  ],
+  "success_criteria": [
+    "The system displays the estimated arrival time for each assigned delivery slot.",
+    "The system displays the route details for each assigned delivery slot.",
+    "The system updates the estimated arrival time when traffic patterns change significantly.",
+    "The system rejects delivery assignments when an agent's current workload exceeds maximum capacity.",
+    "The system confirms the slot as active only after an agent explicitly accepts the delivery assignment.",
+    "The system does not assign a delivery slot to an agent if their current workload exceeds maximum capacity."
+  ]
+}

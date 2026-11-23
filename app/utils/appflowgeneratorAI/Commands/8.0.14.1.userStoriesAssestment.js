@@ -111,7 +111,7 @@ const MODEL_GPU_LAYERS = 20;
 const MODEL_BATCH_SIZE = 128;
 const MODEL_UBATCH_SIZE = 128;
 
-const MODEL_TIMEOUT_MS = 300000;
+const MODEL_TIMEOUT_MS = 600000;
 const MODEL_KILL_GRACE_MS = 6000;
 
 
@@ -467,7 +467,7 @@ async function startScript() {
                     userStoryId
                 );
 
-
+console.log(`\qwenOutput OUTPUT  for User Story: ${qwenOutput}\n`);
             // STEP 6: Receive Qwen response.
 
             let rawResponse =
@@ -716,12 +716,14 @@ function buildPrompt(aiInput) {
     '4. What observable outcomes are supported?',
     '5. Which business rules apply?',
     '6. Which existing scenarios are relevant?',
-    '7. What information is missing?',
+    '7. What information is missing, and which outputs can still be derived from the available evidence?',
     'Use these answers to generate the dimensions. Do not include the answers in the output.',
     '',
     'GENERATION:',
-    'Generate distinct, meaningful and testable results supported by the supplied evidence.',
-    'Do not duplicate existing scenarios unnecessarily or manufacture additional results.',
+    'Derive testable output dimensions from the supplied User Story evidence.',
+    'Reuse relevant existing scenarios; do not omit or duplicate them unnecessarily.',
+    'Derive success criteria from observable outcomes supported by the description, scenarios and business rules.',
+    'Do not invent behaviour. Return empty arrays only when evidence is insufficient.',
     '',
     'OUTPUT:',
     'Return valid JSON only. No Markdown or explanations.',

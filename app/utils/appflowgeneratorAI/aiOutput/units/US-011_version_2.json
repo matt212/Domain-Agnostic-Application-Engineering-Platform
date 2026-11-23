@@ -1,0 +1,30 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Delivery Partner is logged in and viewing their dashboard",
+      "when": "The Order Allocation Engine identifies a delivery task within their defined service area",
+      "then": "The system displays the delivery slot details including route, estimated arrival time, and item list for the partner to accept or reject"
+    },
+    {
+      "given": "The Delivery Partner is within their defined service area",
+      "when": "The system loads the list of available delivery slots",
+      "then": "Only delivery slots within the Delivery Partner's defined service area are displayed to the partner"
+    },
+    {
+      "given": "A Delivery Partner has reached their maximum workload capacity",
+      "when": "The Order Allocation Engine attempts to assign a new delivery task to that partner",
+      "then": "The system rejects the assignment and does not display the slot as available to the partner"
+    },
+    {
+      "given": "A delivery slot has been assigned to a Delivery Partner",
+      "when": "The system validates the assignment against current workload rules",
+      "then": "The slot is marked as active only after the agent explicitly accepts the assignment"
+    }
+  ],
+  "success_criteria": [
+    "The system filters and displays only delivery slots located within the Delivery Partner's defined service zone.",
+    "Delivery slots exceeding the maximum capacity defined for the partner's service zone are excluded from the view.",
+    "A delivery slot is not marked as active or confirmed until the agent explicitly accepts the assignment.",
+    "The system displays the estimated arrival time based on the Real-Time Inventory Snapshot."
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Delivery Partner completes a physical handover and captures a digital signature",
+      "when": "The system processes the submission",
+      "then": "The system validates the proof and releases funds to the Store Partner"
+    },
+    {
+      "given": "The external courier API returns an invalid or missing delivery confirmation",
+      "when": "The system attempts to retrieve proof for a completed delivery",
+      "then": "The system creates a Dispute Ticket and blocks fund release"
+    },
+    {
+      "given": "A Delivery Partner submits a delivery proof for a completed delivery",
+      "when": "The system receives the proof and it lacks a timestamp or valid signature",
+      "then": "The system creates a Dispute Ticket to flag the delivery as invalid"
+    },
+    {
+      "given": "A Delivery Partner attempts to submit a delivery proof for a cancelled delivery assignment",
+      "when": "The system processes the submission request",
+      "then": "The system rejects the delivery proof as invalid"
+    },
+    {
+      "given": "The system retrieves a delivery proof via an external API",
+      "when": "The proof is successfully verified and stored",
+      "then": "The system treats the proof with the same verification standards as locally captured proof and proceeds with fund release"
+    }
+  ],
+  "success_criteria": [
+    "The system must not release funds to the Store Partner until a valid delivery proof is recorded in the system.",
+    "The system must release funds to the Store Partner only after the delivery proof has been successfully verified and stored.",
+    "The system must create a Dispute Ticket when a delivery proof lacks a timestamp or valid signature.",
+    "The system must reject a delivery proof if the associated Delivery Assignment is marked as cancelled.",
+    "The system must validate delivery proofs retrieved via external API using the same standards as locally captured proof."
+  ]
+}
