@@ -1,0 +1,30 @@
+{
+  "given_when_then": [
+    {
+      "given": "A user initiates a request to perform a specific action on a system object",
+      "when": "The system evaluates the user's assigned role against the required permission for that specific action",
+      "then": "The system grants access only if the user's role includes the required permission"
+    },
+    {
+      "given": "A user attempts to perform an action for which their role does not include the required permission",
+      "when": "The system evaluates the user's assigned role against the required permission for that specific action",
+      "then": "The system denies access to the action"
+    },
+    {
+      "given": "A user's role has been updated to include a specific permission",
+      "when": "The user immediately attempts to perform an action requiring that permission",
+      "then": "The system grants access to the action"
+    },
+    {
+      "given": "A user attempts to perform an action without the required permission",
+      "when": "The system denies the access request",
+      "then": "The system records the denial event in an audit log"
+    }
+  ],
+  "success_criteria": [
+    "Access is granted when the user's role includes the specific permission for the requested action.",
+    "Access is denied when the user's role does not include the specific permission for the requested action.",
+    "Permission changes take effect immediately for all subsequent access requests without requiring a new session.",
+    "All denied access attempts are recorded in an audit log."
+  ]
+}
