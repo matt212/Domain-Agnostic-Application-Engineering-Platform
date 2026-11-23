@@ -1,0 +1,37 @@
+{
+  "given_when_then": [
+    {
+      "given": "The Merchandiser is logged in and views the Product Catalog",
+      "when": "The Merchandiser submits a new product entry with all required fields filled including product name and price",
+      "then": "The system creates the new entry, assigns it as the current version, and displays a success message"
+    },
+    {
+      "given": "A product entry exists with a previous archived version",
+      "when": "The Merchandiser submits a product entry update with all required fields filled",
+      "then": "The system updates the product details, archives the previous version, and displays the new entry as the current version"
+    },
+    {
+      "given": "The Merchandiser attempts to update a product entry",
+      "when": "The product entry is in an archived state",
+      "then": "The system rejects the update request and prevents modification"
+    },
+    {
+      "given": "The Merchandiser attempts to update a product entry",
+      "when": "The submitted update request is missing required fields such as product name or price",
+      "then": "The system rejects the request and displays an error message indicating the specific missing field"
+    },
+    {
+      "given": "The Merchandiser submits a product update request",
+      "when": "The request includes the user identifier and timestamp",
+      "then": "The system records the change metadata alongside the updated product details"
+    }
+  ],
+  "success_criteria": [
+    "The system successfully creates a new product entry when all required fields (product name, price) are populated.",
+    "The new product entry is automatically assigned as the current version upon creation.",
+    "The system successfully updates existing product details when submitted with valid data.",
+    "Previous versions of the product are automatically retained and marked as archived upon a new version publish.",
+    "The system prevents updates to product entries that are currently in an archived state.",
+    "The system rejects update requests containing missing required fields and displays a specific error message."
+  ]
+}

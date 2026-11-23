@@ -1,0 +1,31 @@
+{
+  "given_when_then": [
+    {
+      "given": "The Order Allocation Engine attempts to process an incoming Order Request",
+      "when": "The system exposes the active Service Area Definition to the Order Allocation Engine",
+      "then": "The Order Allocation Engine retrieves the active Service Area Definition for real-time validation"
+    },
+    {
+      "given": "An Order Request contains an address within the active Service Area Definition",
+      "when": "The Order Allocation Engine validates the address against the exposed Service Area Definition",
+      "then": "The Order Allocation Engine proceeds with order processing"
+    },
+    {
+      "given": "An Order Request contains an address outside the active Service Area Definition",
+      "when": "The Order Allocation Engine validates the address against the exposed Service Area Definition",
+      "then": "The Order Allocation Engine rejects the order and logs the rejection reason as 'outside service zone'"
+    },
+    {
+      "given": "A new version of a Service Area Definition is published",
+      "when": "The system exposes the updated definition to the Order Allocation Engine",
+      "then": "The Order Allocation Engine receives the new version as the active Service Area Definition immediately"
+    }
+  ],
+  "success_criteria": [
+    "The Order Allocation Engine can successfully retrieve the active Service Area Definition.",
+    "Orders with addresses inside the active Service Area Definition are accepted by the Order Allocation Engine.",
+    "Orders with addresses outside the active Service Area Definition are rejected by the Order Allocation Engine.",
+    "The rejection reason for orders outside the service area includes the text 'outside service zone'.",
+    "The Order Allocation Engine uses the most recently published Service Area Definition for validation."
+  ]
+}

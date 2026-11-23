@@ -1,0 +1,31 @@
+{
+  "given_when_then": [
+    {
+      "given": "The Platform Operator has access to the zone management module",
+      "when": "The operator creates a new polygon boundary for a delivery zone and publishes it",
+      "then": "The system stores the new definition as the active version and invalidates the previous zone map"
+    },
+    {
+      "given": "The Platform Operator modifies a Service Area Definition",
+      "when": "The modification is saved and published",
+      "then": "All modifications are logged with a timestamp and the identity of the Platform Operator"
+    },
+    {
+      "given": "A Service Area Definition is modified",
+      "when": "The system recalculates travel time matrices",
+      "then": "The travel time matrices reflect updated route constraints"
+    },
+    {
+      "given": "An Order Request is submitted for an address outside the active Service Area Definition",
+      "when": "The Order Allocation Engine validates the order",
+      "then": "The order is rejected and a rejection reason is logged"
+    }
+  ],
+  "success_criteria": [
+    "The system logs all modifications to Service Area Definitions with a timestamp and the identity of the Platform Operator.",
+    "The new version of a Service Area Definition supersedes the previous active version immediately upon publication.",
+    "The travel time matrices are recalculated whenever a Service Area Definition is modified to reflect updated route constraints.",
+    "Orders originating from addresses outside the active Service Area Definition are rejected by the Order Allocation Engine.",
+    "A new version of a Service Area Definition is stored and the previous zone map is invalidated."
+  ]
+}

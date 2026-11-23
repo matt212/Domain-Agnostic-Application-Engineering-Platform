@@ -1,0 +1,37 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Platform Operator initiates a request to create a new Service Area Definition with specified geographic boundaries",
+      "when": "The system validates the coordinates against the Regulatory Authority's restricted zones",
+      "then": "If the boundaries intersect a restricted zone, the system rejects the request and returns an error message indicating the overlap; if valid, the definition is persisted with an 'Inactive' status pending activation"
+    },
+    {
+      "given": "A Platform Operator attempts to deactivate a Service Area Definition that is currently in 'Active' state",
+      "when": "The system processes the deactivation request with a specified reason and operator identity",
+      "then": "The system immediately transitions the definition to 'Deactivated' state, logs the change with the provided reason and operator ID, and prevents the acceptance of any new Order Requests originating from that zone"
+    },
+    {
+      "given": "A Store Partner initiates an Order Request from a customer address",
+      "when": "The system executes order validation against the current Service Area Definitions",
+      "then": "If the address falls within an 'Active' Service Area Definition, the validation succeeds; if it falls within a 'Deactivated' or 'Restricted' zone, the system rejects the request and displays a specific message indicating delivery unavailability in that zone"
+    },
+    {
+      "given": "A Store Partner attempts to modify a Service Area Definition while it is in 'Active' state",
+      "when": "The system processes the modification request including boundary adjustments or attribute updates",
+      "then": "The system validates the new boundaries against restricted zones, ensures the modification is logged with the reason and operator identity, applies the changes to the active definition, and maintains the 'Active' status"
+    },
+    {
+      "given": "The system polls for updates to Service Area Definitions during an active order validation process",
+      "when": "A Service Area Definition associated with the current order request transitions from 'Active' to 'Deactivated' between the query and final validation step",
+      "then": "The system detects the status change, automatically cancels the pending order request, and logs a cancellation reason referencing the zone deactivation"
+    }
+  ],
+  "success_criteria": [
+    "The system rejects Service Area Definition creation requests where geographic boundaries overlap with any Regulatory Authority restricted zone.",
+    "New Service Area Definitions are persisted in 'Inactive' status immediately upon creation and require explicit authorization to transition to 'Active'.",
+    "Deactivation of an 'Active' Service Area Definition immediately triggers a state transition, a logged audit trail containing the operator identity and reason for change, and blocks all new order acceptance from that zone.",
+    "Order validation logic returns a pass/fail result based on the intersection of the customer address and the Service Area Definition's current status, with specific error messages for 'Deactivated' or 'Restricted' zones.",
+    "Any modification to an 'Active' Service Area Definition is validated against restricted zones, logged with an immutable audit record, and applied without interrupting existing valid orders.",
+    "The system prevents concurrent operations that would allow an 'Active' Service Area Definition to overlap with a 'Restricted Zone' or another conflicting 'Active' definition."
+  ]
+}

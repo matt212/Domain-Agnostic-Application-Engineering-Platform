@@ -1,0 +1,24 @@
+{
+  "given_when_then": [
+    {
+      "given": "An authorized user requests the history of a Delivery Assignment",
+      "when": "The system processes the request",
+      "then": "The system returns the complete status history for the requested Delivery Assignment."
+    },
+    {
+      "given": "A user is not authorized to query a specific Delivery Assignment",
+      "when": "The user attempts to query the history",
+      "then": "The system denies access and returns an authorization error."
+    },
+    {
+      "given": "The system receives a request to query a Delivery Assignment by ID",
+      "when": "The system processes the request",
+      "then": "The system returns the history with entries ordered chronologically."
+    }
+  ],
+  "success_criteria": [
+    "The system returns the complete status history for the requested Delivery Assignment.",
+    "The system denies access to unauthorized users.",
+    "The system returns history entries ordered chronologically."
+  ]
+}

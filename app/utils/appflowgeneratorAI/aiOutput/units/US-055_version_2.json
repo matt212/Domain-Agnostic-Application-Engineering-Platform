@@ -1,0 +1,36 @@
+{
+  "given_when_then": [
+    {
+      "given": "The Merchandiser is logged in and views the Product Catalog",
+      "when": "The Merchandiser submits a new product entry with all required fields filled",
+      "then": "The system creates the new entry, assigns it as the current version, and displays a success message"
+    },
+    {
+      "given": "The Merchandiser attempts to update a product entry with a missing required field",
+      "when": "The Merchandiser submits the update request",
+      "then": "The system rejects the request and displays an error message indicating the missing field"
+    },
+    {
+      "given": "The Merchandiser attempts to update a product entry that is in an archived state",
+      "when": "The Merchandiser submits the update request",
+      "then": "The system rejects the update and displays an error message indicating the entry cannot be updated due to its state"
+    },
+    {
+      "given": "The Merchandiser submits a new product entry without a timestamp and user identifier",
+      "when": "The system attempts to save the changes",
+      "then": "The system rejects the save operation and displays an error message indicating that updates must include a timestamp and user identifier"
+    },
+    {
+      "given": "The Merchandiser creates a new product version that conflicts with existing versions",
+      "when": "The Merchandiser submits the update request",
+      "then": "The system retains the previous versions and marks them as archived while creating the new version"
+    }
+  ],
+  "success_criteria": [
+    "The system prevents saving of catalog changes that do not meet defined business rules.",
+    "The system retains previous versions of products and marks them as archived upon new version publication.",
+    "The system rejects updates to archived product entries.",
+    "The system enforces mandatory fields for new product entries.",
+    "The system records timestamps and user identifiers for all product updates."
+  ]
+}

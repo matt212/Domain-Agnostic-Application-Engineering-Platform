@@ -1,0 +1,29 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Delivery Assignment has a historical status record showing 'In-Transit' that is already committed to the database",
+      "when": "A Delivery Partner attempts to delete this historical status record from the history log",
+      "then": "The system must reject the deletion request and leave the historical status record unchanged"
+    },
+    {
+      "given": "A Delivery Assignment has a historical status record showing 'Assigned' that is already committed to the database",
+      "when": "A Delivery Partner attempts to edit or alter the data of this historical status record in the history log",
+      "then": "The system must reject the alteration request and leave the historical status record unchanged"
+    },
+    {
+      "given": "A Delivery Proof has a historical status record showing 'Delivered' that is already committed to the database",
+      "when": "A Fulfillment Supervisor attempts to delete this historical status record from the history log",
+      "then": "The system must reject the deletion request and leave the historical status record unchanged"
+    },
+    {
+      "given": "An Order Request has a historical status record showing 'Received' that is already committed to the database",
+      "when": "A Platform Operator attempts to alter the data of this historical status record in the history log",
+      "then": "The system must reject the alteration request and leave the historical status record unchanged"
+    }
+  ],
+  "success_criteria": [
+    "The system prevents deletion of historical status records once committed to the database",
+    "The system prevents alteration of historical status records once committed to the database",
+    "The history log retains all original data, timestamps, and sequence of status entries after failed deletion or alteration attempts"
+  ]
+}

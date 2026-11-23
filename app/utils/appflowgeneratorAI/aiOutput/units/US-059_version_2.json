@@ -1,0 +1,31 @@
+{
+  "given_when_then": [
+    {
+      "given": "The Platform Operator is logged into the zone management module",
+      "when": "The operator publishes a new version of a Service Area Definition",
+      "then": "The new version becomes the active Service Area Definition immediately and the previous version is invalidated"
+    },
+    {
+      "given": "A Delivery Assignment is being prepared for an address",
+      "when": "The address falls outside the currently active Service Area Definition",
+      "then": "The Order Allocation Engine rejects the Delivery Assignment and logs the rejection with the reason 'outside service zone'"
+    },
+    {
+      "given": "A Service Area Definition is active",
+      "when": "The Platform Operator modifies the Service Area Definition",
+      "then": "The Travel time matrices are recalculated to reflect the updated route constraints"
+    },
+    {
+      "given": "The system is configured to calculate estimates",
+      "when": "A potential customer address is provided within a valid Delivery Zone Map",
+      "then": "The system calculates and stores travel duration and distance estimates between the store location and the address"
+    }
+  ],
+  "success_criteria": [
+    "The new Service Area Definition version is active immediately upon publication without delay",
+    "The Order Allocation Engine rejects orders for addresses outside the active Service Area Definition",
+    "Travel time matrices are updated after any modification to the Service Area Definition",
+    "Modifications to Service Area Definitions are logged with a timestamp and Platform Operator identity",
+    "Travel duration and distance estimates are stored in the system for valid store location and customer address pairs"
+  ]
+}

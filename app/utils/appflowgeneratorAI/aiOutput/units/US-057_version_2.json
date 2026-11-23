@@ -1,0 +1,37 @@
+{
+  "given_when_then": [
+    {
+      "given": "The Merchandiser is logged in and views the Product Catalog",
+      "when": "The Merchandiser selects an archived product version",
+      "then": "The system disables all edit fields and prevents the submission of an update request"
+    },
+    {
+      "given": "The Merchandiser is logged in and views the Product Catalog",
+      "when": "The Merchandiser selects a non-archived product version",
+      "then": "The system enables edit fields and allows the submission of an update request"
+    },
+    {
+      "given": "The Merchandiser is logged in and views the Product Catalog",
+      "when": "The Merchandiser attempts to update a product entry that is in an archived state",
+      "then": "The system rejects the request and displays an error message indicating that the entry is archived"
+    },
+    {
+      "given": "The Merchandiser is logged in and views the Product Catalog",
+      "when": "The Merchandiser submits a new product entry with all required fields filled",
+      "then": "The system creates the new entry, assigns it as the current version, and displays a success message"
+    },
+    {
+      "given": "The Merchandiser is logged in and views the Product Catalog",
+      "when": "The Merchandiser attempts to update a product entry with a missing required field",
+      "then": "The system rejects the request and displays an error message indicating the missing field"
+    }
+  ],
+  "success_criteria": [
+    "The system prevents editing of a product version when its status is archived.",
+    "The system disables all input fields for an archived product version.",
+    "The system rejects update requests for archived product versions.",
+    "The system displays an error message when an update request fails due to an archived state.",
+    "The system displays an error message when an update request fails due to missing required fields.",
+    "The system retains previous versions and marks them as archived when a new version is published."
+  ]
+}

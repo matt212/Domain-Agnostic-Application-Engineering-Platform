@@ -1,0 +1,19 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Store Partner attempts to place an order from a location within a Service Area Definition that is in 'Inactive' state",
+      "when": "The system validates the customer's address against the current Service Area Definitions",
+      "then": "The system accepts the order but does not commit it to the fulfillment system, pending activation of the zone"
+    }
+  ],
+  "success_criteria": [
+    "The system prevents creation of Service Area Definitions that overlap with restricted zones or violate Store Partner Agreements.",
+    "The system saves new Service Area Definitions with an 'Inactive' status until explicitly activated.",
+    "The system logs all modifications to active Service Area Definitions with reason and operator identity.",
+    "The system immediately prevents order acceptance from zones that have been deactivated.",
+    "The system rejects Order Requests from locations within deactivated Service Area Definitions.",
+    "The system prevents activation of Service Area Definitions that violate operational constraints.",
+    "The system allows activation and changes state to 'Active' if no operational constraints are violated.",
+    "The system accepts orders for locations within inactive Service Area Definitions but does not commit them to fulfillment."
+  ]
+}

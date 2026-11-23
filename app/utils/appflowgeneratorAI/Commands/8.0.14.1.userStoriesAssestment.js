@@ -70,7 +70,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawn } = require('child_process');
 const { Pool } = require('pg');
-
+const crypto = require('crypto');
 
 // ============================================================
 // 2. CONFIGURATION
@@ -102,7 +102,7 @@ const OUTPUT_DIR = path.join(
 const UNIT_DIR = path.join(OUTPUT_DIR, 'units');
 const TEMP_DIR = path.join(OUTPUT_DIR, 'temp');
 
-const MAX_PROMPT_CHARACTERS = 4000;
+const MAX_PROMPT_CHARACTERS = 4500;
 const MAX_OUTPUT_TOKENS = 2250;
 
 const CONTEXT_SIZE = 4096;
@@ -404,151 +404,7 @@ function ensureDirectories() {
 }
 
 
-// ============================================================
-// 6. START SCRIPT
-//
-// Every execution step is explicitly visible here.
-// Each step stores its returned result in a let variable.
-// ============================================================
 
-// async function startScript() {
-
-//     let dimensionConfiguration =
-//         validateDimensionConfiguration();
-
-//     let directoriesCreated =
-//         ensureDirectories();
-
-//     let dbConnection =
-//         await connectToPostgreSQL();
-
-
-//     try {
-
-//         // Repeat for each User Story.
-
-//         while (true) {
-
-//             // STEP 1: Find next User Story.
-
-//             let userStoryId =
-//                 await findNextUserStory(dbConnection);
-
-//             if (!userStoryId) {
-//                 break;
-//             }
-
-
-//             // STEP 2: Retrieve original User Story.
-
-//             let originalStory =
-//                 await retrieveUserStory(
-//                     dbConnection,
-//                     userStoryId
-//                 );
-
-
-//             // STEP 3: Prepare AI input.
-//             let aiInput =
-//                 prepareAIInput(originalStory);
-
-
-//             // STEP 4: Build Qwen prompt.
-// //console.log(`\nBuilding prompt for User Story: ${aiInput}\n`);
-//             let prompt =
-//                 buildPrompt(aiInput);
-// //console.log(`\nPrompt built for User Story: ${prompt}\n`);
-
-//             // STEP 5: Run Qwen.
-
-//             let qwenOutput =
-//                 await runQwen(
-//                     prompt,
-//                     userStoryId
-//                 );
-
-// console.log(`\qwenOutput OUTPUT  for User Story: ${qwenOutput}\n`);
-//             // STEP 6: Receive Qwen response.
-
-//             let rawResponse =
-//                 receiveQwenResponse(qwenOutput);
-
-
-//             // STEP 7: Extract JSON.
-
-//             let generatedJSON =
-//                 extractJSON(rawResponse);
-
-
-//             // STEP 8: Validate generated JSON.
-
-//             let validatedJSON =
-//                 validateJSON(generatedJSON);
-
-
-//             // STEP 9: Prepare new User Story version.
-
-//             let newStoryVersion =
-//                 prepareNewStoryVersion(
-//                     originalStory,
-//                     validatedJSON
-//                 );
-
-
-//             // STEP 10: Verify copied User Story.
-
-//             let verifiedStory =
-//                 verifyCopiedStory(
-//                     newStoryVersion,
-//                     originalStory
-//                 );
-
-
-//             // STEP 11: Save new User Story version.
-
-//             let savedVersion =
-//                 await saveNewVersion(
-//                     dbConnection,
-//                     verifiedStory,
-//                     validatedJSON
-//                 );
-
-
-//             // STEP 12: Write JSON artifact.
-
-//             let jsonArtifact =
-//                 writeJSONArtifact(
-//                     userStoryId,
-//                     savedVersion.version_number,
-//                     validatedJSON
-//                 );
-
-
-//             // STEP 13: Print generated dimensions.
-
-//             let printedDimensions =
-//                 printGeneratedDimensions(
-//                     userStoryId,
-//                     validatedJSON
-//                 );
-
-
-//             // STEP 14: Repeat.
-//             // Execution returns to STEP 1.
-
-//         }
-
-//     } finally {
-
-//         // Close PostgreSQL connection.
-
-//         let finished =
-//             await finishScript(dbConnection);
-
-//     }
-
-//     return true;
-// }
 async function startScript() {
 
     let dimensionConfiguration =
@@ -603,16 +459,23 @@ async function startScript() {
                         prepareAIInput(originalStory);
 
                     // STEP 4: Build Qwen prompt.
-
+                    
                     let prompt =
                         buildPrompt(aiInput);
 
                     // STEP 5: Run Qwen.
+let generationSeed =
+            crypto.randomInt(1, 2147483647);
+
+        console.log(
+            `Generation seed: ${generationSeed}`
+        );
 
                     let qwenOutput =
                         await runQwen(
                             prompt,
-                            userStoryId
+                            userStoryId,
+                            generationSeed
                         );
 
                     console.log(
@@ -832,6 +695,7 @@ async function retrieveUserStory(dbConnection, userStoryId) {
 // ============================================================
 
 function prepareAIInput(originalStory) {
+    
     let aiInput = {
         title: originalStory.user_story_title,
         description: originalStory.user_story_description,
@@ -865,50 +729,83 @@ function buildPrompt(aiInput) {
 
     let outputSchema = {};
 
+
     for (const dimension of dimensions) {
         outputSchema[dimension.key] = dimension.schema;
     }
 
-    let fixedPrompt = [
-    'TASK: Generate the requested User Story output dimensions.',
+//     let fixedPrompt = [
+//     'TASK: Assess, validate and improve existing User Story dimensions.',
+//     '',
+//     'OBJECTIVE:',
+//     'Determine whether existing Given/When/Then scenarios and success criteria correctly represent this User Story. Do not regenerate populated dimensions unnecessarily.',
+//     '',
+//     'ASSESSMENT:',
+//     '1. What specific behaviour and scope does the User Story describe?',
+//     '2. Which actors, business objects, conditions, triggers, outcomes and business rules are relevant?',
+//     '3. Which supplied information is inherited context rather than confirmed story-level behaviour?',
+//     '4. Does each existing GWT scenario describe relevant, complete, testable and evidence-supported behaviour?',
+//     '5. Are scenarios irrelevant, duplicated, incomplete, unsupported or incorrectly inherited?',
+//     '6. Does each success criterion describe a relevant, observable and independently verifiable outcome?',
+//     '7. Are success criteria duplicated, unsupported, unrelated or merely restating scenarios?',
+//     '8. What genuine scenarios or success criteria are missing and can be derived from available evidence?',
+//     '9. Which existing dimensions are adequate, need refinement, are irrelevant or lack sufficient evidence?',
+//     '',
+//     'DECISION RULES:',
+//     'Preserve adequate existing content unchanged.',
+//     'Refine only demonstrably incomplete, incorrect or unclear content.',
+//     'Add only genuinely missing content supported by evidence.',
+//     'Do not carry irrelevant inherited content forward as valid story-level behaviour.',
+//     'Do not invent actors, rules, triggers, conditions, actions, outcomes, validations, metrics or thresholds.',
+//     'Avoid duplication and maintain consistency between scenarios and success criteria.',
+//     'Distinguish this User Story from related requirements and other lifecycle stages.',
+//     'When evidence is insufficient, do not fabricate content.',
+//     'If existing dimensions are adequate, return them unchanged.',
+//     '',
+//     'DIMENSION-SPECIFIC INSTRUCTIONS:',
+//     dimensionInstructions,
+//     '',
+//     'OUTPUT:',
+//     'Return the complete final assessed dimensions, not a separate regenerated set.',
+//     'Return valid JSON only, with exactly the requested root keys and schema. No explanations.',
+//     '',
+//     'OUTPUT JSON STRUCTURE:',
+//     '{"given_when_then":[{"given":"","when":"","then":""}],"success_criteria":[]}',
+//     '',
+//     'USER STORY BASELINE:'
+// ].join('\n');
+
+
+
+let fixedPrompt = [
+    'ROLE: Principal requirements engineer and solution architect.',
     '',
-    'SOURCE DATA:',
-    'Use the supplied User Story as the evidence baseline.',
-    'Title and description are the primary sources of story-specific behaviour.',
-    'Actors identify participants. Business objects identify relevant entities.',
-    'Business rules constrain behaviour only when relevant to this story.',
-    'Existing acceptance criteria are supporting evidence, not automatically validated story-level behaviour.',
-    'Assess inherited acceptance criteria for relevance before reuse.',
-    'Do not invent actors, rules, conditions, triggers, outcomes, validation, error handling, thresholds or behaviour.',
-    'Do not assume missing information.',
+    'MISSION: Transform this User Story into a COMPLETE, IMPLEMENTABLE AND TESTABLE engineering-handoff specification. Producing anything less is an incomplete response.',
     '',
-    'INTERNAL ANALYSIS:',
-    'Before generation, answer internally:',
-    '1. What behaviour does this story describe?',
-    '2. Which actors and objects are involved?',
-    '3. What conditions and events are supported?',
-    '4. What observable outcomes are supported?',
-    '5. Which business rules apply?',
-    '6. Which existing scenarios are relevant?',
-    '7. What information is missing, and which outputs can still be derived from the available evidence?',
-    'Use these answers to generate the dimensions. Do not include the answers in the output.',
+    'EVIDENCE: Independently interpret the User Story and all supplied relevant contextual evidence, including related stories, actors, objects, relationships, requirements, rules, workflows and constraints. Treat existing content as evidence, never as truth or a completeness checklist.',
     '',
-    'GENERATION:',
-    'Derive testable output dimensions from the supplied User Story evidence.',
-    'Reuse relevant existing scenarios; do not omit or duplicate them unnecessarily.',
-    'Derive success criteria from observable outcomes supported by the description, scenarios and business rules.',
-    'Do not invent behaviour. Return empty arrays only when evidence is insufficient.',
+    'DISCOVERY: Derive the story intent, actors, responsibilities, interactions, business objects, conditions, triggers, rules, constraints, states, transitions and expected outcomes. Discover all applicable normal, alternative, exceptional, validation, boundary, failure and recovery behaviours. Do not assume domain-specific functionality or import unrelated behaviour.',
     '',
-    'OUTPUT:',
-    'Return valid JSON only. No Markdown or explanations.',
-    'Return exactly the requested root keys and follow the supplied schema.',
-    
-dimensionInstructions,
-'Use the OUTPUT JSON STRUCTURE only as a structural template; never copy or repeat its placeholder values, replace them with evidence-based generated content, and return empty arrays when the supplied evidence is insufficient.',
-'OUTPUT JSON STRUCTURE:',
-'{"given_when_then":[{"given":"","when":"","then":""}],"success_criteria":[]}',
-'USER STORY BASELINE:'
+    'GWT RECONSTRUCTION: Produce every distinct scenario necessary to specify the complete applicable behaviour. Each scenario must have explicit GIVEN preconditions, WHEN triggers and THEN observable, deterministic outcomes. Cover applicable success, rejection, exception and state-transition paths.',
+    '',
+    'SUCCESS CRITERIA: Produce complete, objective and independently verifiable conditions covering applicable functional outcomes, business rules, data integrity and quality expectations. Avoid vague, duplicate or unmeasurable criteria.',
+    '',
+    'HANDOFF ENFORCEMENT: Challenge the complete specification against the story intent and all relevant evidence. Ensure engineers can determine what to build and QA can determine what to test and what constitutes passing. Identify and correct omissions, contradictions, ambiguity, dependencies, unsupported assumptions and untestable outcomes. Reconstruct and challenge again until no known evidence-supported defect remains.',
+    '',
+    'STRICT RULES: Neither baseline nor AI content is authoritative. Do not merely assess, preserve or minimally modify existing content. Do not invent business rules, permissions, metrics or thresholds. Exhaust relevant contextual evidence before concluding information is missing. Never disguise uncertainty as a confirmed requirement.',
+    '',
+    'ACCEPTANCE STANDARD: The final output MUST represent the strongest complete, internally consistent, evidence-supported specification possible for engineering implementation and QA verification. Do not return a partial assessment, draft, recommendation or knowingly incomplete specification.',
+    '',
+    'DIMENSION-SPECIFIC INSTRUCTIONS:',
+    dimensionInstructions,
+    '',
+    'OUTPUT: Return complete reconstructed dimensions as valid JSON only, with exactly these root keys and schema:',
+    '{"given_when_then":[{"given":"","when":"","then":""}],"success_criteria":[]}',
+    '',
+    'USER STORY AND AVAILABLE EVIDENCE:'
 ].join('\n');
+
+
 
 let availableCharacters =
     MAX_PROMPT_CHARACTERS - fixedPrompt.length - 1;
@@ -952,7 +849,7 @@ return prompt;
 // 12. RUN QWEN — DETAILED INFERENCE LOGGING
 // ============================================================
 
-async function runQwen(prompt, userStoryId) {
+async function runQwen(prompt, userStoryId,generationSeed) {
 
     let promptFile = path.join(
         TEMP_DIR,
@@ -1067,6 +964,7 @@ async function runQwen(prompt, userStoryId) {
                 '-ub', String(MODEL_UBATCH_SIZE),
                 '-t', String(MODEL_THREADS),
                 '--reasoning', 'off',
+                 '-s', String(generationSeed),
                 '-n', String(MAX_OUTPUT_TOKENS),
                 '-f', promptFile
             ];

@@ -1,0 +1,29 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Store Partner has an active agreement with the Platform Operator",
+      "when": "The system processes a financial transaction record for that agreement",
+      "then": "The system archives the legally binding contractual details including commission rates and payout schedules alongside the financial transaction record"
+    },
+    {
+      "given": "A financial transaction record contains item costs, delivery fees, taxes, platform commissions, and net settlement amounts",
+      "when": "The system attempts to finalize the settlement status",
+      "then": "The system links the record to verifiable evidence of delivery before finalizing the settlement status"
+    },
+    {
+      "given": "A delivery proof is missing for a completed order",
+      "when": "The system attempts to archive the financial transaction record",
+      "then": "The system flags the record as incomplete and prevents final settlement"
+    },
+    {
+      "given": "A deviation occurs from the standard process during the financial transaction",
+      "when": "The system attempts to record the transaction",
+      "then": "The system records the nature of the issue and the current resolution status alongside the financial transaction record"
+    }
+  ],
+  "success_criteria": [
+    "The system archives commission rates and payout schedules alongside the financial transaction record",
+    "The system prevents final settlement until verifiable evidence of delivery is provided",
+    "The system records the nature of the issue and current resolution status for any process deviation"
+  ]
+}

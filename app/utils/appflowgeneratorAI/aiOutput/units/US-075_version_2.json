@@ -1,0 +1,40 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Delivery Assignment has an initial status of 'Pending' and is updated to 'Assigned'",
+      "when": "The system processes the status transition",
+      "then": "The history log must display the sequence 'Pending' -> 'Assigned'."
+    },
+    {
+      "given": "A Delivery Assignment has a status of 'Assigned' and is updated to 'In-Transit'",
+      "when": "The system processes the status transition",
+      "then": "The history log must display the sequence 'Pending' -> 'Assigned' -> 'In-Transit'."
+    },
+    {
+      "given": "A Delivery Assignment is currently in 'In-Transit' and is updated to 'Delivered'",
+      "when": "The system processes the status transition",
+      "then": "The history log must display the sequence 'Pending' -> 'Assigned' -> 'In-Transit' -> 'Delivered'."
+    },
+    {
+      "given": "A Delivery Assignment is in 'Pending' status",
+      "when": "The user attempts to set the status to 'Delivered' (skipping steps)",
+      "then": "The system must prevent the status change as it does not follow the logical lifecycle."
+    },
+    {
+      "given": "A status change occurs via an automated system trigger",
+      "when": "The change is recorded in the history log",
+      "then": "The history log must include a status entry for the change with a timestamp."
+    },
+    {
+      "given": "A user attempts to modify a historical status entry for a completed Delivery Assignment",
+      "when": "The system processes the modification request",
+      "then": "The system must reject the request and the history entry must remain read-only."
+    }
+  ],
+  "success_criteria": [
+    "The system preserves the complete sequence of previous status values in the history log to indicate the direction of change.",
+    "The system records a status entry for every state change, regardless of whether the trigger was manual or automated.",
+    "Historical status entries are immutable and cannot be modified or deleted after creation.",
+    "Each status entry in the history log includes a timestamp recorded in the system's standard time zone."
+  ]
+}

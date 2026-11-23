@@ -1,0 +1,18 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Delivery Assignment is created and subsequently moves from 'Pending' to 'Assigned' and then to 'In-Transit'",
+      "when": "The system processes these state changes",
+      "then": "The history log must contain three entries showing the sequence: Pending -> Assigned -> In-Transit with correct timestamps and the actor responsible for each transition."
+    },
+    {
+      "given": "An authorized user attempts to delete a historical status entry for a completed Delivery Assignment",
+      "when": "The system processes the deletion request",
+      "then": "The system must reject the request and preserve the original status record in the history log."
+    }
+  ],
+  "success_criteria": [
+    "Status transitions must be logged with exact timestamps and actor details.",
+    "The history log must remain read-only after creation."
+  ]
+}

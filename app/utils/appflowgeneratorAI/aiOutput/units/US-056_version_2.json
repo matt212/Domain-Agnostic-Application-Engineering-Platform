@@ -1,0 +1,30 @@
+{
+  "given_when_then": [
+    {
+      "given": "The Merchandiser is logged in and views the Product Catalog",
+      "when": "The Merchandiser submits a new product entry with all required fields filled",
+      "then": "The system creates the new entry, assigns it as the current version, and displays a success message"
+    },
+    {
+      "given": "The Merchandiser attempts to update a product entry with a missing required field",
+      "when": "The Merchandiser submits the update request",
+      "then": "The system rejects the request and displays an error message indicating the missing field"
+    },
+    {
+      "given": "The Merchandiser attempts to update a product entry that is in an archived state",
+      "when": "The Merchandiser submits the update request",
+      "then": "The system rejects the update and indicates the product is in an archived state"
+    },
+    {
+      "given": "The Merchandiser updates a product entry with valid data",
+      "when": "The system processes the change history logic",
+      "then": "The system retains previous versions of the product and marks them as archived"
+    }
+  ],
+  "success_criteria": [
+    "A product entry cannot be updated if it is in an archived state.",
+    "All product updates must include a timestamp and the identifier of the user making the change.",
+    "Required fields such as product name and price must be populated before a new entry is created.",
+    "Previous versions of a product must be retained and marked as archived when a new version is published."
+  ]
+}

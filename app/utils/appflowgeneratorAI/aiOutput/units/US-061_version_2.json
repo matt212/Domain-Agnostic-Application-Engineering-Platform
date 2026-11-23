@@ -1,0 +1,35 @@
+{
+  "given_when_then": [
+    {
+      "given": "The Platform Operator has access to the zone management module",
+      "when": "The operator creates a new polygon boundary for a delivery zone and publishes it",
+      "then": "The system stores the new definition as the active version and invalidates the previous zone map"
+    },
+    {
+      "given": "A new version of a Service Area Definition is published",
+      "when": "The Order Allocation Engine processes an Order Request for an address outside the new service area",
+      "then": "The Order Allocation Engine must reject the order as per rule 2"
+    },
+    {
+      "given": "A new version of a Service Area Definition is published",
+      "when": "The system recalculates travel time matrices for the updated Service Area Definition",
+      "then": "The system must update the travel time matrix to reflect the new route constraints"
+    },
+    {
+      "given": "A new version of a Service Area Definition is published",
+      "when": "The system logs the modification",
+      "then": "The log must contain a timestamp and the identity of the Platform Operator as per rule 4"
+    },
+    {
+      "given": "The system invalidates existing Delivery Zone Maps upon publication of a new Service Area Definition version",
+      "when": "The system assigns a Delivery Assignment to an existing Order Request",
+      "then": "The Delivery Assignment must not reference the old Delivery Zone Map, as it has been invalidated"
+    }
+  ],
+  "success_criteria": [
+    "The system must automatically invalidate existing Delivery Zone Maps upon publication of a new version of a Service Area Definition.",
+    "The system must reject Orders originating from addresses outside the active Service Area Definition.",
+    "The system must recalculate travel time matrices whenever a Service Area Definition is modified.",
+    "The system must log all modifications to Service Area Definitions with a timestamp and the identity of the Platform Operator."
+  ]
+}

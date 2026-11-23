@@ -1,0 +1,24 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Platform Operator initiates a modification to an active Service Area Definition",
+      "when": "The system processes the modification request and persists the updated configuration",
+      "then": "A new audit log entry is created containing the Operator's identity, the exact timestamp of the change, the change type (e.g., Update), and the reason for the change"
+    },
+    {
+      "given": "A Store Partner initiates the deactivation of a Service Area Definition",
+      "when": "The system processes the deactivation request and persists the status change",
+      "then": "A new audit log entry is created recording the Store Partner's identity, the timestamp of deactivation, the change type (Deactivation), and the reason provided"
+    },
+    {
+      "given": "A Platform Operator creates a new Service Area Definition",
+      "when": "The system processes the creation request and saves the definition",
+      "then": "An audit log entry is created recording the Operator's identity, the timestamp of creation, the change type (Creation), and the reason for creation"
+    }
+  ],
+  "success_criteria": [
+    "The system generates a persistent audit log entry for every modification, creation, or deactivation of a Service Area Definition.",
+    "Every audit log entry includes the user identity (who performed the action), the timestamp of the action, the type of change, and the reason for the change.",
+    "The audit log entries are stored with a timestamp that reflects the exact moment the change was committed to the database."
+  ]
+}

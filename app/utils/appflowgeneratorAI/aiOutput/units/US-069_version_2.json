@@ -1,0 +1,24 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Platform Operator initiates the creation of a new delivery zone",
+      "when": "The geographic boundaries of the new zone overlap with a restricted zone defined by the Regulatory Authority",
+      "then": "The system rejects the request to create the Service Area Definition"
+    },
+    {
+      "given": "A Store Partner attempts to place an order from a location within a deactivated Service Area Definition",
+      "when": "The system validates the customer's address against current Service Area Definitions",
+      "then": "The system rejects the Order Request and displays a message indicating delivery is not available"
+    },
+    {
+      "given": "A Platform Operator modifies an active Service Area Definition",
+      "when": "The operator submits the update request",
+      "then": "The system logs the modification with the reason for change and the identity of the operator"
+    }
+  ],
+  "success_criteria": [
+    "The system prevents the creation of a Service Area Definition if its geographic boundaries overlap with a restricted zone defined by the Regulatory Authority",
+    "The system rejects any new Order Request originating from a deactivated Service Area Definition",
+    "The system logs every modification to an active Service Area Definition including the reason for change and the identity of the operator"
+  ]
+}

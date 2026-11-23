@@ -1,0 +1,30 @@
+{
+  "given_when_then": [
+    {
+      "given": "A payment is processed between a customer and a store partner",
+      "when": "The system generates a financial transaction record",
+      "then": "The record must include item costs, delivery fees, taxes, platform commissions, and net settlement amounts."
+    },
+    {
+      "given": "A delivery proof is missing for a completed order",
+      "when": "The system attempts to archive the financial transaction record",
+      "then": "The system must flag the record as incomplete and prevent final settlement until delivery proof is provided."
+    },
+    {
+      "given": "A store partner agreement is available",
+      "when": "The system generates a financial transaction record",
+      "then": "Contractual details including commission rates and payout schedules must be archived alongside the financial transaction record."
+    },
+    {
+      "given": "A deviation from the standard financial transaction process occurs",
+      "when": "The system processes the record",
+      "then": "The nature of the issue and the current resolution status must be recorded."
+    }
+  ],
+  "success_criteria": [
+    "A financial transaction record is generated with all required cost components: item costs, delivery fees, taxes, platform commissions, and net settlement amounts.",
+    "A financial transaction record is flagged as incomplete when delivery proof is missing for a completed order.",
+    "Final settlement is prevented for a financial transaction record when delivery proof is unavailable.",
+    "Contractual details including commission rates and payout schedules are archived alongside the financial transaction record."
+  ]
+}

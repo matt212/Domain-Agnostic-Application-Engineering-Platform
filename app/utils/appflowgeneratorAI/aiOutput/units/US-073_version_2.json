@@ -1,0 +1,49 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Delivery Assignment exists in a specific state (e.g., 'Pending')",
+      "when": "The assignment state transitions to a subsequent valid state (e.g., 'Assigned') via any trigger (manual update, automated workflow, or API call)",
+      "then": "The system automatically creates a new read-only status entry in the history log containing the source state, the target state, the system timestamp in the standard time zone, and the triggering actor or process identifier"
+    },
+    {
+      "given": "A Delivery Assignment is in a valid state within its defined lifecycle",
+      "when": "An authorized actor attempts to transition the assignment to an invalid state that does not logically follow the current state",
+      "then": "The state transition request is rejected by the system, no state change occurs, and no new status entry is generated"
+    },
+    {
+      "given": "A Delivery Assignment has an existing read-only history log",
+      "when": "Any actor attempts to modify the timestamp, state values, or content of an existing historical status entry",
+      "then": "The system rejects the modification request and the historical record remains immutable and unchanged"
+    },
+    {
+      "given": "A Delivery Assignment has a complete history of state transitions",
+      "when": "An authorized user requests a view of the status history",
+      "then": "The system displays the full chronological sequence of status entries in read-only mode, showing the exact sequence of transitions and their timestamps"
+    },
+    {
+      "given": "A Delivery Assignment is in a transient error state or pending external validation",
+      "when": "The system processes a state change trigger that fails due to validation errors or missing prerequisites",
+      "then": "The state transition is aborted, the assignment remains in its current valid state, and no new status entry is generated"
+    },
+    {
+      "given": "A Delivery Assignment moves from 'In-Transit' to 'Delivered'",
+      "when": "The system validates the delivery proof before finalizing the state transition",
+      "then": "Upon successful validation, a new status entry is generated marking the transition to 'Delivered' and the status log is updated to reflect the final state"
+    },
+    {
+      "given": "A Delivery Assignment exists with an incomplete or empty status history",
+      "when": "The system initializes the assignment or processes the first valid state transition",
+      "then": "A status entry is generated capturing the initial state and any subsequent transitions, ensuring the history log is never empty after the first transition"
+    }
+  ],
+  "success_criteria": [
+    "Every valid state transition of a Delivery Assignment results in exactly one new status entry being appended to the history log.",
+    "Historical status entries remain read-only and cannot be edited, deleted, or altered by any actor after creation.",
+    "The timestamp on each status entry corresponds to the exact time of the state transition event in the system's standard time zone.",
+    "Status transitions that violate the defined lifecycle logic (e.g., jumping from 'Pending' to 'Delivered') are blocked and do not generate a new entry.",
+    "The status history log accurately reflects the complete chronological sequence of all state changes for a Delivery Assignment.",
+    "No status entry is generated if the state transition fails validation or if the assignment is in an invalid state.",
+    "The system correctly identifies and records the triggering event type (manual vs automated) for each state transition.",
+    "The status entries are accessible to all defined actors (Delivery Partner, Fulfillment Supervisor, Platform Operator) in a read-only view."
+  ]
+}

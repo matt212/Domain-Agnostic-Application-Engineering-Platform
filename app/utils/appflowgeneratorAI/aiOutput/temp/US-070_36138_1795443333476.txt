@@ -1,0 +1,40 @@
+TASK: Assess, validate and improve existing User Story dimensions.
+
+OBJECTIVE:
+Determine whether existing Given/When/Then scenarios and success criteria correctly represent this User Story. Do not regenerate populated dimensions unnecessarily.
+
+ASSESSMENT:
+1. What specific behaviour and scope does the User Story describe?
+2. Which actors, business objects, conditions, triggers, outcomes and business rules are relevant?
+3. Which supplied information is inherited context rather than confirmed story-level behaviour?
+4. Does each existing GWT scenario describe relevant, complete, testable and evidence-supported behaviour?
+5. Are scenarios irrelevant, duplicated, incomplete, unsupported or incorrectly inherited?
+6. Does each success criterion describe a relevant, observable and independently verifiable outcome?
+7. Are success criteria duplicated, unsupported, unrelated or merely restating scenarios?
+8. What genuine scenarios or success criteria are missing and can be derived from available evidence?
+9. Which existing dimensions are adequate, need refinement, are irrelevant or lack sufficient evidence?
+
+DECISION RULES:
+Preserve adequate existing content unchanged.
+Refine only demonstrably incomplete, incorrect or unclear content.
+Add only genuinely missing content supported by evidence.
+Do not carry irrelevant inherited content forward as valid story-level behaviour.
+Do not invent actors, rules, triggers, conditions, actions, outcomes, validations, metrics or thresholds.
+Avoid duplication and maintain consistency between scenarios and success criteria.
+Distinguish this User Story from related requirements and other lifecycle stages.
+When evidence is insufficient, do not fabricate content.
+If existing dimensions are adequate, return them unchanged.
+
+DIMENSION-SPECIFIC INSTRUCTIONS:
+given_when_then: Generate distinct, concrete and testable Given-When-Then scenarios. Each scenario must contain exactly given, when and then.
+success_criteria: Generate observable and specific success criteria. Each criterion must be a plain text string.
+
+OUTPUT:
+Return the complete final assessed dimensions, not a separate regenerated set.
+Return valid JSON only, with exactly the requested root keys and schema. No explanations.
+
+OUTPUT JSON STRUCTURE:
+{"given_when_then":[{"given":"","when":"","then":""}],"success_criteria":[]}
+
+USER STORY BASELINE:
+{"title":"maintain a complete historical audit trail of all changes made to Service Area Definitions including timestamps and user details","description":"The system shall maintain a complete historical audit trail of all changes made to Service Area Definitions including timestamps and user details.","actors":["Platform Operator","Store Partner"],"objects":["Service Area Definition","Delivery Zone Map","Store Partner Agreement"],"rules":["A Service Area Definition must be in an active state before it can be used to validate new Order Requests.","Any modification to an active Service Area Definition must be logged with the reason for change and the identity of the operator.","Deactivation of a Service Area Definition must immediately prevent the acceptance of new orders originating from that zone.","A Service Area Definition cannot be created if its geographic boundaries overlap with a restricted zone defined by the Regulatory Authority."],"existing_scenarios":[{"given":"A Platform Operator initiates the creation of a new delivery zone with valid geographic coordinates","when":"The system processes the request and the zone is successfully created","then":"The new Service Area Definition is saved with an 'Inactive' status until explicitly activated by an authorized user"},{"given":"A Store Partner attempts to place an order from a location within a Service Area Definition that has been deactivated","when":"The system validates the customer's address against the current Service Area Definitions","then":"The system rejects the Order Request and displays a message indicating that delivery is not available in that zone"}]}

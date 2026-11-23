@@ -1,0 +1,37 @@
+{
+  "given_when_then": [
+    {
+      "given": "A financial transaction record has been generated",
+      "when": "The system attempts to finalize the settlement status",
+      "then": "The system verifies that verifiable delivery evidence is linked to the record"
+    },
+    {
+      "given": "The linked delivery proof is missing",
+      "when": "The system attempts to finalize the settlement status",
+      "then": "The system flags the record as incomplete and prevents final settlement"
+    },
+    {
+      "given": "The system is archiving a financial transaction record",
+      "when": "The record includes item costs, delivery fees, taxes, platform commissions, and net settlement amounts",
+      "then": "The system includes these fields in the archived record"
+    },
+    {
+      "given": "The system is archiving a financial transaction record",
+      "when": "The record is associated with a specific store partner",
+      "then": "The system archives the relevant store partner agreement contractual details alongside the record"
+    },
+    {
+      "given": "A non-standard process deviation occurs during transaction processing",
+      "when": "The system processes the record",
+      "then": "The system records the nature of the issue and the current resolution status"
+    }
+  ],
+  "success_criteria": [
+    "The financial transaction record must be linked to verifiable evidence of delivery before finalizing the settlement status.",
+    "The record must contain item costs, delivery fees, taxes, platform commissions, and net settlement amounts.",
+    "If delivery proof is missing, the system must flag the record as incomplete.",
+    "The system must prevent final settlement if the delivery proof is not provided.",
+    "Contractual details and payout schedules must be archived alongside the financial transaction record.",
+    "Any deviation from the standard process must be recorded with the nature of the issue and the current resolution status."
+  ]
+}

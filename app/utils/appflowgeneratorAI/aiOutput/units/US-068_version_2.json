@@ -1,0 +1,24 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Platform Operator initiates the creation of a new Service Area Definition using valid geographic coordinates",
+      "when": "The system processes the request and validates the input against active Service Area Definitions and regulatory restricted zones",
+      "then": "The new Service Area Definition is saved with an 'Inactive' status until explicitly activated by an authorized user"
+    },
+    {
+      "given": "A Platform Operator attempts to create a Service Area Definition whose boundaries overlap with a restricted zone defined by the Regulatory Authority",
+      "when": "The system processes the request and checks for regulatory zone conflicts",
+      "then": "The system rejects the Service Area Definition creation and prevents saving the record"
+    },
+    {
+      "given": "A Platform Operator initiates the creation of a new Service Area Definition using a valid radius and center coordinates",
+      "when": "The system processes the request and calculates the circular boundary",
+      "then": "The new Service Area Definition is saved with an 'Inactive' status until explicitly activated by an authorized user"
+    }
+  ],
+  "success_criteria": [
+    "A Service Area Definition created by an authorized user is saved with an 'Inactive' status by default.",
+    "Service Area Definition creation is rejected if the defined geographic boundaries overlap with a restricted zone defined by the Regulatory Authority.",
+    "Service Area Definition creation is supported for both geographic boundaries and radius configurations."
+  ]
+}
