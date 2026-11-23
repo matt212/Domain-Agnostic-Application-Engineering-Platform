@@ -1,0 +1,20 @@
+{
+  "given_when_then": [
+    {
+      "given": "The Platform Operator initiates an amendment to an active Store Partner Agreement",
+      "when": "The system processes the amendment request",
+      "then": "A new version of the agreement is created with updated terms, and the previous version is archived as historical data."
+    },
+    {
+      "given": "The Platform Operator creates a new Store Partner Agreement",
+      "when": "The system processes the creation request",
+      "then": "A new active version of the agreement is created with the specified commercial terms."
+    }
+  ],
+  "success_criteria": [
+    "New agreement versions are created with incremented version numbers when amendments are processed.",
+    "Previous agreement versions are automatically marked as historical when a new version is created.",
+    "Order Requests can only be allocated to Store Partners with active agreement versions.",
+    "Only the Platform Operator and the Store Partner associated with the agreement can access agreement edit functions."
+  ]
+}

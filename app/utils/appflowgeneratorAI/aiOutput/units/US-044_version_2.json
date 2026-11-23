@@ -1,0 +1,26 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Customer Profile exists with a unique identifier and verified contact details",
+      "when": "The account closure or significant status change event is triggered by the Platform Operator or Store Partner",
+      "then": "The system archives the Customer Profile and retains all historical data including associated Order Requests and Financial Transaction Records without modification"
+    },
+    {
+      "given": "An actor attempts to modify an archived Customer Profile after the archival action is confirmed",
+      "when": "The actor tries to update profile attributes",
+      "then": "The system prevents modification and retains the historical record as it existed at the time of archival"
+    },
+    {
+      "given": "A Customer Profile is associated with an Order Request",
+      "when": "The account closure event is initiated",
+      "then": "The system retains the historical association in the archived Customer Profile"
+    }
+  ],
+  "success_criteria": [
+    "The archived Customer Profile retains all historical data and cannot be modified after the archival action is confirmed.",
+    "The system successfully archives the Customer Profile without losing any associated Order Requests or Financial Transaction Records.",
+    "The modification timestamp and actor attribution are preserved for the archived Customer Profile state.",
+    "The unique identifier of the Customer Profile remains valid and linked to the archived status.",
+    "The system does not allow any updates to the Customer Profile after the account closure or significant status change confirmation."
+  ]
+}

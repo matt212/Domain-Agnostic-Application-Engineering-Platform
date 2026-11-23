@@ -1,0 +1,26 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Store Partner Agreement is associated with a Store Partner whose critical regulatory license is expired or invalid.",
+      "when": "The system processes a new order for this Store Partner.",
+      "then": "The system prevents order processing for this Store Partner."
+    },
+    {
+      "given": "A Store Partner Agreement is associated with a Store Partner.",
+      "when": "A Store Partner's critical regulatory license is flagged as invalid by the Regulatory Authority.",
+      "then": "The system blocks order allocation to the Store Partner."
+    },
+    {
+      "given": "A Store Partner has a food safety certificate that expires within 30 days.",
+      "when": "The system updates regulatory compliance status with new data from external sources.",
+      "then": "The Store Partner is notified immediately of the license expiration date."
+    }
+  ],
+  "success_criteria": [
+    "The system blocks order allocation when a Store Partner's primary operating license is flagged as invalid.",
+    "The system prevents order processing when a Store Partner's critical regulatory license is expired or invalid.",
+    "The system allows order allocation when a Store Partner's food safety certificate is valid and non-expired.",
+    "The system updates the Store Partner's compliance status to 'Non-Compliant' when their food safety certificate has expired in the external database.",
+    "The system notifies the Store Partner immediately when their license expiration date is within 30 days."
+  ]
+}

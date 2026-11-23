@@ -1,0 +1,32 @@
+{
+  "given_when_then": [
+    {
+      "given": "An authorized actor initiates the creation of a new Customer Profile",
+      "when": "The actor enters valid unique identifiers and contact details",
+      "then": "The system creates a new Customer Profile with an active status and links it to the actor's session"
+    },
+    {
+      "given": "An authorized actor initiates the creation of a new Customer Profile",
+      "when": "The actor does not provide unique identifiers",
+      "then": "The system prevents creation of the Customer Profile as a unique identifier is required before association with Order Requests"
+    },
+    {
+      "given": "An authorized actor initiates the creation of a new Customer Profile",
+      "when": "The actor provides contact details that have not been verified",
+      "then": "The system creates the Customer Profile but the profile status remains inactive until verification is completed"
+    },
+    {
+      "given": "An authorized actor attempts to modify an existing Customer Profile",
+      "when": "The modification data contains invalid fields or formats",
+      "then": "The system rejects the update and displays an error message indicating the validation failure"
+    }
+  ],
+  "success_criteria": [
+    "A new Customer Profile must be created with an active status only when unique identifiers and verified contact details are provided",
+    "Creation of a new Customer Profile is rejected if unique identifiers are missing",
+    "Profile status remains inactive if contact details are not verified",
+    "Modifications to Customer Profiles must be timestamped and attributed to the actor",
+    "Invalid data submissions for Customer Profile updates result in rejection with an error message",
+    "Contact details must be verified before the profile status is set to active"
+  ]
+}

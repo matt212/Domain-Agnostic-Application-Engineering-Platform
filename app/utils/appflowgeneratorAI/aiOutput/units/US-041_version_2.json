@@ -1,0 +1,25 @@
+{
+  "given_when_then": [
+    {
+      "given": "The Regulatory Authority initiates a compliance report generation task.",
+      "when": "The system aggregates the status of all active regulatory documents for Store Partners.",
+      "then": "A report detailing the current compliance status of all active regulatory documents is generated."
+    },
+    {
+      "given": "A Store Partner has a valid and non-expired food safety certificate.",
+      "when": "The Regulatory Authority generates a compliance report for the Store Partner.",
+      "then": "The compliance status for that Store Partner is displayed as 'Active' in the report."
+    },
+    {
+      "given": "A Store Partner's food safety certificate has expired in the external database.",
+      "when": "The Regulatory Authority generates a compliance report for the Store Partner.",
+      "then": "The compliance status for that Store Partner is displayed as 'Non-Compliant' in the report."
+    }
+  ],
+  "success_criteria": [
+    "The system generates a report detailing the status of all active regulatory documents for Store Partners.",
+    "The report accurately reflects the 'Active' status for Store Partners with valid, non-expired certificates.",
+    "The report accurately reflects the 'Non-Compliant' status for Store Partners with expired certificates.",
+    "The report includes the list of all active regulatory documents associated with Store Partners."
+  ]
+}

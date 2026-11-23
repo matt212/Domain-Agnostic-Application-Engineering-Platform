@@ -1,0 +1,17 @@
+{
+  "given_when_then": [
+    {
+      "given": "The system identifies an active Store Partner Agreement",
+      "when": "The Platform Operator initiates an amendment to the agreement terms",
+      "then": "A notification is sent to the Store Partner alerting them of the changes to their active agreement terms."
+    },
+    {
+      "given": "The Platform Operator creates an amendment to an active Store Partner Agreement",
+      "when": "The system processes the amendment request",
+      "then": "A new version of the agreement is created with updated terms, the previous version is archived as historical data, and a notification is sent to the Store Partner."
+    }
+  ],
+  "success_criteria": [
+    "A Store Partner receives a notification regarding changes to their active agreement terms after the Platform Operator initiates an amendment."
+  ]
+}

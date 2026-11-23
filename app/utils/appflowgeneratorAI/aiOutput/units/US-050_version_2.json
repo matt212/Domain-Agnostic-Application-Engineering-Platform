@@ -1,0 +1,38 @@
+{
+  "given_when_then": [
+    {
+      "given": "The Platform Operator or Store Partner initiates an Order Request against a Store Partner Agreement",
+      "when": "The Store Partner Agreement is marked as inactive or superseded",
+      "then": "The system prevents the execution of the order and blocks allocation to the partner"
+    },
+    {
+      "given": "A Store Partner attempts to allocate an Order Request",
+      "when": "The system validates the associated Store Partner Agreement status",
+      "then": "The system rejects the allocation if the agreement is inactive or marked as superseded"
+    },
+    {
+      "given": "The Platform Operator creates a new version of a Store Partner Agreement",
+      "when": "An amendment is applied to an active agreement",
+      "then": "The previous agreement version is automatically marked as historical and the new version becomes active"
+    },
+    {
+      "given": "The Platform Operator or Store Partner attempts to delete a Store Partner Agreement version",
+      "when": "The agreement version has already been created",
+      "then": "The system prevents the deletion of the agreement version"
+    },
+    {
+      "given": "A Store Partner attempts to allocate an Order Request",
+      "when": "The associated Store Partner Agreement is marked as inactive",
+      "then": "The system prevents the creation of the Delivery Assignment"
+    }
+  ],
+  "success_criteria": [
+    "Order Requests are not executed against Store Partner Agreements marked as inactive or superseded",
+    "New agreement versions are created with incremented version numbers when amendments are made to active agreements",
+    "Previous agreement versions are automatically archived as historical data upon amendment",
+    "Deletion of any agreement version is blocked once it has been created",
+    "Order allocations are rejected when the associated agreement is inactive",
+    "Delivery Assignments are not created for orders allocated to partners with inactive agreements",
+    "Only the Platform Operator and the Store Partner have access to edit their respective agreement versions"
+  ]
+}

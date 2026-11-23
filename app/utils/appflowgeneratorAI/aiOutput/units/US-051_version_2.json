@@ -1,0 +1,30 @@
+{
+  "given_when_then": [
+    {
+      "given": "The Platform Operator is viewing the version history of an active Store Partner Agreement",
+      "when": "The Platform Operator selects a previous version to compare against the current active version",
+      "then": "A side-by-side comparison view displays only the fields and values that have changed between the two versions."
+    },
+    {
+      "given": "An amendment to a Store Partner Agreement is initiated by the Platform Operator",
+      "when": "The amendment is saved and processed by the system",
+      "then": "A new version number is assigned to the agreement, the previous version is marked as historical, and the new version is marked as active."
+    },
+    {
+      "given": "The system contains multiple historical and active versions of a Store Partner Agreement",
+      "when": "The Platform Operator requests the version history view",
+      "then": "The view lists all existing versions in chronological order with their version numbers and status indicators."
+    },
+    {
+      "given": "A Store Partner attempts to access the edit interface for an agreement version",
+      "when": "The Store Partner is not the owner of the agreement and the Platform Operator has not granted explicit permission",
+      "then": "The system restricts access and prevents the Store Partner from editing the agreement version."
+    }
+  ],
+  "success_criteria": [
+    "The system successfully creates a new version number for the Store Partner Agreement upon amendment without deleting the previous version.",
+    "The version history view correctly displays a comparison of changes between selected agreement versions.",
+    "The system correctly marks the previous version as historical immediately after an amendment is applied.",
+    "The system prevents deletion of any agreement version once it has been created."
+  ]
+}

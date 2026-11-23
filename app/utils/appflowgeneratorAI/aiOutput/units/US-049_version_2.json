@@ -1,0 +1,29 @@
+{
+  "given_when_then": [
+    {
+      "given": "The Store Partner is associated with an agreement marked as 'Active'",
+      "when": "The Platform Operator or the Store Partner attempts to view the agreement details",
+      "then": "The system allows access to view all versions, including historical ones"
+    },
+    {
+      "given": "A Store Partner is not associated with an active agreement",
+      "when": "The Store Partner attempts to view or edit any agreement version",
+      "then": "The system denies access to the agreement details"
+    },
+    {
+      "given": "The Platform Operator attempts to edit an agreement version",
+      "when": "The system processes the edit request",
+      "then": "The system grants permission to edit the agreement version"
+    },
+    {
+      "given": "An actor who is neither the Platform Operator nor the associated Store Partner",
+      "when": "The actor attempts to view or edit an agreement version",
+      "then": "The system denies access to the agreement version"
+    }
+  ],
+  "success_criteria": [
+    "The system correctly restricts view and edit access to only the Platform Operator and the associated Store Partner.",
+    "The system grants access to all actors with valid authorization for the specific agreement version.",
+    "The system denies access to any actor without valid authorization for the specific agreement version."
+  ]
+}

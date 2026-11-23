@@ -1,0 +1,30 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Store Partner uploads a valid food safety certificate with a future expiration date.",
+      "when": "The system ingests and validates the document against the Regulatory Authority database.",
+      "then": "The system updates the Store Partner's compliance status to 'Active' and allows order allocation."
+    },
+    {
+      "given": "A Store Partner's food safety certificate has expired in the external database.",
+      "when": "The system performs a scheduled validation check on the Store Partner's records.",
+      "then": "The system updates the compliance status to 'Non-Compliant' and blocks all new order requests for that Store Partner."
+    },
+    {
+      "given": "A Store Partner's primary operating license is flagged as invalid.",
+      "when": "The system attempts to allocate an order to the Store Partner.",
+      "then": "The system blocks the order allocation for that Store Partner."
+    },
+    {
+      "given": "A Store Partner's license expiration date is within 30 days.",
+      "when": "The system performs a scheduled validation check on the Store Partner's records.",
+      "then": "The system notifies the Store Partner immediately."
+    }
+  ],
+  "success_criteria": [
+    "The system updates the compliance status to 'Active' when a valid certificate is uploaded and validated.",
+    "The system updates the compliance status to 'Non-Compliant' and blocks new order requests when a food safety certificate is expired.",
+    "The system blocks order allocation when a Store Partner's operating license is flagged as invalid.",
+    "The system notifies the Store Partner immediately if their license expiration date is within 30 days."
+  ]
+}

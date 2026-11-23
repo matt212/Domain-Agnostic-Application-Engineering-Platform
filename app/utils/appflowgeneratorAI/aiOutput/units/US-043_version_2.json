@@ -1,0 +1,17 @@
+{
+  "given_when_then": [
+    {
+      "given": "An authorized actor initiates the creation of a new customer account",
+      "when": "The actor enters valid unique identifiers and contact details",
+      "then": "The system creates a new Customer Profile with an active status and links it to the actor's session"
+    }
+  ],
+  "success_criteria": [
+    "Customer Profile is updated with new address changes and preference updates when valid data is provided by an authorized actor",
+    "Modification to Customer Profile is timestamped and attributed to the actor performing the change",
+    "Archived Customer Profiles cannot be modified and retain all historical data after archival",
+    "Contact details within a Customer Profile must be verified before the profile status is set to active",
+    "System rejects update requests with invalid data and displays a specific error message indicating the validation failure",
+    "New Customer Profile is created with active status and linked to the actor's session when valid unique identifiers and contact details are entered"
+  ]
+}

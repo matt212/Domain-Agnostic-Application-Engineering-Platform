@@ -1,0 +1,34 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Customer Profile exists with a verified unique identifier and active status",
+      "when": "An actor initiates the linking of an associated Order Request to the Customer Profile",
+      "then": "The system successfully links the Order Request to the Customer Profile and updates the audit trail"
+    },
+    {
+      "given": "An actor attempts to modify an Archived Customer Profile",
+      "when": "The actor submits a modification request for any field within the profile",
+      "then": "The system rejects the modification and preserves all historical data without changes"
+    },
+    {
+      "given": "A Customer Profile has unverified contact details",
+      "when": "The actor attempts to set the profile status to active",
+      "then": "The system rejects the status change and retains the profile in a pending state"
+    },
+    {
+      "given": "A valid Order Request is submitted by an actor",
+      "when": "The system processes the Order Request and identifies an associated Customer Profile",
+      "then": "The system links the Order Request to the Customer Profile and records the timestamp and actor in the audit trail"
+    }
+  ],
+  "success_criteria": [
+    "The Customer Profile is linked to the associated Order Request in the system records",
+    "The Customer Profile is linked to the Financial Transaction Record in the system records",
+    "The Customer Profile contains a unique identifier before any Order Request is associated with it",
+    "Contact details within the Customer Profile are verified before the profile status is set to active",
+    "Archived Customer Profiles retain all historical data and cannot be modified after archival",
+    "Any modification to a Customer Profile is timestamped and attributed to the actor performing the change",
+    "The system displays a specific error message when attempting to modify an Archived Customer Profile",
+    "The system rejects the update when data fails validation rules for required fields or format"
+  ]
+}

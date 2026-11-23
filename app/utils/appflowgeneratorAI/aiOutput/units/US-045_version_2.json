@@ -1,0 +1,37 @@
+{
+  "given_when_then": [
+    {
+      "given": "An actor initiates the creation of a new customer account",
+      "when": "The actor enters valid unique identifiers and verified contact details",
+      "then": "The system creates a new Customer Profile with an active status and links it to the actor's session"
+    },
+    {
+      "given": "A Customer Profile lacks a unique identifier",
+      "when": "An actor attempts to associate an Order Request with the profile",
+      "then": "The system rejects the association as the profile is not ready for orders"
+    },
+    {
+      "given": "Contact details within a Customer Profile are not yet verified",
+      "when": "An actor attempts to set the profile status to active",
+      "then": "The system prevents the status change until contact verification is complete"
+    },
+    {
+      "given": "An actor initiates an update to an Archived Customer Profile",
+      "when": "The actor attempts to modify any historical data",
+      "then": "The system rejects the modification and confirms the archival action remains intact"
+    },
+    {
+      "given": "A Customer Profile has been modified",
+      "when": "The system processes the change",
+      "then": "The modification is timestamped and attributed to the actor performing the change"
+    }
+  ],
+  "success_criteria": [
+    "The system successfully creates a Customer Profile with active status only when unique identifiers and contact details are verified.",
+    "The system prevents association of an Order Request with a Customer Profile that lacks a unique identifier.",
+    "The system enforces contact verification as a mandatory prerequisite before allowing a Customer Profile status to be set to active.",
+    "The system permanently prevents modification of data within an Archived Customer Profile after archival confirmation.",
+    "Every modification to a Customer Profile is recorded with a precise timestamp and the specific actor who performed the change.",
+    "The system displays a specific error message when an actor attempts to enter data that fails validation rules for required fields or format."
+  ]
+}
