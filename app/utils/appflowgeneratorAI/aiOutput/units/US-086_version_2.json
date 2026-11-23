@@ -1,0 +1,30 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Delivery Partner enters an incorrect secondary verification code while the total count of consecutive failures is below the system threshold",
+      "when": "The system validates the primary credential and secondary code against the Customer Profile",
+      "then": "Access is denied but the session remains unlocked, allowing another attempt within the time window"
+    },
+    {
+      "given": "A Delivery Partner enters an incorrect secondary verification code while the total count of consecutive failures equals the system threshold",
+      "when": "The system validates the primary credential and secondary code against the Customer Profile",
+      "then": "Access is denied and the session is locked immediately to prevent further attempts"
+    },
+    {
+      "given": "A Delivery Partner enters an incorrect secondary verification code within the allowed time window",
+      "when": "The secondary verification code expires before the system confirms a valid match",
+      "then": "Access is denied and the session is locked to prevent reuse of the expired code"
+    },
+    {
+      "given": "A Delivery Partner enters the correct secondary verification code",
+      "when": "The system validates the primary credential and secondary code against the Customer Profile",
+      "then": "Access is granted and the session is unlocked"
+    }
+  ],
+  "success_criteria": [
+    "The system denies access and locks the session only when the number of consecutive authentication failures exceeds the system threshold following a secondary code failure.",
+    "The system denies access without locking the session when a secondary code fails but the consecutive failure count remains at or below the threshold.",
+    "The system denies access and locks the session if the secondary verification code expires before a valid match is confirmed.",
+    "The system grants access when the primary credential and secondary verification code both validate successfully within the defined time window."
+  ]
+}

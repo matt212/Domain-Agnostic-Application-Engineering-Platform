@@ -1,0 +1,13 @@
+{
+  "given_when_then": [
+    {
+      "given": "An actor attempts to perform an action on an object",
+      "when": "The system verifies the actor's role includes the specific permission for that action",
+      "then": "The system grants access to perform the action if the permission is present"
+    }
+  ],
+  "success_criteria": [
+    "System grants access when actor has the required permission",
+    "System denies access when actor lacks the required permission"
+  ]
+}

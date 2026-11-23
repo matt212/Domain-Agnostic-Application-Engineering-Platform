@@ -1,0 +1,26 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Delivery Partner is presented with the authentication interface",
+      "when": "The Delivery Partner submits valid primary credentials and a valid secondary verification code",
+      "then": "The system grants access and appends an immutable log entry indicating the attempt was 'SUCCESS', recording the specific method used (primary credential + secondary verification code)"
+    },
+    {
+      "given": "A Delivery Partner is presented with the authentication interface",
+      "when": "The Delivery Partner submits invalid primary credentials (e.g., incorrect password or ID)",
+      "then": "The system denies access and appends an immutable log entry indicating the attempt was 'FAILURE', recording the specific method used as the failed credential submission"
+    },
+    {
+      "given": "A Delivery Partner is presented with the authentication interface",
+      "when": "The Delivery Partner submits a valid primary credential and an invalid or expired secondary verification code",
+      "then": "The system denies access and appends an immutable log entry indicating the attempt was 'FAILURE', recording the specific method used as the secondary code verification"
+    }
+  ],
+  "success_criteria": [
+    "The system logs every authentication attempt regardless of whether the outcome is success or failure.",
+    "Every log entry includes a distinct field identifying the specific authentication method used.",
+    "Log entries marked as 'FAILURE' are associated with the specific credential or method that failed.",
+    "Log entries are immutable and retained for the configured regulatory compliance period.",
+    "Log entries are accessible to authorized actors for security auditing purposes."
+  ]
+}

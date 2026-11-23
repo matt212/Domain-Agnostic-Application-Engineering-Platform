@@ -1,0 +1,20 @@
+{
+  "given_when_then": [
+    {
+      "given": "An actor initiates an access attempt to perform a specific action on a system object",
+      "when": "The actor's assigned role does not include the specific permission required for that action",
+      "then": "The system denies the access attempt"
+    },
+    {
+      "given": "An actor initiates an access attempt to perform a specific action on a system object",
+      "when": "The actor's assigned role does not include the specific permission required for that action",
+      "then": "The system records the failed attempt in an audit log"
+    }
+  ],
+  "success_criteria": [
+    "Access attempts by actors lacking the required permission are consistently denied and return a failure response.",
+    "Every denied access attempt is recorded in an audit log containing details of the attempt and the outcome.",
+    "Permission changes take effect immediately for all subsequent access requests made by the affected actor.",
+    "Actors without the required permission cannot bypass role-based restrictions through direct data manipulation."
+  ]
+}

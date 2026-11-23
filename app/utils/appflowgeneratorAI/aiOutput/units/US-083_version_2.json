@@ -1,0 +1,24 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Delivery Partner initiates an action on a Customer Profile",
+      "when": "The system evaluates the Delivery Partner's role against the permission required to access that object",
+      "then": "The system denies access to the Customer Profile and records the failed attempt in the audit log"
+    },
+    {
+      "given": "A Store Partner initiates an action on an Order Request",
+      "when": "The system evaluates the Store Partner's role against the permission required to access that object",
+      "then": "The system denies access to the Order Request and records the failed attempt in the audit log"
+    },
+    {
+      "given": "A Platform Operator initiates an action on a Feedback Record",
+      "when": "The system evaluates the Platform Operator's role against the permission required to access that object",
+      "then": "The system grants access to the Feedback Record and records the action"
+    }
+  ],
+  "success_criteria": [
+    "Access is denied to a business object when the actor lacks the specific permission for that action.",
+    "Access is granted to a business object when the actor has the specific permission for that action.",
+    "All access attempts, both successful and denied, are recorded in the audit log."
+  ]
+}

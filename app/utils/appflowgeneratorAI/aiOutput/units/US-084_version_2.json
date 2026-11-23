@@ -1,0 +1,25 @@
+{
+  "given_when_then": [
+    {
+      "given": "The Delivery Partner attempts to access the login interface",
+      "when": "The system requests a primary credential (e.g., unique agent ID or biometric scan) before proceeding to secondary verification or authentication",
+      "then": "The system blocks progression to the login attempt until a valid primary credential is provided or explicitly rejected"
+    },
+    {
+      "given": "The Delivery Partner attempts to initiate a login sequence",
+      "when": "A valid primary credential is provided",
+      "then": "The system accepts the primary credential and permits the subsequent login attempt flow"
+    },
+    {
+      "given": "The Delivery Partner initiates a login attempt",
+      "when": "An invalid primary credential is provided",
+      "then": "The system denies the login attempt and terminates the session without issuing a secondary verification code"
+    }
+  ],
+  "success_criteria": [
+    "The system must request a primary credential before displaying or enabling any secondary verification input field.",
+    "The system must not generate or display a secondary verification code if the primary credential is invalid.",
+    "The system must allow the login process to continue only after a valid primary credential is successfully validated.",
+    "The system must immediately terminate the session and deny access upon detecting an invalid primary credential."
+  ]
+}

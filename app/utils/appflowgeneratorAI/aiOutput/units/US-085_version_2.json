@@ -1,0 +1,20 @@
+{
+  "given_when_then": [
+    {
+      "given": "A Delivery Partner is at the primary credential entry screen and has entered valid credentials for their Customer Profile.",
+      "when": "The system validates the primary credentials successfully.",
+      "then": "The system issues a one-time verification code via the secondary channel (SMS or email) associated with the Customer Profile."
+    },
+    {
+      "given": "A Delivery Partner is at the secondary verification step, having just received a valid one-time verification code.",
+      "when": "The Delivery Partner enters the received code within its validity duration.",
+      "then": "The system grants access to the Delivery Partner."
+    }
+  ],
+  "success_criteria": [
+    "The system transmits the verification code to the registered secondary channel immediately upon primary credential validation success.",
+    "The system does not grant access until the valid secondary verification code is entered and matches the issued code.",
+    "The system rejects access if the entered code does not match the issued code or has expired.",
+    "The system does not issue a secondary verification code if the primary credentials are invalid."
+  ]
+}

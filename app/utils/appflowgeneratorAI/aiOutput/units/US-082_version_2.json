@@ -1,0 +1,21 @@
+{
+  "given_when_then": [
+    {
+      "given": "An actor has successfully been assigned a new role or a role has been successfully revoked from the actor",
+      "when": "The actor makes a subsequent access request to perform an action",
+      "then": "The system evaluates the actor's permission set based on their updated role and grants access if the new permission exists or denies access if the permission no longer exists"
+    },
+    {
+      "given": "An actor's permission set has been updated due to a successful role assignment or revocation",
+      "when": "The actor attempts to perform an action that requires a permission they previously lacked or possessed",
+      "then": "The system immediately grants or denies the access request without requiring a new session or system restart"
+    }
+  ],
+  "success_criteria": [
+    "The actor's permission set is updated immediately upon successful role assignment or revocation",
+    "Access requests by the actor are evaluated against the updated permission set for all subsequent actions",
+    "Access requests denied due to missing permissions are logged in an audit log",
+    "Access requests granted due to newly acquired permissions are processed without requiring a new session",
+    "The actor cannot bypass role-based restrictions by directly manipulating data or objects"
+  ]
+}
