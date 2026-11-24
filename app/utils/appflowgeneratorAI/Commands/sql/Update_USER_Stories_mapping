@@ -1,0 +1,605 @@
+
+-- ================================================================
+-- FUNCTIONAL REQUIREMENT-CENTRED USER STORY PREVIEW
+-- READ ONLY: SELECT ONLY
+--
+-- ONE FUNCTIONAL REQUIREMENT = ONE USER STORY
+--
+-- No INSERT / UPDATE / DELETE / CREATE TABLE
+-- Does not read existing user_stories as generation input.
+-- ================================================================
+
+WITH
+
+-- ================================================================
+-- 1. FUNCTIONAL REQUIREMENTS: CENTRAL SOURCE
+-- ================================================================
+
+fr AS (
+    SELECT
+        fr.functional_requirement_pk,
+        fr.functional_requirement_id,
+        fr.name,
+        fr.description,
+        fr.status,
+        fr.source_file_id,
+        fr.raw_payload
+    FROM requirements.functional_requirements fr
+),
+
+-- ================================================================
+-- 2. RELATED BUSINESS REQUIREMENTS
+-- ================================================================
+
+linked_br AS (
+    SELECT
+        rr.functional_requirement_pk,
+
+        JSONB_AGG(DISTINCT TO_JSONB(br.business_requirement_id))
+            FILTER (
+                WHERE br.business_requirement_id IS NOT NULL
+            ) AS br_ids,
+
+        JSONB_AGG(
+            DISTINCT JSONB_BUILD_OBJECT(
+                'business_requirement_id', br.business_requirement_id,
+                'name', br.name,
+                'requirement', br.business_requirement,
+                'business_objective', br.business_objective,
+                'business_value', br.business_value,
+                'success_measures', br.success_measures,
+                'priority', br.priority,
+                'stakeholders', br.stakeholders,
+                'assumptions', br.assumptions,
+                'risks_and_dependencies', br.risks_and_dependencies,
+                'policies_and_constraints', br.policies_and_constraints,
+                'validation_status', br.validation_status,
+                'approval_status', br.approval_status
+            )
+        ) FILTER (
+            WHERE br.business_requirement_pk IS NOT NULL
+        ) AS br_context,
+
+        JSONB_AGG(DISTINCT br.success_measures)
+            FILTER (
+                WHERE br.success_measures <> '[]'::JSONB
+            ) AS br_success_measures,
+
+        JSONB_AGG(DISTINCT TO_JSONB(br.business_value))
+            FILTER (
+                WHERE NULLIF(BTRIM(br.business_value), '') IS NOT NULL
+            ) AS br_business_values,
+
+        JSONB_AGG(DISTINCT br.assumptions)
+            FILTER (
+                WHERE br.assumptions <> '[]'::JSONB
+            ) AS br_assumptions,
+
+        JSONB_AGG(DISTINCT br.risks_and_dependencies)
+            FILTER (
+                WHERE br.risks_and_dependencies <> '[]'::JSONB
+            ) AS br_risks,
+
+        JSONB_AGG(DISTINCT br.policies_and_constraints)
+            FILTER (
+                WHERE br.policies_and_constraints <> '[]'::JSONB
+            ) AS br_policies
+
+    FROM requirements.requirement_relationships rr
+
+    JOIN requirements.business_requirements br
+        ON br.business_requirement_pk =
+           rr.business_requirement_pk
+
+    GROUP BY rr.functional_requirement_pk
+),
+
+-- ================================================================
+-- 3. BUSINESS RULES LINKED TO FUNCTIONAL REQUIREMENTS
+-- ================================================================
+
+fr_normalized_rules AS (
+    SELECT
+        f.functional_requirement_pk,
+
+        JSONB_AGG(
+            DISTINCT JSONB_BUILD_OBJECT(
+                'business_rule_id', r.business_rule_id,
+                'rule_name', r.rule_name,
+                'rule_statement', r.rule_statement,
+                'rule_type', r.rule_type,
+                'conditions', r.conditions,
+                'outcomes', r.outcomes,
+                'exceptions', r.exceptions,
+                'rationale', r.rationale,
+                'source', 'business_rules'
+            )
+        ) AS rules
+
+    FROM fr f
+
+    JOIN requirements.business_rules r
+        ON r.supporting_requirements @>
+           JSONB_BUILD_ARRAY(f.functional_requirement_id)
+
+    GROUP BY f.functional_requirement_pk
+),
+
+-- ================================================================
+-- 4. GENERATED BUSINESS RULES LINKED TO FR
+-- ================================================================
+
+fr_generated_rules AS (
+    SELECT
+        f.functional_requirement_pk,
+
+        JSONB_AGG(
+            DISTINCT JSONB_BUILD_OBJECT(
+                'business_rule_id', r.business_rule_id,
+                'rule_name', r.business_rule_name,
+                'rule_statement', r.business_rule,
+                'rationale', r.rationale,
+                'applicability', r.applicability,
+                'conditions', r.conditions,
+                'exceptions', r.exceptions,
+                'contextual_basis', r.contextual_basis,
+                'source', 'generated_business_rules'
+            )
+        ) AS rules
+
+    FROM fr f
+
+    JOIN requirements.generated_business_rules r
+        ON r.contextual_basis @>
+           JSONB_BUILD_ARRAY(f.functional_requirement_id)
+
+    GROUP BY f.functional_requirement_pk
+),
+
+-- ================================================================
+-- 5. ALTERNATIVES FROM LINKED BUSINESS REQUIREMENTS
+-- ================================================================
+
+br_alternative_context AS (
+    SELECT
+        rr.functional_requirement_pk,
+
+        JSONB_AGG(
+            DISTINCT JSONB_BUILD_OBJECT(
+                'alternative_id', a.alternative_id,
+                'business_requirement_id', a.business_requirement_id,
+                'alternative_type', a.alternative_type,
+                'alternative_name', a.alternative_name,
+                'alternative_description', a.alternative_description,
+                'rationale', a.rationale,
+                'status', a.alternative_status
+            )
+        ) AS alternatives
+
+    FROM requirements.requirement_relationships rr
+
+    JOIN requirements.business_requirements br
+        ON br.business_requirement_pk =
+           rr.business_requirement_pk
+
+    JOIN requirements.br_alternatives a
+        ON a.business_requirement_id =
+           br.business_requirement_id
+
+    GROUP BY rr.functional_requirement_pk
+),
+
+-- ================================================================
+-- 6. CONSOLIDATED EVIDENCE PER FUNCTIONAL REQUIREMENT
+-- ================================================================
+
+evidence AS (
+    SELECT
+        f.*,
+
+        COALESCE(b.br_ids, '[]'::JSONB)
+            AS business_requirement_ids,
+
+        COALESCE(b.br_context, '[]'::JSONB)
+            AS business_context,
+
+        COALESCE(b.br_success_measures, '[]'::JSONB)
+            AS br_success_measures,
+
+        COALESCE(b.br_business_values, '[]'::JSONB)
+            AS br_business_values,
+
+        COALESCE(b.br_assumptions, '[]'::JSONB)
+            AS br_assumptions,
+
+        COALESCE(b.br_risks, '[]'::JSONB)
+            AS br_risks,
+
+        COALESCE(b.br_policies, '[]'::JSONB)
+            AS br_policies,
+
+        COALESCE(nr.rules, '[]'::JSONB)
+            AS normalized_business_rules,
+
+        COALESCE(gr.rules, '[]'::JSONB)
+            AS generated_business_rules,
+
+        COALESCE(a.alternatives, '[]'::JSONB)
+            AS br_alternatives
+
+    FROM fr f
+
+    LEFT JOIN linked_br b
+        ON b.functional_requirement_pk =
+           f.functional_requirement_pk
+
+    LEFT JOIN fr_normalized_rules nr
+        ON nr.functional_requirement_pk =
+           f.functional_requirement_pk
+
+    LEFT JOIN fr_generated_rules gr
+        ON gr.functional_requirement_pk =
+           f.functional_requirement_pk
+
+    LEFT JOIN br_alternative_context a
+        ON a.functional_requirement_pk =
+           f.functional_requirement_pk
+),
+
+-- ================================================================
+-- 7. NORMALISE FUNCTIONAL REQUIREMENT JSON ARRAYS
+-- ================================================================
+
+normalised AS (
+    SELECT
+        e.*,
+
+        CASE
+            WHEN JSONB_TYPEOF(
+                e.raw_payload -> 'acceptance_criteria'
+            ) = 'array'
+                THEN e.raw_payload -> 'acceptance_criteria'
+            WHEN e.raw_payload ? 'acceptance_criteria'
+                THEN JSONB_BUILD_ARRAY(
+                    e.raw_payload -> 'acceptance_criteria'
+                )
+            ELSE '[]'::JSONB
+        END AS fr_acceptance_criteria,
+
+        CASE
+            WHEN JSONB_TYPEOF(
+                e.raw_payload -> 'business_rules'
+            ) = 'array'
+                THEN e.raw_payload -> 'business_rules'
+            WHEN e.raw_payload ? 'business_rules'
+                THEN JSONB_BUILD_ARRAY(
+                    e.raw_payload -> 'business_rules'
+                )
+            ELSE '[]'::JSONB
+        END AS fr_business_rules,
+
+        CASE
+            WHEN JSONB_TYPEOF(
+                e.raw_payload -> 'non_functional_requirements'
+            ) = 'array'
+                THEN e.raw_payload -> 'non_functional_requirements'
+            WHEN e.raw_payload ? 'non_functional_requirements'
+                THEN JSONB_BUILD_ARRAY(
+                    e.raw_payload -> 'non_functional_requirements'
+                )
+            ELSE '[]'::JSONB
+        END AS fr_nfrs,
+
+        CASE
+            WHEN JSONB_TYPEOF(
+                e.raw_payload -> 'functional_behaviour'
+            ) = 'array'
+                THEN e.raw_payload -> 'functional_behaviour'
+            WHEN e.raw_payload ? 'functional_behaviour'
+                THEN JSONB_BUILD_ARRAY(
+                    e.raw_payload -> 'functional_behaviour'
+                )
+            ELSE '[]'::JSONB
+        END AS fr_behaviours,
+
+        CASE
+            WHEN JSONB_TYPEOF(
+                e.raw_payload -> 'related_business_objects'
+            ) = 'array'
+                THEN e.raw_payload -> 'related_business_objects'
+            WHEN e.raw_payload ? 'related_business_objects'
+                THEN JSONB_BUILD_ARRAY(
+                    e.raw_payload -> 'related_business_objects'
+                )
+            ELSE '[]'::JSONB
+        END AS fr_business_objects
+
+    FROM evidence e
+),
+
+-- ================================================================
+-- 8. EXTRACT GIVEN / WHEN / THEN SCENARIOS
+-- ================================================================
+
+gwt AS (
+    SELECT
+        n.functional_requirement_pk,
+
+        COALESCE(
+            JSONB_AGG(
+                JSONB_BUILD_OBJECT(
+                    'gwt_id',
+                        'GWT-' ||
+                        LPAD(ac.ordinality::TEXT, 3, '0'),
+                    'given', ac.item -> 'given',
+                    'when', ac.item -> 'when',
+                    'then', ac.item -> 'then',
+                    'context_scope',
+                        'FUNCTIONAL_REQUIREMENT_SOURCE'
+                )
+                ORDER BY ac.ordinality
+            ) FILTER (
+                WHERE
+                    ac.item ? 'given'
+                    AND ac.item ? 'when'
+                    AND ac.item ? 'then'
+            ),
+            '[]'::JSONB
+        ) AS scenarios
+
+    FROM normalised n
+
+    LEFT JOIN LATERAL
+        JSONB_ARRAY_ELEMENTS(
+            n.fr_acceptance_criteria
+        ) WITH ORDINALITY AS ac(item, ordinality)
+        ON TRUE
+
+    GROUP BY n.functional_requirement_pk
+),
+
+-- ================================================================
+-- 9. BUILD ONE USER STORY PER FUNCTIONAL REQUIREMENT
+-- ================================================================
+
+story_data AS (
+    SELECT
+        n.functional_requirement_pk,
+        n.functional_requirement_id,
+        n.name,
+        n.description,
+        n.status,
+        n.source_file_id,
+
+        -- DIMENSION 1: USER GOAL
+        COALESCE(
+            NULLIF(n.raw_payload ->> 'user_goal', ''),
+            NULLIF(n.raw_payload ->> 'business_need', ''),
+            NULLIF(n.description, '')
+        ) AS user_goal,
+
+        -- DIMENSION 2: PRECONDITIONS
+        COALESCE(
+            n.raw_payload -> 'preconditions',
+            '[]'::JSONB
+        ) AS preconditions,
+
+        -- DIMENSION 3: POSTCONDITIONS
+        COALESCE(
+            n.raw_payload -> 'postconditions',
+            '[]'::JSONB
+        ) AS postconditions,
+
+        -- DIMENSION 4: TRIGGER
+        n.raw_payload ->> 'trigger' AS trigger,
+
+        -- DIMENSION 5: MAIN FLOW
+        -- PRESERVE ALL BEHAVIOURS AS ONE FR-LEVEL FLOW
+        CASE
+            WHEN JSONB_ARRAY_LENGTH(n.fr_behaviours) > 0
+                THEN n.fr_behaviours
+            WHEN NULLIF(n.description, '') IS NOT NULL
+                THEN JSONB_BUILD_ARRAY(n.description)
+            ELSE '[]'::JSONB
+        END AS main_flow,
+
+        -- DIMENSION 6: ALTERNATIVE FLOWS
+        JSONB_BUILD_OBJECT(
+            'functional_requirement_alternatives',
+                COALESCE(
+                    n.raw_payload -> 'alternative_flows',
+                    '[]'::JSONB
+                ),
+            'business_requirement_alternatives',
+                n.br_alternatives
+        ) AS alternative_flows,
+
+        -- DIMENSION 7: EXCEPTION FLOWS
+        COALESCE(
+            n.raw_payload -> 'exception_flows',
+            '[]'::JSONB
+        ) AS exception_flows,
+
+        -- DIMENSION 8: ACCEPTANCE CRITERIA
+        n.fr_acceptance_criteria AS acceptance_criteria,
+
+        -- DIMENSION 9: GIVEN / WHEN / THEN
+        COALESCE(g.scenarios, '[]'::JSONB)
+            AS given_when_then,
+
+        -- DIMENSION 10: BUSINESS RULES
+        (
+            n.fr_business_rules
+            || n.normalized_business_rules
+            || n.generated_business_rules
+        ) AS business_rules,
+
+        -- DIMENSION 11: SUCCESS CRITERIA
+        n.br_success_measures AS success_criteria,
+
+        -- DIMENSION 12: DIRECT DEPENDENCIES
+        JSONB_BUILD_OBJECT(
+            'functional_requirement_dependencies',
+                COALESCE(
+                    n.raw_payload -> 'dependencies',
+                    '[]'::JSONB
+                ),
+            'business_requirement_dependencies',
+                n.br_risks
+        ) AS dependencies,
+
+        -- ADDITIONAL USER STORY CONTEXT
+        COALESCE(
+            n.raw_payload -> 'required_by_actors',
+            n.raw_payload -> 'actors',
+            '[]'::JSONB
+        ) AS actor,
+
+        JSONB_BUILD_OBJECT(
+            'functional_requirement_business_need',
+                n.raw_payload -> 'business_need',
+            'business_requirement_values',
+                n.br_business_values
+        ) AS business_value,
+
+        n.fr_business_objects AS business_objects,
+
+        n.business_requirement_ids,
+        n.business_context,
+        n.br_assumptions,
+        n.br_risks,
+        n.br_policies,
+        n.br_alternatives,
+        n.normalized_business_rules,
+        n.generated_business_rules,
+        n.raw_payload
+
+    FROM normalised n
+
+    LEFT JOIN gwt g
+        ON g.functional_requirement_pk =
+           n.functional_requirement_pk
+),
+
+-- ================================================================
+-- 10. FINAL USER STORY PREVIEW
+-- ================================================================
+
+final_user_stories AS (
+    SELECT
+        'US-' || sd.functional_requirement_id
+            AS user_story_id,
+
+        COALESCE(
+            NULLIF(sd.name, ''),
+            sd.functional_requirement_id
+        ) AS user_story_title,
+
+        COALESCE(
+            NULLIF(sd.raw_payload ->> 'requirement', ''),
+            NULLIF(sd.description, ''),
+            sd.functional_requirement_id
+        ) AS user_story_description,
+
+        'FUNCTIONAL'::TEXT AS user_story_type,
+
+        sd.actor,
+        sd.user_goal,
+        sd.business_value,
+
+        'FEAT-' || sd.functional_requirement_id
+            AS feature_id,
+
+        COALESCE(sd.name, sd.functional_requirement_id)
+            AS feature_name,
+
+        NULL::TEXT AS epic_id,
+        NULL::TEXT AS epic_title,
+
+        sd.business_requirement_ids,
+
+        JSONB_BUILD_ARRAY(
+            sd.functional_requirement_id
+        ) AS functional_requirement_ids,
+
+        sd.business_objects,
+        sd.preconditions,
+        sd.postconditions,
+        sd.trigger,
+        sd.main_flow,
+        sd.alternative_flows,
+        sd.exception_flows,
+        sd.business_rules,
+        sd.acceptance_criteria,
+        sd.given_when_then,
+        sd.success_criteria,
+
+        COALESCE(
+            CASE
+                WHEN JSONB_TYPEOF(
+                    sd.raw_payload -> 'non_functional_requirements'
+                ) = 'array'
+                    THEN sd.raw_payload -> 'non_functional_requirements'
+                WHEN sd.raw_payload ? 'non_functional_requirements'
+                    THEN JSONB_BUILD_ARRAY(
+                        sd.raw_payload -> 'non_functional_requirements'
+                    )
+                ELSE '[]'::JSONB
+            END,
+            '[]'::JSONB
+        ) AS non_functional_requirements,
+
+        sd.dependencies,
+
+        -- SOURCE TRACEABILITY / SUPPORTING EVIDENCE
+        JSONB_BUILD_OBJECT(
+            'functional_requirement', JSONB_BUILD_OBJECT(
+                'functional_requirement_id',
+                    sd.functional_requirement_id,
+                'functional_requirement_pk',
+                    sd.functional_requirement_pk,
+                'name', sd.name,
+                'status', sd.status,
+                'source_file_id', sd.source_file_id
+            ),
+
+            'business_requirement_context',
+                sd.business_context,
+
+            'business_rule_sources', JSONB_BUILD_OBJECT(
+                'functional_requirement_rules',
+                    sd.raw_payload -> 'business_rules',
+                'business_rules_table',
+                    sd.normalized_business_rules,
+                'generated_business_rules_table',
+                    sd.generated_business_rules
+            ),
+
+            'business_alternatives',
+                sd.br_alternatives,
+
+            'business_constraints', JSONB_BUILD_OBJECT(
+                'assumptions', sd.br_assumptions,
+                'risks_and_dependencies', sd.br_risks,
+                'policies_and_constraints', sd.br_policies
+            ),
+
+            'source_scope',
+                'FUNCTIONAL_REQUIREMENT_CENTRED',
+
+            'generation_method',
+                'ONE_USER_STORY_PER_FUNCTIONAL_REQUIREMENT'
+        ) AS source_references,
+
+        'DRAFT'::TEXT AS status
+
+    FROM story_data sd
+)
+
+-- ================================================================
+-- 11. READ-ONLY RESULT
+-- ================================================================
+
+SELECT *
+FROM final_user_stories
+ORDER BY feature_id, user_story_id;
