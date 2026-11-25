@@ -1,0 +1,325 @@
+{
+  "status": "COMPLETED",
+  "run_id": "BR_20261125101344491",
+  "run_timestamp": "20261125101344491",
+  "generated_at": "2026-11-25T14:24:20.751Z",
+  "information_requirement_record_id": "rec_c0e1fef508e43281c3068e2f8c4546cfbac2a5ca2cda82dc30f0be7a54c0791c",
+  "information_requirement": "Compliance and Regulatory Status",
+  "information_requirement_traceability": {
+    "originating_information_requirement_record_id": "rec_c0e1fef508e43281c3068e2f8c4546cfbac2a5ca2cda82dc30f0be7a54c0791c",
+    "information_requirement": "Compliance and Regulatory Status",
+    "description": "Current records of licenses, permits, and regulatory adherence regarding food safety, labor laws for gig workers, and data privacy for the specific operating zone."
+  },
+  "generated_count": 6,
+  "business_requirements": [
+    {
+      "name": "BR-01",
+      "business_requirement": "The system shall maintain a centralized, real-time repository of all active operational licenses, permits, and regulatory certifications required for food safety, labor compliance, and data privacy across all designated service zones.",
+      "business_objective": "To ensure continuous legal authorization to operate and mitigate the risk of unauthorized business activities.",
+      "business_value": "Enables the business to operate within legal boundaries, avoids regulatory penalties, and validates authority to process transactions and employ personnel in specific zones.",
+      "requirement_basis": "DOCUMENTED_FACT",
+      "basis_explanation": "The IR explicitly states the need for 'Current records of licenses, permits, and regulatory adherence' to 'ensure the business operates within legal boundaries' and 'validate the authority to operate'.",
+      "originating_information_requirement_record_id": "rec_c0e1fef508e43281c3068e2f8c4546cfbac2a5ca2cda82dc30f0be7a54c0791c",
+      "originating_information_requirement": "Compliance and Regulatory Status",
+      "origin": {
+        "information_requirement_record_id": "rec_c0e1fef508e43281c3068e2f8c4546cfbac2a5ca2cda82dc30f0be7a54c0791c",
+        "information_requirement": "Compliance and Regulatory Status",
+        "description": "Current records of licenses, permits, and regulatory adherence regarding food safety, labor laws for gig workers, and data privacy for the specific operating zone."
+      },
+      "stakeholders": [
+        "Platform Operator",
+        "Regulatory Authority",
+        "Store Partner",
+        "Delivery Partner",
+        "Internal Audit Team"
+      ],
+      "success_measures": [
+        {
+          "measure": "100% of active licenses and permits are recorded in the system with valid status flags.",
+          "target": null,
+          "target_status": "PROPOSED"
+        },
+        {
+          "measure": "Zero instances of operating without a valid license in any service zone.",
+          "target": null,
+          "target_status": "PROPOSED"
+        }
+      ],
+      "priority": "CRITICAL",
+      "policies_and_constraints": [
+        "Data retention policies must be adhered to for all collected data.",
+        "Licenses must be valid and renewed before expiration dates."
+      ],
+      "assumptions": [
+        "Regulatory Authorities will provide standardized data formats for license verification."
+      ],
+      "risks_and_dependencies": [
+        "Risk: Regulatory penalties or fines due to expired licenses.",
+        "Dependency: Ongoing communication channels with Regulatory Authorities for updates."
+      ],
+      "related_business_objects": [
+        "Service Area Definition",
+        "Store Partner Agreement",
+        "Delivery Partner"
+      ],
+      "business_requirement_id": "BR-055"
+    },
+    {
+      "name": "BR-02",
+      "business_requirement": "The system shall provide automated monitoring and alerting mechanisms to track license and permit validity periods, triggering notifications prior to expiration to facilitate timely renewal.",
+      "business_objective": "To prevent operational interruptions caused by expired licenses and ensure continuous compliance.",
+      "business_value": "Mitigates legal risks by ensuring licenses are renewed before expiration, maintaining the authority to operate in specific zones.",
+      "requirement_basis": "LOGICAL_DEDUCTION",
+      "basis_explanation": "The IR specifies that 'Expiry Dates' must be tracked and 'alerts issued before expiration' are required for validation. This implies a need for a proactive system capability to manage these dates.",
+      "originating_information_requirement_record_id": "rec_c0e1fef508e43281c3068e2f8c4546cfbac2a5ca2cda82dc30f0be7a54c0791c",
+      "originating_information_requirement": "Compliance and Regulatory Status",
+      "origin": {
+        "information_requirement_record_id": "rec_c0e1fef508e43281c3068e2f8c4546cfbac2a5ca2cda82dc30f0be7a54c0791c",
+        "information_requirement": "Compliance and Regulatory Status",
+        "description": "Current records of licenses, permits, and regulatory adherence regarding food safety, labor laws for gig workers, and data privacy for the specific operating zone."
+      },
+      "stakeholders": [
+        "Platform Operator",
+        "Internal Audit Team",
+        "Store Partner",
+        "Delivery Partner"
+      ],
+      "success_measures": [
+        {
+          "measure": "Alerts are generated for licenses expiring within the defined renewal window.",
+          "target": null,
+          "target_status": "PROPOSED"
+        },
+        {
+          "measure": "Renewal actions are initiated before license expiration.",
+          "target": null,
+          "target_status": "PROPOSED"
+        }
+      ],
+      "priority": "HIGH",
+      "policies_and_constraints": [
+        "Inspection records must be linked to the specific regulatory authority.",
+        "Status must reflect current regulatory requirements for the zone."
+      ],
+      "assumptions": [
+        "The system has access to accurate future dates for license renewal."
+      ],
+      "risks_and_dependencies": [
+        "Risk: Operational shutdown if renewal is missed.",
+        "Dependency: Availability of renewal processes and forms from Regulatory Authorities."
+      ],
+      "related_business_objects": [
+        "Service Area Definition",
+        "Store Partner Agreement",
+        "Delivery Partner"
+      ],
+      "business_requirement_id": "BR-056"
+    },
+    {
+      "name": "BR-03",
+      "business_requirement": "The system shall enforce strict validation of labor law compliance and gig-worker rights status for all delivery agents before authorizing their participation in the platform.",
+      "business_objective": "To ensure adherence to gig-worker rights and safety protocols, mitigating legal liability and reputational risk.",
+      "business_value": "Validates the authority to employ delivery personnel and ensures compliance with labor laws, protecting the business from penalties and legal challenges.",
+      "requirement_basis": "DOCUMENTED_FACT",
+      "basis_explanation": "The IR explicitly lists 'Labor Law Compliance Status' as a required detail and states that 'Labor law adherence must be verified for all delivery agents' as a functional rule.",
+      "originating_information_requirement_record_id": "rec_c0e1fef508e43281c3068e2f8c4546cfbac2a5ca2cda82dc30f0be7a54c0791c",
+      "originating_information_requirement": "Compliance and Regulatory Status",
+      "origin": {
+        "information_requirement_record_id": "rec_c0e1fef508e43281c3068e2f8c4546cfbac2a5ca2cda82dc30f0be7a54c0791c",
+        "information_requirement": "Compliance and Regulatory Authority",
+        "description": "Current records of licenses, permits, and regulatory adherence regarding food safety, labor laws for gig workers, and data privacy for the specific operating zone."
+      },
+      "stakeholders": [
+        "Platform Operator",
+        "Delivery Partner",
+        "Regulatory Authority",
+        "Internal Audit Team"
+      ],
+      "success_measures": [
+        {
+          "measure": "100% of active delivery agents have verified labor law compliance status.",
+          "target": null,
+          "target_status": "PROPOSED"
+        },
+        {
+          "measure": "Zero delivery agents operate without verified labor compliance status.",
+          "target": null,
+          "target_status": "PROPOSED"
+        }
+      ],
+      "priority": "CRITICAL",
+      "policies_and_constraints": [
+        "Labor law adherence must be verified for all delivery agents.",
+        "Data privacy compliance must be maintained across all user interactions."
+      ],
+      "assumptions": [
+        "Delivery Partners provide accurate and up-to-date labor compliance documentation."
+      ],
+      "risks_and_dependencies": [
+        "Risk: Legal penalties or lawsuits regarding labor violations.",
+        "Dependency: External verification services or regulatory databases for labor law compliance."
+      ],
+      "related_business_objects": [
+        "Delivery Partner",
+        "Store Partner Agreement"
+      ],
+      "business_requirement_id": "BR-057"
+    },
+    {
+      "name": "BR-04",
+      "business_requirement": "The system shall maintain and validate food safety certifications and health standards compliance for all perishable goods operations.",
+      "business_objective": "To ensure compliance with local health codes and maintain public safety standards for food sales.",
+      "business_value": "Validates eligibility for food sales licenses and ensures the business can legally process transactions involving perishable goods.",
+      "requirement_basis": "DOCUMENTED_FACT",
+      "basis_explanation": "The IR explicitly requires 'Food Safety Certifications' and states that 'Food Safety Certifications: Compliance with local health standards for perishable goods' is a required information detail.",
+      "originating_information_requirement_record_id": "rec_c0e1fef508e43281c3068e2f8c4546cfbac2a5ca2cda82dc30f0be7a54c0791c",
+      "originating_information_requirement": "Compliance and Regulatory Status",
+      "origin": {
+        "information_requirement_record_id": "rec_c0e1fef508e43281c3068e2f8c4546cfbac2a5ca2cda82dc30f0be7a54c0791c",
+        "information_requirement": "Compliance and Regulatory Status",
+        "description": "Current records of licenses, permits, and regulatory adherence regarding food safety, labor laws for gig workers, and data privacy for the specific operating zone."
+      },
+      "stakeholders": [
+        "Platform Operator",
+        "Store Partner",
+        "Regulatory Authority",
+        "Internal Audit Team"
+      ],
+      "success_measures": [
+        {
+          "measure": "All food sales operations are linked to valid food safety certifications.",
+          "target": null,
+          "target_status": "PROPOSED"
+        },
+        {
+          "measure": "Zero food sales transactions occur without valid health code compliance.",
+          "target": null,
+          "target_status": "PROPOSED"
+        }
+      ],
+      "priority": "CRITICAL",
+      "policies_and_constraints": [
+        "Food Safety Certifications: Compliance with local health standards for perishable goods.",
+        "Inspection records must be up-to-date for all operating areas."
+      ],
+      "assumptions": [
+        "Health codes are standardized or accessible for verification across operating zones."
+      ],
+      "risks_and_dependencies": [
+        "Risk: Health code violations leading to fines or closure.",
+        "Dependency: Access to local health authority inspection records."
+      ],
+      "related_business_objects": [
+        "Store Partner Agreement",
+        "Service Area Definition"
+      ],
+      "business_requirement_id": "BR-058"
+    },
+    {
+      "name": "BR-05",
+      "business_requirement": "The system shall enforce data privacy compliance protocols for all user interactions and data collection activities.",
+      "business_objective": "To ensure adherence to data privacy regulations and protect user information integrity.",
+      "business_value": "Mitigates legal risks associated with data breaches and ensures the business can legally process transactions and manage user data.",
+      "requirement_basis": "DOCUMENTED_FACT",
+      "basis_explanation": "The IR explicitly lists 'Data privacy for the specific operating zone' and 'Data privacy compliance must be maintained across all user interactions' as functional rules.",
+      "originating_information_requirement_record_id": "rec_c0e1fef508e43281c3068e2f8c4546cfbac2a5ca2cda82dc30f0be7a54c0791c",
+      "originating_information_requirement": "Compliance and Regulatory Status",
+      "origin": {
+        "information_requirement_record_id": "rec_c0e1fef508e43281c3068e2f8c4546cfbac2a5ca2cda82dc30f0be7a54c0791c",
+        "information_requirement": "Compliance and Regulatory Status",
+        "description": "Current records of licenses, permits, and regulatory adherence regarding food safety, labor laws for gig workers, and data privacy for the specific operating zone."
+      },
+      "stakeholders": [
+        "Platform Operator",
+        "Regulatory Authority",
+        "Store Partner",
+        "Delivery Partner",
+        "Internal Audit Team"
+      ],
+      "success_measures": [
+        {
+          "measure": "100% of user interactions adhere to defined data privacy protocols.",
+          "target": null,
+          "target_status": "PROPOSED"
+        },
+        {
+          "measure": "Zero data privacy violations recorded in audit logs.",
+          "target": null,
+          "target_status": "PROPOSED"
+        }
+      ],
+      "priority": "CRITICAL",
+      "policies_and_constraints": [
+        "Data privacy compliance must be maintained across all user interactions.",
+        "Data retention policies must be adhered to for all collected data."
+      ],
+      "assumptions": [
+        "Clear data privacy regulations exist for the specific operating zone."
+      ],
+      "risks_and_dependencies": [
+        "Risk: Regulatory fines or loss of consumer trust due to data breaches.",
+        "Dependency: Legal team definition of specific data privacy protocols."
+      ],
+      "related_business_objects": [
+        "Store Partner Agreement",
+        "Delivery Partner"
+      ],
+      "business_requirement_id": "BR-059"
+    },
+    {
+      "name": "BR-06",
+      "business_requirement": "The system shall support the business decision-making process for authorizing platform operations in specific geographic zones based on verified regulatory status.",
+      "business_objective": "To enable the Platform Operator to make informed decisions regarding market entry and expansion.",
+      "business_value": "Ensures the business can legally process transactions and employ delivery personnel by validating authority to operate in specific zones.",
+      "requirement_basis": "LOGICAL_DEDUCTION",
+      "basis_explanation": "The IR states that the information supports 'Authorizing the operation of the platform in a specific geographic zone' and 'Determining eligibility for food sales licenses based on local health codes'.",
+      "originating_information_requirement_record_id": "rec_c0e1fef508e43281c3068e2f8c4546cfbac2a5ca2cda82dc30f0be7a54c0791c",
+      "originating_information_requirement": "Compliance and Regulatory Status",
+      "origin": {
+        "information_requirement_record_id": "rec_c0e1fef508e43281c3068e2f8c4546cfbac2a5ca2cda82dc30f0be7a54c0791c",
+        "information_requirement": "Compliance and Regulatory Status",
+        "description": "Current records of licenses, permits, and regulatory adherence regarding food safety, labor laws for gig workers, and data privacy for the specific operating zone."
+      },
+      "stakeholders": [
+        "Platform Operator",
+        "Regulatory Authority",
+        "Internal Audit Team"
+      ],
+      "success_measures": [
+        {
+          "measure": "Market entry decisions are based on verified compliance data.",
+          "target": null,
+          "target_status": "PROPOSED"
+        },
+        {
+          "measure": "Zero unauthorized market expansions occur.",
+          "target": null,
+          "target_status": "PROPOSED"
+        }
+      ],
+      "priority": "HIGH",
+      "policies_and_constraints": [
+        "Status must reflect current regulatory requirements for the zone.",
+        "Licenses must be valid and renewed before expiration dates."
+      ],
+      "assumptions": [
+        "Compliance data is accurate and up-to-date at the time of decision."
+      ],
+      "risks_and_dependencies": [
+        "Risk: Unauthorized operation in a zone leading to penalties.",
+        "Dependency: Real-time access to regulatory status updates."
+      ],
+      "related_business_objects": [
+        "Service Area Definition",
+        "Store Partner Agreement"
+      ],
+      "business_requirement_id": "BR-060"
+    }
+  ],
+  "metadata": {
+    "model": "unsloth/Qwen3.5-9B-GGUF:Q4_K_M",
+    "run_id": "BR_20261125101344491",
+    "run_timestamp": "20261125101344491",
+    "generated_at": "2026-11-25T14:24:20.751Z"
+  }
+}

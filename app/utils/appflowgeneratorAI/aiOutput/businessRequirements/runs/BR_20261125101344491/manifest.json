@@ -3,7 +3,7 @@
   "run_timestamp": "20261125101344491",
   "model": "unsloth/Qwen3.5-9B-GGUF:Q4_K_M",
   "created_at": "2026-11-25T04:43:44.491Z",
-  "updated_at": "2026-11-25T12:03:48.016Z",
+  "updated_at": "2026-11-25T16:30:17.058Z",
   "run_directory": "/Users/apple/Documents/Projects/fastify/Nodejs_Postgresql_VanillaJS_Fastify/app/utils/appflowgeneratorAI/aiOutput/businessRequirements/runs/BR_20261125101344491",
   "context_file": "/Users/apple/Documents/Projects/fastify/Nodejs_Postgresql_VanillaJS_Fastify/app/utils/appflowgeneratorAI/aiOutput/businessRequirements/runs/BR_20261125101344491/context.json",
   "information_requirements_directory": "/Users/apple/Documents/Projects/fastify/Nodejs_Postgresql_VanillaJS_Fastify/app/utils/appflowgeneratorAI/aiOutput/businessRequirements/runs/BR_20261125101344491/information_requirements",
@@ -11,16 +11,54 @@
   "statistics": {
     "information_requirements": 20
   },
-  "status": "LOADED",
+  "status": "GENERATION_COMPLETED_WITH_ERRORS",
   "generation_progress": {
     "selected": 20,
-    "completed": 6,
+    "completed": 17,
     "skipped": 0,
-    "failed": 0,
-    "last_processed_record_id": "rec_30a3ef06b9b60acd32af3591e2330661d46dba9963408d7bac1ee2d85d2d4320",
-    "updated_at": "2026-11-25T12:03:48.016Z"
+    "failed": 3,
+    "last_processed_record_id": "rec_fc56a71a5b93236f2275b465d1bd1b3176c43c05385ab6693969a5cafdce579d",
+    "updated_at": "2026-11-25T16:30:17.056Z"
   },
-  "generation_summary": null,
+  "generation_summary": {
+    "selected": 20,
+    "completed": 17,
+    "skipped": 0,
+    "failed": 3,
+    "failures": [
+      {
+        "record_id": "rec_459f8c8df29bf31596b37e618b2b342719350cbaf6cc34f7bcbb17453c6df284",
+        "error": "No complete JSON object containing information_requirement_traceability and business_requirements was found.",
+        "failed_at": "2026-11-25T13:01:59.038Z"
+      },
+      {
+        "record_id": "rec_5da59246a74c22496295373e6dfdef697d646cf88174e488663ec3112a93f6d2",
+        "error": "No complete JSON object containing information_requirement_traceability and business_requirements was found.",
+        "failed_at": "2026-11-25T13:40:06.083Z"
+      },
+      {
+        "record_id": "rec_d17c2e49dd7e48e43a29d0710f0d60b7dac269d5dd093cb66192b38f05bc2932",
+        "error": "Qwen timed out after 1800000ms. Stdout characters: 22303. Stderr characters: 100000.",
+        "failed_at": "2026-11-25T15:35:54.763Z"
+      }
+    ]
+  },
   "merge_summary": null,
-  "failures": []
+  "failures": [
+    {
+      "record_id": "rec_459f8c8df29bf31596b37e618b2b342719350cbaf6cc34f7bcbb17453c6df284",
+      "error": "No complete JSON object containing information_requirement_traceability and business_requirements was found.",
+      "failed_at": "2026-11-25T13:01:59.038Z"
+    },
+    {
+      "record_id": "rec_5da59246a74c22496295373e6dfdef697d646cf88174e488663ec3112a93f6d2",
+      "error": "No complete JSON object containing information_requirement_traceability and business_requirements was found.",
+      "failed_at": "2026-11-25T13:40:06.083Z"
+    },
+    {
+      "record_id": "rec_d17c2e49dd7e48e43a29d0710f0d60b7dac269d5dd093cb66192b38f05bc2932",
+      "error": "Qwen timed out after 1800000ms. Stdout characters: 22303. Stderr characters: 100000.",
+      "failed_at": "2026-11-25T15:35:54.763Z"
+    }
+  ]
 }
