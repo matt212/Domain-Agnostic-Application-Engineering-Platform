@@ -102,7 +102,7 @@ const OUTPUT_DIR = path.join(
 const UNIT_DIR = path.join(OUTPUT_DIR, 'units');
 const TEMP_DIR = path.join(OUTPUT_DIR, 'temp');
 
-const MAX_PROMPT_CHARACTERS = 7000;
+const MAX_PROMPT_CHARACTERS = 9000;
 const MAX_OUTPUT_TOKENS = 4750;
 
 const CONTEXT_SIZE = 5096;

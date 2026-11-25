@@ -1,0 +1,266 @@
+{
+  "status": "COMPLETED",
+  "run_id": "BR_20261125101344491",
+  "run_timestamp": "20261125101344491",
+  "generated_at": "2026-11-25T11:11:50.912Z",
+  "information_requirement_record_id": "rec_09d47d41cb879c8b12911633760cd1bbd4991b89ca22c6c3ec2fb831bc8e6882",
+  "information_requirement": "Product Expiry and Shelf-Life Data",
+  "information_requirement_traceability": {
+    "originating_information_requirement_record_id": "rec_09d47d41cb879c8b12911633760cd1bbd4991b89ca22c6c3ec2fb831bc8e6882",
+    "information_requirement": "Product Expiry and Shelf-Life Data",
+    "description": "Information regarding the expiration dates and freshness status of perishable goods, particularly relevant for items nearing their sell-by date."
+  },
+  "generated_count": 5,
+  "business_requirements": [
+    {
+      "name": "BR-01: Maintain Accurate Expiry Data Integrity",
+      "business_requirement": "The system shall ensure that expiry dates and shelf-life data for all perishable items are accurate, verifiable, and synchronized between the Store Partner and the Platform Operator to prevent the sale of unsafe products.",
+      "business_objective": "To ensure product safety and compliance by preventing the sale of items past their sell-by date.",
+      "business_value": "Mitigates liability risks associated with selling expired goods and protects brand reputation.",
+      "requirement_basis": "DOCUMENTED_FACT",
+      "basis_explanation": "The IR explicitly states that 'Items past their sell-by date must be flagged for removal' and requires data to be 'accurate and verifiable by the store' and 'synchronized with the store's inventory system'.",
+      "originating_information_requirement_record_id": "rec_09d47d41cb879c8b12911633760cd1bbd4991b89ca22c6c3ec2fb831bc8e6882",
+      "originating_information_requirement": "Product Expiry and Shelf-Life Data",
+      "origin": {
+        "information_requirement_record_id": "rec_09d47d41cb879c8b12911633760cd1bbd4991b89ca22c6c3ec2fb831bc8e6882",
+        "information_requirement": "Product Expiry and Shelf-Life Data",
+        "description": "Information regarding the expiration dates and freshness status of perishable goods, particularly relevant for items nearing their sell-by date."
+      },
+      "stakeholders": [
+        "Store Partner",
+        "Platform Operator",
+        "Customer"
+      ],
+      "success_measures": [
+        {
+          "measure": "Percentage of orders containing items past their sell-by date",
+          "target": null,
+          "target_status": "NOT_SPECIFIED"
+        },
+        {
+          "measure": "Frequency of data synchronization failures between Store Partner and Platform",
+          "target": null,
+          "target_status": "NOT_SPECIFIED"
+        }
+      ],
+      "priority": "CRITICAL",
+      "policies_and_constraints": [
+        "Items past their sell-by date must be flagged for removal.",
+        "Expiry dates must be accurate and verifiable by the store."
+      ],
+      "assumptions": [
+        "Store Partners have the capability to provide accurate production and expiry dates."
+      ],
+      "risks_and_dependencies": [
+        "Risk: Inaccurate data provided by Store Partners leads to unsafe product sales.",
+        "Dependency: Real-time synchronization with the Store Partner's inventory system."
+      ],
+      "related_business_objects": [
+        "Real-Time Inventory Snapshot",
+        "Product Catalog"
+      ],
+      "business_requirement_id": "BR-006"
+    },
+    {
+      "name": "BR-02: Optimize Inventory Turnover for Perishables",
+      "business_requirement": "The system shall prioritize the allocation and sale of perishable inventory based on proximity to expiry dates to minimize waste and maximize margin on near-expiry goods.",
+      "business_objective": "To reduce inventory shrinkage caused by spoilage and improve financial performance on perishable stock.",
+      "business_value": "Reduces waste costs and increases revenue from items that would otherwise be discarded.",
+      "requirement_basis": "LOGICAL_DEDUCTION",
+      "basis_explanation": "The IR states the business purpose is 'To prioritize the sale of perishable inventory' and 'minimize waste, maximize margin on near-expiry goods'. This implies a requirement for the system to actively manage allocation based on this data.",
+      "originating_information_requirement_record_id": "rec_09d47d41cb879c8b12911633760cd1bbd4991b89ca22c6c3ec2fb831bc8e6882",
+      "originating_information_requirement": "Product Expiry and Shelf-Life Data",
+      "origin": {
+        "information_requirement_record_id": "rec_09d47d41cb879c8b12911633760cd1bbd4991b89ca22c6c3ec2fb831bc8e6882",
+        "information_requirement": "Product Expiry and Shelf-Life Data",
+        "description": "Information regarding the expiration dates and freshness status of perishable goods, particularly relevant for items nearing their sell-by date."
+      },
+      "stakeholders": [
+        "Merchandiser",
+        "Platform Operator",
+        "Store Partner"
+      ],
+      "success_measures": [
+        {
+          "measure": "Reduction in inventory shrinkage due to spoilage",
+          "target": null,
+          "target_status": "NOT_SPECIFIED"
+        },
+        {
+          "measure": "Revenue generated from 'Best Before' promotions",
+          "target": null,
+          "target_status": "NOT_SPECIFIED"
+        }
+      ],
+      "priority": "HIGH",
+      "policies_and_constraints": [
+        "Promotions must be prioritized for items nearing expiry.",
+        "Shelf-life must be updated upon restocking or item transfer."
+      ],
+      "assumptions": [
+        "The system can calculate time-to-expiry for active items in the catalog."
+      ],
+      "risks_and_dependencies": [
+        "Risk: Failure to prioritize near-expiry items results in increased waste.",
+        "Dependency: Availability of 'Shelf-Life Remaining' and 'Expiry Date' data."
+      ],
+      "related_business_objects": [
+        "Product Catalog",
+        "Order Allocation Engine"
+      ],
+      "business_requirement_id": "BR-007"
+    },
+    {
+      "name": "BR-03: Enable Dynamic Promotion Management",
+      "business_requirement": "The system shall support the creation and execution of promotions specifically targeted at items approaching their sell-by date to recover value from perishable stock.",
+      "business_objective": "To recover margin on near-expiry goods through targeted discounting and features.",
+      "business_value": "Increases profitability on inventory that is at risk of becoming unsellable.",
+      "requirement_basis": "LOGICAL_DEDUCTION",
+      "business_explanation": "The IR states that 'Deciding whether to discount items approaching their sell-by date' is a business decision supported by the data, and 'Promotions must be prioritized for items nearing expiry'.",
+      "originating_information_requirement_record_id": "rec_09d47d41cb879c8b12911633760cd1bbd4991b89ca22c6c3ec2fb831bc8e6882",
+      "originating_information_requirement": "Product Expiry and Shelf-Life Data",
+      "origin": {
+        "information_requirement_record_id": "rec_09d47d41cb879c8b12911633760cd1bbd4991b89ca22c6c3ec2fb831bc8e6882",
+        "information_requirement": "Product Expiry and Shelf-Life Data",
+        "description": "Information regarding the expiration dates and freshness status of perishable goods, particularly relevant for items nearing their sell-by date."
+      },
+      "stakeholders": [
+        "Merchandiser",
+        "Platform Operator",
+        "Customer"
+      ],
+      "success_measures": [
+        {
+          "measure": "Conversion rate of items in 'Best Before' promotions",
+          "target": null,
+          "target_status": "NOT_SPECIFIED"
+        },
+        {
+          "measure": "Percentage of near-expiry items sold via promotions",
+          "target": null,
+          "target_status": "NOT_SPECIFIED"
+        }
+      ],
+      "priority": "MEDIUM",
+      "policies_and_constraints": [
+        "Promotions must be prioritized for items nearing expiry.",
+        "Discounts must be linked to specific expiry thresholds."
+      ],
+      "assumptions": [
+        "Merchandisers have the authority to set discount thresholds based on expiry data."
+      ],
+      "risks_and_dependencies": [
+        "Risk: Over-discounting may erode overall brand value or margin.",
+        "Dependency: Promotion Manager module integration."
+      ],
+      "related_business_objects": [
+        "Product Catalog",
+        "Store Partner Agreement"
+      ],
+      "business_requirement_id": "BR-008"
+    },
+    {
+      "name": "BR-04: Ensure Customer Freshness Assurance",
+      "business_requirement": "The system shall ensure that customers receive goods within their expected shelf life by validating product freshness status prior to order fulfillment.",
+      "business_objective": "To maintain customer trust and satisfaction by delivering fresh products.",
+      "business_value": "Enhances customer experience and reduces returns/complaints related to product quality.",
+      "requirement_basis": "LOGICAL_DEDUCTION",
+      "basis_explanation": "The IR states the business purpose includes 'ensure customers receive goods within their expected shelf life' and 'ensure product freshness for customers'.",
+      "originating_information_requirement_record_id": "rec_09d47d41cb879c8b12911633760cd1bbd4991b89ca22c6c3ec2fb831bc8e6882",
+      "originating_information_requirement": "Product Expiry and Shelf-Life Data",
+      "origin": {
+        "information_requirement_record_id": "rec_09d47d41cb879c8b12911633760cd1bbd4991b89ca22c6c3ec2fb831bc8e6882",
+        "information_requirement": "Product Expiry and Shelf-Life Data",
+        "description": "Information regarding the expiration dates and freshness status of perishable goods, particularly relevant for items nearing their sell-by date."
+      },
+      "stakeholders": [
+        "Customer",
+        "Platform Operator",
+        "Store Partner"
+      ],
+      "success_measures": [
+        {
+          "measure": "Customer satisfaction score regarding product freshness",
+          "target": null,
+          "target_status": "NOT_SPECIFIED"
+        },
+        {
+          "measure": "Rate of returns due to product age or spoilage",
+          "target": null,
+          "target_status": "NOT_SPECIFIED"
+        }
+      ],
+      "priority": "HIGH",
+      "policies_and_constraints": [
+        "Item status must reflect the current age relative to expiry.",
+        "Quality Grade assessment must be available for customer visibility."
+      ],
+      "assumptions": [
+        "Customers value freshness information when making purchasing decisions."
+      ],
+      "risks_and_dependencies": [
+        "Risk: Shipping delays may cause items to spoil before delivery despite valid shelf-life at dispatch.",
+        "Dependency: Logistics system integration for transit time estimation."
+      ],
+      "related_business_objects": [
+        "Real-Time Inventory Snapshot",
+        "Order Initiation and Selection"
+      ],
+      "business_requirement_id": "BR-009"
+    },
+    {
+      "name": "BR-05: Provide Visibility for Merchandising Strategy",
+      "business_requirement": "The system shall provide Merchandisers with actionable insights into perishability levels and quality grades to support catalog curation and strategy.",
+      "business_objective": "To enable data-driven decisions on which items to feature, stock, or remove from the catalog.",
+      "business_value": "Improves catalog relevance and operational efficiency in managing perishable inventory.",
+      "requirement_basis": "LOGICAL_DEDUCTION",
+      "basis_explanation": "The IR states that 'Evaluated by the Merchandiser' and supports 'Product Catalog Curation and Strategy'. The data includes 'Perishability Level' and 'Quality Grade'.",
+      "originating_information_requirement_record_id": "rec_09d47d41cb879c8b12911633760cd1bbd4991b89ca22c6c3ec2fb831bc8e6882",
+      "originating_information_requirement": "Product Expiry and Shelf-Life Data",
+      "origin": {
+        "information_requirement_record_id": "rec_09d47d41cb879c8b12911633760cd1bbd4991b89ca22c6c3ec2fb831bc8e6882",
+        "information_requirement": "Product Expiry and Shelf-Life Data",
+        "description": "Information regarding the expiration dates and expiration dates and freshness status of perishable goods, particularly relevant for items nearing their sell-by date."
+      },
+      "stakeholders": [
+        "Merchandiser",
+        "Platform Operator"
+      ],
+      "success_measures": [
+        {
+          "measure": "Time taken to curate catalog based on expiry data",
+          "target": null,
+          "target_status": "NOT_SPECIFIED"
+        },
+        {
+          "measure": "Accuracy of merchandising decisions regarding perishable stock",
+          "target": null,
+          "target_status": "NOT_SPECIFIED"
+        }
+      ],
+      "priority": "MEDIUM",
+      "policies_and_constraints": [
+        "Perishability Level classification must be consistent.",
+        "Quality Grade assessment must be available for decision-making."
+      ],
+      "assumptions": [
+        "Merchandisers require aggregated views of perishable inventory health."
+      ],
+      "risks_and_dependencies": [
+        "Risk: Inconsistent classification leads to poor merchandising decisions.",
+        "Dependency: Data enrichment by the Platform Operator."
+      ],
+      "related_business_objects": [
+        "Product Catalog",
+        "Store Partner Agreement"
+      ],
+      "business_requirement_id": "BR-010"
+    }
+  ],
+  "metadata": {
+    "model": "unsloth/Qwen3.5-9B-GGUF:Q4_K_M",
+    "run_id": "BR_20261125101344491",
+    "run_timestamp": "20261125101344491",
+    "generated_at": "2026-11-25T11:11:50.912Z"
+  }
+}
